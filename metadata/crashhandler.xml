@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<compiz>
+  <plugin name="crashhandler" useBcop="true">
+    <short>Crash handler</short>
+    <long>Compiz crash handler plugin</long>
+	<category>Development</category>
+    <display>
+      <group>
+        <short>Main</short>
+        <option name="enabled" type="bool">
+          <short>Enable Crash Handler</short>
+          <long>Activate Crash Handler.</long>
+          <default>true</default>
+        </option>
+        <option name="start_wm" type="bool">
+          <short>Start Other Window Manager</short>
+          <long>Start other window manager on Crash.</long>
+          <default>false</default>
+        </option>
+        <option name="wm_cmd" type="string">
+          <short>Window Manager Command Line</short>
+          <long>Window manager command line. DO NOT ENTER COMPIZ HERE!!!</long>
+          <hints>command;</hints>
+          <default/>
+        </option>
+      </group>
+    </display>
+  </plugin>
+</compiz>
