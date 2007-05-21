@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<compiz>
+  <plugin name="bench" useBcop="true">
+    <short>Benchmark</short>
+    <long>A simple benchmark plugin</long>
+	<category>Extras</category>
+    <display>
+      <group>
+        <short>Main</short>
+        <option name="initiate" type="action">
+          <short>Initiate</short>
+          <long>Start benchmark</long>
+          <allowed key="true"/>
+          <default>
+            <key>&lt;Super&gt;F12</key>
+          </default>
+        </option>
+        <option name="disable_limiter" type="bool">
+          <short>Disable limiter</short>
+          <long>Disable beryl integrated FPS limiter</long>
+          <default>true</default>
+        </option>
+        <subgroup>
+          <short>Screen Output</short>
+          <option name="output_screen" type="bool">
+            <short>Enable</short>
+            <long>Display FPS on screen</long>
+            <default>true</default>
+          </option>
+          <option name="position_x" type="int">
+            <short>X position</short>
+            <long>X Position of benchmark window</long>
+            <default>0</default>
+            <min>0</min>
+            <max>4096</max>
+          </option>
+          <option name="position_y" type="int">
+            <short>Y position</short>
+            <long>Y Position of benchmark window</long>
+            <default>0</default>
+            <min>0</min>
+            <max>4096</max>
+          </option>
+        </subgroup>
+        <subgroup>
+          <short>Console Output</short>
+          <option name="output_console" type="bool">
+            <short>Enable</short>
+            <long>Print FPS to console</long>
+            <default>false</default>
+          </option>
+          <option name="console_update_time" type="int">
+            <short>Update time</short>
+            <long>Console output update time</long>
+            <default>5</default>
+            <min>1</min>
+            <max>60</max>
+          </option>
+        </subgroup>
+      </group>
+    </display>
+  </plugin>
+</compiz>
