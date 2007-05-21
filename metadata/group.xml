@@ -114,7 +114,7 @@
           <option name="change_color" type="action">
             <short>Glow Color Change</short>
             <long>If you don't like the current glow color, you can change it with this key.</long>
-            <allowed/>
+            <allowed key="true"/>
             <default/>
           </option>
         </subgroup>
