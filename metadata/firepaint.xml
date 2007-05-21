@@ -1,0 +1,80 @@
+<compiz>
+    <plugin name="firepaint" useBcop="true">
+	<short>Paint fire on the screen</short>
+	<long>Paint fire or other particles on the screen</long>
+	<category>Effects</category>
+	<display>
+	    <option type="action" name="initiate">
+		<short>Initiate</short>
+		<long>Initiate fire drawing</long>
+		<allowed key="true" button="true"/>
+		<default>
+		    <button>&lt;Super&gt;&lt;Shift&gt;Button1</button>
+		</default>
+	    </option>
+	    <option type="action" name="clear">
+		<short>Clear</short>
+		<long>Clear</long>
+		<allowed key="true" button="true"/>
+		<default>
+		    <key>&lt;Super&gt;&lt;Shift&gt;c</key>
+		</default>
+	    </option>
+	</display>
+	<screen>
+	    <option name="num_Particles" type="int">
+		<short>Number of particles</short>
+		<long>Maximum number of active particles</long>
+		<default>3000</default>
+		<min>100</min>
+		<max>20000</max>
+	    </option>
+	    <option name="fire_size" type="float">
+		<short>Fire Particle Size</short>
+		<long>Fire particle size.</long>
+		<default>15.0</default>
+		<min>0.1</min>
+		<max>40</max>
+		<precision>0.1</precision>
+	    </option>
+	    <option name="fire_slowdown" type="float">
+		<short>Fire Particle Slowdown</short>
+		<long>Fire particle slowdown.</long>
+		<default>0.5</default>
+		<min>0.1</min>
+		<max>10</max>
+		<precision>0.1</precision>
+	    </option>
+	    <option name="fire_life" type="float">
+		<short>Fire Particle Life</short>
+		<long>Fire particle life.</long>
+		<default>0.7</default>
+		<min>0.1</min>
+		<max>0.95</max>
+		<precision>0.05</precision>
+	    </option>
+	    <option name="fire_color" type="color">
+		<short>Fire Particle Color</short>
+		<long>Fire particle color.</long>
+		<default>
+		    <red>0xffff</red>
+		    <green>0x3333</green>
+		    <blue>0x0555</blue>
+		    <alpha>0xffff</alpha>
+		</default>
+	    </option>
+	    <option name="fire_mystical" type="bool">
+		<short>Randomly Colored Fire</short>
+		<long>Have random colors for the fire effect, also known as Mystical Fire.</long>
+		<default>false</default>
+	    </option>
+	    <option name="bg_brightness" type="int">
+		<short>Background brightness</short>
+		<long>Background brightness during paint</long>
+		<default>50</default>
+		<min>0</min>
+		<max>100</max>
+	    </option>
+	</screen>
+    </plugin>
+</compiz>
