@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<compiz>
+  <plugin name="addhelper" useBcop="true">
+    <short>AddHelper</short>
+	<long>Make it slightly easier to concentrate by dimming all but the active window.</long>
+	<category>Accessibility</category>
+	<deps>
+		<relation type="after">
+			<plugin>fade</plugin>
+		</relation>
+	</deps>
+    <display>
+      <group>
+        <short>Bindings</short>
+        <option name="toggle" type="action">
+          <short>Toggle AddHelper</short>
+          <long>Use this to enable/disable AddHelper on the fly.</long>
+          <allowed key="true"/>
+          <default>
+            <key>&lt;Super&gt;p</key>
+          </default>
+        </option>
+      </group>
+      <group>
+        <short>Misc. options</short>
+        <option name="window_types" type="match">
+          <short>Window Types</short>
+          <long>Window types that should be Opacified.</long>
+          <default>Toolbar | Utility | Dialog | ModalDialog | Fullscreen | Normal</default>
+        </option>
+        <option name="brightness" type="int">
+          <short>Brightness</short>
+          <long>Brightness of faded windows</long>
+          <default>30</default>
+          <min>1</min>
+          <max>100</max>
+        </option>
+        <option name="saturation" type="int">
+          <short>Saturation</short>
+          <long>Saturation of faded windows</long>
+          <default>50</default>
+          <min>0</min>
+          <max>100</max>
+        </option>
+        <option name="opacity" type="int">
+          <short>Opacity</short>
+          <long>Opacity of faded windows</long>
+          <default>100</default>
+          <min>1</min>
+          <max>100</max>
+        </option>
+      </group>
+    </display>
+  </plugin>
+</compiz>
