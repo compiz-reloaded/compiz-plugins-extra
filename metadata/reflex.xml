@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<compiz>
+  <plugin name="reflex" useBcop="true">
+    <short>Reflection</short>
+    <long>Draws reflections</long>
+	<category>Effects</category>
+    <screen>
+      <group>
+        <short>Main</short>
+        <option name="file" type="string">
+          <short>Reflection Image</short>
+          <long>Reflection Image file</long>
+          <hints>file;image;</hints>
+          <default>/data/emboss.png</default>
+        </option>
+        <option name="match" type="match">
+          <short>Window match</short>
+          <long>Reflection Window Match</long>
+          <default>any</default>
+        </option>
+        <option name="window" type="bool">
+          <short>Reflection for Windows</short>
+          <long>Draw Reflection for windows.</long>
+          <default>false</default>
+        </option>
+        <option name="decoration" type="bool">
+          <short>Reflection for Decorations</short>
+          <long>Draw Reflection for decorations.</long>
+          <default>true</default>
+        </option>
+        <option name="threshold" type="int">
+          <short>Alpha Dependence Threshold</short>
+          <long>Alpha dependence threshold.</long>
+          <default>2</default>
+          <min>1</min>
+          <max>10</max>
+        </option>
+      </group>
+    </screen>
+  </plugin>
+</compiz>
