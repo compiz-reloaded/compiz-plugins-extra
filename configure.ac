@@ -1,6 +1,6 @@
 AC_PREREQ(2.57)
 
-AC_INIT([compcomm-plugins-main],esyscmd(. ./VERSION;echo -n $VERSION), [maniac@opencompositing.org])
+AC_INIT([compcomm-plugins-extra],esyscmd(. ./VERSION;echo -n $VERSION), [maniac@opencompositing.org])
 
 AC_DEFINE_UNQUOTED(VERSION,"$VERSION",[Version])
 
@@ -19,7 +19,7 @@ AC_CHECK_HEADERS([stdlib.h sys/time.h unistd.h])
 #IT_PROG_INTLTOOL([0.35.0])
 #AC_SUBST(ALL_LINGUAS)
 #AM_GLIB_GNU_GETTEXT
-#GETTEXT_PACKAGE=compcomm-plugins-main
+#GETTEXT_PACKAGE=compcomm-plugins-extra
 #AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [Gettext package.])
 #AC_SUBST(GETTEXT_PACKAGE)
 
