@@ -362,6 +362,7 @@ typedef struct _GroupScreen {
 	DonePaintScreenProc donePaintScreen;
 	WindowGrabNotifyProc windowGrabNotify;
 	WindowUngrabNotifyProc windowUngrabNotify;
+	WindowAddNotifyProc windowAddNotify;
 	DamageWindowRectProc damageWindowRect;
 	WindowStateChangeNotifyProc windowStateChangeNotify;
 
@@ -468,7 +469,7 @@ void groupWindowUngrabNotify(CompWindow * w);
 void groupWindowMoveNotify(CompWindow * w, int dx, int dy, Bool immediate);
 void groupWindowStateChangeNotify(CompWindow *w);
 void groupGetOutputExtentsForWindow(CompWindow * w, CompWindowExtents * output);
-
+void groupWindowAddNotify(CompWindow * w);
 Bool groupDamageWindowRect(CompWindow * w, Bool initial, BoxPtr rect);
 
 /*
