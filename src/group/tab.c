@@ -641,6 +641,32 @@ void groupHandleTextFade(GroupSelection *group, int msSinceLastPaint)
 }
 
 /*
+ * groupHanldeTabBarAnimation
+ *
+ * Description: Handles the different animations for the tab bar defined in
+ * GroupAnimationType. Basically that means this function updates
+ * tabBar->animation->time as well as checking if the animation is already
+ * finished.
+ *
+ */
+void groupHandleTabBarAnimation(GroupSelection *group, int msSinceLastPaint)
+{
+	GroupTabBar *bar = group->tabBar;
+
+	if (bar->bgAnimation)
+	{
+		bar->bgAnimationTime -= msSinceLastPaint;
+
+		if (bar->bgAnimationTime <= 0) {
+			bar->bgAnimationTime = 0;
+			bar->bgAnimation = 0;
+
+			groupRenderTabBarBackground(group);
+		}
+	}
+}
+
+/*
  * groupTabChangeActivateEvent
  * 
  * Description: Creates a compiz event to let other plugins know about
@@ -2487,6 +2513,8 @@ void groupInitTabBar(GroupSelection *group, CompWindow* topTab)
 	GroupTabBar *bar = (GroupTabBar*) malloc(sizeof(GroupTabBar));
 	bar->slots = NULL;
 	bar->nSlots = 0;
+	bar->bgAnimation = AnimationNone;
+	bar->bgAnimationTime = 0;
 	bar->state = PaintOff;
 	bar->animationTime = 0;
 	bar->timeoutHandle = 0;

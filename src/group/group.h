@@ -196,6 +196,11 @@ typedef enum {
 	PaintPermanentOn
 } PaintState;
 
+typedef enum {
+	AnimationNone = 0,
+	AnimationPulse,
+	AnimationReflex
+} GroupAnimationType;
 
 typedef struct _GroupCairoLayer {
 	Pixmap			pixmap;
@@ -242,13 +247,17 @@ typedef struct _GroupTabBar {
 	GroupCairoLayer	*bgLayer;
 	GroupCairoLayer	*selectionLayer;
 
+	// for animations
+	int bgAnimationTime;
+	GroupAnimationType bgAnimation;
+
 	PaintState	state;
 	int		timeoutHandle;
 	int		animationTime;
 	Region		region;
 	int		oldWidth;
 	
-	//for DnD animations.
+	// for DnD animations.
 	int		leftSpringX, rightSpringX;
 	int		leftSpeed, rightSpeed;
 	float		leftMsSinceLastMove, rightMsSinceLastMove;
@@ -480,6 +489,7 @@ void groupHandleChanges(CompScreen* s);
 void groupHandleScreenActions(CompScreen *s);
 void groupHandleHoverDetection(GroupSelection *group);
 void groupHandleTabBarFade(GroupSelection *group, int msSinceLastPaint);
+void groupHandleTabBarAnimation(GroupSelection *group, int msSinceLastPaint);
 void groupHandleTextFade(GroupSelection *group, int msSinceLastPaint);
 void groupDrawTabAnimation(CompScreen * s, int msSinceLastPaint);
 void groupUpdateTabBars(CompScreen *s, Window enteredWin);

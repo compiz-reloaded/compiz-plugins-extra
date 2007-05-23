@@ -285,6 +285,22 @@
             <max>5.0</max>
             <precision>0.1</precision>
           </option>
+		  <option name="pulse_time" type="float">
+            <short>Time for tab bar pulse animation</short>
+            <long>Duration (in s) of the tab bar pulse animation</long>
+            <default>3.0</default>
+            <min>0.0</min>
+            <max>8.0</max>
+            <precision>0.1</precision>
+          </option>
+		  <option name="reflex_time" type="float">
+            <short>Time for tab bar reflex animation</short>
+            <long>Duration (in s) of the tab bar reflex animation</long>
+            <default>0.5</default>
+            <min>0.0</min>
+            <max>5.0</max>
+            <precision>0.1</precision>
+          </option>
           <option name="fade_text_time" type="float">
             <short>Fade time for text animations</short>
             <long>Duration (in s) of the text fading animation when showing/hiding it</long>
