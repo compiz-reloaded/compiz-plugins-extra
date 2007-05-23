@@ -358,7 +358,7 @@ void groupRenderTabBarBackground(GroupSelection *group)
 			cairo_save(cr);
 
 			// clip width rounded rectangle
-			cairo_clip(cr);
+			cairo_clip_preserve(cr);
 
 			// ==== TOP ====
 
@@ -367,12 +367,6 @@ void groupRenderTabBarBackground(GroupSelection *group)
 			x1 = width  - border_width/2.0;
 			y1 = height - border_width/2.0;
 			radius = (y1 - y0) / 2;
-
-			cairo_move_to(cr, x0, y0);
-			cairo_line_to(cr, x1, y0);
-			cairo_arc(cr, x1 - radius, y0, radius, 0.0, M_PI * 0.5);
-			cairo_arc_negative(cr, x0 + radius, y1, radius, M_PI * 1.5, M_PI);
-			cairo_close_path (cr);
 
 			// setup pattern
 			pattern = cairo_pattern_create_linear(0, 0, 0, height);
@@ -435,9 +429,11 @@ void groupRenderTabBarBackground(GroupSelection *group)
 			     groupGetTabBaseColorAlpha(group->screen)) / (2 * 65535.0f);
 			cairo_pattern_add_color_stop_rgba(pattern, 1.0f, r, g, b, a);
 
+			cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
 			cairo_set_source(cr, pattern);
 			cairo_fill(cr);
 			cairo_pattern_destroy(pattern);
+			cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
 
 			cairo_restore(cr);
 
@@ -1312,35 +1308,21 @@ groupPaintWindow(CompWindow * w,
 	{
 		float rotateAngle;
 		float timeLeft = gw->group->changeAnimationTime;
-		float animationProgress;
-		float animWidth, animHeight;
-		float animScaleX, animScaleY;
 		
 		if(gw->group->changeState == PaintFadeIn)
 			timeLeft += groupGetChangeAnimationTime(w->screen) * 500.0f;
 		
-		animationProgress = (1 - (timeLeft / (groupGetChangeAnimationTime(w->screen) * 1000.0f))); // 0 at the beginning, 1 at the end.
-		
-		rotateAngle = animationProgress * 180.0f;
-		if (IS_TOP_TAB(w, gw->group))
+		rotateAngle = timeLeft * 180.0f / (groupGetChangeAnimationTime(w->screen) * 1000.0f);
+		if (IS_PREV_TOP_TAB(w, gw->group))
 			rotateAngle += 180.0f;
 
 		if (gw->group->changeAnimationDirection < 0)
 			rotateAngle *= -1.0f;
-			
-		animWidth = (1 - animationProgress) * WIN_REAL_WIDTH(PREV_TOP_TAB(gw->group)) + animationProgress * WIN_REAL_WIDTH(TOP_TAB(gw->group));
-		animHeight = (1 - animationProgress) * WIN_REAL_HEIGHT(PREV_TOP_TAB(gw->group)) + animationProgress * WIN_REAL_HEIGHT(TOP_TAB(gw->group));
-
-		animScaleX = animWidth / WIN_REAL_WIDTH(w);
-		animScaleY = animHeight / WIN_REAL_HEIGHT(w);
 
 		matrixScale(&wTransform, 1.0f, 1.0f, 1.0f / w->screen->width);
-		matrixTranslate(&wTransform, WIN_REAL_X(w) + WIN_REAL_WIDTH(w) / 2.0f,
-		                             WIN_REAL_Y(w) + WIN_REAL_HEIGHT(w) / 2.0f, 0.0f);
+		matrixTranslate(&wTransform, WIN_X(w) + WIN_WIDTH(w)/2.0f, 0.0f, 0.0f);
 		matrixRotate(&wTransform, rotateAngle, 0.0f, 1.0f, 0.0f);
-		matrixScale(&wTransform, animScaleX, animScaleY, 1.0f);
-		matrixTranslate(&wTransform, -(WIN_REAL_X(w) + WIN_REAL_WIDTH(w) / 2.0f),
-		                             -(WIN_REAL_Y(w) + WIN_REAL_HEIGHT(w) / 2.0f), 0.0f);
+		matrixTranslate(&wTransform, -WIN_X(w) - WIN_WIDTH(w)/2.0f, 0.0f, 0.0f);
 
 		glPushMatrix();
 		glLoadMatrixf(wTransform.m);

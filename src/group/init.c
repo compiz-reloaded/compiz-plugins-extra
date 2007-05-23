@@ -207,9 +207,8 @@ Bool groupInitScreen(CompPlugin * p, CompScreen * s)
 	WRAP(gs, s, donePaintScreen, groupDonePaintScreen);
 	WRAP(gs, s, windowGrabNotify, groupWindowGrabNotify);
 	WRAP(gs, s, windowUngrabNotify, groupWindowUngrabNotify);
-	WRAP(gs, s, windowAddNotify, groupWindowAddNotify);
-	WRAP(gs, s, damageWindowRect, groupDamageWindowRect);
-	WRAP(gs, s, windowStateChangeNotify, groupWindowStateChangeNotify);
+	WRAP(gs,s,damageWindowRect,groupDamageWindowRect);
+	WRAP(gs,s,windowStateChangeNotify,groupWindowStateChangeNotify);
 
 	s->privates[gd->screenPrivateIndex].ptr = gs;
 
@@ -317,9 +316,8 @@ void groupFiniScreen(CompPlugin * p, CompScreen * s)
 	UNWRAP(gs, s, donePaintScreen);
 	UNWRAP(gs, s, windowGrabNotify);
 	UNWRAP(gs, s, windowUngrabNotify);
-	UNWRAP(gs, s, windowAddNotify);
-	UNWRAP(gs, s, damageWindowRect);
-	UNWRAP(gs, s, windowStateChangeNotify);
+	UNWRAP(gs,s,damageWindowRect);
+	UNWRAP(gs,s,windowStateChangeNotify);
 
 	finiTexture (s, &gs->glowTexture); 
 	free(gs);
