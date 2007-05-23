@@ -1360,21 +1360,35 @@ groupPaintWindow(CompWindow * w,
 	{
 		float rotateAngle;
 		float timeLeft = gw->group->changeAnimationTime;
+		float animationProgress;
+		float animWidth, animHeight;
+		float animScaleX, animScaleY;
 		
 		if(gw->group->changeState == PaintFadeIn)
 			timeLeft += groupGetChangeAnimationTime(w->screen) * 500.0f;
 		
-		rotateAngle = timeLeft * 180.0f / (groupGetChangeAnimationTime(w->screen) * 1000.0f);
-		if (IS_PREV_TOP_TAB(w, gw->group))
+		animationProgress = (1 - (timeLeft / (groupGetChangeAnimationTime(w->screen) * 1000.0f))); // 0 at the beginning, 1 at the end.
+		
+		rotateAngle = animationProgress * 180.0f;
+		if (IS_TOP_TAB(w, gw->group))
 			rotateAngle += 180.0f;
 
 		if (gw->group->changeAnimationDirection < 0)
 			rotateAngle *= -1.0f;
+			
+		animWidth = (1 - animationProgress) * WIN_REAL_WIDTH(PREV_TOP_TAB(gw->group)) + animationProgress * WIN_REAL_WIDTH(TOP_TAB(gw->group));
+		animHeight = (1 - animationProgress) * WIN_REAL_HEIGHT(PREV_TOP_TAB(gw->group)) + animationProgress * WIN_REAL_HEIGHT(TOP_TAB(gw->group));
+
+		animScaleX = animWidth / WIN_REAL_WIDTH(w);
+		animScaleY = animHeight / WIN_REAL_HEIGHT(w);
 
 		matrixScale(&wTransform, 1.0f, 1.0f, 1.0f / w->screen->width);
-		matrixTranslate(&wTransform, WIN_X(w) + WIN_WIDTH(w)/2.0f, 0.0f, 0.0f);
+		matrixTranslate(&wTransform, WIN_REAL_X(w) + WIN_REAL_WIDTH(w) / 2.0f,
+		                             WIN_REAL_Y(w) + WIN_REAL_HEIGHT(w) / 2.0f, 0.0f);
 		matrixRotate(&wTransform, rotateAngle, 0.0f, 1.0f, 0.0f);
-		matrixTranslate(&wTransform, -WIN_X(w) - WIN_WIDTH(w)/2.0f, 0.0f, 0.0f);
+		matrixScale(&wTransform, animScaleX, animScaleY, 1.0f);
+		matrixTranslate(&wTransform, -(WIN_REAL_X(w) + WIN_REAL_WIDTH(w) / 2.0f),
+		                             -(WIN_REAL_Y(w) + WIN_REAL_HEIGHT(w) / 2.0f), 0.0f);
 
 		glPushMatrix();
 		glLoadMatrixf(wTransform.m);

@@ -1612,6 +1612,24 @@ void groupWindowUngrabNotify(CompWindow * w)
 	WRAP(gs, w->screen, windowUngrabNotify, groupWindowUngrabNotify);
 }
 
+void groupWindowAddNotify(CompWindow * w)
+{
+	GROUP_SCREEN(w->screen);
+	GROUP_WINDOW(w);
+
+	if (groupGetAutotabCreate(w->screen) && 
+	    matchEval(groupGetWindowMatch(w->screen), w)) 
+	{
+		if (!gw->group && (gw->windowState == WindowNormal)) {
+			groupAddWindowToGroup(w, NULL, 0);
+			groupTabGroup(w);
+		}
+	}
+
+	UNWRAP (gs, w->screen, windowAddNotify);
+	(*w->screen->windowAddNotify) (w);
+	WRAP (gs, w->screen, windowAddNotify, groupWindowAddNotify);
+}
 
 Bool groupDamageWindowRect(CompWindow * w, Bool initial, BoxPtr rect)
 {
@@ -1619,20 +1637,12 @@ Bool groupDamageWindowRect(CompWindow * w, Bool initial, BoxPtr rect)
 	GROUP_SCREEN(w->screen);
 	Bool status;
 
-	UNWRAP(gs,w->screen,damageWindowRect);
+	UNWRAP(gs, w->screen, damageWindowRect);
 	status = (*w->screen->damageWindowRect) (w,initial,rect);
-	WRAP(gs,w->screen,damageWindowRect,groupDamageWindowRect);
+	WRAP(gs, w->screen, damageWindowRect, groupDamageWindowRect);
 
 	if (initial) {
 		GROUP_WINDOW(w);
-		if (groupGetAutotabCreate(w->screen) && 
-		    matchEval(groupGetWindowMatch(w->screen), w)) 
-		{
-			if (!gw->group && (gw->windowState == WindowNormal)) {
-				groupAddWindowToGroup(w, NULL, 0);
-				groupTabGroup(w);
-			}
-		}
 
 		if ((gw->windowState == WindowMinimized) && gw->group) {
 			if (groupGetMinimizeAll(w->screen))
