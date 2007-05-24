@@ -903,7 +903,7 @@ groupHandleButtonReleaseEvent(CompDisplay *d, XEvent *event)
 	for(group = gs->groups; group; group = group->next) {
 		Bool inTabBar;
 		
-		if (!group->tabBar)
+		if (!group->tabBar || !HAS_TOP_WIN(group))
 			continue;
 
 		// create clipping region
