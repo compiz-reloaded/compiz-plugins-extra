@@ -10,7 +10,8 @@ meta_DATA =	         \
 	mblur.xml \
 	reflex.xml \
 	splash.xml \
-	trailfocus.xml
+	trailfocus.xml \
+	showdesktop.xml
 
 EXTRA_DIST = $(meta_DATA)
 

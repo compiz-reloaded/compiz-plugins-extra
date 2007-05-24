@@ -170,4 +170,5 @@ src/mblur/Makefile
 src/reflex/Makefile
 src/splash/Makefile
 src/trailfocus/Makefile
+src/showdesktop/Makefile
 ])
