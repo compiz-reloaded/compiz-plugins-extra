@@ -209,6 +209,7 @@ typedef struct _GroupCairoLayer {
 	cairo_t			*cairo;
 
 	int texWidth, texHeight;
+	Bool boundToTexture;
 
 	PaintState		state;
 	int			animationTime;

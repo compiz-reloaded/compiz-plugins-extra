@@ -118,7 +118,6 @@ void groupPaintThumb(GroupSelection *group, GroupTabBarSlot *slot, const CompTra
 void groupRenderTopTabHighlight(GroupSelection *group)
 {
 	GroupTabBar *bar;
-	GroupCairoLayer *layer;
 	cairo_t *cr;
 
 	if (!group->tabBar || !HAS_TOP_WIN(group) || !group->tabBar->selectionLayer || !group->tabBar->selectionLayer->cairo)
@@ -130,8 +129,10 @@ void groupRenderTopTabHighlight(GroupSelection *group)
 	int height = group->topTab->region->extents.y2 - group->topTab->region->extents.y1 + 10;
 
 	bar->selectionLayer = groupRebuildCairoLayer(group->screen, bar->selectionLayer, width, height);
-	layer = bar->selectionLayer;
-	cr = layer->cairo;
+	if (!bar->selectionLayer)
+		return;
+
+	cr = bar->selectionLayer->cairo;
 	
 	// fill
 	cairo_set_line_width(cr, 2);
@@ -536,6 +537,8 @@ void groupRenderWindowTitle(GroupSelection *group)
 
 	bar->textLayer = groupRebuildCairoLayer(group->screen, bar->textLayer, width, height);
 	layer = bar->textLayer;
+	if (!layer)
+		return;
 
 	int font_size = groupGetTabbarFontSize(group->screen);
 	
@@ -656,8 +659,8 @@ void groupPaintTabBar(GroupSelection * group, const WindowPaintAttrib *wAttrib,
 				// handle the repaint of the background
 				int newWidth = bar->region->extents.x2 - bar->region->extents.x1;
 
-				if (newWidth > bar->bgLayer->texWidth)
-					newWidth = bar->bgLayer->texWidth;
+				if (layer && (newWidth > layer->texWidth))
+					newWidth = layer->texWidth;
 
 				w_scale = (double) (bar->region->extents.x2 - bar->region->extents.x1) / (double) newWidth;
 
@@ -710,7 +713,7 @@ void groupPaintTabBar(GroupSelection * group, const WindowPaintAttrib *wAttrib,
 			break;
 
 			case PAINT_TEXT:
-				if (bar->textLayer->state != PaintOff) {
+				if (bar->textLayer && (bar->textLayer->state != PaintOff)) {
 					layer = bar->textLayer;
 					
 					h_scale = 1.0f;

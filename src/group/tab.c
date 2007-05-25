@@ -200,6 +200,28 @@ groupSetWindowVisibility(CompWindow *w, Bool visible)
 	}
 }
 
+/*
+ * groupBindTabBarLayer
+ *
+ */
+static void
+groupBindTabBarLayer (CompScreen *s, GroupCairoLayer *layer, Bool bind)
+{
+	if (!layer)
+		return;
+
+	if (bind && !layer->boundToTexture)
+		layer->boundToTexture = bindPixmapToTexture(s, 
+													&layer->texture, 
+													layer->pixmap, 
+													layer->texWidth, 
+													layer->texHeight, 32);
+	else if (!bind && layer->boundToTexture)
+	{
+		releasePixmapFromTexture (s, &layer->texture);
+		layer->boundToTexture = FALSE;
+	}
+}
 
 /*
  * groupTabBarTimeout
@@ -346,6 +368,13 @@ void groupTabSetVisibility(GroupSelection *group, Bool visible, unsigned int mas
 	if (bar->state != oldState && bar->state != PaintPermanentOn) // FIXME remove that when we have a new state for PaintPermanentFadeIn
 		bar->animationTime = (groupGetFadeTime(group->screen) * 1000) - 
 			     bar->animationTime;
+
+	if (bar->state != oldState)
+	{
+		groupBindTabBarLayer (group->screen, group->tabBar->bgLayer, (bar->state != PaintOff)); 
+		groupBindTabBarLayer (group->screen, group->tabBar->textLayer, (bar->state != PaintOff)); 
+		groupBindTabBarLayer (group->screen, group->tabBar->selectionLayer, (bar->state != PaintOff)); 
+	}
 
 	groupCheckForVisibleTabBars(group->screen);
 }
@@ -520,21 +549,25 @@ void groupHandleHoverDetection(GroupSelection *group)
 
 			XDestroyRegion(clip);
 			
-			// trigger a FadeOut of the text
-			if ((bar->textLayer->state == PaintFadeIn || bar->textLayer->state == PaintOn) &&
-			    bar->hoveredSlot != bar->textSlot)
+			if (bar->textLayer)
 			{
-				bar->textLayer->animationTime = (groupGetFadeTextTime(group->screen) * 1000) -
-												bar->textLayer->animationTime;
-				bar->textLayer->state = PaintFadeOut;
-			}
+				// trigger a FadeOut of the text
+				if ((bar->hoveredSlot != bar->textSlot) &&
+			   		(bar->textLayer->state == PaintFadeIn || bar->textLayer->state == PaintOn))
+				{
+					bar->textLayer->animationTime = (groupGetFadeTextTime(group->screen) * 1000) -
+						                            bar->textLayer->animationTime;
+					bar->textLayer->state = PaintFadeOut;
+				}
 			
-			// or trigger a FadeIn of the text
-			else if (bar->textLayer->state == PaintFadeOut && bar->hoveredSlot == bar->textSlot && bar->hoveredSlot)
-			{
-				bar->textLayer->animationTime = (groupGetFadeTextTime(group->screen) * 1000) -
-												bar->textLayer->animationTime;
-				bar->textLayer->state = PaintFadeIn;
+				// or trigger a FadeIn of the text
+				else if (bar->textLayer->state == PaintFadeOut && 
+						 bar->hoveredSlot == bar->textSlot && bar->hoveredSlot)
+				{
+					bar->textLayer->animationTime = (groupGetFadeTextTime(group->screen) * 1000) -
+						                            bar->textLayer->animationTime;
+					bar->textLayer->state = PaintFadeIn;
+				}
 			}
 		}
 	}
@@ -571,6 +604,11 @@ void groupHandleTabBarFade(GroupSelection *group, int msSinceLastPaint)
 
 			else if (bar->state == PaintFadeOut) {
 				bar->state = PaintOff;
+
+				groupBindTabBarLayer (group->screen, bar->bgLayer, FALSE);
+				groupBindTabBarLayer (group->screen, bar->textLayer, FALSE); 
+				groupBindTabBarLayer (group->screen, bar->selectionLayer, FALSE);
+
 				groupCheckForVisibleTabBars(group->screen);
 		
 				if (bar->textLayer)	{
@@ -1562,27 +1600,36 @@ void groupTabGroup(CompWindow *main)
 	height = group->tabBar->region->extents.y2 - group->tabBar->region->extents.y1;
 	
 	group->tabBar->textLayer = groupCreateCairoLayer(main->screen, width, height);
-	group->tabBar->textLayer->state = PaintOff;
-	group->tabBar->textLayer->animationTime = 0;
-	groupRenderWindowTitle(group);
-	group->tabBar->textLayer->animationTime = groupGetFadeTextTime(main->screen) * 1000;
-	group->tabBar->textLayer->state = PaintFadeIn;
+	if (group->tabBar->textLayer)
+	{
+		group->tabBar->textLayer->state = PaintOff;
+		group->tabBar->textLayer->animationTime = 0;
+		groupRenderWindowTitle(group);
+		group->tabBar->textLayer->animationTime = groupGetFadeTextTime(main->screen) * 1000;
+		group->tabBar->textLayer->state = PaintFadeIn;
+	}
 	
 	// we need a buffer for DnD here
 	int space = groupGetThumbSpace(main->screen);
 	int thumb_size = groupGetThumbSize(main->screen);
 	group->tabBar->bgLayer = groupCreateCairoLayer(main->screen, width + space + thumb_size, height);
-	group->tabBar->bgLayer->state = PaintOn;
-	group->tabBar->bgLayer->animationTime = 0;
-	groupRenderTabBarBackground(group);
+	if (group->tabBar->bgLayer)
+	{
+		group->tabBar->bgLayer->state = PaintOn;
+		group->tabBar->bgLayer->animationTime = 0;
+		groupRenderTabBarBackground(group);
+	}
 
 	width = group->topTab->region->extents.x2 - group->topTab->region->extents.x1;
 	height = group->topTab->region->extents.y2 - group->topTab->region->extents.y1;
 
 	group->tabBar->selectionLayer = groupCreateCairoLayer(main->screen, width, height);
-	group->tabBar->selectionLayer->state = PaintOn;
-	group->tabBar->selectionLayer->animationTime = 0;
-	groupRenderTopTabHighlight(group);
+	if (group->tabBar->selectionLayer)
+	{
+		group->tabBar->selectionLayer->state = PaintOn;
+		group->tabBar->selectionLayer->animationTime = 0;
+		groupRenderTopTabHighlight(group);
+	}
 
 	if(!HAS_TOP_WIN(group))
 		return;
@@ -1789,6 +1836,8 @@ GroupCairoLayer* groupRebuildCairoLayer(CompScreen *s, GroupCairoLayer *layer, i
 
 	groupDestroyCairoLayer(s, layer);
 	layer = groupCreateCairoLayer(s, width, height);
+	if (!layer)
+		return NULL;
 
 	layer->animationTime = timeBuf;
 	layer->state = stateBuf;
@@ -1819,7 +1868,7 @@ void groupDestroyCairoLayer(CompScreen *s, GroupCairoLayer *layer)
 		cairo_destroy(layer->cairo);
 
 	if (layer->surface)
-		cairo_surface_destroy(layer->surface);;
+		cairo_surface_destroy(layer->surface);
 
 	if (&layer->texture)
 		finiTexture(s, &layer->texture);
@@ -1856,12 +1905,7 @@ GroupCairoLayer* groupCreateCairoLayer(CompScreen *s, int width, int height)
 	XRenderPictFormat *format;
 	format = XRenderFindStandardFormat (display, PictStandardARGB32);
 	layer->pixmap = XCreatePixmap (display, s->root, width, height, 32);
-
-	if (!bindPixmapToTexture(s, &layer->texture, layer->pixmap, width, height, 32)) {
-		XFreePixmap(display, layer->pixmap);
-		free(layer);
-		return NULL;
-	}
+	layer->boundToTexture = FALSE;
 
 	layer->surface = 
 		cairo_xlib_surface_create_with_xrender_format(display, layer->pixmap, screen, format, width, height);
@@ -2158,12 +2202,15 @@ void groupUnhookTabBarSlot(GroupTabBar *bar, GroupTabBarSlot *slot, Bool tempora
 	if (slot == bar->textSlot)
 	{
 		bar->textSlot = NULL;
-		
-		if (bar->textLayer->state == PaintFadeIn || bar->textLayer->state == PaintOn)
+	
+		if (bar->textLayer)
 		{
-			bar->textLayer->animationTime = (groupGetFadeTextTime(w->screen) * 1000) -
-											bar->textLayer->animationTime;
-			bar->textLayer->state = PaintFadeOut;
+			if (bar->textLayer->state == PaintFadeIn || bar->textLayer->state == PaintOn)
+			{
+				bar->textLayer->animationTime = (groupGetFadeTextTime(w->screen) * 1000) -
+											    bar->textLayer->animationTime;
+				bar->textLayer->state = PaintFadeOut;
+			}
 		}
 	}
 
