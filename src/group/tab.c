@@ -1870,8 +1870,7 @@ void groupDestroyCairoLayer(CompScreen *s, GroupCairoLayer *layer)
 	if (layer->surface)
 		cairo_surface_destroy(layer->surface);
 
-	if (&layer->texture)
-		finiTexture(s, &layer->texture);
+	finiTexture(s, &layer->texture);
 
 	if (layer->pixmap)
 		XFreePixmap(s->display->display, layer->pixmap);
