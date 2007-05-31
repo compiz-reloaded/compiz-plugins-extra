@@ -367,7 +367,7 @@ typedef struct _FireScreen
 	int grabIndex;
 
 	PreparePaintScreenProc preparePaintScreen;
-	PaintScreenProc paintScreen;
+	PaintOutputProc paintOutput;
 	DonePaintScreenProc donePaintScreen;
 
 } FireScreen;
@@ -641,18 +641,19 @@ firePreparePaintScreen (CompScreen * s, int time)
 }
 
 static Bool
-firePaintScreen (CompScreen * s,
+firePaintOutput (CompScreen * s,
 				 const ScreenPaintAttrib * sAttrib,
 				 const CompTransform * transform,
-				 Region region, int output, unsigned int mask)
+				 Region region, CompOutput *output, 
+				 unsigned int mask)
 {
 	Bool status;
 
 	FIRE_SCREEN (s);
 
-	UNWRAP (fs, s, paintScreen);
-	status = (*s->paintScreen) (s, sAttrib, transform, region, output, mask);
-	WRAP (fs, s, paintScreen, firePaintScreen);
+	UNWRAP (fs, s, paintOutput);
+	status = (*s->paintOutput) (s, sAttrib, transform, region, output, mask);
+	WRAP (fs, s, paintOutput, firePaintOutput);
 
 	if ((!fs->init && fs->ps.active) || fs->brightness < 1.0)
 	{
@@ -668,14 +669,14 @@ firePaintScreen (CompScreen * s,
 			glColor4f (0.0, 0.0, 0.0, 1.0 - fs->brightness);
 			glEnable (GL_BLEND);
 			glBegin (GL_QUADS);
-			glVertex2d (s->outputDev[output].region.extents.x1,
-						s->outputDev[output].region.extents.y1);
-			glVertex2d (s->outputDev[output].region.extents.x1,
-						s->outputDev[output].region.extents.y2);
-			glVertex2d (s->outputDev[output].region.extents.x2,
-						s->outputDev[output].region.extents.y2);
-			glVertex2d (s->outputDev[output].region.extents.x2,
-						s->outputDev[output].region.extents.y1);
+			glVertex2d (output->region.extents.x1,
+						output->region.extents.y1);
+			glVertex2d (output->region.extents.x1,
+						output->region.extents.y2);
+			glVertex2d (output->region.extents.x2,
+						output->region.extents.y2);
+			glVertex2d (output->region.extents.x2,
+						output->region.extents.y1);
 			glEnd ();
 			glDisable (GL_BLEND);
 			glColor4usv (defaultColor);
@@ -796,7 +797,7 @@ fireInitScreen (CompPlugin * p, CompScreen * s)
 	fs->init = TRUE;
 
 	WRAP (fs, s, preparePaintScreen, firePreparePaintScreen);
-	WRAP (fs, s, paintScreen, firePaintScreen);
+	WRAP (fs, s, paintOutput, firePaintOutput);
 	WRAP (fs, s, donePaintScreen, fireDonePaintScreen);
 
 	return TRUE;
@@ -811,7 +812,7 @@ fireFiniScreen (CompPlugin * p, CompScreen * s)
 	freeWindowPrivateIndex (s, fs->windowPrivateIndex);
 
 	UNWRAP (fs, s, preparePaintScreen);
-	UNWRAP (fs, s, paintScreen);
+	UNWRAP (fs, s, paintOutput);
 	UNWRAP (fs, s, donePaintScreen);
 
 
