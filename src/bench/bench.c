@@ -90,7 +90,7 @@ typedef struct _BenchScreen
 
 	PreparePaintScreenProc preparePaintScreen;
 	DonePaintScreenProc donePaintScreen;
-	PaintScreenProc paintScreen;
+	PaintOutputProc paintOutput;
 
 } BenchScreen;
 
@@ -172,9 +172,10 @@ static void benchDonePaintScreen(CompScreen * s)
 
 
 static Bool
-benchPaintScreen(CompScreen * s, const ScreenPaintAttrib * sa,
+benchPaintOutput(CompScreen * s, const ScreenPaintAttrib * sa,
 				 const CompTransform    *transform,
-				 Region region, int output, unsigned int mask)
+				 Region region, CompOutput *output, 
+				 unsigned int mask)
 {
 
 	Bool status, isSet;
@@ -182,9 +183,9 @@ benchPaintScreen(CompScreen * s, const ScreenPaintAttrib * sa,
 
 	BENCH_SCREEN(s);
 
-	UNWRAP(bs, s, paintScreen);
-	status = (*s->paintScreen) (s, sa, transform, region, output, mask);
-	WRAP(bs, s, paintScreen, benchPaintScreen);
+	UNWRAP(bs, s, paintOutput);
+	status = (*s->paintOutput) (s, sa, transform, region, output, mask);
+	WRAP(bs, s, paintOutput, benchPaintOutput);
 
 	if (bs->alpha <= 0.0
 		|| !benchGetOutputScreen(s->display))
@@ -353,7 +354,7 @@ static Bool benchInitScreen(CompPlugin * p, CompScreen * s)
 
 	s->privates[bd->screenPrivateIndex].ptr = bs;
 
-	WRAP(bs, s, paintScreen, benchPaintScreen);
+	WRAP(bs, s, paintOutput, benchPaintOutput);
 	WRAP(bs, s, preparePaintScreen, benchPreparePaintScreen);
 	WRAP(bs, s, donePaintScreen, benchDonePaintScreen);
 
@@ -459,7 +460,7 @@ static void benchFiniScreen(CompPlugin * p, CompScreen * s)
 	glDeleteTextures(1, &bs->backTex);
 
 	//Restore the original function
-	UNWRAP(bs, s, paintScreen);
+	UNWRAP(bs, s, paintOutput);
 	UNWRAP(bs, s, preparePaintScreen);
 	UNWRAP(bs, s, donePaintScreen);
 

@@ -201,29 +201,6 @@ groupSetWindowVisibility(CompWindow *w, Bool visible)
 }
 
 /*
- * groupBindTabBarLayer
- *
- */
-static void
-groupBindTabBarLayer (CompScreen *s, GroupCairoLayer *layer, Bool bind)
-{
-	if (!layer)
-		return;
-
-	if (bind && !layer->boundToTexture)
-		layer->boundToTexture = bindPixmapToTexture(s, 
-													&layer->texture, 
-													layer->pixmap, 
-													layer->texWidth, 
-													layer->texHeight, 32);
-	else if (!bind && layer->boundToTexture)
-	{
-		releasePixmapFromTexture (s, &layer->texture);
-		layer->boundToTexture = FALSE;
-	}
-}
-
-/*
  * groupTabBarTimeout
  *
  * Description:
@@ -368,13 +345,6 @@ void groupTabSetVisibility(GroupSelection *group, Bool visible, unsigned int mas
 	if (bar->state != oldState && bar->state != PaintPermanentOn) // FIXME remove that when we have a new state for PaintPermanentFadeIn
 		bar->animationTime = (groupGetFadeTime(group->screen) * 1000) - 
 			     bar->animationTime;
-
-	if (bar->state != oldState)
-	{
-		groupBindTabBarLayer (group->screen, group->tabBar->bgLayer, (bar->state != PaintOff)); 
-		groupBindTabBarLayer (group->screen, group->tabBar->textLayer, (bar->state != PaintOff)); 
-		groupBindTabBarLayer (group->screen, group->tabBar->selectionLayer, (bar->state != PaintOff)); 
-	}
 
 	groupCheckForVisibleTabBars(group->screen);
 }
@@ -604,10 +574,6 @@ void groupHandleTabBarFade(GroupSelection *group, int msSinceLastPaint)
 
 			else if (bar->state == PaintFadeOut) {
 				bar->state = PaintOff;
-
-				groupBindTabBarLayer (group->screen, bar->bgLayer, FALSE);
-				groupBindTabBarLayer (group->screen, bar->textLayer, FALSE); 
-				groupBindTabBarLayer (group->screen, bar->selectionLayer, FALSE);
 
 				groupCheckForVisibleTabBars(group->screen);
 		
@@ -1904,7 +1870,18 @@ GroupCairoLayer* groupCreateCairoLayer(CompScreen *s, int width, int height)
 	XRenderPictFormat *format;
 	format = XRenderFindStandardFormat (display, PictStandardARGB32);
 	layer->pixmap = XCreatePixmap (display, s->root, width, height, 32);
-	layer->boundToTexture = FALSE;
+	if (!layer->pixmap) {
+		free (layer);
+		return NULL;
+	}
+
+	if (!bindPixmapToTexture(s, &layer->texture, layer->pixmap, 
+							 width, height, 32))
+	{
+		XFreePixmap (display, layer->pixmap);
+		free (layer);
+		return NULL;
+	}
 
 	layer->surface = 
 		cairo_xlib_surface_create_with_xrender_format(display, layer->pixmap, screen, format, width, height);
