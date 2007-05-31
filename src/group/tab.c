@@ -262,7 +262,7 @@ groupShowDelayTimeout(void *data)
  *
  * Description:
  * This function is used to update the gs->tabBarVisible
- * attribute which is used in groupPaintScreen to do add
+ * attribute which is used in groupPaintOutput to do add
  * a PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_MAS mask to the
  * screen mask. It checks if there are any tab bar's with
  * a PaintState which is no PaintOff on the given screen.

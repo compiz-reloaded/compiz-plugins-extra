@@ -820,7 +820,7 @@ void groupPaintTabBar(GroupSelection * group, const WindowPaintAttrib *wAttrib,
 static void
 groupPaintSelectionOutline (CompScreen *s, const ScreenPaintAttrib *sa, 
 			    const CompTransform *transform,
-			    int output, Bool transformed)
+			    CompOutput *output, Bool transformed)
 {
 	GROUP_SCREEN(s);
 
@@ -911,14 +911,15 @@ void groupPreparePaintScreen(CompScreen * s, int msSinceLastPaint)
 }
 
 /*
- * groupPaintScreen
+ * groupPaintOutput
  *
  */
 Bool
-groupPaintScreen(CompScreen * s,
+groupPaintOutput(CompScreen * s,
 		 const ScreenPaintAttrib * sAttrib,
 		 const CompTransform *transform,
-		 Region region, int output, unsigned int mask)
+		 Region region, CompOutput *output,
+		 unsigned int mask)
 {
 	GROUP_SCREEN(s);
 	GroupSelection *group;
@@ -937,9 +938,9 @@ groupPaintScreen(CompScreen * s,
 	if (gs->tabBarVisible) 
 			mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_MASK;
 
-	UNWRAP(gs, s, paintScreen);
-	status = (*s->paintScreen) (s, sAttrib, transform, region, output, mask);
-	WRAP(gs, s, paintScreen, groupPaintScreen);
+	UNWRAP(gs, s, paintOutput);
+	status = (*s->paintOutput) (s, sAttrib, transform, region, output, mask);
+	WRAP(gs, s, paintOutput, groupPaintOutput);
 
 	gs->isRotating = FALSE;
 	
@@ -970,22 +971,23 @@ groupPaintScreen(CompScreen * s,
 }
 
 /*
- * groupaintTransformedScreen
+ * groupaintTransformedOutput
  *
  */
 void
-groupPaintTransformedScreen(CompScreen * s, const ScreenPaintAttrib * sa,
+groupPaintTransformedOutput(CompScreen * s, const ScreenPaintAttrib * sa,
 			    const CompTransform *transform,
-			    Region region, int output, unsigned int mask)
+			    Region region, CompOutput *output, 
+			    unsigned int mask)
 {
 	GROUP_SCREEN(s);
 
 	gs->isRotating = ((fmod(sa->xRotate, 90.0) != 0.0) || (fmod(sa->yRotate, 90.0) != 0.0) || 
 			(fmod(sa->vRotate, 90.0) != 0.0));
 
-	UNWRAP(gs, s, paintTransformedScreen);
-	(*s->paintTransformedScreen) (s, sa, transform, region, output, mask);
-	WRAP(gs, s, paintTransformedScreen, groupPaintTransformedScreen);
+	UNWRAP(gs, s, paintTransformedOutput);
+	(*s->paintTransformedOutput) (s, sa, transform, region, output, mask);
+	WRAP(gs, s, paintTransformedOutput, groupPaintTransformedOutput);
 	
 	if ((gs->vpX == s->x) && (gs->vpY == s->y)) {
 		gs->painted = TRUE;

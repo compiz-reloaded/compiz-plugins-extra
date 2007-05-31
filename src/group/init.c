@@ -200,10 +200,10 @@ Bool groupInitScreen(CompPlugin * p, CompScreen * s)
 	WRAP(gs, s, windowResizeNotify, groupWindowResizeNotify);
 	WRAP(gs, s, getOutputExtentsForWindow, groupGetOutputExtentsForWindow);
 	WRAP(gs, s, preparePaintScreen, groupPreparePaintScreen);
-	WRAP(gs, s, paintScreen, groupPaintScreen);
+	WRAP(gs, s, paintOutput, groupPaintOutput);
 	WRAP(gs, s, drawWindow, groupDrawWindow);
 	WRAP(gs, s, paintWindow, groupPaintWindow);
-	WRAP(gs, s, paintTransformedScreen, groupPaintTransformedScreen);
+	WRAP(gs, s, paintTransformedOutput, groupPaintTransformedOutput);
 	WRAP(gs, s, donePaintScreen, groupDonePaintScreen);
 	WRAP(gs, s, windowGrabNotify, groupWindowGrabNotify);
 	WRAP(gs, s, windowUngrabNotify, groupWindowUngrabNotify);
@@ -309,10 +309,10 @@ void groupFiniScreen(CompPlugin * p, CompScreen * s)
 	UNWRAP(gs, s, windowResizeNotify);
 	UNWRAP(gs, s, getOutputExtentsForWindow);
 	UNWRAP(gs, s, preparePaintScreen);
-	UNWRAP(gs, s, paintScreen);
+	UNWRAP(gs, s, paintOutput);
 	UNWRAP(gs, s, drawWindow);
 	UNWRAP(gs, s, paintWindow);
-	UNWRAP(gs, s, paintTransformedScreen);
+	UNWRAP(gs, s, paintTransformedOutput);
 	UNWRAP(gs, s, donePaintScreen);
 	UNWRAP(gs, s, windowGrabNotify);
 	UNWRAP(gs, s, windowUngrabNotify);
