@@ -61,7 +61,7 @@ typedef struct _SplashScreen
 {
 	PreparePaintScreenProc preparePaintScreen;
 	DonePaintScreenProc donePaintScreen;
-	PaintScreenProc paintScreen;
+	PaintOutputProc paintOutput;
 	PaintWindowProc paintWindow;
 
 	int fade_in;
@@ -242,9 +242,10 @@ splashGetCurrentOutputRect (CompScreen * s, XRectangle * outputRect)
 
 
 static Bool
-splashPaintScreen (CompScreen * s, const ScreenPaintAttrib * sa,
+splashPaintOutput (CompScreen * s, const ScreenPaintAttrib * sa,
 				   const CompTransform * transform,
-				   Region region, int output, unsigned int mask)
+				   Region region, CompOutput *output, 
+				   unsigned int mask)
 {
 
 	SPLASH_SCREEN (s);
@@ -264,9 +265,9 @@ splashPaintScreen (CompScreen * s, const ScreenPaintAttrib * sa,
 			((1.0 - (splashGetBrightness (d) / 100.0)) * alpha);
 	}
 
-	UNWRAP (ss, s, paintScreen);
-	status = (*s->paintScreen) (s, sa, transform, region, output, mask);
-	WRAP (ss, s, paintScreen, splashPaintScreen);
+	UNWRAP (ss, s, paintOutput);
+	status = (*s->paintOutput) (s, sa, transform, region, output, mask);
+	WRAP (ss, s, paintOutput, splashPaintOutput);
 
 	if (!ss->active)
 		return status;
@@ -475,7 +476,7 @@ splashInitScreen (CompPlugin * p, CompScreen * s)
 
 	s->privates[sd->screenPrivateIndex].ptr = ss;
 
-	WRAP (ss, s, paintScreen, splashPaintScreen);
+	WRAP (ss, s, paintOutput, splashPaintOutput);
 	WRAP (ss, s, preparePaintScreen, splashPreparePaintScreen);
 	WRAP (ss, s, donePaintScreen, splashDonePaintScreen);
 	WRAP (ss, s, paintWindow, splashPaintWindow);
@@ -522,7 +523,7 @@ splashFiniScreen (CompPlugin * p, CompScreen * s)
 	SPLASH_SCREEN (s);
 
 	//Restore the original function
-	UNWRAP (ss, s, paintScreen);
+	UNWRAP (ss, s, paintOutput);
 	UNWRAP (ss, s, preparePaintScreen);
 	UNWRAP (ss, s, donePaintScreen);
 	UNWRAP (ss, s, paintWindow);
