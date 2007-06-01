@@ -56,7 +56,7 @@ typedef struct _MblurScreen
 	// functions that we will intercept
 	PreparePaintScreenProc preparePaintScreen;
 	PaintScreenProc paintScreen;
-	PaintTransformedScreenProc paintTransformedScreen;
+	PaintTransformedOutputProc paintTransformedOutput;
 
 	Bool active;
 	Bool update;				// is an update of the motion blut texture needed
@@ -127,13 +127,10 @@ mblurPreparePaintScreen (CompScreen * s, int msec)
 }
 
 
-static Bool
-mblurPaintScreen (CompScreen * s, const ScreenPaintAttrib * sa,
-				  const CompTransform * transform,
-				  Region region, int output, unsigned int mask)
+static void
+mblurPaintScreen (CompScreen * s, CompOutput *outputs,
+				  int numOutput, unsigned int mask)
 {
-
-	Bool status;
 
 	MBLUR_SCREEN (s);
 
@@ -142,7 +139,7 @@ mblurPaintScreen (CompScreen * s, const ScreenPaintAttrib * sa,
 
 
 	UNWRAP (ms, s, paintScreen);
-	status = (*s->paintScreen) (s, sa, transform, region, output, mask);
+	(*s->paintScreen) (s, outputs, numOutput, mask);
 	WRAP (ms, s, paintScreen, mblurPaintScreen);
 
 	Bool enable_scissor = FALSE;
@@ -153,8 +150,7 @@ mblurPaintScreen (CompScreen * s, const ScreenPaintAttrib * sa,
 		enable_scissor = TRUE;
 	}
 
-	if (ms->active && mblurGetMode (s) == ModeTextureCopy
-		&& output + 1 == s->nOutputDev)
+	if (ms->active && mblurGetMode (s) == ModeTextureCopy)
 	{
 
 		float tx, ty;
@@ -249,8 +245,7 @@ mblurPaintScreen (CompScreen * s, const ScreenPaintAttrib * sa,
 		damageScreen (s);
 	}
 
-	if (ms->active && mblurGetMode (s) == ModeAccumulationBuffer
-		&& output + 1 == s->nOutputDev)
+	if (ms->active && mblurGetMode (s) == ModeAccumulationBuffer)
 	{
 
 		// create motion blur effect using accumulation buffer
@@ -274,13 +269,13 @@ mblurPaintScreen (CompScreen * s, const ScreenPaintAttrib * sa,
 	if (enable_scissor)
 		glEnable (GL_SCISSOR_TEST);
 
-	return status;
 }
 
 static void
-mblurPaintTransformedScreen (CompScreen * s, const ScreenPaintAttrib * sa,
+mblurPaintTransformedOutput (CompScreen * s, const ScreenPaintAttrib * sa,
 							 const CompTransform * transform,
-							 Region region, int output, unsigned int mask)
+							 Region region, CompOutput *output,
+							 unsigned int mask)
 {
 
 	MBLUR_SCREEN (s);
@@ -292,9 +287,9 @@ mblurPaintTransformedScreen (CompScreen * s, const ScreenPaintAttrib * sa,
 		ms->timer = 500;
 	}
 
-	UNWRAP (ms, s, paintTransformedScreen);
-	(*s->paintTransformedScreen) (s, sa, transform, region, output, mask);
-	WRAP (ms, s, paintTransformedScreen, mblurPaintTransformedScreen);
+	UNWRAP (ms, s, paintTransformedOutput);
+	(*s->paintTransformedOutput) (s, sa, transform, region, output, mask);
+	WRAP (ms, s, paintTransformedOutput, mblurPaintTransformedOutput);
 }
 
 static Bool
@@ -363,7 +358,7 @@ mblurInitScreen (CompPlugin * p, CompScreen * s)
 	//Take over the window draw function
 	WRAP (ms, s, paintScreen, mblurPaintScreen);
 	WRAP (ms, s, preparePaintScreen, mblurPreparePaintScreen);
-	WRAP (ms, s, paintTransformedScreen, mblurPaintTransformedScreen);
+	WRAP (ms, s, paintTransformedOutput, mblurPaintTransformedOutput);
 
 	damageScreen (s);
 
@@ -381,7 +376,7 @@ mblurFiniScreen (CompPlugin * p, CompScreen * s)
 	// restore the original function
 	UNWRAP (ms, s, paintScreen);
 	UNWRAP (ms, s, preparePaintScreen);
-	UNWRAP (ms, s, paintTransformedScreen);
+	UNWRAP (ms, s, paintTransformedOutput);
 
 	// free the screen pointer
 	free (ms);
