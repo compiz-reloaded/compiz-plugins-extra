@@ -78,7 +78,7 @@ typedef struct _ShowdesktopScreen
 	int windowPrivateIndex;
 
 	PreparePaintScreenProc preparePaintScreen;
-	PaintScreenProc paintScreen;
+	PaintOutputProc paintOutput;
 	DonePaintScreenProc donePaintScreen;
 	PaintWindowProc paintWindow;
 	EnterShowDesktopModeProc enterShowDesktopMode;
@@ -414,10 +414,11 @@ showdesktopPreparePaintScreen(CompScreen * s, int msSinceLastPaint)
 }
 
 static Bool
-showdesktopPaintScreen(CompScreen * s, 
+showdesktopPaintOutput(CompScreen * s, 
 					   const ScreenPaintAttrib * sAttrib,
 			   		   const CompTransform  *transform, 
-					   Region region,  int output, unsigned int mask)
+					   Region region,  CompOutput *output, 
+					   unsigned int mask)
 {
 	Bool status;
 
@@ -426,9 +427,9 @@ showdesktopPaintScreen(CompScreen * s,
 	if ((ss->state == SD_STATE_ACTIVATING) || (ss->state == SD_STATE_DEACTIVATING))
 		mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_MASK;
 
-	UNWRAP(ss, s, paintScreen);
-	status = (*s->paintScreen) (s, sAttrib, transform, region, output, mask);
-	WRAP(ss, s, paintScreen, showdesktopPaintScreen);
+	UNWRAP(ss, s, paintOutput);
+	status = (*s->paintOutput) (s, sAttrib, transform, region, output, mask);
+	WRAP(ss, s, paintOutput, showdesktopPaintOutput);
 
 	return status;
 }
@@ -725,7 +726,7 @@ static Bool showdesktopInitScreen(CompPlugin * p, CompScreen * s)
 	ss->ignoreNextTerminateEvent = FALSE;
 
 	WRAP(ss, s, preparePaintScreen, showdesktopPreparePaintScreen);
-	WRAP(ss, s, paintScreen, showdesktopPaintScreen);
+	WRAP(ss, s, paintOutput, showdesktopPaintOutput);
 	WRAP(ss, s, donePaintScreen, showdesktopDonePaintScreen);
 	WRAP(ss, s, paintWindow, showdesktopPaintWindow);
 	WRAP(ss, s, enterShowDesktopMode, showdesktopEnterShowDesktopMode);
@@ -743,7 +744,7 @@ static void showdesktopFiniScreen(CompPlugin * p, CompScreen * s)
 	SD_SCREEN(s);
 
 	UNWRAP(ss, s, preparePaintScreen);
-	UNWRAP(ss, s, paintScreen);
+	UNWRAP(ss, s, paintOutput);
 	UNWRAP(ss, s, donePaintScreen);
 	UNWRAP(ss, s, paintWindow);
 	UNWRAP(ss, s, enterShowDesktopMode);
