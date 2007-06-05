@@ -354,8 +354,6 @@ typedef struct _FireDisplay
 
 typedef struct _FireScreen
 {
-	int windowPrivateIndex;
-
 	ParticleSystem ps;
 	Bool init;
 
@@ -809,13 +807,16 @@ fireFiniScreen (CompPlugin * p, CompScreen * s)
 {
 	FIRE_SCREEN (s);
 
-	freeWindowPrivateIndex (s, fs->windowPrivateIndex);
-
 	UNWRAP (fs, s, preparePaintScreen);
 	UNWRAP (fs, s, paintOutput);
 	UNWRAP (fs, s, donePaintScreen);
 
+	if (!fs->init)
+		finiParticles (&fs->ps);
 
+	if (fs->points)
+		free(fs->points);
+	
 	free (fs);
 }
 
