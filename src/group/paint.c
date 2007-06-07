@@ -795,7 +795,7 @@ void groupPaintTabBar(GroupSelection * group, const WindowPaintAttrib *wAttrib,
 
 				initFragmentAttrib(&fragment, &attrib);
 
-				screnTexEnvMode (s, GL_MODULATE);
+				screenTexEnvMode (s, GL_MODULATE);
 
 				alpha = alpha * wAttrib->opacity / 0xffff;
 				glColor4us(alpha, alpha, alpha, alpha);
