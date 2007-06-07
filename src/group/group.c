@@ -538,6 +538,7 @@ groupAddWindowToGroup(CompWindow * w, GroupSelection *group, long int initialIde
 		g->grabMask = 0;
 		
 		g->inputPrevention = None;
+		g->ipwMapped = FALSE;
 
 		g->oldTopTabCenterX = 0;
 		g->oldTopTabCenterY = 0;
@@ -1004,7 +1005,12 @@ groupHandleButtonReleaseEvent(CompDisplay *d, XEvent *event)
 			// Hide tab-bars.
 			GroupSelection *tmpGroup;
 			for(tmpGroup = gs->groups; tmpGroup; tmpGroup = tmpGroup->next)
-				groupTabSetVisibility(tmpGroup, FALSE, PERMANENT);
+			{
+				if (group == tmpGroup)
+					groupTabSetVisibility (tmpGroup, TRUE, 0);
+				else
+					groupTabSetVisibility(tmpGroup, FALSE, PERMANENT);
+			}
 			
 			break;
 		}

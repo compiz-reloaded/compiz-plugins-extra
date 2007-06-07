@@ -327,6 +327,12 @@ void groupTabSetVisibility(GroupSelection *group, Bool visible, unsigned int mas
 		groupSwitchTopTabInput(group, FALSE);
 	
 	}
+
+	else if (visible && bar->state == PaintPermanentOn &&
+		 !(mask & PERMANENT))
+	{
+		bar->state = PaintOn;
+	}
 	
 	else if (visible && 
 		(bar->state == PaintOff || bar->state == PaintFadeOut))
@@ -1232,7 +1238,14 @@ void groupUpdateTabBars(CompScreen *s, Window enteredWin)
 		for (group = gs->groups; group; group = group->next)
 		{
 			if (group->inputPrevention == enteredWin)
-				hoveredGroup = group;
+			{
+				/* only accept it if the IPW is mapped */
+				if (group->ipwMapped)
+				{
+					hoveredGroup = group;
+					break;
+				}
+			}
 		}
 	}
 
@@ -1249,19 +1262,16 @@ void groupUpdateTabBars(CompScreen *s, Window enteredWin)
 		if (bar && ((bar->state == PaintOff) || (bar->state == PaintFadeOut))) {			
 			int showDelayTime = groupGetTabbarShowDelay(s) * 1000;
 	
-			if (bar->state == PaintOff)
+			/* Show the tab-bar after a delay, only if the tab-bar wasn't fading out. */
+			if (showDelayTime > 0 && (bar->state == PaintOff))
 			{
-				/* Show the tab-bar after a delay, only if the tab-bar wasn't fading out. */
-				if (showDelayTime > 0)
-				{
-					if (gs->showDelayTimeoutHandle)
-						compRemoveTimeout (gs->showDelayTimeoutHandle);
-					gs->showDelayTimeoutHandle = 
-						compAddTimeout(showDelayTime, groupShowDelayTimeout, hoveredGroup);
-				}
-				else
-					groupShowDelayTimeout(hoveredGroup);
+				if (gs->showDelayTimeoutHandle)
+					compRemoveTimeout (gs->showDelayTimeoutHandle);
+				gs->showDelayTimeoutHandle = 
+					compAddTimeout(showDelayTime, groupShowDelayTimeout, hoveredGroup);
 			}
+			else
+				groupShowDelayTimeout(hoveredGroup);
 		}
 	}
 
@@ -2718,6 +2728,8 @@ groupSwitchTopTabInput(GroupSelection *group, Bool enable)
 		XMapWindow(group->screen->display->display, group->inputPrevention);
 	else 
 		XUnmapWindow(group->screen->display->display, group->inputPrevention);
+
+	group->ipwMapped = !enable;
 }
 
 /*
@@ -2764,6 +2776,7 @@ void groupCreateInputPreventionWindow(GroupSelection* group)
 		group->inputPrevention = XCreateWindow(group->screen->display->display, 
 				group->screen->root, -100, -100, 1, 1, 0, CopyFromParent,  
 				InputOnly, CopyFromParent, CWOverrideRedirect, &attrib); 
+		group->ipwMapped = FALSE;
 	} 
 }
 
@@ -2778,6 +2791,7 @@ void groupDestroyInputPreventionWindow(GroupSelection* group)
 		XDestroyWindow(group->screen->display->display, group->inputPrevention); 
 
 		group->inputPrevention = None; 
+		group->ipwMapped = TRUE;
 	}
 } 
 

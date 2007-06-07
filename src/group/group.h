@@ -326,6 +326,7 @@ struct _GroupSelection {
 	int oldTopTabCenterY;
 
 	Window inputPrevention;
+	Bool ipwMapped;
 
 	GLushort color[4];
 };
