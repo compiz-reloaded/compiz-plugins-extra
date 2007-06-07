@@ -484,7 +484,7 @@ void groupHandleHoverDetection(GroupSelection *group)
 
 	CompWindow *topTab = TOP_TAB(group);
 
-	if (bar->state != PaintOff) {	// Tab-bar is visible.
+	if (bar->state != PaintOff && group->grabMask == 0) {	// Tab-bar is visible.
 		int mouseX, mouseY;
 		Bool mouseOnScreen;
 		
