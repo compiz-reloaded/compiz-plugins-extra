@@ -484,7 +484,7 @@ void groupHandleHoverDetection(GroupSelection *group)
 
 	CompWindow *topTab = TOP_TAB(group);
 
-	if (bar->state != PaintOff && group->grabMask == 0) {	// Tab-bar is visible.
+	if (bar->state != PaintOff) {	// Tab-bar is visible.
 		int mouseX, mouseY;
 		Bool mouseOnScreen;
 		
@@ -1248,12 +1248,20 @@ void groupUpdateTabBars(CompScreen *s, Window enteredWin)
 
 		if (bar && ((bar->state == PaintOff) || (bar->state == PaintFadeOut))) {			
 			int showDelayTime = groupGetTabbarShowDelay(s) * 1000;
-			
-			if (showDelayTime > 0 && bar->state == PaintOff)	// Show the tab-bar after a delay, only if the tab-bar wasn't fading out.
-				gs->showDelayTimeoutHandle = 
-					compAddTimeout(showDelayTime, groupShowDelayTimeout, hoveredGroup);
-			else
-				groupShowDelayTimeout(hoveredGroup);
+	
+			if (bar->state == PaintOff)
+			{
+				/* Show the tab-bar after a delay, only if the tab-bar wasn't fading out. */
+				if (showDelayTime > 0)
+				{
+					if (gs->showDelayTimeoutHandle)
+						compRemoveTimeout (gs->showDelayTimeoutHandle);
+					gs->showDelayTimeoutHandle = 
+						compAddTimeout(showDelayTime, groupShowDelayTimeout, hoveredGroup);
+				}
+				else
+					groupShowDelayTimeout(hoveredGroup);
+			}
 		}
 	}
 
