@@ -193,6 +193,8 @@ void groupRenderTabBarBackground(GroupSelection *group)
 	int border_width = groupGetBorderWidth(group->screen);
 	cairo_set_line_width(cr, border_width);
 
+	cairo_save(cr);
+
 	double x0, y0, x1, y1;
 	x0 = border_width/2.0;
 	y0 = border_width/2.0;
@@ -463,7 +465,10 @@ void groupRenderTabBarBackground(GroupSelection *group)
 	b = groupGetTabBorderColorBlue(group->screen) / 65535.0f;
 	a = groupGetTabBorderColorAlpha(group->screen) / 65535.0f;
 	cairo_set_source_rgba(cr, r, g, b, a);
-	cairo_stroke_preserve(cr);
+	if (bar->bgAnimation != AnimationNone)
+		cairo_stroke_preserve(cr);
+	else
+		cairo_stroke(cr);
 
 	switch (bar->bgAnimation)
 	{
@@ -515,6 +520,8 @@ void groupRenderTabBarBackground(GroupSelection *group)
 		default:
 			break;
 	}
+
+	cairo_restore(cr);
 }
 
 /*
