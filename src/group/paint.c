@@ -610,10 +610,6 @@ void groupPaintTabBar(GroupSelection * group, const WindowPaintAttrib *wAttrib,
 
 	GROUP_SCREEN(s);
 
-	/* we do not want to paint the tab bar if we currently rotate the screen */
-	if (gs->isRotating)
-		return;
-	
 	int i;
 	int alpha;
 	float w_scale;
@@ -942,8 +938,6 @@ groupPaintOutput(CompScreen * s,
 	status = (*s->paintOutput) (s, sAttrib, transform, region, output, mask);
 	WRAP(gs, s, paintOutput, groupPaintOutput);
 
-	gs->isRotating = FALSE;
-	
 	if (status && !gs->painted) {
 		if ((gs->grabState == ScreenGrabTabDrag) && gs->draggedSlot) {
 			GROUP_WINDOW(gs->draggedSlot->window);
@@ -981,9 +975,6 @@ groupPaintTransformedOutput(CompScreen * s, const ScreenPaintAttrib * sa,
 			    unsigned int mask)
 {
 	GROUP_SCREEN(s);
-
-	gs->isRotating = ((fmod(sa->xRotate, 90.0) != 0.0) || (fmod(sa->yRotate, 90.0) != 0.0) || 
-			(fmod(sa->vRotate, 90.0) != 0.0));
 
 	UNWRAP(gs, s, paintTransformedOutput);
 	(*s->paintTransformedOutput) (s, sa, transform, region, output, mask);

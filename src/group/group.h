@@ -393,7 +393,6 @@ typedef struct _GroupScreen {
 	// for selection
 	Bool painted;
 	int vpX, vpY;
-	Bool isRotating;
 	int x1;
 	int y1;
 	int x2;

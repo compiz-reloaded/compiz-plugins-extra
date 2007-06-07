@@ -246,8 +246,6 @@ Bool groupInitScreen(CompPlugin * p, CompScreen * s)
 
 	gs->screenActions = (CHECK_WINDOW_PROPERTIES | APPLY_AUTO_TABBING);
 
-	gs->isRotating = FALSE;
-
 	initTexture (s, &gs->glowTexture);
 
 	GroupGlowTypeEnum glowType = groupGetGlowType(s);
