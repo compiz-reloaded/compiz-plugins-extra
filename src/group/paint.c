@@ -795,8 +795,9 @@ void groupPaintTabBar(GroupSelection * group, const WindowPaintAttrib *wAttrib,
 
 				initFragmentAttrib(&fragment, &attrib);
 
+				screnTexEnvMode (s, GL_MODULATE);
+
 				alpha = alpha * wAttrib->opacity / 0xffff;
-				glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 				glColor4us(alpha, alpha, alpha, alpha);
 
 				(*group->screen->drawWindowTexture) (topTab, &layer->texture, 
@@ -1268,7 +1269,7 @@ groupDrawWindow(CompWindow * w,
 				fAttrib.saturation = COLOR;
 				fAttrib.brightness = BRIGHT;
 
-				glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+				screenTexEnvMode (w->screen, GL_MODULATE);
 				//glBlendFunc(GL_SRC_ALPHA, GL_ONE); - maybe add an option for that...
 				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 				glColor4us(color[0], color[1], color[2],
