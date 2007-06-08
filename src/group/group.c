@@ -1655,7 +1655,25 @@ Bool groupDamageWindowRect(CompWindow * w, Bool initial, BoxPtr rect)
 	}
 
 	if (gw->slot)
-		damageScreenRegion (w->screen, gw->slot->region);
+	{
+		int vx, vy;
+		Region reg;
+
+		groupGetDrawOffsetForSlot (gw->slot, &vx, &vy);
+		if (vx || vy)
+		{
+			reg = XCreateRegion ();
+			XUnionRegion (reg, gw->slot->region, reg);
+			XOffsetRegion (reg, vx, vy);
+		}
+		else
+			reg = gw->slot->region;
+
+		damageScreenRegion (w->screen, reg);
+
+		if (vx || vy)
+			XDestroyRegion (reg);
+	}
 
 	return status;
 
