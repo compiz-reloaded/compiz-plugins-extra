@@ -372,6 +372,7 @@ groupGetDrawOffsetForSlot(GroupTabBarSlot *slot, int *hoffset, int *voffset)
 		return;
 
 	CompWindow *w = slot->window;
+	CompWindow *topTab;
 
 	GROUP_WINDOW(w);
 	GROUP_SCREEN(w->screen);
@@ -389,9 +390,22 @@ groupGetDrawOffsetForSlot(GroupTabBarSlot *slot, int *hoffset, int *voffset)
 	int oldX = w->serverX;
 	int oldY = w->serverY;
 	
+	if (HAS_TOP_WIN(gw->group))
+		topTab = TOP_TAB(gw->group);
+	else if (HAS_PREV_TOP_WIN(gw->group))
+		topTab = PREV_TOP_TAB(gw->group);
+	else
+	{
+		if (hoffset)
+			*hoffset = 0;
+		if (voffset)
+			*voffset = 0;
+		return;
+	}
+
 	if (gw->group) {
-		w->serverX = WIN_X(TOP_TAB(gw->group)) + WIN_WIDTH(TOP_TAB(gw->group)) / 2 - WIN_WIDTH(w) / 2;
-		w->serverY = WIN_Y(TOP_TAB(gw->group)) + WIN_HEIGHT(TOP_TAB(gw->group)) / 2 - WIN_HEIGHT(w) / 2;
+		w->serverX = WIN_X(topTab) + WIN_WIDTH(topTab) / 2 - WIN_WIDTH(w) / 2;
+		w->serverY = WIN_Y(topTab) + WIN_HEIGHT(topTab) / 2 - WIN_HEIGHT(w) / 2;
 	}
 
 	defaultViewportForWindow(w, &vx, &vy);
