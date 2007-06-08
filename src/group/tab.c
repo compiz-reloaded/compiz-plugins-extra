@@ -249,7 +249,6 @@ groupShowDelayTimeout(void *data)
 
 	groupRecalcTabBarPos(group, mouseX, WIN_REAL_X(topTab), 
 		WIN_REAL_X(topTab) + WIN_REAL_WIDTH(topTab));
-	addWindowDamage(topTab);
 
 	groupTabSetVisibility(group, TRUE, 0);
 	
@@ -351,6 +350,9 @@ void groupTabSetVisibility(GroupSelection *group, Bool visible, unsigned int mas
 	if (bar->state != oldState && bar->state != PaintPermanentOn) // FIXME remove that when we have a new state for PaintPermanentFadeIn
 		bar->animationTime = (groupGetFadeTime(group->screen) * 1000) - 
 			     bar->animationTime;
+
+	if (bar->state != oldState)
+		groupDamageTabBarRegion (group);
 
 	groupCheckForVisibleTabBars(group->screen);
 }
@@ -1965,11 +1967,7 @@ void groupRecalcTabBarPos(GroupSelection *group, int middleX, int minX1, int max
 	Bool isDraggedSlotGroup = FALSE;
 	GROUP_SCREEN(group->screen);
 
-	/* first damage the old region to make sure it is updated */
-	damageScreenRegion (group->screen, bar->region);
-
 	int space = groupGetThumbSpace(group->screen);
-	int old_width = bar->region->extents.x2 - bar->region->extents.x1; 
 	int bar_width;
 	int currentSlot;
 	XRectangle box;
@@ -2021,8 +2019,7 @@ void groupRecalcTabBarPos(GroupSelection *group, int middleX, int minX1, int max
 	box.width = bar_width;
 	box.height = space * 2 + tabs_height;
 
-	EMPTY_REGION(bar->region);
-	XUnionRectWithRegion(&box, bar->region, bar->region);
+	groupResizeTabBarRegion (group, &box, TRUE);
 	
 	// recalc every slot region
 	currentSlot = 0;
@@ -2050,14 +2047,106 @@ void groupRecalcTabBarPos(GroupSelection *group, int middleX, int minX1, int max
 	
 	bar->rightMsSinceLastMove = 0;
 	bar->leftMsSinceLastMove = 0;
-	
-	groupUpdateInputPreventionWindow(group);
+}
 
-	// size changed rebuild TabBar
-	if (box.width != old_width && bar->bgLayer) {
-		bar->bgLayer = groupRebuildCairoLayer(group->screen, bar->bgLayer, box.width + space + thumb_size, box.height);
-		bar->oldWidth = 0; // trigger repaint
+#define SIZE_AND_DAMAGE_REGION(s,reg) \
+    reg.extents.x1 -= 5; \
+    reg.extents.x2 += 5; \
+    reg.extents.y1 -= 5; \
+    reg.extents.y2 += 5; \
+    damageScreenRegion (s, &reg);
+
+void
+groupDamageTabBarRegion (GroupSelection *group)
+{
+/* FIXME: the commented code normally should be used, but the currently 
+   damaged region is too small if slots are outside the tab bar */
+#if 0
+    REGION reg;
+
+    reg.rects = &reg.extents;
+    reg.numRects = 1;
+
+    reg.extents = group->tabBar->region->extents;
+	SIZE_AND_DAMAGE_REGION (group->screen, reg)
+
+	if (group->tabBar->slots)
+	{
+		reg.extents = group->tabBar->slots->region->extents;
+		SIZE_AND_DAMAGE_REGION (group->screen, reg)
 	}
+
+	if (group->tabBar->revSlots &&
+		(group->tabBar->revSlots != group->tabBar->slots))
+	{
+		reg.extents = group->tabBar->slots->region->extents;
+		SIZE_AND_DAMAGE_REGION (group->screen, reg)
+	}
+#else
+	if (HAS_TOP_WIN (group))
+		addWindowDamage (TOP_TAB (group));
+	else if (HAS_PREV_TOP_WIN (group))
+		addWindowDamage (PREV_TOP_TAB (group));
+#endif
+}
+
+#undef SIZE_AND_DAMAGE_REGION
+
+void
+groupMoveTabBarRegion (GroupSelection *group, int dx, int dy, Bool syncIPW)
+{
+	groupDamageTabBarRegion (group);
+
+    XOffsetRegion (group->tabBar->region, dx, dy);
+
+	if (syncIPW)
+		XMoveWindow (group->screen->display->display, group->inputPrevention,
+					 group->tabBar->leftSpringX, group->tabBar->region->extents.y1);
+
+	groupDamageTabBarRegion (group);
+}
+
+void
+groupResizeTabBarRegion (GroupSelection *group, XRectangle *box, Bool syncIPW)
+{
+    int oldWidth;
+
+    groupDamageTabBarRegion (group);
+
+    oldWidth = group->tabBar->region->extents.x2 - group->tabBar->region->extents.x1;
+
+    if (group->tabBar->bgLayer &&
+	(oldWidth != box->width))
+    {
+	group->tabBar->bgLayer = 
+	    groupRebuildCairoLayer (group->screen, 
+				    group->tabBar->bgLayer, 
+				    box->width + 
+				    groupGetThumbSpace (group->screen) +
+				    groupGetThumbSize (group->screen),
+				    box->height);
+    }
+
+    EMPTY_REGION (group->tabBar->region);
+    XUnionRectWithRegion(box, group->tabBar->region, group->tabBar->region);
+
+    if (syncIPW)
+    {
+	XWindowChanges xwc;
+
+	xwc.x = box->x;
+	xwc.y = box->y;
+	xwc.width = box->width;
+	xwc.height = box->height;
+
+	xwc.stack_mode = Above;
+    	xwc.sibling = HAS_TOP_WIN(group) ? TOP_TAB(group)->id : None;
+
+	XConfigureWindow (group->screen->display->display, group->inputPrevention, 
+	    		  CWSibling | CWStackMode | CWX | CWY | CWWidth | CWHeight, &xwc); 
+    }
+
+	groupDamageTabBarRegion (group);
 }
 
 /*
@@ -2443,8 +2532,9 @@ void groupApplyForces(CompScreen *s, GroupTabBar *bar, GroupTabBarSlot* draggedS
  * groupApplySpeeds
  *
  */
-void groupApplySpeeds(CompScreen* s, GroupTabBar* bar, int msSinceLastRepaint)
+void groupApplySpeeds(CompScreen* s, GroupSelection *group, int msSinceLastRepaint)
 {
+	GroupTabBar *bar = group->tabBar;
 	GroupTabBarSlot* slot;
 	int move;
 	XRectangle box;
@@ -2509,10 +2599,7 @@ void groupApplySpeeds(CompScreen* s, GroupTabBar* bar, int msSinceLastRepaint)
 		bar->rightMsSinceLastMove = 0;
 	
 	if(updateTabBar)
-	{
-		EMPTY_REGION(bar->region);
-		XUnionRectWithRegion(&box, bar->region, bar->region);
-	}
+		groupResizeTabBarRegion (group, &box, FALSE);
 	
 	for(slot = bar->slots; slot; slot = slot->next)
 	{
@@ -2730,36 +2817,6 @@ groupSwitchTopTabInput(GroupSelection *group, Bool enable)
 		XUnmapWindow(group->screen->display->display, group->inputPrevention);
 
 	group->ipwMapped = !enable;
-}
-
-/*
- * groupUpdateInputPreventionWindow
- *
- */
-void
-groupUpdateInputPreventionWindow(GroupSelection *group)
-{
-	XWindowChanges xwc; 
-	
-	if(!group->tabBar || !HAS_TOP_WIN(group))
-		return;
-
-	if (!group->inputPrevention)
-		groupCreateInputPreventionWindow(group);
-
-	CompWindow *w = TOP_TAB(group);
-
-	xwc.x = group->tabBar->leftSpringX;
-	xwc.y = group->tabBar->region->extents.y1; 
-	xwc.width = group->tabBar->rightSpringX - group->tabBar->leftSpringX;
-	xwc.height = group->tabBar->region->extents.y2 - group->tabBar->region->extents.y1; 
-
-	xwc.stack_mode = Above;
-	
-	xwc.sibling = w->id;
-
-	XConfigureWindow(group->screen->display->display, group->inputPrevention, 
-			CWSibling | CWStackMode | CWX | CWY | CWWidth | CWHeight, &xwc); 
 }
 
 /*

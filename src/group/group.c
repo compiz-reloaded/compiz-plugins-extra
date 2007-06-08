@@ -1336,7 +1336,15 @@ void groupHandleEvent(CompDisplay * d, XEvent * event)
 			GROUP_WINDOW(w);
 
 			if (gw->group && gw->group->tabBar && IS_TOP_TAB(w, gw->group) && gw->group->inputPrevention)
-				groupUpdateInputPreventionWindow(gw->group);
+			{
+			    XWindowChanges xwc;
+
+			    xwc.stack_mode = Above;
+			    xwc.sibling = w->id;
+
+		    	    XConfigureWindow (w->screen->display->display, gw->group->inputPrevention, 
+					      CWSibling | CWStackMode, &xwc); 
+			}
 		}
 		break;
 
@@ -1496,14 +1504,12 @@ groupWindowMoveNotify(CompWindow * w, int dx, int dy, Bool immediate)
 		GroupTabBarSlot *slot;
 		GroupTabBar *bar = gw->group->tabBar;
 
-		if (groupGetSpringModelOnMove(w->screen))
-			XOffsetRegion (bar->region, 0, dy);
-		else
-			XOffsetRegion (bar->region, dx, dy);
-
 		bar->rightSpringX += dx;
 		bar->leftSpringX += dx;
 			
+		groupMoveTabBarRegion (gw->group, 
+				       (groupGetSpringModelOnMove (w->screen)) ? 0 : dx, dy, TRUE);
+
 		for(slot = bar->slots; slot; slot = slot->next) {
 			if (groupGetSpringModelOnMove(w->screen))
 				XOffsetRegion (slot->region, 0, dy);
@@ -1512,8 +1518,6 @@ groupWindowMoveNotify(CompWindow * w, int dx, int dy, Bool immediate)
 			slot->springX += dx;
 		}
 			
-		groupUpdateInputPreventionWindow(gw->group);
-		
 		return;
 	}
 
@@ -1622,6 +1626,7 @@ Bool groupDamageWindowRect(CompWindow * w, Bool initial, BoxPtr rect)
 {
 
 	GROUP_SCREEN(w->screen);
+	GROUP_WINDOW(w);
 	Bool status;
 
 	UNWRAP(gs, w->screen, damageWindowRect);
@@ -1629,8 +1634,6 @@ Bool groupDamageWindowRect(CompWindow * w, Bool initial, BoxPtr rect)
 	WRAP(gs, w->screen, damageWindowRect, groupDamageWindowRect);
 
 	if (initial) {
-		GROUP_WINDOW(w);
-
 		if (groupGetAutotabCreate(w->screen) && 
 			matchEval(groupGetWindowMatch(w->screen), w)) 
 		{
@@ -1650,6 +1653,9 @@ Bool groupDamageWindowRect(CompWindow * w, Bool initial, BoxPtr rect)
 		
 		gw->windowState = WindowNormal;
 	}
+
+	if (gw->slot)
+		damageScreenRegion (w->screen, gw->slot->region);
 
 	return status;
 

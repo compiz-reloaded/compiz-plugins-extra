@@ -508,7 +508,7 @@ void groupUnhookTabBarSlot(GroupTabBar *bar, GroupTabBarSlot *slot, Bool tempora
 void groupDeleteTabBarSlot(GroupTabBar *bar, GroupTabBarSlot *slot);
 void groupCreateSlot(GroupSelection *group, CompWindow *w);
 void groupApplyForces(CompScreen *s, GroupTabBar *bar, GroupTabBarSlot* draggedSlot);
-void groupApplySpeeds(CompScreen* s, GroupTabBar* bar, int msSinceLastRepaint);
+void groupApplySpeeds(CompScreen* s, GroupSelection *group, int msSinceLastRepaint);
 void groupInitTabBar(GroupSelection *group, CompWindow* topTab);
 void groupDeleteTabBar(GroupSelection *group);
 void groupStartTabbingAnimation(GroupSelection *group, Bool tab);
@@ -518,11 +518,13 @@ Bool groupInitTab(CompDisplay * d, CompAction * action, CompActionState state, C
 Bool groupChangeTab(GroupTabBarSlot* topTab, ChangeTabAnimationDirection direction);
 Bool groupChangeTabLeft(CompDisplay * d, CompAction * action, CompActionState state, CompOption * option, int nOption);
 Bool groupChangeTabRight(CompDisplay * d, CompAction * action, CompActionState state, CompOption * option, int nOption);
-void groupUpdateInputPreventionWindow(GroupSelection* group);
 void groupSwitchTopTabInput(GroupSelection *group, Bool enable);
 void groupCreateInputPreventionWindow(GroupSelection* group); 
 void groupDestroyInputPreventionWindow(GroupSelection* group); 
 Region groupGetClippingRegion(CompWindow *w);
+void groupMoveTabBarRegion (GroupSelection *group, int dx, int dy, Bool syncIPW);
+void groupResizeTabBarRegion (GroupSelection *group, XRectangle *box, Bool syncIPW);
+void groupDamageTabBarRegion (GroupSelection *group);
 
 /*
  * paint.c

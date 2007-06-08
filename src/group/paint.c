@@ -104,8 +104,6 @@ void groupPaintThumb(GroupSelection *group, GroupTabBarSlot *slot, const CompTra
 			PAINT_WINDOW_TRANSFORMED_MASK | PAINT_WINDOW_TRANSLUCENT_MASK);
 
 		glPopMatrix();
-
-		addWindowDamage(w);
 	}
 	
 	w->screen->addWindowGeometry = oldAddWindowGeometry;
@@ -666,10 +664,8 @@ void groupPaintTabBar(GroupSelection * group, const WindowPaintAttrib *wAttrib,
 					newWidth = layer->texWidth;
 
 				w_scale = (double) (bar->region->extents.x2 - bar->region->extents.x1) / (double) newWidth;
-
 				if (newWidth != bar->oldWidth || bar->bgAnimation)
 					groupRenderTabBarBackground(group);
-
 				bar->oldWidth = newWidth;
 				box.extents = bar->region->extents;
 			break;
@@ -896,7 +892,7 @@ void groupPreparePaintScreen(CompScreen * s, int msSinceLastPaint)
 			continue;
 	
 		groupApplyForces(s, bar, (gs->dragged)? gs->draggedSlot: NULL);
-		groupApplySpeeds(s, bar, msSinceLastPaint);
+		groupApplySpeeds(s, group, msSinceLastPaint);
 
 		groupHandleHoverDetection(group);
 		groupHandleTabBarFade(group, msSinceLastPaint);
@@ -1038,8 +1034,23 @@ void groupDonePaintScreen(CompScreen * s)
 		if (group->changeState != PaintOff)
 			damageScreen(s);
 
-		if (group->tabBar && group->tabBar->state != PaintOff)
-			damageScreenRegion(s, group->tabBar->region);
+		if (group->tabBar)
+		{
+			if ((group->tabBar->state == PaintFadeIn) ||
+				(group->tabBar->state == PaintFadeOut))
+			{
+				groupDamageTabBarRegion (group);
+			}
+
+			if (group->tabBar->textLayer)
+			{
+				if ((group->tabBar->textLayer->state == PaintFadeIn) ||
+					(group->tabBar->textLayer->state == PaintFadeOut))
+				{
+					groupDamageTabBarRegion (group);
+				}
+			}
+		}
 	}
 }
 
