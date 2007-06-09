@@ -28,61 +28,61 @@
  * groupWindowInRegion
  *
  */
-    static Bool
-    groupWindowInRegion(CompWindow *w, Region src, float precision)
-    {
-	    Region buf = XCreateRegion();
-	    XIntersectRegion(w->region, src, buf);
+static Bool
+groupWindowInRegion(CompWindow *w, Region src, float precision)
+{
+	Region buf = XCreateRegion();
+	XIntersectRegion(w->region, src, buf);
 
-	    // buf area
-	    int i;
-	    int area = 0;
-	    BOX *box;
-	    for(i = 0; i < buf->numRects; i++) {
-		    box = &buf->rects[i];
-		    area += (box->x2 - box->x1) * (box->y2 - box->y1); // width * height
-	    }
+	// buf area
+	int i;
+	int area = 0;
+	BOX *box;
+	for(i = 0; i < buf->numRects; i++) {
+		box = &buf->rects[i];
+		area += (box->x2 - box->x1) * (box->y2 - box->y1); // width * height
+	}
 
-	    XDestroyRegion(buf);
+	XDestroyRegion(buf);
 
-	    if (area >= WIN_WIDTH(w) * WIN_HEIGHT(w) * precision) {
-		    XSubtractRegion(src, w->region, src);
-		    return TRUE;
-	    }
+	if (area >= WIN_WIDTH(w) * WIN_HEIGHT(w) * precision) {
+		XSubtractRegion(src, w->region, src);
+		return TRUE;
+	}
 
-	    return FALSE;
-    }
+	return FALSE;
+}
 
-    /*
-     * groupFindGroupInWindows
-     *
-     */
-    static Bool groupFindGroupInWindows(GroupSelection *group, CompWindow **windows, int nWins)
-    {
-	    int i;
-	    for (i = 0; i < nWins; i++) {
-		    CompWindow *cw = windows[i];
-		    GROUP_WINDOW(cw);
-		    if (gw->group == group)
-			    return TRUE;
-	    }
+/*
+ * groupFindGroupInWindows
+ *
+ */
+static Bool groupFindGroupInWindows(GroupSelection *group, CompWindow **windows, int nWins)
+{
+	int i;
+	for (i = 0; i < nWins; i++) {
+		CompWindow *cw = windows[i];
+		GROUP_WINDOW(cw);
+		if (gw->group == group)
+			return TRUE;
+	}
 
-	    return FALSE;
-    }
+	return FALSE;
+}
 
-    /*
-     * groupFindWindowsInRegion
-     *
-     */
-    CompWindow **groupFindWindowsInRegion(CompScreen * s, Region reg, int *c)
-    {
-	    float precision = groupGetSelectPrecision(s) / 100.0f;
+/*
+ * groupFindWindowsInRegion
+ *
+ */
+CompWindow **groupFindWindowsInRegion(CompScreen * s, Region reg, int *c)
+{
+	float precision = groupGetSelectPrecision(s) / 100.0f;
 
-	    CompWindow **ret = NULL;
-	    int count = 0;
-	    CompWindow *w;
-	    for (w = s->reverseWindows; w; w = w->prev) {
-		    if (matchEval(groupGetWindowMatch(s), w) &&
+	CompWindow **ret = NULL;
+	int count = 0;
+	CompWindow *w;
+	for (w = s->reverseWindows; w; w = w->prev) {
+		if (matchEval(groupGetWindowMatch(s), w) &&
 		    !w->invisible &&
 		    groupWindowInRegion(w, reg, precision))
 		{
@@ -340,7 +340,7 @@ groupDamageSelectionRect(CompScreen* s, int xRoot, int yRoot)
 	reg.rects = &reg.extents;
 	reg.numRects = 1;
 
-    reg.extents.x1 = MIN(gs->x1, gs->x2) - 5;
+	reg.extents.x1 = MIN(gs->x1, gs->x2) - 5;
 	reg.extents.y1 = MIN(gs->y1, gs->y2) - 5;
 	reg.extents.x2 = MAX(gs->x1, gs->x2) + 5;
 	reg.extents.y2 = MAX(gs->y1, gs->y2) + 5;
