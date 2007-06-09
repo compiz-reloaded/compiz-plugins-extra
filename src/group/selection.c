@@ -33,7 +33,7 @@
     {
 	    Region buf = XCreateRegion();
 	    XIntersectRegion(w->region, src, buf);
-	    
+
 	    // buf area
 	    int i;
 	    int area = 0;
@@ -42,14 +42,14 @@
 		    box = &buf->rects[i];
 		    area += (box->x2 - box->x1) * (box->y2 - box->y1); // width * height
 	    }
-	    
+
 	    XDestroyRegion(buf);
 
 	    if (area >= WIN_WIDTH(w) * WIN_HEIGHT(w) * precision) {
 		    XSubtractRegion(src, w->region, src);
 		    return TRUE;
 	    }
-	    
+
 	    return FALSE;
     }
 
@@ -82,7 +82,7 @@
 	    int count = 0;
 	    CompWindow *w;
 	    for (w = s->reverseWindows; w; w = w->prev) {
-		    if (matchEval(groupGetWindowMatch(s), w) && 
+		    if (matchEval(groupGetWindowMatch(s), w) &&
 		    !w->invisible &&
 		    groupWindowInRegion(w, reg, precision))
 		{
@@ -101,7 +101,7 @@
 			count++;
 		}
 	}
-	
+
 	(*c) = count;
 	return ret;
 }
@@ -295,7 +295,7 @@ groupSelectTerminate(CompDisplay * d, CompAction * action,
 				rect.width  = MAX(gs->x1, gs->x2) - MIN(gs->x1, gs->x2) + 4;
 				rect.height = MAX(gs->y1, gs->y2) - MIN(gs->y1, gs->y2) + 4;
 				XUnionRectWithRegion(&rect, reg, reg);
-				
+
 				damageScreenRegion(s, reg);
 
 				int count;

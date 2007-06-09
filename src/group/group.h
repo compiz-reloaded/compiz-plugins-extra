@@ -94,7 +94,7 @@
  */
 
 /*
- * window states  
+ * window states
  */
 typedef enum {
 	WindowNormal = 0,
@@ -225,7 +225,7 @@ struct _GroupTabBarSlot {
 	Region		region;
 
 	CompWindow	*window;
-	
+
 	//for DnD animations.
 	int		springX;
 	int		speed;
@@ -256,7 +256,7 @@ typedef struct _GroupTabBar {
 	int		animationTime;
 	Region		region;
 	int		oldWidth;
-	
+
 	// for DnD animations.
 	int		leftSpringX, rightSpringX;
 	int		leftSpeed, rightSpeed;
@@ -299,12 +299,12 @@ struct _GroupSelection {
 
 	GroupTabBarSlot* topTab;
 	GroupTabBarSlot* prevTopTab;
-	
+
 	//Those two are only for the change-tab animation, when the tab was changed again during animation.
 	//Another animation should be started again, switching for this window.
 	ChangeTabAnimationDirection nextDirection;
-	GroupTabBarSlot* nextTopTab;	
-	
+	GroupTabBarSlot* nextTopTab;
+
 	GroupTabBarSlot* activateTab;
 
 	GroupTabBar *tabBar;
@@ -388,7 +388,7 @@ typedef struct _GroupScreen {
 	int grabIndex;
 
 	GroupSelection *lastHoveredGroup;
-	
+
 	int showDelayTimeoutHandle;
 
 	// for selection
@@ -398,7 +398,7 @@ typedef struct _GroupScreen {
 	int y1;
 	int x2;
 	int y2;
-	
+
 	//For d&d
 	GroupTabBarSlot	*draggedSlot;
 	int dragHoverTimeoutHandle;
@@ -519,8 +519,8 @@ Bool groupChangeTab(GroupTabBarSlot* topTab, ChangeTabAnimationDirection directi
 Bool groupChangeTabLeft(CompDisplay * d, CompAction * action, CompActionState state, CompOption * option, int nOption);
 Bool groupChangeTabRight(CompDisplay * d, CompAction * action, CompActionState state, CompOption * option, int nOption);
 void groupSwitchTopTabInput(GroupSelection *group, Bool enable);
-void groupCreateInputPreventionWindow(GroupSelection* group); 
-void groupDestroyInputPreventionWindow(GroupSelection* group); 
+void groupCreateInputPreventionWindow(GroupSelection* group);
+void groupDestroyInputPreventionWindow(GroupSelection* group);
 Region groupGetClippingRegion(CompWindow *w);
 void groupMoveTabBarRegion (GroupSelection *group, int dx, int dy, Bool syncIPW);
 void groupResizeTabBarRegion (GroupSelection *group, XRectangle *box, Bool syncIPW);

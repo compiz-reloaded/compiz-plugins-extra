@@ -33,7 +33,7 @@ void groupPaintThumb(GroupSelection *group, GroupTabBarSlot *slot, const CompTra
 	AddWindowGeometryProc oldAddWindowGeometry;
 
 	CompWindow *w = slot->window;
-	
+
 	int tw, th;
 	tw = slot->region->extents.x2 - slot->region->extents.x1;
 	th = slot->region->extents.y2 - slot->region->extents.y1;
@@ -42,20 +42,20 @@ void groupPaintThumb(GroupSelection *group, GroupTabBarSlot *slot, const CompTra
 	   drawWindowGeometry function is used */
 	oldAddWindowGeometry = w->screen->addWindowGeometry;
 	w->screen->addWindowGeometry = addWindowGeometry;
-	
+
 	WindowPaintAttrib sAttrib = w->paint;
 
 	// animate fade
 	if (group && group->tabBar->state == PaintFadeIn)
-		sAttrib.opacity -= sAttrib.opacity * group->tabBar->animationTime / 
+		sAttrib.opacity -= sAttrib.opacity * group->tabBar->animationTime /
 				   (groupGetFadeTime(w->screen) * 1000);
 	else if (group && group->tabBar->state == PaintFadeOut)
-		sAttrib.opacity = sAttrib.opacity * group->tabBar->animationTime / 
+		sAttrib.opacity = sAttrib.opacity * group->tabBar->animationTime /
 				  (groupGetFadeTime(w->screen) * 1000);
 
 	sAttrib.opacity = sAttrib.opacity * targetOpacity / 0xffff;
 
-	if (w->mapNum) 
+	if (w->mapNum)
 	{
 		int width, height;
 
@@ -92,7 +92,7 @@ void groupPaintThumb(GroupSelection *group, GroupTabBarSlot *slot, const CompTra
 							 (sAttrib.xScale * width / 2) +
 							 (w->output.left * sAttrib.xScale) -
 			                 w->attrib.x + vx;
-		sAttrib.yTranslate = slot->region->extents.y1 + 
+		sAttrib.yTranslate = slot->region->extents.y1 +
 			                 (w->output.top * sAttrib.yScale) -
 			                 w->attrib.y + vy;
 
@@ -103,7 +103,7 @@ void groupPaintThumb(GroupSelection *group, GroupTabBarSlot *slot, const CompTra
 
 		matrixTranslate(&wTransform, WIN_X(w), WIN_Y(w), 0.0f);
 		matrixScale(&wTransform, sAttrib.xScale, sAttrib.yScale, 0.0f);
-		matrixTranslate(&wTransform, 
+		matrixTranslate(&wTransform,
 				sAttrib.xTranslate / sAttrib.xScale - WIN_X(w),
 				sAttrib.yTranslate / sAttrib.yScale - WIN_Y(w),
 				0.0f);
@@ -116,7 +116,7 @@ void groupPaintThumb(GroupSelection *group, GroupTabBarSlot *slot, const CompTra
 
 		glPopMatrix();
 	}
-	
+
 	w->screen->addWindowGeometry = oldAddWindowGeometry;
 }
 
@@ -142,10 +142,10 @@ void groupRenderTopTabHighlight(GroupSelection *group)
 		return;
 
 	cr = bar->selectionLayer->cairo;
-	
+
 	// fill
 	cairo_set_line_width(cr, 2);
-	cairo_set_source_rgba(cr, 
+	cairo_set_source_rgba(cr,
 		(group->color[0] / 65535.0f),
 		(group->color[1] / 65535.0f),
 		(group->color[2] / 65535.0f),
@@ -153,12 +153,12 @@ void groupRenderTopTabHighlight(GroupSelection *group)
 
 	cairo_move_to(cr, 0, 0);
 	cairo_rectangle(cr, 0, 0, width, height);
-	
+
 	// fill
 	cairo_fill_preserve(cr);
 
 	// outline
-	cairo_set_source_rgba(cr, 
+	cairo_set_source_rgba(cr,
 		(group->color[0] / 65535.0f),
 		(group->color[1] / 65535.0f),
 		(group->color[2] / 65535.0f),
@@ -188,13 +188,13 @@ void groupRenderTabBarBackground(GroupSelection *group)
 
 	if (width > bar->bgLayer->texWidth)
 		width = bar->bgLayer->texWidth;
-	
+
 	if (radius > width / 2)
 		radius = width / 2;
 
 	layer = bar->bgLayer;
 	cr = layer->cairo;
-	
+
 	groupClearCairoLayer(layer);
 
 	float r, g, b, a;
@@ -227,7 +227,7 @@ void groupRenderTabBarBackground(GroupSelection *group)
 			b = groupGetTabBaseColorBlue(group->screen) / 65535.0f;
 			a = groupGetTabBaseColorAlpha(group->screen) / 65535.0f;
 			cairo_set_source_rgba(cr, r, g, b, a);
-			
+
 			cairo_fill_preserve(cr);
 			break;
 		}
@@ -251,7 +251,7 @@ void groupRenderTabBarBackground(GroupSelection *group)
 			b = groupGetTabBaseColorBlue(group->screen) / 65535.0f;
 			a = groupGetTabBaseColorAlpha(group->screen) / 65535.0f;
 			cairo_pattern_add_color_stop_rgba(pattern, 1.0f, r, g, b, a);
-	
+
 			cairo_set_source(cr, pattern);
 			cairo_fill_preserve(cr);
 			cairo_pattern_destroy(pattern);
@@ -286,7 +286,7 @@ void groupRenderTabBarBackground(GroupSelection *group)
 			b = groupGetTabBaseColorBlue(group->screen) / 65535.0f;
 			a = groupGetTabBaseColorAlpha(group->screen) / 65535.0f;
 			cairo_pattern_add_color_stop_rgba(pattern, 0.6f, r, g, b, a);
-	
+
 			cairo_set_source(cr, pattern);
 			cairo_fill(cr);
 			cairo_pattern_destroy(pattern);
@@ -298,13 +298,13 @@ void groupRenderTabBarBackground(GroupSelection *group)
 			pattern = cairo_pattern_create_linear(0, 0, 0, height);
 
 			// we don't want to use a full highlight here so we mix the colors
-			r = (groupGetTabHighlightColorRed(group->screen) + 
+			r = (groupGetTabHighlightColorRed(group->screen) +
 			     groupGetTabBaseColorRed(group->screen)) / (2 * 65535.0f);
-			g = (groupGetTabHighlightColorGreen(group->screen) + 
+			g = (groupGetTabHighlightColorGreen(group->screen) +
 			     groupGetTabBaseColorGreen(group->screen)) / (2 * 65535.0f);
-			b = (groupGetTabHighlightColorBlue(group->screen) + 
+			b = (groupGetTabHighlightColorBlue(group->screen) +
 			     groupGetTabBaseColorBlue(group->screen)) / (2 * 65535.0f);
-			a = (groupGetTabHighlightColorAlpha(group->screen) + 
+			a = (groupGetTabHighlightColorAlpha(group->screen) +
 			     groupGetTabBaseColorAlpha(group->screen)) / (2 * 65535.0f);
 			cairo_pattern_add_color_stop_rgba(pattern, 1.0f, r, g, b, a);
 
@@ -314,11 +314,11 @@ void groupRenderTabBarBackground(GroupSelection *group)
 			b = groupGetTabBaseColorBlue(group->screen) / 65535.0f;
 			a = groupGetTabBaseColorAlpha(group->screen) / 65535.0f;
 			cairo_pattern_add_color_stop_rgba(pattern, 0.5f, r, g, b, a);
-	
+
 			cairo_set_source(cr, pattern);
 			cairo_fill(cr);
 			cairo_pattern_destroy(pattern);
-			
+
 			cairo_restore(cr);
 
 			// draw shape again for the outline
@@ -357,7 +357,7 @@ void groupRenderTabBarBackground(GroupSelection *group)
 			b = groupGetTabBaseColorBlue(group->screen) / 65535.0f;
 			a = groupGetTabBaseColorAlpha(group->screen) / 65535.0f;
 			cairo_pattern_add_color_stop_rgba(pattern, 1.0f, r, g, b, a);
-	
+
 			cairo_set_source(cr, pattern);
 			cairo_fill_preserve(cr);
 			cairo_pattern_destroy(pattern);
@@ -382,15 +382,15 @@ void groupRenderTabBarBackground(GroupSelection *group)
 
 			// setup pattern
 			pattern = cairo_pattern_create_linear(0, 0, 0, height);
-			
+
 			// we don't want to use a full highlight here so we mix the colors
-			r = (groupGetTabHighlightColorRed(group->screen) + 
+			r = (groupGetTabHighlightColorRed(group->screen) +
 			     groupGetTabBaseColorRed(group->screen)) / (2 * 65535.0f);
-			g = (groupGetTabHighlightColorGreen(group->screen) + 
+			g = (groupGetTabHighlightColorGreen(group->screen) +
 			     groupGetTabBaseColorGreen(group->screen)) / (2 * 65535.0f);
-			b = (groupGetTabHighlightColorBlue(group->screen) + 
+			b = (groupGetTabHighlightColorBlue(group->screen) +
 			     groupGetTabBaseColorBlue(group->screen)) / (2 * 65535.0f);
-			a = (groupGetTabHighlightColorAlpha(group->screen) + 
+			a = (groupGetTabHighlightColorAlpha(group->screen) +
 			     groupGetTabBaseColorAlpha(group->screen)) / (2 * 65535.0f);
 			cairo_pattern_add_color_stop_rgba(pattern, 0.0f, r, g, b, a);
 
@@ -402,7 +402,7 @@ void groupRenderTabBarBackground(GroupSelection *group)
 			cairo_pattern_add_color_stop_rgba(pattern, 1.0f, r, g, b, a);
 
 			cairo_set_source(cr, pattern);
-	
+
 			cairo_fill(cr);
 			cairo_pattern_destroy(pattern);
 
@@ -431,13 +431,13 @@ void groupRenderTabBarBackground(GroupSelection *group)
 			cairo_pattern_add_color_stop_rgba(pattern, 0.0f, r, g, b, a);
 
 			// we don't want to use a full highlight here so we mix the colors
-			r = (groupGetTabHighlightColorRed(group->screen) + 
+			r = (groupGetTabHighlightColorRed(group->screen) +
 			     groupGetTabBaseColorRed(group->screen)) / (2 * 65535.0f);
-			g = (groupGetTabHighlightColorGreen(group->screen) + 
+			g = (groupGetTabHighlightColorGreen(group->screen) +
 			     groupGetTabBaseColorGreen(group->screen)) / (2 * 65535.0f);
-			b = (groupGetTabHighlightColorBlue(group->screen) + 
+			b = (groupGetTabHighlightColorBlue(group->screen) +
 			     groupGetTabBaseColorBlue(group->screen)) / (2 * 65535.0f);
-			a = (groupGetTabHighlightColorAlpha(group->screen) + 
+			a = (groupGetTabHighlightColorAlpha(group->screen) +
 			     groupGetTabBaseColorAlpha(group->screen)) / (2 * 65535.0f);
 			cairo_pattern_add_color_stop_rgba(pattern, 1.0f, r, g, b, a);
 
@@ -487,7 +487,7 @@ void groupRenderTabBarBackground(GroupSelection *group)
 			double alpha = fabs(sin(PI*3 * animationProgress)) * 0.75;
 			if (alpha <= 0)
 				break;
-				
+
 			cairo_save(cr);
 			cairo_clip(cr);
 			cairo_set_operator(cr, CAIRO_OPERATOR_XOR);
@@ -557,7 +557,7 @@ void groupRenderWindowTitle(GroupSelection *group)
 		return;
 
 	int font_size = groupGetTabbarFontSize(group->screen);
-	
+
 	CompTextAttrib text_attrib;
 	text_attrib.family = "Sans";
 	text_attrib.size = font_size;
@@ -576,12 +576,12 @@ void groupRenderWindowTitle(GroupSelection *group)
 
 	int stride;
 
-	if (!((*group->screen->display->fileToImage)(group->screen->display, "TextToPixmap", 
-					(const char*) &text_attrib, &width, 
-					&height, &stride, &data))) 
+	if (!((*group->screen->display->fileToImage)(group->screen->display, "TextToPixmap",
+					(const char*) &text_attrib, &width,
+					&height, &stride, &data)))
 	{
 		/* getting the pixmap failed, so create an empty one */
-		Pixmap emptyPixmap = XCreatePixmap(group->screen->display->display, 
+		Pixmap emptyPixmap = XCreatePixmap(group->screen->display->display,
 				group->screen->root, width, height, 32);
 
 		if (emptyPixmap) {
@@ -589,10 +589,10 @@ void groupRenderWindowTitle(GroupSelection *group)
 			gcv.foreground = 0x00000000;
 			gcv.plane_mask = 0xffffffff;
 
-			GC gc = XCreateGC(group->screen->display->display, emptyPixmap, 
+			GC gc = XCreateGC(group->screen->display->display, emptyPixmap,
 					GCForeground, &gcv);
 
-			XFillRectangle(group->screen->display->display, emptyPixmap, gc, 
+			XFillRectangle(group->screen->display->display, emptyPixmap, gc,
 					0, 0, width, height);
 
 			XFreeGC(group->screen->display->display, gc);
@@ -613,7 +613,7 @@ void groupRenderWindowTitle(GroupSelection *group)
  * groupPaintTabBar
  *
  */
-void groupPaintTabBar(GroupSelection * group, const WindowPaintAttrib *wAttrib, 
+void groupPaintTabBar(GroupSelection * group, const WindowPaintAttrib *wAttrib,
 	const CompTransform *transform, unsigned int mask, Region clipRegion)
 {
 	if (!group || !HAS_TOP_WIN(group) || !group->tabBar || (group->tabBar->state == PaintOff))
@@ -654,10 +654,10 @@ void groupPaintTabBar(GroupSelection * group, const WindowPaintAttrib *wAttrib,
 	for (i = 0; i < PAINT_MAX; i++) {
 		alpha = 0xffff;
 
-		if (bar->state == PaintFadeIn) 
+		if (bar->state == PaintFadeIn)
 			alpha -= alpha * bar->animationTime /
 				(groupGetFadeTime(s) * 1000);
-		else if (bar->state == PaintFadeOut) 
+		else if (bar->state == PaintFadeOut)
 			alpha = alpha * bar->animationTime /
 				(groupGetFadeTime(s) * 1000);
 
@@ -725,7 +725,7 @@ void groupPaintTabBar(GroupSelection * group, const WindowPaintAttrib *wAttrib,
 			case PAINT_TEXT:
 				if (bar->textLayer && (bar->textLayer->state != PaintOff)) {
 					layer = bar->textLayer;
-					
+
 					h_scale = 1.0f;
 					w_scale = 1.0f;
 
@@ -738,10 +738,10 @@ void groupPaintTabBar(GroupSelection * group, const WindowPaintAttrib *wAttrib,
 						box.extents.x2 = bar->region->extents.x2;
 
 					// recalculate the alpha again...
-					if (bar->textLayer->state == PaintFadeIn) 
+					if (bar->textLayer->state == PaintFadeIn)
 						alpha -= alpha * bar->textLayer->animationTime /
 							(groupGetFadeTextTime(s) * 1000);
-					else if (group->tabBar->textLayer->state == PaintFadeOut) 
+					else if (group->tabBar->textLayer->state == PaintFadeOut)
 						alpha = alpha * bar->textLayer->animationTime /
 							(groupGetFadeTextTime(s) * 1000);
 				} else
@@ -771,9 +771,9 @@ void groupPaintTabBar(GroupSelection * group, const WindowPaintAttrib *wAttrib,
 				box.extents.x2 = box.extents.x1 + layer->texWidth;
 			if (box.extents.y2*h_scale < layer->texHeight)
 				box.extents.y2 += box.extents.y1;
-			else 
+			else
 				box.extents.y2 = box.extents.y1 + layer->texHeight;
-			
+
 
 			matrix.x0 -= box.extents.x1 * matrix.xx;
 			matrix.y0 -= box.extents.y1 * matrix.yy;
@@ -807,8 +807,8 @@ void groupPaintTabBar(GroupSelection * group, const WindowPaintAttrib *wAttrib,
 				alpha = alpha * wAttrib->opacity / 0xffff;
 				glColor4us(alpha, alpha, alpha, alpha);
 
-				(*group->screen->drawWindowTexture) (topTab, &layer->texture, 
-						&fragment, mask | PAINT_WINDOW_TRANSLUCENT_MASK | 
+				(*group->screen->drawWindowTexture) (topTab, &layer->texture,
+						&fragment, mask | PAINT_WINDOW_TRANSLUCENT_MASK |
 						PAINT_WINDOW_TRANSFORMED_MASK);
 
 				glPopMatrix();
@@ -829,7 +829,7 @@ void groupPaintTabBar(GroupSelection * group, const WindowPaintAttrib *wAttrib,
  *
  */
 static void
-groupPaintSelectionOutline (CompScreen *s, const ScreenPaintAttrib *sa, 
+groupPaintSelectionOutline (CompScreen *s, const ScreenPaintAttrib *sa,
 			    const CompTransform *transform,
 			    CompOutput *output, Bool transformed)
 {
@@ -895,13 +895,13 @@ void groupPreparePaintScreen(CompScreen * s, int msSinceLastPaint)
 	for (group = gs->groups; group; group = group->next)
 	{
 		GroupTabBar *bar = group->tabBar;
-	
+
 		if (group->changeState != PaintOff)
 			group->changeAnimationTime -= msSinceLastPaint;
 
 		if (!bar)
 			continue;
-	
+
 		groupApplyForces(s, bar, (gs->dragged)? gs->draggedSlot: NULL);
 		groupApplySpeeds(s, group, msSinceLastPaint);
 
@@ -910,7 +910,7 @@ void groupPreparePaintScreen(CompScreen * s, int msSinceLastPaint)
 		groupHandleTextFade(group, msSinceLastPaint);
 		groupHandleTabBarAnimation(group, msSinceLastPaint);
 	}
-	
+
 	groupHandleScreenActions(s);
 
 	groupHandleChanges(s);
@@ -946,7 +946,7 @@ groupPaintOutput(CompScreen * s,
 			mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_MASK;
 	}
 
-	if (gs->tabBarVisible) 
+	if (gs->tabBarVisible)
 			mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_MASK;
 
 	UNWRAP(gs, s, paintOutput);
@@ -960,10 +960,10 @@ groupPaintOutput(CompScreen * s,
 			CompTransform wTransform = *transform;
 
 			transformToScreenSpace(s, output, -DEFAULT_Z_CAMERA, &wTransform);
-			
+
 			glPushMatrix();
 			glLoadMatrixf(wTransform.m);
-		
+
 			// prevent tab bar drawing..
 			PaintState state = gw->group->tabBar->state;
 			gw->group->tabBar->state = PaintOff;
@@ -975,7 +975,7 @@ groupPaintOutput(CompScreen * s,
 			groupPaintSelectionOutline (s, sAttrib, transform, output, FALSE);
 		}
 	}
-	
+
 	return status;
 }
 
@@ -986,7 +986,7 @@ groupPaintOutput(CompScreen * s,
 void
 groupPaintTransformedOutput(CompScreen * s, const ScreenPaintAttrib * sa,
 			    const CompTransform *transform,
-			    Region region, CompOutput *output, 
+			    Region region, CompOutput *output,
 			    unsigned int mask)
 {
 	GROUP_SCREEN(s);
@@ -994,7 +994,7 @@ groupPaintTransformedOutput(CompScreen * s, const ScreenPaintAttrib * sa,
 	UNWRAP(gs, s, paintTransformedOutput);
 	(*s->paintTransformedOutput) (s, sa, transform, region, output, mask);
 	WRAP(gs, s, paintTransformedOutput, groupPaintTransformedOutput);
-	
+
 	if ((gs->vpX == s->x) && (gs->vpY == s->y)) {
 		gs->painted = TRUE;
 
@@ -1005,9 +1005,9 @@ groupPaintTransformedOutput(CompScreen * s, const ScreenPaintAttrib * sa,
 			transformToScreenSpace(s, output, -sa->zTranslate, &wTransform);
 			glPushMatrix();
 			glLoadMatrixf(wTransform.m);
-	
+
 			groupPaintThumb(NULL, gs->draggedSlot, &wTransform, 0xffff);
-	
+
 			glPopMatrix();
 		} else if (gs->grabState == ScreenGrabSelect) {
 			groupPaintSelectionOutline (s, sa, transform, output, TRUE);
@@ -1091,7 +1091,7 @@ groupComputeGlowQuads (CompWindow *w, CompMatrix *matrix)
 	int glowSize = groupGetGlowSize(w->screen);
 	GroupGlowTypeEnum glowType = groupGetGlowType(w->screen);
 	int glowOffset = (glowSize * gd->glowTextureProperties[glowType].glowOffset /
-		      gd->glowTextureProperties[glowType].textureSize) + 1; 
+		      gd->glowTextureProperties[glowType].textureSize) + 1;
 
 	/* Top left corner */
 	box = &gw->glowQuads[GLOWQUAD_TOPLEFT].box;
@@ -1126,9 +1126,9 @@ groupComputeGlowQuads (CompWindow *w, CompMatrix *matrix)
 	quadMatrix->x0 = 1.0 - (box->x1 * quadMatrix->xx);
 	quadMatrix->y0 = 1.0 - (box->y1 * quadMatrix->yy);
 
-	box->x1 = MAX(WIN_REAL_X(w) + WIN_REAL_WIDTH(w) - glowOffset, 
+	box->x1 = MAX(WIN_REAL_X(w) + WIN_REAL_WIDTH(w) - glowOffset,
 		WIN_REAL_X(w) + (WIN_REAL_WIDTH(w) / 2));
-	box->y2 = MIN(WIN_REAL_Y(w) + glowOffset, 
+	box->y2 = MIN(WIN_REAL_Y(w) + glowOffset,
 		WIN_REAL_Y(w) + (WIN_REAL_HEIGHT(w) / 2));
 
 	/* Bottom left corner */
@@ -1148,7 +1148,7 @@ groupComputeGlowQuads (CompWindow *w, CompMatrix *matrix)
 
 	box->y1 = MAX(WIN_REAL_Y(w) + WIN_REAL_HEIGHT(w) - glowOffset,
 		WIN_REAL_Y(w) + (WIN_REAL_HEIGHT(w) / 2));
-	box->x2 = MIN(WIN_REAL_X(w) + glowOffset, 
+	box->x2 = MIN(WIN_REAL_X(w) + glowOffset,
 		WIN_REAL_X(w) + (WIN_REAL_WIDTH(w) / 2));
 
 	/* Bottom right corner */
@@ -1166,7 +1166,7 @@ groupComputeGlowQuads (CompWindow *w, CompMatrix *matrix)
 	quadMatrix->x0 = 1.0 - (box->x1 * quadMatrix->xx);
 	quadMatrix->y0 = -(box->y1 * quadMatrix->yy);
 
-	box->x1 = MAX(WIN_REAL_X(w) + WIN_REAL_WIDTH(w) - glowOffset, 
+	box->x1 = MAX(WIN_REAL_X(w) + WIN_REAL_WIDTH(w) - glowOffset,
 		WIN_REAL_X(w) + (WIN_REAL_WIDTH(w) / 2));
 	box->y1 = MAX(WIN_REAL_Y(w) + WIN_REAL_HEIGHT(w) - glowOffset,
 		WIN_REAL_Y(w) + (WIN_REAL_HEIGHT(w) / 2));
@@ -1265,24 +1265,24 @@ groupDrawWindow(CompWindow * w,
 
 				if (box.extents.x1 < box.extents.x2 &&
 				    box.extents.y1 < box.extents.y2) {
-					(*w->screen->addWindowGeometry) (w, 
+					(*w->screen->addWindowGeometry) (w,
 						&gw->glowQuads[i].matrix, 1, &box, region);
 				}
 			}
 
 			if (w->vCount) {
 				FragmentAttrib fAttrib = *attrib;
-				
+
 				GLushort color[3] = {gw->group->color[0], gw->group->color[1], gw->group->color[2]};
-				
+
 				// Apply brightness to color.
 				color[0] *= (float)attrib->brightness / 0xffff;
 				color[1] *= (float)attrib->brightness / 0xffff;
 				color[2] *= (float)attrib->brightness / 0xffff;
-				
+
 				// Apply saturation to color.
 				GLushort avarage = (color[0] + color[1] + color[2]) / 3;
-				
+
 				color[0] = avarage + (color[0] - avarage) * attrib->saturation / 0xffff;
 				color[1] = avarage + (color[1] - avarage) * attrib->saturation / 0xffff;
 				color[2] = avarage + (color[2] - avarage) * attrib->saturation / 0xffff;
@@ -1299,8 +1299,8 @@ groupDrawWindow(CompWindow * w,
 
 				/* we use PAINT_WINDOW_TRANSFORMED_MASK here to force
 				   the usage of a good texture filter */
-				(*w->screen->drawWindowTexture) (w, &gs->glowTexture, 
-					&fAttrib, mask | PAINT_WINDOW_BLEND_MASK | 
+				(*w->screen->drawWindowTexture) (w, &gs->glowTexture,
+					&fAttrib, mask | PAINT_WINDOW_BLEND_MASK |
 					PAINT_WINDOW_TRANSLUCENT_MASK |
 					PAINT_WINDOW_TRANSFORMED_MASK);
 
@@ -1310,11 +1310,11 @@ groupDrawWindow(CompWindow * w,
 			}
 		}
 	}
-	
+
 	UNWRAP(gs, w->screen, drawWindow);
 	status = (*w->screen->drawWindow) (w, transform, attrib, region, mask);
 	WRAP(gs, w->screen, drawWindow, groupDrawWindow);
-	
+
 	return status;
 }
 
@@ -1350,35 +1350,35 @@ groupPaintWindow(CompWindow * w,
 		gAttrib.brightness = brightness;
 	} else if (gw->group && gw->group->tabbingState != PaintOff &&
 		(gw->animateState & (IS_ANIMATED | FINISHED_ANIMATION))) {
-		//fade the window out 
+		//fade the window out
 		float opacity;
-		
+
 		int origDistanceX = (gw->orgPos.x - gw->destination.x);
 		int origDistanceY = (gw->orgPos.y - gw->destination.y);
 		float origDistance = sqrt(pow(origDistanceX, 2) + pow(origDistanceY,2));
-		
+
 		float distanceX = (WIN_X(w) - gw->destination.x);
 		float distanceY = (WIN_Y(w) - gw->destination.y);
 		float distance = sqrt(pow(distanceX, 2) + pow(distanceY, 2));
-		
-		if(distance > origDistance) 
+
+		if(distance > origDistance)
 			opacity = 100.0f;
 		else {
 			if(!origDistanceX && !origDistanceY) {
-				if (IS_TOP_TAB(w, gw->group) && (gw->group->tabbingState == PaintFadeIn)) 
+				if (IS_TOP_TAB(w, gw->group) && (gw->group->tabbingState == PaintFadeIn))
 					opacity = 100.0f;
 				else
 					opacity = 0.0f;
-			} else 
+			} else
 				opacity = 100.0f * distance / origDistance;
 
-			if (gw->group->tabbingState == PaintFadeOut) 
+			if (gw->group->tabbingState == PaintFadeOut)
 				opacity = 100.0f - opacity;
 		}
 
-		gAttrib.opacity = gAttrib.opacity * opacity / 100; 
-	}            
-	
+		gAttrib.opacity = gAttrib.opacity * opacity / 100;
+	}
+
 	doRotate = gw->group && (gw->group->changeState != PaintOff) &&
 		(IS_TOP_TAB(w, gw->group) || IS_PREV_TOP_TAB(w, gw->group));
 
@@ -1389,19 +1389,19 @@ groupPaintWindow(CompWindow * w,
 		float animationProgress;
 		float animWidth, animHeight;
 		float animScaleX, animScaleY;
-		
+
 		if(gw->group->changeState == PaintFadeIn)
 			timeLeft += groupGetChangeAnimationTime(w->screen) * 500.0f;
-		
+
 		animationProgress = (1 - (timeLeft / (groupGetChangeAnimationTime(w->screen) * 1000.0f))); // 0 at the beginning, 1 at the end.
-		
+
 		rotateAngle = animationProgress * 180.0f;
 		if (IS_TOP_TAB(w, gw->group))
 			rotateAngle += 180.0f;
 
 		if (gw->group->changeAnimationDirection < 0)
 			rotateAngle *= -1.0f;
-			
+
 		animWidth = (1 - animationProgress) * WIN_REAL_WIDTH(PREV_TOP_TAB(gw->group)) + animationProgress * WIN_REAL_WIDTH(TOP_TAB(gw->group));
 		animHeight = (1 - animationProgress) * WIN_REAL_HEIGHT(PREV_TOP_TAB(gw->group)) + animationProgress * WIN_REAL_HEIGHT(TOP_TAB(gw->group));
 
@@ -1418,7 +1418,7 @@ groupPaintWindow(CompWindow * w,
 
 		glPushMatrix();
 		glLoadMatrixf(wTransform.m);
-		
+
 		mask |= PAINT_WINDOW_TRANSFORMED_MASK;
 	}
 
@@ -1426,12 +1426,12 @@ groupPaintWindow(CompWindow * w,
 		mask |= PAINT_WINDOW_NO_CORE_INSTANCE_MASK;
 
 	UNWRAP(gs, w->screen, paintWindow);
-	
+
 	status = (*w->screen->paintWindow) (w, &gAttrib, &wTransform, region, mask);
-	
+
 	if (gw->group && gw->group->tabBar) {
 		if (HAS_TOP_WIN(gw->group) && IS_TOP_TAB(w, gw->group)) {
-			if ((gw->group->changeState == PaintOff) || (gw->group->changeState == PaintFadeOut)) 
+			if ((gw->group->changeState == PaintOff) || (gw->group->changeState == PaintFadeOut))
 				groupPaintTabBar(gw->group, attrib, &wTransform, mask, region);
 		} else if (IS_PREV_TOP_TAB(w, gw->group)) {
 			if (gw->group->changeState == PaintFadeIn)
@@ -1440,7 +1440,7 @@ groupPaintWindow(CompWindow * w,
 	}
 
 	WRAP(gs, w->screen, paintWindow, groupPaintWindow);
-	
+
 	if(doRotate)
 		glPopMatrix();
 

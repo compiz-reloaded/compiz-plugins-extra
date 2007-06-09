@@ -54,7 +54,7 @@ void groupEnqueueMoveNotify (CompWindow *w, int dx, int dy, Bool immediate, Bool
 
 		temp->next = move;
 	}
-	
+
 	else
 		gs->pendingMoves = move;
 
@@ -74,7 +74,7 @@ void groupDequeueMoveNotifies (CompScreen *s)
 	{
 		move = gs->pendingMoves;
 		gs->pendingMoves = move->next;
-		
+
 		moveWindow (move->w, move->dx, move->dy, TRUE, move->immediate);
 		if (move->sync)
 		    syncWindowPosition(move->w);
@@ -130,7 +130,7 @@ void groupDequeueGrabNotifies (CompScreen *s)
 	{
 		grab = gs->pendingGrabs;
 		gs->pendingGrabs = gs->pendingGrabs->next;
-		
+
 		(*(grab->w)->screen->windowGrabNotify) (grab->w, grab->x, grab->y, grab->state, grab->mask);
 
 		free (grab);
@@ -160,7 +160,7 @@ void groupEnqueueUngrabNotify (CompWindow *w)
 
 		temp->next = ungrab;
 	}
-	
+
 	else
 		gs->pendingUngrabs = ungrab;
 
@@ -175,12 +175,12 @@ void groupDequeueUngrabNotifies (CompScreen *s)
 	GROUP_SCREEN (s);
 
 	gs->queued = TRUE;
-	
+
 	while (gs->pendingUngrabs)
 	{
 		ungrab = gs->pendingUngrabs;
 		gs->pendingUngrabs = gs->pendingUngrabs->next;
-		
+
 		(*(ungrab->w)->screen->windowUngrabNotify) (ungrab->w);
 
 		free (ungrab);

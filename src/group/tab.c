@@ -39,10 +39,10 @@ Bool groupGetCurrentMousePosition(CompScreen *s, int *x, int *y)
 	Window root;
 	Window child;
 	Bool result;
-	
-	result = XQueryPointer (s->display->display, s->root, &root, 
+
+	result = XQueryPointer (s->display->display, s->root, &root,
 			&child, &mouseX, &mouseY, &winX, &winY, &rmask);
-	
+
 	if (result) {
 		(*x) = mouseX;
 		(*y) = mouseY;
@@ -72,7 +72,7 @@ Region groupGetClippingRegion(CompWindow *w)
 	{
 		if (!cw->invisible && !(cw->state & CompWindowStateHiddenMask)) {
 			Region buf = XCreateRegion();
-			
+
 			XRectangle rect;
 			rect.x = WIN_REAL_X(cw);
 			rect.y = WIN_REAL_Y(cw);
@@ -99,7 +99,7 @@ groupClearWindowInputShape(CompWindow *w, GroupWindowHideInfo *hideInfo)
 	XRectangle *rects;
 	int count, ordering;
 
-	rects = XShapeGetRectangles(w->screen->display->display, 
+	rects = XShapeGetRectangles(w->screen->display->display,
 			w->id, ShapeInput, &count, &ordering);
 
 	if (count == 0) {
@@ -126,10 +126,10 @@ groupClearWindowInputShape(CompWindow *w, GroupWindowHideInfo *hideInfo)
 	hideInfo->inputRectOrdering = ordering;
 
 	XShapeSelectInput(w->screen->display->display, w->id, NoEventMask);
-			
+
 	XShapeCombineRectangles(w->screen->display->display, w->id,
 			ShapeInput, 0, 0, NULL, 0, ShapeSet, 0);
- 
+
 	XShapeSelectInput(w->screen->display->display, w->id, ShapeNotify);
 }
 
@@ -142,7 +142,7 @@ groupSetWindowVisibility(CompWindow *w, Bool visible)
 {
 	GROUP_WINDOW(w);
 
-	if (!visible && !gw->windowHideInfo) 
+	if (!visible && !gw->windowHideInfo)
 	{
 		gw->windowHideInfo = malloc(sizeof(GroupWindowHideInfo));
 
@@ -154,26 +154,26 @@ groupSetWindowVisibility(CompWindow *w, Bool visible)
 		gw->windowHideInfo->shapeMask = XShapeInputSelected(
 				w->screen->display->display, w->id);
 		groupClearWindowInputShape(w, gw->windowHideInfo);
- 		
+
  		if (w->frame) {
  			gw->windowHideInfo->frameWindow = w->frame;
  			XUnmapWindow(w->screen->display->display, w->frame);
  		} else
 			gw->windowHideInfo->frameWindow = None;
- 
- 		gw->windowHideInfo->skipState = w->state & 
+
+ 		gw->windowHideInfo->skipState = w->state &
  					(CompWindowStateSkipPagerMask | CompWindowStateSkipTaskbarMask);
 
 		changeWindowState(w, w->state | CompWindowStateSkipPagerMask |
 						  CompWindowStateSkipTaskbarMask);
- 	} 
-	else if (visible && gw->windowHideInfo) 
+ 	}
+	else if (visible && gw->windowHideInfo)
 	{
  		if (gw->windowHideInfo->nInputRects)
  		{
- 			XShapeCombineRectangles(w->screen->display->display, 
- 						w->id, ShapeInput, 0, 0, 
- 						gw->windowHideInfo->inputRects, 
+ 			XShapeCombineRectangles(w->screen->display->display,
+ 						w->id, ShapeInput, 0, 0,
+ 						gw->windowHideInfo->inputRects,
  						gw->windowHideInfo->nInputRects,
  						ShapeSet, gw->windowHideInfo->inputRectOrdering);
  		} else {
@@ -184,7 +184,7 @@ groupSetWindowVisibility(CompWindow *w, Bool visible)
 		if (gw->windowHideInfo->inputRects)
 			XFree(gw->windowHideInfo->inputRects);
 
-		XShapeSelectInput(w->screen->display->display, w->id, 
+		XShapeSelectInput(w->screen->display->display, w->id,
 						gw->windowHideInfo->shapeMask);
 
 		if (gw->windowHideInfo->frameWindow) {
@@ -212,7 +212,7 @@ groupSetWindowVisibility(CompWindow *w, Bool visible)
  * a hiding of even PaintPermanentOn tab bars.
  *
  */
-static Bool 
+static Bool
 groupTabBarTimeout(void *data)
 {
 	GroupSelection *group = (GroupSelection *) data;
@@ -228,7 +228,7 @@ groupTabBarTimeout(void *data)
  * groupShowDelayTimeout
  *
  */
-static Bool 
+static Bool
 groupShowDelayTimeout(void *data)
 {
 	int mouseX, mouseY;
@@ -236,22 +236,22 @@ groupShowDelayTimeout(void *data)
 	GroupSelection *group = (GroupSelection *) data;
 	CompScreen *s = group->windows[0]->screen;
 	GROUP_SCREEN(s);
-	
+
 	if (!HAS_TOP_WIN(group))
 	{
 		gs->showDelayTimeoutHandle = 0;
 		return FALSE;	//This will free the timer.
 	}
-	
+
 	CompWindow *topTab = group->topTab->window;
 
 	groupGetCurrentMousePosition(s, &mouseX, &mouseY);
 
-	groupRecalcTabBarPos(group, mouseX, WIN_REAL_X(topTab), 
+	groupRecalcTabBarPos(group, mouseX, WIN_REAL_X(topTab),
 		WIN_REAL_X(topTab) + WIN_REAL_WIDTH(topTab));
 
 	groupTabSetVisibility(group, TRUE, 0);
-	
+
 	gs->showDelayTimeoutHandle = 0;
 	return FALSE;	//This will free the timer.
 }
@@ -305,7 +305,7 @@ void groupTabSetVisibility(GroupSelection *group, Bool visible, unsigned int mas
 	// fixes bad crash...
 	if (!group || !group->windows || !group->tabBar || !HAS_TOP_WIN(group))
 		return;
-	
+
 	GroupTabBar *bar = group->tabBar;
 	CompWindow *topTab = TOP_TAB(group);
 	PaintState oldState;
@@ -317,14 +317,14 @@ void groupTabSetVisibility(GroupSelection *group, Bool visible, unsigned int mas
 	{
 		bar->state = PaintOff;
 		groupSwitchTopTabInput(group, TRUE);
-	} 
-	
-	else if (visible && bar->state != PaintPermanentOn && 
+	}
+
+	else if (visible && bar->state != PaintPermanentOn &&
 			(mask & PERMANENT))
 	{
 		bar->state = PaintPermanentOn;
 		groupSwitchTopTabInput(group, FALSE);
-	
+
 	}
 
 	else if (visible && bar->state == PaintPermanentOn &&
@@ -332,14 +332,14 @@ void groupTabSetVisibility(GroupSelection *group, Bool visible, unsigned int mas
 	{
 		bar->state = PaintOn;
 	}
-	
-	else if (visible && 
+
+	else if (visible &&
 		(bar->state == PaintOff || bar->state == PaintFadeOut))
 	{
-		bar->state = PaintFadeIn;	
+		bar->state = PaintFadeIn;
 		groupSwitchTopTabInput(group, FALSE);
  	}
- 	
+
  	else if (!visible && (bar->state != PaintPermanentOn || (mask & PERMANENT)) &&
  		(bar->state == PaintOn || bar->state == PaintPermanentOn || bar->state == PaintFadeIn))
  	{
@@ -348,7 +348,7 @@ void groupTabSetVisibility(GroupSelection *group, Bool visible, unsigned int mas
  	}
 
 	if (bar->state != oldState && bar->state != PaintPermanentOn) // FIXME remove that when we have a new state for PaintPermanentFadeIn
-		bar->animationTime = (groupGetFadeTime(group->screen) * 1000) - 
+		bar->animationTime = (groupGetFadeTime(group->screen) * 1000) -
 			     bar->animationTime;
 
 	if (bar->state != oldState)
@@ -389,7 +389,7 @@ groupGetDrawOffsetForSlot(GroupTabBarSlot *slot, int *hoffset, int *voffset)
 	int vx, vy;
 	int oldX = w->serverX;
 	int oldY = w->serverY;
-	
+
 	if (HAS_TOP_WIN(gw->group))
 		topTab = TOP_TAB(gw->group);
 	else if (HAS_PREV_TOP_WIN(gw->group))
@@ -451,11 +451,11 @@ void groupHandleScreenActions(CompScreen *s)
 			long int id;
 			GLushort color[3];
 
-			/* read window property to see if window was grouped 
+			/* read window property to see if window was grouped
 			 before - if it was, regroup */
 			if (groupCheckWindowProperty(w, &id, &tabbed, color))
 			{
-				GroupSelection *group = groupFindGroupByID(w->screen, id); 
+				GroupSelection *group = groupFindGroupByID(w->screen, id);
 				groupAddWindowToGroup(w, group, id);
 				if (tabbed)
 					groupTabGroup(w);
@@ -467,10 +467,10 @@ void groupHandleScreenActions(CompScreen *s)
 				damageScreen(w->screen);
 			}
 		}
-		
+
 		if (gs->screenActions & APPLY_AUTO_TABBING)
 		{
-			if (groupGetAutotabCreate(s) && !w->invisible && 
+			if (groupGetAutotabCreate(s) && !w->invisible &&
 			    matchEval(groupGetWindowMatch(s), w))
 			{
 				if (!gw->group && (gw->windowState == WindowNormal)) {
@@ -509,7 +509,7 @@ void groupHandleHoverDetection(GroupSelection *group)
 	if (bar->state != PaintOff) {	// Tab-bar is visible.
 		int mouseX, mouseY;
 		Bool mouseOnScreen;
-		
+
 		// first get the current mouse position
 		mouseOnScreen = groupGetCurrentMousePosition(group->screen, &mouseX, &mouseY);
 
@@ -517,7 +517,7 @@ void groupHandleHoverDetection(GroupSelection *group)
 		if (mouseOnScreen && !(bar->hoveredSlot && XPointInRegion(bar->hoveredSlot->region, mouseX, mouseY)))
 		{
 			bar->hoveredSlot = NULL;
-		
+
 			Region clip;
 			clip = groupGetClippingRegion(topTab);
 
@@ -540,7 +540,7 @@ void groupHandleHoverDetection(GroupSelection *group)
 			}
 
 			XDestroyRegion(clip);
-			
+
 			if (bar->textLayer)
 			{
 				// trigger a FadeOut of the text
@@ -551,9 +551,9 @@ void groupHandleHoverDetection(GroupSelection *group)
 						                            bar->textLayer->animationTime;
 					bar->textLayer->state = PaintFadeOut;
 				}
-			
+
 				// or trigger a FadeIn of the text
-				else if (bar->textLayer->state == PaintFadeOut && 
+				else if (bar->textLayer->state == PaintFadeOut &&
 						 bar->hoveredSlot == bar->textSlot && bar->hoveredSlot)
 				{
 					bar->textLayer->animationTime = (groupGetFadeTextTime(group->screen) * 1000) -
@@ -582,7 +582,7 @@ void groupHandleTabBarFade(GroupSelection *group, int msSinceLastPaint)
 	    bar->animationTime > 0)
 	{
 		bar->animationTime -= msSinceLastPaint;
-		
+
 		if (bar->animationTime < 0)
 			bar->animationTime = 0;
 
@@ -598,13 +598,13 @@ void groupHandleTabBarFade(GroupSelection *group, int msSinceLastPaint)
 				bar->state = PaintOff;
 
 				groupCheckForVisibleTabBars(group->screen);
-		
+
 				if (bar->textLayer)	{
 					// Tab-bar is no longer painted, clean up text animation variables.
 					bar->textLayer->animationTime = 0;
 					bar->textLayer->state = PaintOff;
 					bar->textSlot = bar->hoveredSlot = NULL;
-						
+
 					groupRenderWindowTitle(group);
 				}
 			}
@@ -624,7 +624,7 @@ void groupHandleTabBarFade(GroupSelection *group, int msSinceLastPaint)
 void groupHandleTextFade(GroupSelection *group, int msSinceLastPaint)
 {
 	GroupTabBar *bar = group->tabBar;
-	GroupCairoLayer *textLayer = bar->textLayer;		
+	GroupCairoLayer *textLayer = bar->textLayer;
 
 	if (!textLayer)
 		return;
@@ -634,30 +634,30 @@ void groupHandleTextFade(GroupSelection *group, int msSinceLastPaint)
 	    textLayer->animationTime > 0)
 	{
 		textLayer->animationTime -= msSinceLastPaint;
-		
+
 		if (textLayer->animationTime < 0)
 			textLayer->animationTime = 0;
-		
+
 		// Fade has finished.
 		if (textLayer->animationTime == 0) {
 			if (textLayer->state == PaintFadeIn)
 				textLayer->state = PaintOn;
-			
+
 			else if (textLayer->state == PaintFadeOut)
 				textLayer->state = PaintOff;
 		}
 	}
-		
+
 	if (textLayer->state == PaintOff && bar->hoveredSlot)
 	{
 		// Start text animation for the new hovered slot.
 		bar->textSlot = bar->hoveredSlot;
 		textLayer->state = PaintFadeIn;
 		textLayer->animationTime =  (groupGetFadeTextTime(group->screen) * 1000);
-			
+
 		groupRenderWindowTitle(group);
 	}
-		
+
 	else if (textLayer->state == PaintOff && bar->textSlot)
 	{
 		// Clean Up.
@@ -694,7 +694,7 @@ void groupHandleTabBarAnimation(GroupSelection *group, int msSinceLastPaint)
 
 /*
  * groupTabChangeActivateEvent
- * 
+ *
  * Description: Creates a compiz event to let other plugins know about
  * the starting and ending point of the tab changing animation
  */
@@ -738,56 +738,56 @@ groupHandleTabChange(CompScreen *s, GroupSelection *group)
 
 	CompWindow* topTab = TOP_TAB(group);
 
-	if(group->tabbingState != PaintOff) 
+	if(group->tabbingState != PaintOff)
 	{
 		// if the previous top-tab window is being removed from the group, move the new top-tab window onscreen.
 		if(group->ungroupState == UngroupSingle && group->prevTopTab == NULL)
 		{
 			gs->queued = TRUE;
 			groupSetWindowVisibility(topTab, TRUE);
-			moveWindow(topTab, group->oldTopTabCenterX - WIN_X(topTab) - WIN_WIDTH(topTab) / 2, 
-				group->oldTopTabCenterY - WIN_Y(topTab) - WIN_HEIGHT(topTab) / 2, 
-				TRUE, TRUE); 
+			moveWindow(topTab, group->oldTopTabCenterX - WIN_X(topTab) - WIN_WIDTH(topTab) / 2,
+				group->oldTopTabCenterY - WIN_Y(topTab) - WIN_HEIGHT(topTab) / 2,
+				TRUE, TRUE);
 			syncWindowPosition(topTab);
 			gs->queued = FALSE;
-			
+
 			// recalc here is needed (for y value)!
 			groupRecalcTabBarPos(group, (group->tabBar->region->extents.x1 + group->tabBar->region->extents.x2) / 2,
-				WIN_REAL_X(topTab), 
+				WIN_REAL_X(topTab),
 				WIN_REAL_X(topTab) + WIN_REAL_WIDTH(topTab));
-			
+
 			group->prevTopTab = group->topTab;
 		}
-		
+
 		return;
 	}
 
 	gs->queued = TRUE;
 	groupSetWindowVisibility(topTab, TRUE);
-	moveWindow(topTab, group->oldTopTabCenterX - WIN_X(topTab) - WIN_WIDTH(topTab) / 2, 
-		group->oldTopTabCenterY - WIN_Y(topTab) - WIN_HEIGHT(topTab) / 2, 
-		TRUE, TRUE); 
+	moveWindow(topTab, group->oldTopTabCenterX - WIN_X(topTab) - WIN_WIDTH(topTab) / 2,
+		group->oldTopTabCenterY - WIN_Y(topTab) - WIN_HEIGHT(topTab) / 2,
+		TRUE, TRUE);
 	syncWindowPosition(topTab);
 	gs->queued = FALSE;
-			
+
 	if(group->prevTopTab) {
 		//we use only the half time here - the second half will be PaintFadeOut
 		group->changeAnimationTime = groupGetChangeAnimationTime(s) * 500;
-		
+
 		groupTabChangeActivateEvent(s, TRUE);
 
 		group->changeState = PaintFadeIn;
-				
+
 		group->changeTab = FALSE;
 	}
-	
+
 	else	//No window to do animation with.
 	{
 		group->prevTopTab = group->topTab;
 		group->changeTab = FALSE;
 		activateWindow (TOP_TAB(group));
 	}
-	
+
 	return;
 }
 
@@ -815,16 +815,16 @@ groupHandleAnimation(CompScreen *s, GroupSelection *group)
 
 		// recalc here is needed (for y value)!
 		groupRecalcTabBarPos(group, (group->tabBar->region->extents.x1 + group->tabBar->region->extents.x2) / 2,
-			WIN_REAL_X(TOP_TAB(group)), 
+			WIN_REAL_X(TOP_TAB(group)),
 			WIN_REAL_X(TOP_TAB(group)) + WIN_REAL_WIDTH(TOP_TAB(group)));
 
 		group->changeAnimationTime += groupGetChangeAnimationTime(s) * 500;
-		
+
 		if (group->changeAnimationTime <= 0)
 			group->changeAnimationTime = 0;
-		
+
 		group->changeState = PaintFadeOut;
-		
+
 		if (HAS_TOP_WIN(group))
 			activateWindow (TOP_TAB(group));
 	}
@@ -834,32 +834,32 @@ groupHandleAnimation(CompScreen *s, GroupSelection *group)
 		groupTabChangeActivateEvent(s, FALSE);
 
 		int oldChangeAnimationTime = group->changeAnimationTime;
-		
+
 		if (group->prevTopTab)
 			groupSetWindowVisibility(PREV_TOP_TAB(group), FALSE);
-			
+
 		group->prevTopTab = group->topTab;
 		group->changeState = PaintOff;
-					
+
 		if (group->nextTopTab) {
 			groupChangeTab(group->nextTopTab, group->nextDirection);
 			group->nextTopTab = NULL;
-						
+
 			groupHandleTabChange(s, group);
-			
+
 			if (group->changeState == PaintFadeIn)
 				group->changeAnimationTime += oldChangeAnimationTime;	// If a new animation was started.
 		}
-		
+
 		if (group->changeAnimationTime <= 0)
 			group->changeAnimationTime = 0;
-		
+
 		else if (groupGetVisibilityTime(s) != 0.0f && group->changeState == PaintOff) {
 			groupTabSetVisibility (group, TRUE, PERMANENT | SHOW_BAR_INSTANTLY_MASK);
-			
+
 			if (group->tabBar->timeoutHandle)
 				compRemoveTimeout(group->tabBar->timeoutHandle);
-		
+
 			group->tabBar->timeoutHandle = compAddTimeout (
 				groupGetVisibilityTime(s) * 1000, groupTabBarTimeout, group);
 		}
@@ -881,9 +881,9 @@ groupHandleTab(CompScreen *s, GroupSelection *group)
 	if (group->tabbingState == PaintOff || group->doTabbing ||
 	    !HAS_TOP_WIN(group) || !group->changeTab)
 		return;
-		
+
 	GroupTabBarSlot *slot;
-			
+
 	for(slot = group->tabBar->slots; slot; slot = slot->next) {
 		if (!slot->window)
 			continue;
@@ -899,7 +899,7 @@ groupHandleTab(CompScreen *s, GroupSelection *group)
 
 	group->changeTab = FALSE;
 	group->prevTopTab = group->topTab;
-	
+
 	return;
 }
 
@@ -920,7 +920,7 @@ groupHandleTabbingAnimation(CompScreen *s, GroupSelection *group)
 
 	if (group->tabbingState == PaintOff || group->doTabbing)
 		return;
-	
+
 	// Not animated any more.
 	group->tabbingState = PaintOff;
 	groupSyncWindows(group);
@@ -954,14 +954,14 @@ groupHandleUntab(CompScreen *s, GroupSelection *group)
 		return;
 
 	groupDeleteTabBar(group);
-				
+
 	group->changeAnimationTime = 0;
 	group->changeState = PaintOff;
 	group->nextTopTab = NULL;
 
 	group->changeTab = FALSE;
 	group->prevTopTab = group->topTab;
-	
+
 	return;
 }
 
@@ -989,23 +989,23 @@ groupHandleUngroup(CompScreen *s, GroupSelection *group)
 		for(i = 0; i < group->nWins; i++) {
 			CompWindow *w = group->windows[i];
 			GROUP_WINDOW(w);
-			
+
 			if (gw->ungroup)
 			{
 				gs->queued = TRUE;
 				groupSetWindowVisibility(w, TRUE);
-				moveWindow(w, group->oldTopTabCenterX - WIN_X(w) - WIN_WIDTH(w) / 2, 
-					group->oldTopTabCenterY - WIN_Y(w) - WIN_HEIGHT(w) / 2, 
+				moveWindow(w, group->oldTopTabCenterX - WIN_X(w) - WIN_WIDTH(w) / 2,
+					group->oldTopTabCenterY - WIN_Y(w) - WIN_HEIGHT(w) / 2,
 					TRUE, TRUE);
 				syncWindowPosition(w);
 				gs->queued = FALSE;
 			}
 		}
-		
+
 		group->changeTab = FALSE;
-		
+
 	}
-	
+
 	if ((group->ungroupState == UngroupSingle) && !group->doTabbing) {
 		Bool morePending;
 
@@ -1015,7 +1015,7 @@ groupHandleUngroup(CompScreen *s, GroupSelection *group)
 			for(i = 0;i < group->nWins; i++) {
 				CompWindow *w = group->windows[i];
 				GROUP_WINDOW(w);
-			
+
 				if (gw->ungroup) {
 					groupDeleteGroupWindow(w, TRUE);
 					gw->ungroup = FALSE;
@@ -1072,7 +1072,7 @@ groupHandleChanges(CompScreen* s)
 }
 
 /* adjust velocity for each animation step (adapted from the scale plugin) */
-static int 
+static int
 adjustTabVelocity(CompWindow * w)
 {
 	float dx, dy, adjust, amount;
@@ -1138,7 +1138,7 @@ void groupDrawTabAnimation(CompScreen * s, int msSinceLastPaint)
 	GROUP_SCREEN(s);
 
 	int i;
-	
+
 	GroupSelection *group;
 	for(group = gs->groups; group; group = group->next)
 	{
@@ -1149,7 +1149,7 @@ void groupDrawTabAnimation(CompScreen * s, int msSinceLastPaint)
 		float amount, chunk;
 
 		amount = msSinceLastPaint * 0.05f * groupGetTabbingSpeed(s);
-		steps = amount / (0.5f * groupGetTabbingTimestep(s)); 
+		steps = amount / (0.5f * groupGetTabbingTimestep(s));
 		if (!steps)
 			steps = 1;
 		chunk = amount / (float)steps;
@@ -1199,9 +1199,9 @@ void groupDrawTabAnimation(CompScreen * s, int msSinceLastPaint)
  * This function is responsible for showing / unshowing the tab-bars,
  * when the title-bars / tab-bars are hovered.
  * The function is called whenever a new window is entered,
- * checks if the entered window is a window frame (and if the title 
+ * checks if the entered window is a window frame (and if the title
  * bar part of that frame was hovered) or if it was the input
- * prevention window of a tab bar, and sets tab-bar visibility 
+ * prevention window of a tab bar, and sets tab-bar visibility
  * according to that.
  *
  */
@@ -1221,12 +1221,12 @@ void groupUpdateTabBars(CompScreen *s, Window enteredWin)
 
 	if (w)
 	{
-		/* is the window the entered frame belongs to inside 
+		/* is the window the entered frame belongs to inside
 		   a tabbed group? if no, it's not interesting for us */
 		GROUP_WINDOW(w);
 		if (gw->group && gw->group->tabBar)
 		{
-			/* it is grouped and tabbed, so now we have to 
+			/* it is grouped and tabbed, so now we have to
 			   check if we hovered the title bar or the frame */
 			if (groupGetCurrentMousePosition(s, &mouseX, &mouseY))
 			{
@@ -1271,19 +1271,19 @@ void groupUpdateTabBars(CompScreen *s, Window enteredWin)
 		groupTabSetVisibility (gs->lastHoveredGroup, FALSE, 0);
 
 	/* if we entered a tab bar (or title bar), show the tab bar */
-	if (hoveredGroup && HAS_TOP_WIN(hoveredGroup) && !TOP_TAB(hoveredGroup)->grabbed) 
+	if (hoveredGroup && HAS_TOP_WIN(hoveredGroup) && !TOP_TAB(hoveredGroup)->grabbed)
 	{
 		GroupTabBar *bar = hoveredGroup->tabBar;
 
-		if (bar && ((bar->state == PaintOff) || (bar->state == PaintFadeOut))) {			
+		if (bar && ((bar->state == PaintOff) || (bar->state == PaintFadeOut))) {
 			int showDelayTime = groupGetTabbarShowDelay(s) * 1000;
-	
+
 			/* Show the tab-bar after a delay, only if the tab-bar wasn't fading out. */
 			if (showDelayTime > 0 && (bar->state == PaintOff))
 			{
 				if (gs->showDelayTimeoutHandle)
 					compRemoveTimeout (gs->showDelayTimeoutHandle);
-				gs->showDelayTimeoutHandle = 
+				gs->showDelayTimeoutHandle =
 					compAddTimeout(showDelayTime, groupShowDelayTimeout, hoveredGroup);
 			}
 			else
@@ -1304,17 +1304,17 @@ static Region groupGetConstrainRegion(CompScreen *s)
 	Region     region;
 	REGION     r;
 	int        i;
-	       
+
 	region = XCreateRegion ();
 	if (!region)
 		return NULL;
 
 	for (i = 0;i < s->nOutputDev; i++)
 		XUnionRegion (&s->outputDev[i].region, region, region);
- 	
+
 	r.rects    = &r.extents;
 	r.numRects = r.size = 1;
-	
+
 	for (w = s->windows; w; w = w->next) {
 		if (!w->mapNum)
 			 continue;
@@ -1324,28 +1324,28 @@ static Region groupGetConstrainRegion(CompScreen *s)
 			r.extents.y1 = w->struts->top.y;
 		       	r.extents.x2 = r.extents.x1 + w->struts->top.width;
 			r.extents.y2 = r.extents.y1 + w->struts->top.height;
-			
+
 			XSubtractRegion (region, &r, region);
 
 			r.extents.x1 = w->struts->bottom.x;
 			r.extents.y1 = w->struts->bottom.y;
 			r.extents.x2 = r.extents.x1 + w->struts->bottom.width;
 			r.extents.y2 = r.extents.y1 + w->struts->bottom.height;
-		       
+
 			XSubtractRegion (region, &r, region);
 
 			r.extents.x1 = w->struts->left.x;
 			r.extents.y1 = w->struts->left.y;
 			r.extents.x2 = r.extents.x1 + w->struts->left.width;
 			r.extents.y2 = r.extents.y1 + w->struts->left.height;
-		       
+
 			XSubtractRegion (region, &r, region);
 
 			r.extents.x1 = w->struts->right.x;
 			r.extents.y1 = w->struts->right.y;
 			r.extents.x2 = r.extents.x1 + w->struts->right.width;
 			r.extents.y2 = r.extents.y1 + w->struts->right.height;
-		       
+
 			XSubtractRegion (region, &r, region);
 		}
 	}
@@ -1357,7 +1357,7 @@ static Region groupGetConstrainRegion(CompScreen *s)
  * groupConstrainMovement
  *
  */
-static Bool groupConstrainMovement(CompWindow *w, Region constrainRegion, int dx, int dy, 
+static Bool groupConstrainMovement(CompWindow *w, Region constrainRegion, int dx, int dy,
 	int *new_dx, int *new_dy)
 {
 	GROUP_WINDOW(w);
@@ -1382,7 +1382,7 @@ static Bool groupConstrainMovement(CompWindow *w, Region constrainRegion, int dx
 	while (dx && (xStatus != RectangleIn)) {
 		xStatus = XRectInRegion(constrainRegion, x, y - dy,
 					width, height);
-			
+
 		if (xStatus != RectangleIn)
 			dx += (dx < 0) ? 1 : -1;
 
@@ -1390,7 +1390,7 @@ static Bool groupConstrainMovement(CompWindow *w, Region constrainRegion, int dx
 	}
 
 	while (dy && (status != RectangleIn)) {
-		status = XRectInRegion(constrainRegion, x, y, 
+		status = XRectInRegion(constrainRegion, x, y,
 				width, height);
 
 		if (status != RectangleIn)
@@ -1415,7 +1415,7 @@ static Bool groupConstrainMovement(CompWindow *w, Region constrainRegion, int dx
  * groupApplyConstrainingToWindows
  *
  */
-static void groupApplyConstrainingToWindows(GroupSelection *group, 
+static void groupApplyConstrainingToWindows(GroupSelection *group,
 	Region constrainRegion, Window constrainedWindow, int dx, int dy)
 {
 	int i;
@@ -1507,7 +1507,7 @@ void groupStartTabbingAnimation(GroupSelection *group, Bool tab)
 		while (constrainedWindows) {
 			constrainedWindows = FALSE;
 			/* loop through all windows and try to constrain their
-		   	   animation path (going from gw->orgPos to 
+		   	   animation path (going from gw->orgPos to
 		   	   gw->destination) to the active screen area */
 			for (i = 0; i < group->nWins; i++) {
 				CompWindow *w = group->windows[i];
@@ -1523,7 +1523,7 @@ void groupStartTabbingAnimation(GroupSelection *group, Bool tab)
 
 				/* is the original position inside the screen area? */
 				constrainStatus = XRectInRegion(constrainRegion,
-						gw->orgPos.x  - w->input.left, 
+						gw->orgPos.x  - w->input.left,
 						gw->orgPos.y - w->input.top,
 						WIN_REAL_WIDTH(w), WIN_REAL_HEIGHT(w));
 
@@ -1544,18 +1544,18 @@ void groupStartTabbingAnimation(GroupSelection *group, Bool tab)
 						/* if we found a valid target position, apply
 						   the change also to other windows to retain
 						   the distance between the windows */
-						groupApplyConstrainingToWindows(group, 
-							constrainRegion, w->id, 
-							dx - gw->destination.x + gw->orgPos.x, 
+						groupApplyConstrainingToWindows(group,
+							constrainRegion, w->id,
+							dx - gw->destination.x + gw->orgPos.x,
 							dy - gw->destination.y + gw->orgPos.y);
 
-						/* if we hit constraints, adjust the mask and the 
+						/* if we hit constraints, adjust the mask and the
 						   target position accordingly */
 		    				if (dx != (gw->destination.x - gw->orgPos.x)) {
 							gw->animateState |= CONSTRAINED_X;
 							gw->destination.x = gw->orgPos.x + dx;
 						}
-						
+
 						if (dy != (gw->destination.y - gw->orgPos.y)) {
 							gw->animateState |= CONSTRAINED_Y;
 							gw->destination.y = gw->orgPos.y + dy;
@@ -1589,16 +1589,16 @@ void groupTabGroup(CompWindow *main)
 
 	groupInitTabBar(group, main);
 	groupCreateInputPreventionWindow(group);
-	
+
 	group->tabbingState = PaintOff;
 	groupChangeTab(gw->slot, RotateUncertain);	//Slot is initialized after groupInitTabBar(group);
-	groupRecalcTabBarPos(gw->group, WIN_X(main) + WIN_WIDTH(main)/2,   
- 			WIN_X(main), WIN_X(main) + WIN_WIDTH(main)); 
-	
+	groupRecalcTabBarPos(gw->group, WIN_X(main) + WIN_WIDTH(main)/2,
+ 			WIN_X(main), WIN_X(main) + WIN_WIDTH(main));
+
 	int width, height;
 	width = group->tabBar->region->extents.x2 - group->tabBar->region->extents.x1;
 	height = group->tabBar->region->extents.y2 - group->tabBar->region->extents.y1;
-	
+
 	group->tabBar->textLayer = groupCreateCairoLayer(main->screen, width, height);
 	if (group->tabBar->textLayer)
 	{
@@ -1608,7 +1608,7 @@ void groupTabGroup(CompWindow *main)
 		group->tabBar->textLayer->animationTime = groupGetFadeTextTime(main->screen) * 1000;
 		group->tabBar->textLayer->state = PaintFadeIn;
 	}
-	
+
 	// we need a buffer for DnD here
 	int space = groupGetThumbSpace(main->screen);
 	int thumb_size = groupGetThumbSize(main->screen);
@@ -1635,12 +1635,12 @@ void groupTabGroup(CompWindow *main)
 		return;
 
 	GroupTabBarSlot *slot;
-					
-	for(slot = group->tabBar->slots; slot; slot = slot->next) {		
+
+	for(slot = group->tabBar->slots; slot; slot = slot->next) {
 		CompWindow *cw = slot->window;
 
 		GROUP_WINDOW(cw);
-		
+
 		int x = WIN_X(cw), y = WIN_Y(cw);
 
 		if(gw->animateState & IS_ANIMATED)
@@ -1648,7 +1648,7 @@ void groupTabGroup(CompWindow *main)
 			x = gw->destination.x;
 			y = gw->destination.y;
 		}
-		
+
 		// center the window to the main window
 		gw->destination.x = WIN_X(main) + (WIN_WIDTH(main) / 2) - (WIN_WIDTH(cw) / 2);
 		gw->destination.y = WIN_Y(main) + (WIN_HEIGHT(main) / 2) - (WIN_HEIGHT(cw) / 2);
@@ -1678,27 +1678,27 @@ groupUntabGroup(GroupSelection *group)
 		return;
 
 	GROUP_WINDOW(TOP_TAB(group));
-	GROUP_SCREEN(TOP_TAB(group)->screen);	
-	
+	GROUP_SCREEN(TOP_TAB(group)->screen);
+
 	int mainOrgPosX = gw->mainTabOffset.x;
 	int mainOrgPosY = gw->mainTabOffset.y;
 	int oldX, oldY;
-	
+
 	CompWindow* prevTopTab;
-	
+
 	if(group->prevTopTab)
 		prevTopTab = PREV_TOP_TAB(group);
 	else
 		prevTopTab = TOP_TAB(group);	//If prevTopTab isn't set, we have no choice but using topTab.
 						//It happens when there is still animation, which means the tab wasn't changed anyway.
-	
+
 	group->oldTopTabCenterX = WIN_X(prevTopTab) + WIN_WIDTH(prevTopTab)/2;
 	group->oldTopTabCenterY = WIN_Y(prevTopTab) + WIN_HEIGHT(prevTopTab)/2;
-	
+
 	group->topTab = NULL;
 
 	GroupTabBarSlot *slot;
-		
+
 	for(slot = group->tabBar->slots; slot; slot = slot->next) {
 
 		CompWindow *cw = slot->window;
@@ -1707,8 +1707,8 @@ groupUntabGroup(GroupSelection *group)
 
 		gs->queued = TRUE;
 		groupSetWindowVisibility(cw, TRUE);
-		moveWindow(cw, group->oldTopTabCenterX - WIN_X(cw) - WIN_WIDTH(cw) / 2, 
-			group->oldTopTabCenterY - WIN_Y(cw) - WIN_HEIGHT(cw) / 2, 
+		moveWindow(cw, group->oldTopTabCenterX - WIN_X(cw) - WIN_WIDTH(cw) / 2,
+			group->oldTopTabCenterY - WIN_Y(cw) - WIN_HEIGHT(cw) / 2,
 			TRUE, TRUE);
 		syncWindowPosition(cw);
 		gs->queued = FALSE;
@@ -1748,15 +1748,15 @@ groupChangeTab(GroupTabBarSlot* topTab, ChangeTabAnimationDirection direction)
 
 	CompWindow* w = topTab->window;
 	GROUP_WINDOW(w);
-	
+
 	GroupSelection *group = gw->group;
 
 	if (!group || group->tabbingState != PaintOff)
 		return TRUE;
-	
+
 	if (group->changeState == PaintOff && group->topTab == topTab)
 		return TRUE;
-	
+
 	if (group->changeState != PaintOff && group->nextTopTab == topTab)
 		return TRUE;
 
@@ -1764,10 +1764,10 @@ groupChangeTab(GroupTabBarSlot* topTab, ChangeTabAnimationDirection direction)
 		group->oldTopTabCenterX = WIN_X(PREV_TOP_TAB(group)) + WIN_WIDTH(PREV_TOP_TAB(group))/2;
 		group->oldTopTabCenterY = WIN_Y(PREV_TOP_TAB(group)) + WIN_HEIGHT(PREV_TOP_TAB(group))/2;
 	}
-	
+
 	if (group->changeState != PaintOff)
 		group->nextDirection = direction;
-	else if (direction == RotateLeft) 
+	else if (direction == RotateLeft)
 		group->changeAnimationDirection = 1;
 	else if (direction == RotateRight)
 		group->changeAnimationDirection = -1;
@@ -1776,15 +1776,15 @@ groupChangeTab(GroupTabBarSlot* topTab, ChangeTabAnimationDirection direction)
 		GroupTabBarSlot *slot;
 
 		if (group->topTab)
-			for (slot = group->tabBar->slots; slot && (slot != group->topTab); 
+			for (slot = group->tabBar->slots; slot && (slot != group->topTab);
 				slot = slot->next, distanceOld++);
 
-		for (slot = group->tabBar->slots; slot && (slot != topTab); 
+		for (slot = group->tabBar->slots; slot && (slot != topTab);
 			slot = slot->next, distanceNew++);
 
 		if (distanceNew < distanceOld)
 			group->changeAnimationDirection = 1;   //left
-		else 
+		else
 			group->changeAnimationDirection = -1;    //right
 
 		//check if the opposite direction is shorter
@@ -1800,18 +1800,18 @@ groupChangeTab(GroupTabBarSlot* topTab, ChangeTabAnimationDirection direction)
 			GroupTabBarSlot *tmp = group->topTab;
 			group->topTab = group->prevTopTab;
 			group->prevTopTab = tmp;
-			
+
 			group->changeAnimationDirection *= -1;
 			group->changeAnimationTime = groupGetChangeAnimationTime(w->screen) * 500 - group->changeAnimationTime;
 			group->changeState = (group->changeState == PaintFadeIn)? PaintFadeOut: PaintFadeIn;
-			
+
 			group->nextTopTab = NULL;
 		}
-		
+
 		else
 			group->nextTopTab = topTab;
 	}
-	
+
 	else
 	{
 		group->topTab = topTab;
@@ -1885,7 +1885,7 @@ void groupDestroyCairoLayer(CompScreen *s, GroupCairoLayer *layer)
 GroupCairoLayer* groupCreateCairoLayer(CompScreen *s, int width, int height)
 {
 	GroupCairoLayer* layer = (GroupCairoLayer*) malloc(sizeof(GroupCairoLayer));
-	
+
 	Screen *screen;
 	Display *display;
 	display = s->display->display;
@@ -1909,7 +1909,7 @@ GroupCairoLayer* groupCreateCairoLayer(CompScreen *s, int width, int height)
 		return NULL;
 	}
 
-	if (!bindPixmapToTexture(s, &layer->texture, layer->pixmap, 
+	if (!bindPixmapToTexture(s, &layer->texture, layer->pixmap,
 							 width, height, 32))
 	{
 		XFreePixmap (display, layer->pixmap);
@@ -1917,7 +1917,7 @@ GroupCairoLayer* groupCreateCairoLayer(CompScreen *s, int width, int height)
 		return NULL;
 	}
 
-	layer->surface = 
+	layer->surface =
 		cairo_xlib_surface_create_with_xrender_format(display, layer->pixmap, screen, format, width, height);
 
 	if (cairo_surface_status(layer->surface) != CAIRO_STATUS_SUCCESS) {
@@ -1942,7 +1942,7 @@ GroupCairoLayer* groupCreateCairoLayer(CompScreen *s, int width, int height)
  * groupRecalcSlotPos
  *
  */
-static void 
+static void
 groupRecalcSlotPos(GroupTabBarSlot *slot, int slotPos)
 {
 	GROUP_WINDOW (slot->window);
@@ -1995,7 +1995,7 @@ void groupRecalcTabBarPos(GroupSelection *group, int middleX, int minX1, int max
 			isDraggedSlotGroup = TRUE;
 			continue;
 		}
-	
+
 		tabs_width += (slot->region->extents.x2 - slot->region->extents.x1);
 		if ((slot->region->extents.y2 - slot->region->extents.y1) > tabs_height)
 			tabs_height = slot->region->extents.y2 - slot->region->extents.y1;
@@ -2003,14 +2003,14 @@ void groupRecalcTabBarPos(GroupSelection *group, int middleX, int minX1, int max
 
 	// just a little work-a-round for first call
 	int thumb_size = groupGetThumbSize(group->screen);
-	if (bar->nSlots && tabs_width <= 0)	
-	{ 
+	if (bar->nSlots && tabs_width <= 0)
+	{
 		// first call
 		tabs_width = thumb_size * bar->nSlots;
-		
+
 		if (bar->nSlots && tabs_height < thumb_size) // we need to do the standard height too
 			tabs_height = thumb_size;
-		
+
 		if(isDraggedSlotGroup)
 			tabs_width -= thumb_size;
 	}
@@ -2020,12 +2020,12 @@ void groupRecalcTabBarPos(GroupSelection *group, int middleX, int minX1, int max
 	if (isDraggedSlotGroup)
 		bar_width -= space;  //1 tab is missing, so we have 1 less border
 
-	if (maxX2 - minX1 < bar_width) 
-		box.x = (maxX2 + minX1)/2 - bar_width / 2;	
+	if (maxX2 - minX1 < bar_width)
+		box.x = (maxX2 + minX1)/2 - bar_width / 2;
 	else if (middleX - bar_width/2 < minX1)
-		box.x = minX1;	
+		box.x = minX1;
 	else if (middleX + bar_width/2 > maxX2)
-		box.x = maxX2 - bar_width;	
+		box.x = maxX2 - bar_width;
 	else
 		box.x = middleX - bar_width / 2;
 
@@ -2034,31 +2034,31 @@ void groupRecalcTabBarPos(GroupSelection *group, int middleX, int minX1, int max
 	box.height = space * 2 + tabs_height;
 
 	groupResizeTabBarRegion (group, &box, TRUE);
-	
+
 	// recalc every slot region
 	currentSlot = 0;
 	for(slot = bar->slots; slot; slot = slot->next)
 	{
 		if(slot == gs->draggedSlot && gs->dragged)
 			continue;
-	
+
 		groupRecalcSlotPos (slot, currentSlot);
-		XOffsetRegion (slot->region, 
+		XOffsetRegion (slot->region,
 			bar->region->extents.x1,
 			bar->region->extents.y1);
 		slot->springX = (slot->region->extents.x1 + slot->region->extents.x2) / 2;
 		slot->speed = 0;
 		slot->msSinceLastMove = 0;
-		
+
 		currentSlot++;
 	}
-	
+
 	bar->leftSpringX = box.x;
 	bar->rightSpringX = box.x + box.width;
-	
+
 	bar->rightSpeed = 0;
 	bar->leftSpeed = 0;
-	
+
 	bar->rightMsSinceLastMove = 0;
 	bar->leftMsSinceLastMove = 0;
 }
@@ -2072,22 +2072,22 @@ groupDamageTabBarRegion (GroupSelection *group)
     reg.numRects = 1;
 
 	/* we use 15 pixels as damage buffer here, as there is a 10 pixel wide
-	   border around the selected slot which also needs to be damaged 
-	   properly - however the best way would be if slot->region was 
+	   border around the selected slot which also needs to be damaged
+	   properly - however the best way would be if slot->region was
 	   sized including the border */
 #define DAMAGE_BUFFER 20
 
     reg.extents.x1 = MIN (group->tabBar->region->extents.x1,
-						  group->tabBar->slots->region->extents.x1) - 
+						  group->tabBar->slots->region->extents.x1) -
 		             DAMAGE_BUFFER;
 	reg.extents.y1 = MIN (group->tabBar->region->extents.y1,
 						  group->tabBar->slots->region->extents.y1) -
 		             DAMAGE_BUFFER;
     reg.extents.x2 = MAX (group->tabBar->region->extents.x2,
-						  group->tabBar->revSlots->region->extents.x2) + 
+						  group->tabBar->revSlots->region->extents.x2) +
 		             DAMAGE_BUFFER;
 	reg.extents.y2 = MAX (group->tabBar->region->extents.y2,
-						  group->tabBar->revSlots->region->extents.y2) + 
+						  group->tabBar->revSlots->region->extents.y2) +
 		             DAMAGE_BUFFER;
 
 	damageScreenRegion (group->screen, &reg);
@@ -2119,10 +2119,10 @@ groupResizeTabBarRegion (GroupSelection *group, XRectangle *box, Bool syncIPW)
     if (group->tabBar->bgLayer &&
 	(oldWidth != box->width))
     {
-	group->tabBar->bgLayer = 
-	    groupRebuildCairoLayer (group->screen, 
-				    group->tabBar->bgLayer, 
-				    box->width + 
+	group->tabBar->bgLayer =
+	    groupRebuildCairoLayer (group->screen,
+				    group->tabBar->bgLayer,
+				    box->width +
 				    groupGetThumbSpace (group->screen) +
 				    groupGetThumbSize (group->screen),
 				    box->height);
@@ -2143,8 +2143,8 @@ groupResizeTabBarRegion (GroupSelection *group, XRectangle *box, Bool syncIPW)
 	xwc.stack_mode = Above;
     	xwc.sibling = HAS_TOP_WIN(group) ? TOP_TAB(group)->id : None;
 
-	XConfigureWindow (group->screen->display->display, group->inputPrevention, 
-	    		  CWSibling | CWStackMode | CWX | CWY | CWWidth | CWHeight, &xwc); 
+	XConfigureWindow (group->screen->display->display, group->inputPrevention,
+	    		  CWSibling | CWStackMode | CWX | CWY | CWWidth | CWHeight, &xwc);
     }
 
 	groupDamageTabBarRegion (group);
@@ -2245,12 +2245,12 @@ void groupUnhookTabBarSlot(GroupTabBar *bar, GroupTabBarSlot *slot, Bool tempora
 {
 	GroupTabBarSlot *prev = slot->prev;
 	GroupTabBarSlot *next = slot->next;
-	
+
 	if(prev)
 		prev->next = next;
 	else
 		bar->slots = next;
-	
+
 	if(next)
 		next->prev = prev;
 	else
@@ -2282,11 +2282,11 @@ void groupUnhookTabBarSlot(GroupTabBar *bar, GroupTabBarSlot *slot, Bool tempora
 
 	if (slot == bar->hoveredSlot)
 		bar->hoveredSlot = NULL;
-	
+
 	if (slot == bar->textSlot)
 	{
 		bar->textSlot = NULL;
-	
+
 		if (bar->textLayer)
 		{
 			if (bar->textLayer->state == PaintFadeIn || bar->textLayer->state == PaintOn)
@@ -2320,7 +2320,7 @@ void groupDeleteTabBarSlot(GroupTabBar *bar, GroupTabBarSlot *slot)
 	CompScreen *s = w->screen;
 	GROUP_WINDOW(w);
 	GROUP_SCREEN(s);
-		
+
 	if(slot == gs->draggedSlot)
 	{
 		gs->draggedSlot = NULL;
@@ -2329,7 +2329,7 @@ void groupDeleteTabBarSlot(GroupTabBar *bar, GroupTabBarSlot *slot)
 		if (gs->grabState == ScreenGrabTabDrag)
 			groupGrabScreen(s, ScreenGrabNone);
 	}
-	
+
 	gw->slot = NULL;
 	groupUpdateWindowProperty(w);
 	free(slot);
@@ -2370,8 +2370,8 @@ void groupCreateSlot(GroupSelection *group, CompWindow *w)
 static int groupSpringForce(CompScreen *s, int centerX, int springX)
 {
 	// Each slot has a spring attached to it, starting at springX, and ending at the center of the slot (centerX).
-	// The spring will cause the slot to move, using the well-known physical formula F = k * dl... 
-	
+	// The spring will cause the slot to move, using the well-known physical formula F = k * dl...
+
 	return -SPRING_K * (centerX - springX);
 }
 
@@ -2384,29 +2384,29 @@ static int groupDraggedSlotForce(CompScreen *s, int distanceX, int distanceY)
 	// The dragged slot will make the slot move, to get DnD animations (slots will make room for the newly inserted slot).
 	// As the dragged slot is closer to the slot, it will put more force on the slot, causing it to make room for the dragged slot...
 	// But if the dragged slot gets too close to the slot, they are going to be reordered soon, so the force will get lower.
-	
+
 	// If the dragged slot is in the other side of the slot, it will have to make force in the opposite direction.
-	
+
 	// So we the needed funtion is an odd function that goes up at first, and down after that.
 	// Sinus is a function like that... :)
-	
+
 	// The maximum is got when x = (x1 + x2) / 2, in this case: x = SIZE + BORDER.
 	// Because of that, for x = SIZE + BORDER, we get a force of SPRING_K * (SIZE + BORDER) / 2.
 	// That equals to the force we get from the the spring.
 	// This way, the slot won't move when its distance from the dragged slot is SIZE + BORDER (which is the default distance between slots).
 
 	float a = SPRING_K * (SIZE + BORDER) / 2;	// The maximum value.
-	float b = PI /  (2 * SIZE + 2 * BORDER);	// This will make distanceX == 2 * (SIZE + BORDER) to get 0, 
+	float b = PI /  (2 * SIZE + 2 * BORDER);	// This will make distanceX == 2 * (SIZE + BORDER) to get 0,
 							// and distanceX == (SIZE + BORDER) to get the maximum.
-	
+
 	// If there is some distance between the slots in the y axis, the slot should get less force...
 	// For this, we change max to a lower value, using a simple linear function.
-	
+
 	if(distanceY < Y_START_MOVE)
 		a *= 1.0f - (float)distanceY / Y_START_MOVE;
 	else
 		a = 0;
-	
+
 	if(abs(distanceX) < 2 * (SIZE + BORDER))
 		return a * sin(b * distanceX);
 	else
@@ -2421,10 +2421,10 @@ static void groupApplyFriction(CompScreen *s, int *speed)
 {
 	if(abs(*speed) < FRICTION)
 		*speed = 0;
-			
+
 	else if(*speed > 0)
 		*speed -= FRICTION;
-		
+
 	else if(*speed < 0)
 		*speed += FRICTION;
 }
@@ -2437,7 +2437,7 @@ static void groupApplySpeedLimit(CompScreen *s, int *speed)
 {
 	if(*speed > SPEED_LIMIT)
 		*speed = SPEED_LIMIT;
-	
+
 	else if(*speed < -SPEED_LIMIT)
 		*speed = - SPEED_LIMIT;
 }
@@ -2462,52 +2462,52 @@ void groupApplyForces(CompScreen *s, GroupTabBar *bar, GroupTabBarSlot* draggedS
 		draggedCenterX = 0;
 		draggedCenterY = 0;
 	}
-	
+
 	bar->leftSpeed += groupSpringForce(s, bar->region->extents.x1, bar->leftSpringX);
 	bar->rightSpeed += groupSpringForce(s, bar->region->extents.x2, bar->rightSpringX);
-	
+
 	if (draggedSlot)
 	{
 		int leftForce = groupDraggedSlotForce(s, bar->region->extents.x1 - SIZE / 2 - draggedCenterX,
 							abs((bar->region->extents.y1 + bar->region->extents.y2) / 2 - draggedCenterY));
-		
+
 		int rightForce = groupDraggedSlotForce(s, bar->region->extents.x2 + SIZE / 2 - draggedCenterX,
 							abs((bar->region->extents.y1 + bar->region->extents.y2) / 2 - draggedCenterY));
-		
+
 		if(leftForce < 0)
 			bar->leftSpeed += leftForce;
 		if(rightForce > 0)
 			bar->rightSpeed += rightForce;
 	}
-	
+
 	for(slot = bar->slots; slot; slot = slot->next)
 	{
 		centerX = (slot->region->extents.x1 + slot->region->extents.x2) / 2;
 		centerY = (slot->region->extents.y1 + slot->region->extents.y2) / 2;
-		
+
 		slot->speed += groupSpringForce(s, centerX, slot->springX);
-		
+
 		if(draggedSlot && draggedSlot != slot)
-		{		
+		{
 			int draggedSlotForce = groupDraggedSlotForce(s, centerX - draggedCenterX,
 									abs(centerY - draggedCenterY));
-			
+
 			slot->speed += draggedSlotForce ;
-			
+
 			slot2 = NULL;
-			
+
 			if(draggedSlotForce < 0)
 			{
 				slot2 = slot->prev;
 				bar->leftSpeed += draggedSlotForce;
 			}
-			
+
 			else if(draggedSlotForce > 0)
 			{
 				slot2 = slot->next;
 				bar->rightSpeed += draggedSlotForce;
 			}
-			
+
 			for( ; slot2; slot2 = (draggedSlotForce < 0)? slot2->prev: slot2->next)
 			{
 				if(slot2 != draggedSlot)
@@ -2515,16 +2515,16 @@ void groupApplyForces(CompScreen *s, GroupTabBar *bar, GroupTabBarSlot* draggedS
 			}
 		}
 	}
-	
+
 	for(slot = bar->slots; slot; slot = slot->next)
 	{
 		groupApplyFriction(s, &slot->speed);
 		groupApplySpeedLimit(s, &slot->speed);
 	}
-	
+
 	groupApplyFriction(s, &bar->leftSpeed);
 	groupApplySpeedLimit(s, &bar->leftSpeed);
-	
+
 	groupApplyFriction(s, &bar->rightSpeed);
 	groupApplySpeedLimit(s, &bar->rightSpeed);
 }
@@ -2540,18 +2540,18 @@ void groupApplySpeeds(CompScreen* s, GroupSelection *group, int msSinceLastRepai
 	int move;
 	XRectangle box;
 	Bool updateTabBar = FALSE;
-	
+
 	box.x = bar->region->extents.x1;
-	box.y = bar->region->extents.y1; 
+	box.y = bar->region->extents.y1;
 	box.width = bar->region->extents.x2 - bar->region->extents.x1;
 	box.height = bar->region->extents.y2 - bar->region->extents.y1;
-	
+
 	bar->leftMsSinceLastMove += msSinceLastRepaint;
 	bar->rightMsSinceLastMove += msSinceLastRepaint;
-	
+
 	// Left
 	move = bar->leftSpeed * bar->leftMsSinceLastMove / 1000;
-	
+
 	if(move)
 	{
 		box.x += move;
@@ -2560,8 +2560,8 @@ void groupApplySpeeds(CompScreen* s, GroupSelection *group, int msSinceLastRepai
 		bar->leftMsSinceLastMove = 0;
 		updateTabBar = TRUE;
 	}
-	
-	else if(bar->leftSpeed == 0 && bar->region->extents.x1 != bar->leftSpringX && 
+
+	else if(bar->leftSpeed == 0 && bar->region->extents.x1 != bar->leftSpringX &&
 		SPRING_K * abs(bar->region->extents.x1 - bar->leftSpringX) < FRICTION)
 	{
 		// Friction is preventing from the left border to get to its original position.
@@ -2571,22 +2571,22 @@ void groupApplySpeeds(CompScreen* s, GroupSelection *group, int msSinceLastRepai
 		bar->leftMsSinceLastMove = 0;
 		updateTabBar = TRUE;
 	}
-	
+
 	else if(bar->leftSpeed == 0)
 		bar->leftMsSinceLastMove = 0;
-	
+
 	//Right
 	move = bar->rightSpeed * bar->rightMsSinceLastMove / 1000;
-	
+
 	if(move)
 	{
 		box.width += move;
-		
+
 		bar->rightMsSinceLastMove = 0;
 		updateTabBar = TRUE;
 	}
-	
-	else if(bar->rightSpeed == 0 && bar->region->extents.x2 != bar->rightSpringX && 
+
+	else if(bar->rightSpeed == 0 && bar->region->extents.x2 != bar->rightSpringX &&
 		SPRING_K * abs(bar->region->extents.x2 - bar->rightSpringX) < FRICTION)
 	{
 		// Friction is preventing from the right border to get to its original position.
@@ -2595,35 +2595,35 @@ void groupApplySpeeds(CompScreen* s, GroupSelection *group, int msSinceLastRepai
 		bar->leftMsSinceLastMove = 0;
 		updateTabBar = TRUE;
 	}
-	
+
 	else if(bar->rightSpeed == 0)
 		bar->rightMsSinceLastMove = 0;
-	
+
 	if(updateTabBar)
 		groupResizeTabBarRegion (group, &box, FALSE);
-	
+
 	for(slot = bar->slots; slot; slot = slot->next)
 	{
 		slot->msSinceLastMove += msSinceLastRepaint;
 		move = slot->speed * slot->msSinceLastMove / 1000;
-		
+
 		if(move)
 		{
-			XOffsetRegion (slot->region, 
+			XOffsetRegion (slot->region,
 				move, 0);
 			slot->msSinceLastMove = 0;
 		}
-		
+
 		else if(slot->speed == 0 && (slot->region->extents.x1 + slot->region->extents.x2) / 2 != slot->springX &&
 			SPRING_K * abs((slot->region->extents.x1 + slot->region->extents.x2) / 2 - slot->springX) < FRICTION)
 		{
 			// Friction is preventing from the slot to get to its original position.
-			
+
 			XOffsetRegion (slot->region,
 				slot->springX - (slot->region->extents.x1 + slot->region->extents.x2) / 2, 0);
 			slot->msSinceLastMove = 0;
 		}
-		
+
 		else if(slot->speed == 0)
 			slot->msSinceLastMove = 0;
 	}
@@ -2660,7 +2660,7 @@ void groupInitTabBar(GroupSelection *group, CompWindow* topTab)
 	int i;
 	for(i = 0; i < group->nWins; i++)
 		groupCreateSlot(group, group->windows[i]);
-	
+
 	groupRecalcTabBarPos(group, WIN_X(topTab) + WIN_WIDTH(topTab) / 2,
 				WIN_X(topTab), WIN_X(topTab) + WIN_WIDTH(topTab));
 
@@ -2673,7 +2673,7 @@ void groupInitTabBar(GroupSelection *group, CompWindow* topTab)
 void groupDeleteTabBar(GroupSelection *group)
 {
 	GroupTabBar *bar = group->tabBar;
-	
+
 	groupDestroyCairoLayer(group->screen, bar->textLayer);
 	groupDestroyCairoLayer(group->screen, bar->bgLayer);
 	groupDestroyCairoLayer(group->screen, bar->selectionLayer);
@@ -2703,22 +2703,22 @@ groupInitTab(CompDisplay * d, CompAction * action, CompActionState state,
 {
 	CompWindow *w = findWindowAtDisplay(d, d->activeWindow);
 	Bool allowUntab = TRUE;
-	
+
 	if (!w)
 		return TRUE;
 
 	GROUP_WINDOW(w);
-	
+
 	if (gw->inSelection)
 	{
 		groupGroupWindows(d, action, state, option, nOption);
 		allowUntab = FALSE;	// If the window was selected, we don't want to untab the group.
 					// because the user probably wanted to tab the selected windows.
 	}
-	
+
 	if (!gw->group)
 		return TRUE;
-	
+
 	if (gw->group->tabbingState != PaintOff)
 		groupSyncWindows(gw->group);
 
@@ -2727,9 +2727,9 @@ groupInitTab(CompDisplay * d, CompAction * action, CompActionState state,
 	} else if (allowUntab) {
 		groupUntabGroup(gw->group);
 	}
-	
+
 	damageScreen(w->screen);
-	
+
 	return TRUE;
 }
 
@@ -2743,21 +2743,21 @@ groupChangeTabLeft(CompDisplay * d, CompAction * action, CompActionState state,
 {
 	CompWindow *w = findWindowAtDisplay(d, d->activeWindow);
 	CompWindow *topTab = w;
-	
+
 	if(!w)
 		return TRUE;
-	
+
 	GROUP_WINDOW(w);
 	GROUP_SCREEN(w->screen);
-	
+
 	if(!gw->slot || !gw->group)
 		return TRUE;
-	
+
 	if(gw->group->nextTopTab)
 		topTab = NEXT_TOP_TAB(gw->group);
 	else if(gw->group->topTab)
 		topTab = TOP_TAB(gw->group);	//If there are no tabbing animations, topTab is never NULL.
-	
+
 	gw = GET_GROUP_WINDOW(topTab, gs);
 
 	if(gw->slot->prev)
@@ -2776,21 +2776,21 @@ groupChangeTabRight(CompDisplay * d, CompAction * action, CompActionState state,
 {
 	CompWindow *w = findWindowAtDisplay(d, d->activeWindow);
 	CompWindow *topTab = w;
-	
+
 	if(!w)
 		return TRUE;
-	
+
 	GROUP_WINDOW(w);
 	GROUP_SCREEN(w->screen);
-	
+
 	if(!gw->slot || !gw->group)
 		return TRUE;
-	
+
 	if(gw->group->nextTopTab)
 		topTab = NEXT_TOP_TAB(gw->group);
 	else if(gw->group->topTab)
 		topTab = TOP_TAB(gw->group);	//If there are no tabbing animations, topTab is never NULL.
-	
+
 	gw = GET_GROUP_WINDOW(topTab, gs);
 
 	if(gw->slot->next)
@@ -2812,9 +2812,9 @@ groupSwitchTopTabInput(GroupSelection *group, Bool enable)
 	if (!group->inputPrevention)
 		groupCreateInputPreventionWindow(group);
 
-	if (!enable) 
+	if (!enable)
 		XMapWindow(group->screen->display->display, group->inputPrevention);
-	else 
+	else
 		XUnmapWindow(group->screen->display->display, group->inputPrevention);
 
 	group->ipwMapped = !enable;
@@ -2826,16 +2826,16 @@ groupSwitchTopTabInput(GroupSelection *group, Bool enable)
  */
 void groupCreateInputPreventionWindow(GroupSelection* group)
 {
-	if (!group->inputPrevention)    //For preventing a memory leak. 
-	{ 
-		XSetWindowAttributes attrib; 
+	if (!group->inputPrevention)    //For preventing a memory leak.
+	{
+		XSetWindowAttributes attrib;
 		attrib.override_redirect = TRUE;
 
-		group->inputPrevention = XCreateWindow(group->screen->display->display, 
-				group->screen->root, -100, -100, 1, 1, 0, CopyFromParent,  
-				InputOnly, CopyFromParent, CWOverrideRedirect, &attrib); 
+		group->inputPrevention = XCreateWindow(group->screen->display->display,
+				group->screen->root, -100, -100, 1, 1, 0, CopyFromParent,
+				InputOnly, CopyFromParent, CWOverrideRedirect, &attrib);
 		group->ipwMapped = FALSE;
-	} 
+	}
 }
 
 /*
@@ -2844,13 +2844,13 @@ void groupCreateInputPreventionWindow(GroupSelection* group)
  */
 void groupDestroyInputPreventionWindow(GroupSelection* group)
 {
-	if(group->inputPrevention) 
-	{ 
-		XDestroyWindow(group->screen->display->display, group->inputPrevention); 
+	if(group->inputPrevention)
+	{
+		XDestroyWindow(group->screen->display->display, group->inputPrevention);
 
-		group->inputPrevention = None; 
+		group->inputPrevention = None;
 		group->ipwMapped = TRUE;
 	}
-} 
+}
 
 

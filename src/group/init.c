@@ -60,7 +60,7 @@ static void groupScreenOptionChanged(CompScreen *s, CompOption *opt, GroupScreen
 		case GroupScreenOptionThumbSpace:
 			for (group = gs->groups; group; group = group->next)
 				if (group->tabBar)
-					groupRecalcTabBarPos(group, 
+					groupRecalcTabBarPos(group,
 										 (group->tabBar->region->extents.x1 +
 										 group->tabBar->region->extents.x2) / 2,
 										 group->tabBar->region->extents.x1,
@@ -171,7 +171,7 @@ void groupFiniDisplay(CompPlugin * p, CompDisplay * d)
 	freeScreenPrivateIndex(d, gd->screenPrivateIndex);
 
 	UNWRAP(gd, d, handleEvent);
-	
+
 	free(gd);
 }
 
@@ -237,7 +237,7 @@ Bool groupInitScreen(CompPlugin * p, CompScreen * s)
 	gs->pendingMoves = NULL;
 	gs->pendingGrabs = NULL;
 	gs->pendingUngrabs = NULL;
-	
+
 	gs->draggedSlot = NULL;
 	gs->dragged = FALSE;
 	gs->dragHoverTimeoutHandle = 0;
@@ -249,12 +249,12 @@ Bool groupInitScreen(CompPlugin * p, CompScreen * s)
 	initTexture (s, &gs->glowTexture);
 
 	GroupGlowTypeEnum glowType = groupGetGlowType(s);
-	imageDataToTexture (s, &gs->glowTexture, 
+	imageDataToTexture (s, &gs->glowTexture,
 		glowTextureProperties[glowType].textureData,
 		glowTextureProperties[glowType].textureSize,
 		glowTextureProperties[glowType].textureSize,
 		GL_RGBA, GL_UNSIGNED_BYTE);
-	
+
 	return TRUE;
 }
 
@@ -317,7 +317,7 @@ void groupFiniScreen(CompPlugin * p, CompScreen * s)
 	UNWRAP(gs, s, damageWindowRect);
 	UNWRAP(gs, s, windowStateChangeNotify);
 
-	finiTexture (s, &gs->glowTexture); 
+	finiTexture (s, &gs->glowTexture);
 	free(gs);
 }
 
