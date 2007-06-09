@@ -3,7 +3,7 @@ PFLAGS=-module -avoid-version -no-undefined
 
 libtrailfocus_la_LDFLAGS = $(PFLAGS)
 libtrailfocus_la_LIBADD = @COMPIZ_LIBS@
-libtrailfocus_la_SOURCES = trailfocus_options.c trailfocus.c
+libtrailfocus_la_SOURCES = trailfocus_options.c trailfocus_options.h trailfocus.c
 
 INCLUDES =                              \
 	@COMPIZ_CFLAGS@                  \

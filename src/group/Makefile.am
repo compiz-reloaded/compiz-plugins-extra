@@ -3,7 +3,16 @@ PFLAGS=-module -avoid-version -no-undefined
 if GROUP_PLUGIN
 libgroup_la_LDFLAGS = $(PFLAGS)
 libgroup_la_LIBADD = @COMPIZ_LIBS@ @GROUP_LIBS@
-libgroup_la_SOURCES = group_options.c group.c init.c paint.c queues.c selection.c tab.c group.h group_glow.h 
+libgroup_la_SOURCES = group_options.c \
+		      group_options.h \
+		      group.c         \
+		      init.c          \
+		      paint.c         \
+		      queues.c        \
+		      selection.c     \
+		      tab.c           \
+		      group.h         \
+		      group_glow.h 
 endif
 
 INCLUDES =                              \

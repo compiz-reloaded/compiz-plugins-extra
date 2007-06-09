@@ -3,7 +3,7 @@ PFLAGS=-module -avoid-version -no-undefined
 
 libfirepaint_la_LDFLAGS = $(PFLAGS)
 libfirepaint_la_LIBADD = @COMPIZ_LIBS@
-libfirepaint_la_SOURCES = firepaint_options.c firepaint.c firepaint_tex.h
+libfirepaint_la_SOURCES = firepaint_options.c firepaint_options.h firepaint.c firepaint_tex.h
 
 INCLUDES =                              \
 	@COMPIZ_CFLAGS@                  \

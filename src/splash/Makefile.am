@@ -3,7 +3,7 @@ PFLAGS=-module -avoid-version -no-undefined
 
 libsplash_la_LDFLAGS = $(PFLAGS)
 libsplash_la_LIBADD = @COMPIZ_LIBS@
-libsplash_la_SOURCES = splash_options.c splash.c
+libsplash_la_SOURCES = splash_options.c splash_options.h splash.c
 
 INCLUDES =                              \
 	@COMPIZ_CFLAGS@                  \

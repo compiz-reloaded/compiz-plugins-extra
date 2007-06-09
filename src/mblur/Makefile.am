@@ -3,7 +3,7 @@ PFLAGS=-module -avoid-version -no-undefined
 
 libmblur_la_LDFLAGS = $(PFLAGS)
 libmblur_la_LIBADD = @COMPIZ_LIBS@
-libmblur_la_SOURCES = mblur_options.c mblur.c
+libmblur_la_SOURCES = mblur_options.c mblur_options.h mblur.c
 
 INCLUDES =                              \
 	@COMPIZ_CFLAGS@                  \

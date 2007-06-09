@@ -3,7 +3,7 @@ PFLAGS=-module -avoid-version -no-undefined
 
 libbench_la_LDFLAGS = $(PFLAGS)
 libbench_la_LIBADD = @COMPIZ_LIBS@
-libbench_la_SOURCES = bench_options.c bench.c bench_tex.h
+libbench_la_SOURCES = bench_options.c bench_options.h bench.c bench_tex.h
 
 INCLUDES =                              \
 	@COMPIZ_CFLAGS@                  \

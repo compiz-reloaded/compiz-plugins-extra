@@ -3,7 +3,7 @@ PFLAGS=-module -avoid-version -no-undefined
 
 libshowdesktop_la_LDFLAGS = $(PFLAGS)
 libshowdesktop_la_LIBADD = @COMPIZ_LIBS@
-libshowdesktop_la_SOURCES = showdesktop_options.c showdesktop.c
+libshowdesktop_la_SOURCES = showdesktop_options.c showdesktop_options.h showdesktop.c
 
 INCLUDES =                              \
 	@COMPIZ_CFLAGS@                  \

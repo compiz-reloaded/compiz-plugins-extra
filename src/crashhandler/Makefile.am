@@ -3,7 +3,7 @@ PFLAGS=-module -avoid-version -no-undefined
 
 libcrashhandler_la_LDFLAGS = $(PFLAGS)
 libcrashhandler_la_LIBADD = @COMPIZ_LIBS@
-libcrashhandler_la_SOURCES = crashhandler_options.c crashhandler.c
+libcrashhandler_la_SOURCES = crashhandler_options.c crashhandler_options.h crashhandler.c
 
 INCLUDES =                              \
 	@COMPIZ_CFLAGS@                  \

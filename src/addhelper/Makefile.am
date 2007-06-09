@@ -3,7 +3,7 @@ PFLAGS=-module -avoid-version -no-undefined
 
 libaddhelper_la_LDFLAGS = $(PFLAGS)
 libaddhelper_la_LIBADD = @COMPIZ_LIBS@
-libaddhelper_la_SOURCES = addhelper_options.c addhelper.c
+libaddhelper_la_SOURCES = addhelper_options.c addhelper_options.h addhelper.c
 
 INCLUDES =                              \
 	@COMPIZ_CFLAGS@                  \

@@ -3,7 +3,7 @@ PFLAGS=-module -avoid-version -no-undefined
 
 libreflex_la_LDFLAGS = $(PFLAGS)
 libreflex_la_LIBADD = @COMPIZ_LIBS@
-libreflex_la_SOURCES = reflex_options.c reflex.c
+libreflex_la_SOURCES = reflex_options.c reflex_options.h reflex.c
 
 INCLUDES =                              \
 	@COMPIZ_CFLAGS@                  \

@@ -3,7 +3,7 @@ PFLAGS=-module -avoid-version -no-undefined
 
 libfadedesktop_la_LDFLAGS = $(PFLAGS)
 libfadedesktop_la_LIBADD = @COMPIZ_LIBS@
-libfadedesktop_la_SOURCES = fadedesktop_options.c fadedesktop.c
+libfadedesktop_la_SOURCES = fadedesktop_options.c fadedesktop_options.h fadedesktop.c
 
 INCLUDES =                              \
 	@COMPIZ_CFLAGS@                  \

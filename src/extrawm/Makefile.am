@@ -3,7 +3,7 @@ PFLAGS=-module -avoid-version -no-undefined
 
 libextrawm_la_LDFLAGS = $(PFLAGS)
 libextrawm_la_LIBADD = @COMPIZ_LIBS@
-libextrawm_la_SOURCES = extrawm_options.c extrawm.c
+libextrawm_la_SOURCES = extrawm_options.c extrawm_options.h extrawm.c
 
 INCLUDES =                              \
 	@COMPIZ_CFLAGS@                  \
