@@ -802,7 +802,7 @@ groupHandleButtonPressEvent(CompDisplay *d, XEvent *event)
 	for (group = gs->groups; group; group = group->next) {
 		if ((group->inputPrevention == event->xbutton.window) && group->tabBar) {
 			switch (button) {
-			case Button1:
+				case Button1:
 				{
 					GroupTabBarSlot *slot;
 
@@ -822,8 +822,9 @@ groupHandleButtonPressEvent(CompDisplay *d, XEvent *event)
 					}
 				}
 				break;
-			case Button4:
-			case Button5:
+			
+				case Button4:
+				case Button5:
 				{
 					CompWindow *topTab = NULL;
 					GroupWindow *gw;
