@@ -624,16 +624,22 @@ groupGroupWindows(CompDisplay * d, CompAction * action,
 
 		// we need to do one first to get the pointer of a new group
 		cw = gd->tmpSel.windows[0];
+		GROUP_WINDOW (cw);
+
 		groupAddWindowToGroup(cw, group, 0);
 		addWindowDamage(cw);
 
-		GROUP_WINDOW (cw);
-		group = gw->group;
+		gw->inSelection = FALSE;
 
+		group = gw->group;
 		for (i = 1; i < gd->tmpSel.nWins; i++) {
 			cw = gd->tmpSel.windows[i];
+			GROUP_WINDOW (cw);
+
 			groupAddWindowToGroup(cw, group, 0);
 			addWindowDamage(cw);
+
+			gw->inSelection = FALSE;
 		}
 
 		// exit selection
