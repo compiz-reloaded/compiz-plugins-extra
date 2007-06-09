@@ -471,7 +471,7 @@ groupAddWindowToGroup(CompWindow * w, GroupSelection *group, long int initialIde
 	GROUP_SCREEN(w->screen);
 	GROUP_WINDOW(w);
 
-	if(group && (gw->group == group))
+	if (group && gw->group == group)
 		return;
 
 	if (gw->group)
@@ -514,7 +514,7 @@ groupAddWindowToGroup(CompWindow * w, GroupSelection *group, long int initialIde
 
 			groupStartTabbingAnimation(group, TRUE);
 
-			damageScreen(w->screen);
+			addWindowDamage(w);
 		}
 	} else {
 		GroupSelection *g = malloc(sizeof(GroupSelection));
@@ -625,20 +625,15 @@ groupGroupWindows(CompDisplay * d, CompAction * action,
 		// we need to do one first to get the pointer of a new group
 		cw = gd->tmpSel.windows[0];
 		groupAddWindowToGroup(cw, group, 0);
+		addWindowDamage(cw);
 
 		GROUP_WINDOW (cw);
-		gw->inSelection = FALSE;
-		damageScreen(cw->screen);
 		group = gw->group;
 
 		for (i = 1; i < gd->tmpSel.nWins; i++) {
 			cw = gd->tmpSel.windows[i];
-			GROUP_WINDOW(cw);
-
 			groupAddWindowToGroup(cw, group, 0);
-
-			gw->inSelection = FALSE;
-			damageScreen(cw->screen);
+			addWindowDamage(cw);
 		}
 
 		// exit selection

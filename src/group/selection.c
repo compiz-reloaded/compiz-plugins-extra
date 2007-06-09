@@ -113,6 +113,7 @@ CompWindow **groupFindWindowsInRegion(CompScreen * s, Region reg, int *c)
 void groupDeleteSelectionWindow(CompDisplay * d, CompWindow * w)
 {
 	GROUP_DISPLAY(d);
+	GROUP_WINDOW(w);
 
 	if (gd->tmpSel.nWins > 0 && gd->tmpSel.windows) {
 		CompWindow **buf = gd->tmpSel.windows;
@@ -129,6 +130,8 @@ void groupDeleteSelectionWindow(CompDisplay * d, CompWindow * w)
 		gd->tmpSel.nWins = counter;
 		free(buf);
 	}
+
+	gw->inSelection = FALSE;
 }
 
 /*
@@ -138,11 +141,14 @@ void groupDeleteSelectionWindow(CompDisplay * d, CompWindow * w)
 void groupAddWindowToSelection(CompDisplay * d, CompWindow * w)
 {
 	GROUP_DISPLAY(d);
+	GROUP_WINDOW(w);
 
 	gd->tmpSel.windows = (CompWindow **) realloc(gd->tmpSel.windows, sizeof(CompWindow *) * (gd->tmpSel.nWins + 1));
 
 	gd->tmpSel.windows[gd->tmpSel.nWins] = w;
 	gd->tmpSel.nWins++;
+
+	gw->inSelection = TRUE;
 }
 
 /*
@@ -159,8 +165,6 @@ void groupSelectWindow(CompDisplay * d, CompWindow * w)
 	    !w->invisible && !gw->inSelection && !gw->group) {
 
 		groupAddWindowToSelection(d, w);
-
-		gw->inSelection = TRUE;
 		addWindowDamage(w);
 	}
 	// unselect single window
@@ -168,7 +172,6 @@ void groupSelectWindow(CompDisplay * d, CompWindow * w)
 		 !w->invisible && gw->inSelection && !gw->group) {
 
 		groupDeleteSelectionWindow(d, w);
-		gw->inSelection = FALSE;
 		addWindowDamage(w);
 	}
 	// select group
@@ -178,11 +181,8 @@ void groupSelectWindow(CompDisplay * d, CompWindow * w)
 		int i;
 		for (i = 0; i < gw->group->nWins; i++) {
 			CompWindow *cw = gw->group->windows[i];
-			GROUP_WINDOW(cw);
 
 			groupAddWindowToSelection(d, cw);
-
-			gw->inSelection = TRUE;
 			addWindowDamage(cw);
 		}
 	}
@@ -190,6 +190,7 @@ void groupSelectWindow(CompDisplay * d, CompWindow * w)
 	else if (matchEval(groupGetWindowMatch(w->screen), w) &&
 		 !w->invisible && gw->inSelection && gw->group) {
 
+		// Faster than doing groupDeleteSelectionWindow for each window in this group.
 		GroupSelection *group = gw->group;
 		CompWindow **buf = gd->tmpSel.windows;
 		gd->tmpSel.windows = (CompWindow **) calloc(gd->tmpSel.nWins - gw->group->nWins, sizeof(CompWindow *));
