@@ -59,8 +59,8 @@ void groupPaintThumb(GroupSelection *group, GroupTabBarSlot *slot, const CompTra
 	{
 		int width, height;
 
-		width = w->width + w->output.left + w->output.right;
-		height = w->height + w->output.top + w->output.bottom;
+		width = WIN_REAL_WIDTH(w);
+		height = WIN_REAL_HEIGHT(w);
 
 		if (width > tw)
 			sAttrib.xScale = (float) tw / width;
@@ -87,26 +87,17 @@ void groupPaintThumb(GroupSelection *group, GroupTabBarSlot *slot, const CompTra
 		int vx, vy;
 		groupGetDrawOffsetForSlot(slot, &vx, &vy);
 
-		sAttrib.xTranslate = slot->region->extents.x1 +
-			                 ((slot->region->extents.x2 - slot->region->extents.x1) / 2) -
-							 (sAttrib.xScale * width / 2) +
-							 (w->output.left * sAttrib.xScale) -
-			                 w->attrib.x + vx;
-		sAttrib.yTranslate = slot->region->extents.y1 +
-			                 (w->output.top * sAttrib.yScale) -
-			                 w->attrib.y + vy;
+		sAttrib.xTranslate = slot->region->extents.x1 + vx;
+		sAttrib.yTranslate = slot->region->extents.y1 + vy;
 
 		FragmentAttrib fragment;
 		CompTransform wTransform = *transform;
 
 		initFragmentAttrib(&fragment, &sAttrib);
 
-		matrixTranslate(&wTransform, WIN_X(w), WIN_Y(w), 0.0f);
+		matrixTranslate(&wTransform, sAttrib.xTranslate, sAttrib.yTranslate, 0.0f);
 		matrixScale(&wTransform, sAttrib.xScale, sAttrib.yScale, 0.0f);
-		matrixTranslate(&wTransform,
-				sAttrib.xTranslate / sAttrib.xScale - WIN_X(w),
-				sAttrib.yTranslate / sAttrib.yScale - WIN_Y(w),
-				0.0f);
+		matrixTranslate(&wTransform, -WIN_REAL_X(w), -WIN_REAL_Y(w), 0.0f);
 
 		glPushMatrix();
 		glLoadMatrixf(wTransform.m);
