@@ -972,6 +972,7 @@ groupHandleButtonReleaseEvent(CompDisplay *d, XEvent *event)
 				GroupSelection *tmpGroup = gw->group;
 
 				// if the dragged window is not the top tab, move it onscreen
+				// FIXME: Move to addWindowToGroup.
 				if (!IS_TOP_TAB(gs->draggedSlot->window, tmpGroup) && tmpGroup->topTab) {
 					CompWindow *tw = tmpGroup->topTab->window;
 
@@ -1101,25 +1102,23 @@ groupHandleMotionEvent(CompScreen * s, int xRoot, int yRoot)
 			int vx,vy;
 			groupGetDrawOffsetForSlot(gs->draggedSlot, &vx, &vy);
 
-			// (border = 5) + (buffer = 2) == (damage buffer = 7)
-			//TODO: respect border option.
-			reg.extents.x1 = draggedRegion->extents.x1 - 7 + vx;
-			reg.extents.y1 = draggedRegion->extents.y1 - 7 + vy;
-			reg.extents.x2 = draggedRegion->extents.x2 + 7 + vx;
-			reg.extents.y2 = draggedRegion->extents.y2 + 7 + vy;
+			reg.extents.x1 = draggedRegion->extents.x1 + vx;
+			reg.extents.y1 = draggedRegion->extents.y1 + vy;
+			reg.extents.x2 = draggedRegion->extents.x2 + vx;
+			reg.extents.y2 = draggedRegion->extents.y2 + vy;
 			damageScreenRegion(s, &reg);
 
 			XOffsetRegion (gs->draggedSlot->region, dx, dy);
 			gs->draggedSlot->springX = (gs->draggedSlot->region->extents.x1 + gs->draggedSlot->region->extents.x2) / 2;
 
-			reg.extents.x1 = draggedRegion->extents.x1 - 7 + vx;
-			reg.extents.y1 = draggedRegion->extents.y1 - 7 + vy;
-			reg.extents.x2 = draggedRegion->extents.x2 + 7 + vx;
-			reg.extents.y2 = draggedRegion->extents.y2 + 7 + vy;
+			reg.extents.x1 = draggedRegion->extents.x1 + vx;
+			reg.extents.y1 = draggedRegion->extents.y1 + vy;
+			reg.extents.x2 = draggedRegion->extents.x2 + vx;
+			reg.extents.y2 = draggedRegion->extents.y2 + vy;
 			damageScreenRegion(s, &reg);
 		}
 	} else if (gs->grabState == ScreenGrabSelect) {
-    	groupDamageSelectionRect(s, xRoot, yRoot);
+		groupDamageSelectionRect(s, xRoot, yRoot);
 	}
 }
 
