@@ -115,7 +115,6 @@ static void groupScreenOptionChanged(CompScreen *s, CompOption *opt, GroupScreen
  */
 Bool groupInitDisplay(CompPlugin * p, CompDisplay * d)
 {
-
 	GroupDisplay *gd;
 
 	gd = malloc(sizeof(GroupDisplay));
@@ -156,6 +155,8 @@ Bool groupInitDisplay(CompPlugin * p, CompDisplay * d)
 	groupSetChangeColorInitiate(d, groupChangeColor);
 
 	d->privates[displayPrivateIndex].ptr = gd;
+
+	srand (time(NULL));
 
 	return TRUE;
 }

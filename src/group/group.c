@@ -546,10 +546,9 @@ groupAddWindowToGroup(CompWindow * w, GroupSelection *group, long int initialIde
 		g->oldTopTabCenterY = 0;
 
 		// glow color
-		srand(time(NULL));
-		g->color[0] = rand() % 0xFFFF;
-		g->color[1] = rand() % 0xFFFF;
-		g->color[2] = rand() % 0xFFFF;
+		g->color[0] = (int)(rand() / (((double)RAND_MAX + 1)/ 0xffff));
+		g->color[1] = (int)(rand() / (((double)RAND_MAX + 1)/ 0xffff));
+		g->color[2] = (int)(rand() / (((double)RAND_MAX + 1)/ 0xffff));
 		g->color[3] = 0xFFFF;
 
 		if (initialIdent)
@@ -734,10 +733,9 @@ groupChangeColor(CompDisplay * d, CompAction * action,
 	GROUP_WINDOW(w);
 
 	if (gw->group) {
-		srand(time(NULL));
-		gw->group->color[0] = rand() % 0xFFFF;
-		gw->group->color[1] = rand() % 0xFFFF;
-		gw->group->color[2] = rand() % 0xFFFF;
+		gw->group->color[0] = (int)(rand() / (((double)RAND_MAX + 1)/ 0xffff));
+		gw->group->color[1] = (int)(rand() / (((double)RAND_MAX + 1)/ 0xffff));
+		gw->group->color[2] = (int)(rand() / (((double)RAND_MAX + 1)/ 0xffff));
 
 		groupRenderTopTabHighlight(gw->group);
 
