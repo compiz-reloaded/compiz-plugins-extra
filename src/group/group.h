@@ -94,7 +94,7 @@
  */
 
 /*
- * window states
+ * Window states
  */
 typedef enum {
 	WindowNormal = 0,
@@ -103,7 +103,7 @@ typedef enum {
 } GroupWindowState;
 
 /*
- * screengrab states
+ * Screengrab states
  */
 typedef enum {
 	ScreenGrabNone = 0,
@@ -112,7 +112,7 @@ typedef enum {
 } GroupScreenGrabState;
 
 /*
- * ungrouping states
+ * Ungrouping states
  */
 typedef enum {
 	UngroupNone = 0,
@@ -121,7 +121,7 @@ typedef enum {
 } GroupUngroupState;
 
 /*
- * rotation direction for change tab animation
+ * Rotation direction for change tab animation
  */
 typedef enum {
 	RotateUncertain = 0,
@@ -136,7 +136,7 @@ typedef struct _GlowTextureProperties {
 } GlowTextureProperties;
 
 /*
- * structs for pending callbacks
+ * Structs for pending callbacks
  */
 typedef struct _GroupPendingMoves GroupPendingMoves;
 struct _GroupPendingMoves {
@@ -165,7 +165,7 @@ struct _GroupPendingUngrabs {
 };
 
 /*
- * pointer to display list
+ * Pointer to display list
  */
 int displayPrivateIndex;
 
@@ -173,15 +173,15 @@ int displayPrivateIndex;
  * PaintState
  */
 
-/* mask for screen wide actions executed in preparePaintScreen */
+/* Mask for screen wide actions executed in preparePaintScreen */
 #define CHECK_WINDOW_PROPERTIES	(1 << 0)
 #define APPLY_AUTO_TABBING	(1 << 1)
 
-/* mask values for groupTabSetVisibility */
+/* Mask values for groupTabSetVisibility */
 #define SHOW_BAR_INSTANTLY_MASK	(1 << 0)
 #define PERMANENT		(1 << 1)
 
-/* mask values for tabbing animation */
+/* Mask values for tabbing animation */
 #define IS_ANIMATED		(1 << 0)
 #define FINISHED_ANIMATION	(1 << 1)
 #define CONSTRAINED_X		(1 << 2)
@@ -226,7 +226,7 @@ struct _GroupTabBarSlot {
 
 	CompWindow	*window;
 
-	//for DnD animations.
+	// For DnD animations.
 	int		springX;
 	int		speed;
 	float		msSinceLastMove;
@@ -247,7 +247,7 @@ typedef struct _GroupTabBar {
 	GroupCairoLayer	*bgLayer;
 	GroupCairoLayer	*selectionLayer;
 
-	// for animations
+	// For animations
 	int bgAnimationTime;
 	GroupAnimationType bgAnimation;
 
@@ -257,7 +257,7 @@ typedef struct _GroupTabBar {
 	Region		region;
 	int		oldWidth;
 
-	// for DnD animations.
+	// For DnD animations.
 	int		leftSpringX, rightSpringX;
 	int		leftSpeed, rightSpeed;
 	float		leftMsSinceLastMove, rightMsSinceLastMove;
@@ -294,14 +294,14 @@ struct _GroupSelection {
 	CompWindow **windows;
 	int nWins;
 
-	// unique identifier for this group
+	// Unique identifier for this group
 	long int identifier;
 
 	GroupTabBarSlot* topTab;
 	GroupTabBarSlot* prevTopTab;
 
-	//Those two are only for the change-tab animation, when the tab was changed again during animation.
-	//Another animation should be started again, switching for this window.
+	// Those two are only for the change-tab animation, when the tab was changed again during animation.
+	// Another animation should be started again, switching for this window.
 	ChangeTabAnimationDirection nextDirection;
 	GroupTabBarSlot* nextTopTab;
 
@@ -391,7 +391,7 @@ typedef struct _GroupScreen {
 
 	int showDelayTimeoutHandle;
 
-	// for selection
+	// For selection
 	Bool painted;
 	int vpX, vpY;
 	int x1;
@@ -399,15 +399,15 @@ typedef struct _GroupScreen {
 	int x2;
 	int y2;
 
-	//For d&d
+	// For d&d
 	GroupTabBarSlot	*draggedSlot;
 	int dragHoverTimeoutHandle;
 	Bool dragged;
-	int prevX, prevY;	//buffer for mouse coordinates
+	int prevX, prevY;	// Buffer for mouse coordinates
 
 	CompTexture glowTexture;
 
-	// pending screen wide actions
+	// Pending screen wide actions
 	unsigned int screenActions;
 } GroupScreen;
 
@@ -418,11 +418,11 @@ typedef struct _GroupWindow {
 	GroupSelection *group;
 	Bool inSelection;
 
-	// for the tab bar
+	// For the tab bar
 	GroupTabBarSlot *slot;
 	int oldWindowState;
 
-	// for resize notify...
+	// For resize notify...
 	Bool needsPosSync;
 
 	GlowQuad *glowQuads;
@@ -430,7 +430,7 @@ typedef struct _GroupWindow {
 	GroupWindowState windowState;
 	GroupWindowHideInfo *windowHideInfo;
 
-	// for tab animation
+	// For tab animation
 	Bool ungroup;
 	int animateState;
 	XPoint mainTabOffset;
@@ -450,7 +450,7 @@ typedef struct _GroupWindow {
 /*
  * group.c
  */
-/* Compiz only functions */
+/* Compiz only function */
 Bool screenGrabExist(CompScreen *s, ...);
 
 void groupUpdateWindowProperty(CompWindow *w);
