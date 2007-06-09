@@ -58,9 +58,13 @@ screenGrabExist (CompScreen *s, ...)
     return FALSE;
 }
 
-
-/* helper for activating a window after a certain time a slot has dragged over it */
-
+/*
+ * groupFindWindowIndex
+ *
+ * Description:
+ * Activates a window after a certain time a slot has been dragged over it.
+ *
+ */
 static Bool
 groupDragHoverTimeout(void* closure)
 {
@@ -210,11 +214,9 @@ void groupGrabScreen(CompScreen * s, GroupScreenGrabState newState)
  */
 void groupSyncWindows(GroupSelection *group)
 {
-       int i;
-       for (i = 0; i < group->nWins; i++) {
-               CompWindow *w = group->windows[i];
-               syncWindowPosition(w);
-       }
+	int i;
+	for (i = 0; i < group->nWins; i++)
+		syncWindowPosition(group->windows[i]);
 }
 
 /*
@@ -300,7 +302,7 @@ void groupDeleteGroupWindow(CompWindow * w, Bool allowRegroup)
 			if (gs->draggedSlot && gs->dragged && gs->draggedSlot->window->id == w->id)
 				groupUnhookTabBarSlot(group->tabBar, gw->slot, FALSE);
 			else
-	        	groupDeleteTabBarSlot(group->tabBar, gw->slot);
+				groupDeleteTabBarSlot(group->tabBar, gw->slot);
 		}
 
 		if(!gw->ungroup && group->nWins > 1)
