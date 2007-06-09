@@ -55,15 +55,20 @@ void groupPaintThumb(GroupSelection *group, GroupTabBarSlot *slot, const CompTra
 
 	sAttrib.opacity = sAttrib.opacity * targetOpacity / 0xffff;
 
-	if (w->mapNum) {
+	if (w->mapNum) 
+	{
+		int width, height;
 
-		if (WIN_WIDTH(w) > tw)
-			sAttrib.xScale = (float) tw / WIN_WIDTH(w);
+		width = w->width + w->output.left + w->output.right;
+		height = w->height + w->output.top + w->output.bottom;
+
+		if (width > tw)
+			sAttrib.xScale = (float) tw / width;
 		else
 			sAttrib.xScale = 1.0f;
 
-		if (WIN_HEIGHT(w) > th)
-			sAttrib.yScale = (float) tw / WIN_HEIGHT(w);
+		if (height > th)
+			sAttrib.yScale = (float) tw / height;
 		else
 			sAttrib.yScale = 1.0f;
 
@@ -82,8 +87,14 @@ void groupPaintThumb(GroupSelection *group, GroupTabBarSlot *slot, const CompTra
 		int vx, vy;
 		groupGetDrawOffsetForSlot(slot, &vx, &vy);
 
-		sAttrib.xTranslate = slot->region->extents.x1 - w->attrib.x + vx;
-		sAttrib.yTranslate = slot->region->extents.y1 - w->attrib.y + vy;
+		sAttrib.xTranslate = slot->region->extents.x1 +
+			                 ((slot->region->extents.x2 - slot->region->extents.x1) / 2) -
+							 (sAttrib.xScale * width / 2) +
+							 (w->output.left * sAttrib.xScale) -
+			                 w->attrib.x + vx;
+		sAttrib.yTranslate = slot->region->extents.y1 + 
+			                 (w->output.top * sAttrib.yScale) -
+			                 w->attrib.y + vy;
 
 		FragmentAttrib fragment;
 		CompTransform wTransform = *transform;
@@ -123,8 +134,8 @@ void groupRenderTopTabHighlight(GroupSelection *group)
 
 	bar = group->tabBar;
 
-	int width = group->topTab->region->extents.x2 - group->topTab->region->extents.x1 + 10;
-	int height = group->topTab->region->extents.y2 - group->topTab->region->extents.y1 + 10;
+	int width = group->topTab->region->extents.x2 - group->topTab->region->extents.x1;
+	int height = group->topTab->region->extents.y2 - group->topTab->region->extents.y1;
 
 	bar->selectionLayer = groupRebuildCairoLayer(group->screen, bar->selectionLayer, width, height);
 	if (!bar->selectionLayer)
@@ -677,10 +688,10 @@ void groupPaintTabBar(GroupSelection * group, const WindowPaintAttrib *wAttrib,
 					h_scale = 1.0f;
 					w_scale = 1.0f;
 
-					box.extents.x1 = group->topTab->region->extents.x1 - 5;
-					box.extents.x2 = group->topTab->region->extents.x2 + 5;
-					box.extents.y1 = group->topTab->region->extents.y1 - 5;
-					box.extents.y2 = group->topTab->region->extents.y2 + 5;
+					box.extents.x1 = group->topTab->region->extents.x1;
+					box.extents.x2 = group->topTab->region->extents.x2;
+					box.extents.y1 = group->topTab->region->extents.y1;
+					box.extents.y2 = group->topTab->region->extents.y2;
 				} else
 					layer = NULL;
 			break;

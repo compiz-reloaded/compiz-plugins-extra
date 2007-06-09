@@ -2063,48 +2063,35 @@ void groupRecalcTabBarPos(GroupSelection *group, int middleX, int minX1, int max
 	bar->leftMsSinceLastMove = 0;
 }
 
-#define SIZE_AND_DAMAGE_REGION(s,reg) \
-    reg.extents.x1 -= 5; \
-    reg.extents.x2 += 5; \
-    reg.extents.y1 -= 5; \
-    reg.extents.y2 += 5; \
-    damageScreenRegion (s, &reg);
-
 void
 groupDamageTabBarRegion (GroupSelection *group)
 {
-/* FIXME: the commented code normally should be used, but the currently 
-   damaged region is too small if slots are outside the tab bar */
-#if 0
     REGION reg;
 
     reg.rects = &reg.extents;
     reg.numRects = 1;
 
-    reg.extents = group->tabBar->region->extents;
-	SIZE_AND_DAMAGE_REGION (group->screen, reg)
+	/* we use 15 pixels as damage buffer here, as there is a 10 pixel wide
+	   border around the selected slot which also needs to be damaged 
+	   properly - however the best way would be if slot->region was 
+	   sized including the border */
+#define DAMAGE_BUFFER 20
 
-	if (group->tabBar->slots)
-	{
-		reg.extents = group->tabBar->slots->region->extents;
-		SIZE_AND_DAMAGE_REGION (group->screen, reg)
-	}
+    reg.extents.x1 = MIN (group->tabBar->region->extents.x1,
+						  group->tabBar->slots->region->extents.x1) - 
+		             DAMAGE_BUFFER;
+	reg.extents.y1 = MIN (group->tabBar->region->extents.y1,
+						  group->tabBar->slots->region->extents.y1) -
+		             DAMAGE_BUFFER;
+    reg.extents.x2 = MAX (group->tabBar->region->extents.x2,
+						  group->tabBar->revSlots->region->extents.x2) + 
+		             DAMAGE_BUFFER;
+	reg.extents.y2 = MAX (group->tabBar->region->extents.y2,
+						  group->tabBar->revSlots->region->extents.y2) + 
+		             DAMAGE_BUFFER;
 
-	if (group->tabBar->revSlots &&
-		(group->tabBar->revSlots != group->tabBar->slots))
-	{
-		reg.extents = group->tabBar->slots->region->extents;
-		SIZE_AND_DAMAGE_REGION (group->screen, reg)
-	}
-#else
-	if (HAS_TOP_WIN (group))
-		addWindowDamage (TOP_TAB (group));
-	else if (HAS_PREV_TOP_WIN (group))
-		addWindowDamage (PREV_TOP_TAB (group));
-#endif
+	damageScreenRegion (group->screen, &reg);
 }
-
-#undef SIZE_AND_DAMAGE_REGION
 
 void
 groupMoveTabBarRegion (GroupSelection *group, int dx, int dy, Bool syncIPW)
