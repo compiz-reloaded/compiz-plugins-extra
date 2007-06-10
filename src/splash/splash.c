@@ -141,9 +141,9 @@ splashPreparePaintScreen (CompScreen * s, int ms)
 										&ss->backSize[0], &ss->backSize[1]);
 				if (ss->hasBack)
 				{
-					fprintf (stderr,
-							 "[SPLASH]: Could not load splash background image \"%s\" using default!\n",
-							 splashGetBackground (d));
+					compLogMessage (d, "splash", CompLogLevelWarn,
+									"Could not load splash background image \"%s\" using default!",
+									splashGetBackground (d));
 				}
 			}
 			if (!ss->hasLogo)
@@ -154,19 +154,19 @@ splashPreparePaintScreen (CompScreen * s, int ms)
 										&ss->logoSize[0], &ss->logoSize[1]);
 				if (ss->hasLogo)
 				{
-					fprintf (stderr,
-							 "[SPLASH]: Could not load splash logo image \"%s\" using default!\n",
-							 splashGetLogo (d));
+					compLogMessage (d, "splash", CompLogLevelWarn,
+									"Could not load splash logo image \"%s\" using default!",
+									splashGetLogo (d));
 				}
 			}
 			if (!ss->hasBack)
-				fprintf (stderr,
-						 "[SPLASH]: Could not load splash background image \"%s\" !\n",
-						 splashGetBackground (d));
+				compLogMessage (d, "splash", CompLogLevelWarn,
+								"Could not load splash background image \"%s\" !",
+								splashGetBackground (d));
 			if (!ss->hasLogo)
-				fprintf (stderr,
-						 "[SPLASH]: Could not load splash logo image \"%s\" !\n",
-						 splashGetLogo (d));
+				compLogMessage (d, "splash", CompLogLevelWarn,
+								"Could not load splash logo image \"%s\" !",
+								splashGetLogo (d));
 		}
 	}
 	else
