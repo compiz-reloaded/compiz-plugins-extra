@@ -338,7 +338,7 @@
           <option name="thumb_space" type="int">
             <short>Space</short>
             <long>The space between the thumbs</long>
-            <default>10</default>
+            <default>5</default>
             <min>1</min>
             <max>20</max>
           </option>
