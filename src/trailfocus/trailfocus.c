@@ -248,8 +248,8 @@ static void recalculateAttributes(CompScreen * s)
 
 	if (start >= winMax)
 	{
-		fprintf(stderr,
-				"trailfocus: WARNING: Attempting to define start higher than max windows.\n");
+		compLogMessage (s->display, "trailfocus", CompLogLevelWarn,
+						"Attempting to define start higher than max windows.");
 		start = winMax - 1;
 	}
 
