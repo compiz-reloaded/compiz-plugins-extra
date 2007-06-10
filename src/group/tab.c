@@ -2072,15 +2072,22 @@ groupDamageTabBarRegion (GroupSelection *group)
 	reg.rects = &reg.extents;
 	reg.numRects = 1;
 
+	/* we use 15 pixels as damage buffer here, as there is a 10 pixel wide
+	border around the selected slot which also needs to be damaged 
+	properly - however the best way would be if slot->region was 
+	sized including the border */
+
+#define DAMAGE_BUFFER 20
+
 	reg.extents.x1 = MIN (group->tabBar->region->extents.x1,
-			      group->tabBar->slots->region->extents.x1);
+			      group->tabBar->slots->region->extents.x1) - DAMAGE_BUFFER;
 	reg.extents.y1 = MIN (group->tabBar->region->extents.y1,
-			      group->tabBar->slots->region->extents.y1);
+			      group->tabBar->slots->region->extents.y1) - DAMAGE_BUFFER;
 
 	reg.extents.x2 = MAX (group->tabBar->region->extents.x2,
-			      group->tabBar->revSlots->region->extents.x2);
+			      group->tabBar->revSlots->region->extents.x2) + DAMAGE_BUFFER;
 	reg.extents.y2 = MAX (group->tabBar->region->extents.y2,
-			      group->tabBar->revSlots->region->extents.y2);
+			      group->tabBar->revSlots->region->extents.y2) + DAMAGE_BUFFER;
 
 	damageScreenRegion (group->screen, &reg);
 }
