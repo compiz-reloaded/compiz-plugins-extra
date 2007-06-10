@@ -68,42 +68,43 @@ static void groupScreenOptionChanged(CompScreen *s, CompOption *opt, GroupScreen
 			break;
 		case GroupScreenOptionGlow:
 		case GroupScreenOptionGlowSize:
-			{
-				CompWindow *w;
+		{
+			CompWindow *w;
 
-				groupRecomputeGlow(s);
-				for (w = s->windows; w; w = w->next) {
-					GROUP_WINDOW(w);
+			groupRecomputeGlow(s);
+			for (w = s->windows; w; w = w->next) {
+				GROUP_WINDOW(w);
 
-					if (gw->glowQuads) {
-						damageWindowOutputExtents(w);
-						updateWindowOutputExtents(w);
-						damageWindowOutputExtents(w);
-					}
+				if (gw->glowQuads) {
+					damageWindowOutputExtents(w);
+					updateWindowOutputExtents(w);
+					damageWindowOutputExtents(w);
 				}
 			}
 			break;
+		}
 		case GroupScreenOptionGlowType:
-			{
-				GROUP_DISPLAY(s->display);
-				GroupGlowTypeEnum glowType;
-				glowType = groupGetGlowType(s);
+		{
+			GROUP_DISPLAY(s->display);
+			GroupGlowTypeEnum glowType;
+			glowType = groupGetGlowType(s);
 
-				finiTexture(s, &gs->glowTexture);
-				initTexture(s, &gs->glowTexture);
+			finiTexture(s, &gs->glowTexture);
+			initTexture(s, &gs->glowTexture);
 
-				imageDataToTexture(s, &gs->glowTexture,
-								   gd->glowTextureProperties[glowType].textureData,
-								   gd->glowTextureProperties[glowType].textureSize,
-								   gd->glowTextureProperties[glowType].textureSize,
-								   GL_RGBA, GL_UNSIGNED_BYTE);
+			imageDataToTexture(s, &gs->glowTexture,
+							   gd->glowTextureProperties[glowType].textureData,
+							   gd->glowTextureProperties[glowType].textureSize,
+							   gd->glowTextureProperties[glowType].textureSize,
+							   GL_RGBA, GL_UNSIGNED_BYTE);
 
-				if (groupGetGlow(s) && gs->groups) {
-					groupRecomputeGlow(s);
-					damageScreen(s);
-				}
+			if (groupGetGlow(s) && gs->groups) {
+				groupRecomputeGlow(s);
+				damageScreen(s);
 			}
 			break;
+		}
+
 		default:
 			break;
 	}
