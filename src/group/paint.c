@@ -66,6 +66,7 @@ void groupPaintThumb(GroupSelection *group, GroupTabBarSlot *slot, const CompTra
 			sAttrib.xScale = (float) tw / width;
 		else
 			sAttrib.xScale = 1.0f;
+
 		if (height > th)
 			sAttrib.yScale = (float) tw / height;
 		else
@@ -96,7 +97,7 @@ void groupPaintThumb(GroupSelection *group, GroupTabBarSlot *slot, const CompTra
 
 		matrixTranslate(&wTransform, sAttrib.xTranslate, sAttrib.yTranslate, 0.0f);
 		matrixScale(&wTransform, sAttrib.xScale, sAttrib.yScale, 0.0f);
-		matrixTranslate(&wTransform, -(WIN_X(w) + WIN_WIDTH(w) / 2), 
+		matrixTranslate(&wTransform, -(WIN_X(w) + WIN_WIDTH(w) / 2),
 					     -(WIN_Y(w) - w->output.top), 0.0f);
 
 		glPushMatrix();

@@ -1583,8 +1583,7 @@ void groupTabGroup(CompWindow *main)
 		return;
 
 	if (!main->screen->display->shapeExtension) {
-		compLogMessage (main->screen->display, "group", CompLogLevelError,
-						"No X shape extension! Tabbing disabled.");
+		printf("group plugin: No X shape extension! Tabbing won't work...\n");
 		return;
 	}
 
