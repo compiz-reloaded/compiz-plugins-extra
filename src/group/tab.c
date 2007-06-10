@@ -234,7 +234,7 @@ groupShowDelayTimeout(void *data)
 	int mouseX, mouseY;
 
 	GroupSelection *group = (GroupSelection *) data;
-	CompScreen *s = group->windows[0]->screen;
+	CompScreen *s = group->screen;
 	GROUP_SCREEN(s);
 
 	if (!HAS_TOP_WIN(group))
@@ -533,6 +533,7 @@ void groupHandleHoverDetection(GroupSelection *group)
 				if (XPointInRegion(reg, mouseX, mouseY))
 				{
 					bar->hoveredSlot = slot;
+					XDestroyRegion(reg);
 					break;
 				}
 
@@ -1477,7 +1478,7 @@ void groupStartTabbingAnimation(GroupSelection *group, Bool tab)
 	if (!group || (group->tabbingState != PaintOff))
 		return;
 
-	CompScreen *s = group->windows[0]->screen;
+	CompScreen *s = group->screen;
 	int i;
 	int dx, dy;
 	int constrainStatus;
@@ -2066,29 +2067,20 @@ void groupRecalcTabBarPos(GroupSelection *group, int middleX, int minX1, int max
 void
 groupDamageTabBarRegion (GroupSelection *group)
 {
-    REGION reg;
+	REGION reg;
 
-    reg.rects = &reg.extents;
-    reg.numRects = 1;
+	reg.rects = &reg.extents;
+	reg.numRects = 1;
 
-	/* we use 15 pixels as damage buffer here, as there is a 10 pixel wide
-	   border around the selected slot which also needs to be damaged
-	   properly - however the best way would be if slot->region was
-	   sized including the border */
-#define DAMAGE_BUFFER 20
-
-    reg.extents.x1 = MIN (group->tabBar->region->extents.x1,
-						  group->tabBar->slots->region->extents.x1) -
-		             DAMAGE_BUFFER;
+	reg.extents.x1 = MIN (group->tabBar->region->extents.x1,
+			      group->tabBar->slots->region->extents.x1);
 	reg.extents.y1 = MIN (group->tabBar->region->extents.y1,
-						  group->tabBar->slots->region->extents.y1) -
-		             DAMAGE_BUFFER;
-    reg.extents.x2 = MAX (group->tabBar->region->extents.x2,
-						  group->tabBar->revSlots->region->extents.x2) +
-		             DAMAGE_BUFFER;
+			      group->tabBar->slots->region->extents.y1);
+
+	reg.extents.x2 = MAX (group->tabBar->region->extents.x2,
+			      group->tabBar->revSlots->region->extents.x2);
 	reg.extents.y2 = MAX (group->tabBar->region->extents.y2,
-						  group->tabBar->revSlots->region->extents.y2) +
-		             DAMAGE_BUFFER;
+			      group->tabBar->revSlots->region->extents.y2);
 
 	damageScreenRegion (group->screen, &reg);
 }
@@ -2098,7 +2090,7 @@ groupMoveTabBarRegion (GroupSelection *group, int dx, int dy, Bool syncIPW)
 {
 	groupDamageTabBarRegion (group);
 
-    XOffsetRegion (group->tabBar->region, dx, dy);
+	XOffsetRegion (group->tabBar->region, dx, dy);
 
 	if (syncIPW)
 		XMoveWindow (group->screen->display->display, group->inputPrevention,
@@ -2110,42 +2102,41 @@ groupMoveTabBarRegion (GroupSelection *group, int dx, int dy, Bool syncIPW)
 void
 groupResizeTabBarRegion (GroupSelection *group, XRectangle *box, Bool syncIPW)
 {
-    int oldWidth;
+	int oldWidth;
 
-    groupDamageTabBarRegion (group);
+	groupDamageTabBarRegion (group);
 
-    oldWidth = group->tabBar->region->extents.x2 - group->tabBar->region->extents.x1;
+	oldWidth = group->tabBar->region->extents.x2 - group->tabBar->region->extents.x1;
 
-    if (group->tabBar->bgLayer &&
-	(oldWidth != box->width))
-    {
-	group->tabBar->bgLayer =
-	    groupRebuildCairoLayer (group->screen,
-				    group->tabBar->bgLayer,
-				    box->width +
-				    groupGetThumbSpace (group->screen) +
-				    groupGetThumbSize (group->screen),
-				    box->height);
-    }
+	if (group->tabBar->bgLayer && oldWidth != box->width)
+	{
+		group->tabBar->bgLayer =
+			groupRebuildCairoLayer (group->screen,
+						group->tabBar->bgLayer,
+						box->width +
+							groupGetThumbSpace (group->screen) +
+							groupGetThumbSize (group->screen),
+						box->height);
+	}
 
-    EMPTY_REGION (group->tabBar->region);
-    XUnionRectWithRegion(box, group->tabBar->region, group->tabBar->region);
+	EMPTY_REGION (group->tabBar->region);
+	XUnionRectWithRegion(box, group->tabBar->region, group->tabBar->region);
 
-    if (syncIPW)
-    {
-	XWindowChanges xwc;
+	if (syncIPW)
+	{
+		XWindowChanges xwc;
 
-	xwc.x = box->x;
-	xwc.y = box->y;
-	xwc.width = box->width;
-	xwc.height = box->height;
+		xwc.x = box->x;
+		xwc.y = box->y;
+		xwc.width = box->width;
+		xwc.height = box->height;
 
-	xwc.stack_mode = Above;
-    	xwc.sibling = HAS_TOP_WIN(group) ? TOP_TAB(group)->id : None;
+		xwc.stack_mode = Above;
+		xwc.sibling = HAS_TOP_WIN(group) ? TOP_TAB(group)->id : None;
 
-	XConfigureWindow (group->screen->display->display, group->inputPrevention,
-	    		  CWSibling | CWStackMode | CWX | CWY | CWWidth | CWHeight, &xwc);
-    }
+		XConfigureWindow (group->screen->display->display, group->inputPrevention,
+				  CWSibling | CWStackMode | CWX | CWY | CWWidth | CWHeight, &xwc);
+	}
 
 	groupDamageTabBarRegion (group);
 }
