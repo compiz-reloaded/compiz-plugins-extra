@@ -66,7 +66,6 @@ void groupPaintThumb(GroupSelection *group, GroupTabBarSlot *slot, const CompTra
 			sAttrib.xScale = (float) tw / width;
 		else
 			sAttrib.xScale = 1.0f;
-
 		if (height > th)
 			sAttrib.yScale = (float) tw / height;
 		else

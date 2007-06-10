@@ -1373,16 +1373,22 @@ groupGetOutputExtentsForWindow (CompWindow * w, CompWindowExtents * output)
 
 	if (gw->group && gw->group->nWins > 1)
 	{
-		int glowSize = groupGetGlowSize(w->screen);
+		GROUP_DISPLAY (w->screen->display);
 
-		if (glowSize > output->left)
-			output->left = glowSize;
-		if (glowSize > output->right)
-			output->right = glowSize;
-		if (glowSize > output->top)
-			output->top = glowSize;
-		if (glowSize > output->bottom)
-			output->bottom = glowSize;
+		int glowSize = groupGetGlowSize (w->screen);
+		int glowType = groupGetGlowType (w->screen);
+		int glowTextureSize = gd->glowTextureProperties[glowType].textureSize;
+		int glowOffset = gd->glowTextureProperties[glowType].glowOffset;
+
+		glowSize = glowSize * (glowTextureSize - glowOffset) / glowTextureSize;
+
+		/* glowSize is the size of the glow outside the window decoration
+		 * (w->input), while w->output includes the size of w->input
+		 * this is why we have to add w->input here */
+		output->left   = MAX (output->left, glowSize + w->input.left);
+		output->right  = MAX (output->right, glowSize + w->input.right);
+		output->top    = MAX (output->top, glowSize + w->input.top);
+		output->bottom = MAX (output->bottom, glowSize + w->input.bottom);
 	}
 }
 
