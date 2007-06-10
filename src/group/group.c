@@ -820,8 +820,8 @@ groupHandleButtonPressEvent(CompDisplay *d, XEvent *event)
 							}
 						}
 					}
+					break;
 				}
-				break;
 
 				case Button4:
 				case Button5:
@@ -852,8 +852,8 @@ groupHandleButtonPressEvent(CompDisplay *d, XEvent *event)
 						else
 							groupChangeTab(gw->group->tabBar->slots, RotateRight);
 					}
+					break;
 				}
-				break;
 			}
 
 			break;
@@ -1131,7 +1131,7 @@ void groupHandleEvent(CompDisplay * d, XEvent * event)
 	GROUP_DISPLAY(d);
 
 	switch (event->type) {
-	case MotionNotify:
+		case MotionNotify:
 		{
 			CompScreen *s = findScreenAtDisplay(d, event->xmotion.root);
 			if (s)
@@ -1140,23 +1140,23 @@ void groupHandleEvent(CompDisplay * d, XEvent * event)
 			break;
 		}
 
-	case ButtonPress:
-		groupHandleButtonPressEvent(d, event);
-		break;
+		case ButtonPress:
+			groupHandleButtonPressEvent(d, event);
+			break;
 
-	case ButtonRelease:
-		groupHandleButtonReleaseEvent(d, event);
-		break;
+		case ButtonRelease:
+			groupHandleButtonReleaseEvent(d, event);
+			break;
 
-	case MapNotify:
+		case MapNotify:
 		{
-		    CompWindow *cw;
-		    CompWindow *w = findWindowAtDisplay(d, event->xmap.window);
-		    if (!w)
+			CompWindow *cw;
+			CompWindow *w = findWindowAtDisplay(d, event->xmap.window);
+			if (!w)
 				break;
 
-		    for (cw = w->screen->windows; cw; cw = cw->next)
-		    {
+			for (cw = w->screen->windows; cw; cw = cw->next)
+			{
 				if (w->id == cw->frame)
 				{
 				    GROUP_WINDOW(cw);
@@ -1164,10 +1164,10 @@ void groupHandleEvent(CompDisplay * d, XEvent * event)
 						XUnmapWindow(cw->screen->display->display, cw->frame);
 				}
 			}
+			break;
 		}
-		break;
 
-	case UnmapNotify:
+		case UnmapNotify:
 		{
 			CompWindow *w = findWindowAtDisplay(d, event->xunmap.window);
 			if (!w)
@@ -1205,51 +1205,51 @@ void groupHandleEvent(CompDisplay * d, XEvent * event)
 			break;
 		}
 
-	case ClientMessage:
-		if (event->xclient.message_type == d->winActiveAtom) {
-			CompWindow *w = findWindowAtDisplay(d, event->xclient.window);
-			if (!w)
-				return;
+		case ClientMessage:
+			if (event->xclient.message_type == d->winActiveAtom) {
+				CompWindow *w = findWindowAtDisplay(d, event->xclient.window);
+				if (!w)
+					return;
 
-			GROUP_WINDOW(w);
+				GROUP_WINDOW(w);
 
-			if (gw->group && gw->group->tabBar && HAS_TOP_WIN(gw->group)) {
-				CompWindow *tw = TOP_TAB(gw->group);
+				if (gw->group && gw->group->tabBar && HAS_TOP_WIN(gw->group)) {
+					CompWindow *tw = TOP_TAB(gw->group);
 
-				if (w->id != tw->id) {
-					/* if a non top-tab has been activated, switch to the
-					   top-tab instead - but only if is visible */
-					if (tw->shaded) {
-						changeWindowState(tw, tw->state & ~CompWindowStateShadedMask);
-						updateWindowAttributes(tw, CompStackingUpdateModeNone);
-					} else if (tw->minimized)
-						unminimizeWindow(tw);
+					if (w->id != tw->id) {
+						/* if a non top-tab has been activated, switch to the
+						   top-tab instead - but only if is visible */
+						if (tw->shaded) {
+							changeWindowState(tw, tw->state & ~CompWindowStateShadedMask);
+							updateWindowAttributes(tw, CompStackingUpdateModeNone);
+						} else if (tw->minimized)
+							unminimizeWindow(tw);
 
-					if (!(tw->state & CompWindowStateHiddenMask)) {
-						if (!gw->group->changeTab)
-							gw->group->activateTab = gw->slot;
-						sendWindowActivationRequest(tw->screen, tw->id);
+						if (!(tw->state & CompWindowStateHiddenMask)) {
+							if (!gw->group->changeTab)
+								gw->group->activateTab = gw->slot;
+							sendWindowActivationRequest(tw->screen, tw->id);
+						}
 					}
 				}
 			}
-		}
-		break;
+			break;
 
-	default:
-		if (event->type == d->shapeEvent + ShapeNotify) {
-			XShapeEvent *se = (XShapeEvent*)event;
-			if (se->kind == ShapeInput) {
-				CompWindow *w = findWindowAtDisplay(d, se->window);
+		default:
+			if (event->type == d->shapeEvent + ShapeNotify) {
+				XShapeEvent *se = (XShapeEvent*)event;
+				if (se->kind == ShapeInput) {
+					CompWindow *w = findWindowAtDisplay(d, se->window);
 
-				if (w) {
-					GROUP_WINDOW(w);
+					if (w) {
+						GROUP_WINDOW(w);
 
-					if (gw->windowHideInfo)
-						groupClearWindowInputShape(w, gw->windowHideInfo);
+						if (gw->windowHideInfo)
+							groupClearWindowInputShape(w, gw->windowHideInfo);
+					}
 				}
 			}
-		}
-		break;
+			break;
 	}
 
 	UNWRAP(gd, d, handleEvent);
@@ -1257,7 +1257,7 @@ void groupHandleEvent(CompDisplay * d, XEvent * event)
 	WRAP(gd, d, handleEvent, groupHandleEvent);
 
 	switch (event->type) {
-	case FocusIn:
+		case FocusIn:
 		{
 			CompWindow *w = findWindowAtDisplay(d, event->xfocus.window);
 			if (!w)
@@ -1268,36 +1268,36 @@ void groupHandleEvent(CompDisplay * d, XEvent * event)
 				if (groupGetRaiseAll(w->screen))
 					groupRaiseWindows(w, gw->group);
 			}
+			break;
 		}
-		break;
 
-	case PropertyNotify:
-		if (event->xproperty.atom == d->winActiveAtom) {
-			CompWindow *w = findWindowAtDisplay(d, d->activeWindow);
-			if (!w)
-				break;
+		case PropertyNotify:
+			if (event->xproperty.atom == d->winActiveAtom) {
+				CompWindow *w = findWindowAtDisplay(d, d->activeWindow);
+				if (!w)
+					break;
 
-			GROUP_WINDOW(w);
+				GROUP_WINDOW(w);
 
-			if (gw->group && gw->group->activateTab) {
-				groupChangeTab(gw->group->activateTab, RotateUncertain);
-				gw->group->activateTab = NULL;
+				if (gw->group && gw->group->activateTab) {
+					groupChangeTab(gw->group->activateTab, RotateUncertain);
+					gw->group->activateTab = NULL;
+				}
+			} else if (event->xproperty.atom == d->wmNameAtom) {
+				CompWindow *w = findWindowAtDisplay(d, d->activeWindow);
+				if (!w)
+					break;
+
+				GROUP_WINDOW(w);
+
+				if (gw->group && gw->group->tabBar) {
+					// make sure we are using the updated name
+					groupRenderWindowTitle(gw->group);
+				}
 			}
-		} else if (event->xproperty.atom == d->wmNameAtom) {
-			CompWindow *w = findWindowAtDisplay(d, d->activeWindow);
-			if (!w)
-				break;
+			break;
 
-			GROUP_WINDOW(w);
-
-			if (gw->group && gw->group->tabBar) {
-				// make sure we are using the updated name
-				groupRenderWindowTitle(gw->group);
-			}
-		}
-		break;
-
-	case EnterNotify:
+		case EnterNotify:
 		{
 			CompWindow *w = findWindowAtDisplay(d, event->xcrossing.window);
 			if (!w)
@@ -1325,9 +1325,11 @@ void groupHandleEvent(CompDisplay * d, XEvent * event)
 							compAddTimeout(hoverTime, groupDragHoverTimeout, w);
 				}
 			}
+
+			break;
 		}
 
-	case ConfigureNotify:
+		case ConfigureNotify:
 		{
 			CompWindow *w = findWindowAtDisplay(d, event->xconfigure.window);
 
@@ -1346,12 +1348,11 @@ void groupHandleEvent(CompDisplay * d, XEvent * event)
 		    	    XConfigureWindow (w->screen->display->display, gw->group->inputPrevention,
 					      CWSibling | CWStackMode, &xwc);
 			}
+			break;
 		}
-		break;
 
-
-	default:
-		break;
+		default:
+			break;
 	}
 }
 

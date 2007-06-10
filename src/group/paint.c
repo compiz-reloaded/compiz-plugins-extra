@@ -671,7 +671,7 @@ void groupPaintTabBar(GroupSelection * group, const WindowPaintAttrib *wAttrib,
 					groupRenderTabBarBackground(group);
 				bar->oldWidth = newWidth;
 				box.extents = bar->region->extents;
-			break;
+				break;
 
 			case PAINT_SEL:
 				if (group->topTab != gs->draggedSlot) {
@@ -686,7 +686,7 @@ void groupPaintTabBar(GroupSelection * group, const WindowPaintAttrib *wAttrib,
 					box.extents.y2 = group->topTab->region->extents.y2;
 				} else
 					layer = NULL;
-			break;
+				break;
 
 			case PAINT_THUMBS:
 				glColor4usv(defaultColor);
@@ -712,7 +712,7 @@ void groupPaintTabBar(GroupSelection * group, const WindowPaintAttrib *wAttrib,
 				layer = NULL;
 				w_scale = 1.0f;
 				h_scale = 1.0f;
-			break;
+				break;
 
 			case PAINT_TEXT:
 				if (bar->textLayer && (bar->textLayer->state != PaintOff)) {
@@ -738,13 +738,13 @@ void groupPaintTabBar(GroupSelection * group, const WindowPaintAttrib *wAttrib,
 							(groupGetFadeTextTime(s) * 1000);
 				} else
 					layer = NULL;
-			break;
+				break;
 
 			default:
 				layer = NULL;
 				w_scale = 1.0f;
 				h_scale = 1.0f;
-			break;
+				break;
 		}
 
 		if (layer) {
