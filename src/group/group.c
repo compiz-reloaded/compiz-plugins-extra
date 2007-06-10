@@ -1372,7 +1372,14 @@ groupGetOutputExtentsForWindow (CompWindow * w, CompWindowExtents * output)
 
 	if (gw->group && gw->group->nWins > 1)
 	{
-		int glowSize = groupGetGlowSize(w->screen);
+		GROUP_DISPLAY (w->screen->display);
+
+		int glowSize = groupGetGlowSize (w->screen);
+		int glowType = groupGetGlowType (w->screen);
+		int glowTextureSize = gd->glowTextureProperties[glowType].textureSize;
+		int glowOffset = gd->glowTextureProperties[glowType].glowOffset;
+
+		glowSize = glowSize * glowOffset / glowTextureSize;
 
 		if (glowSize > output->left)
 			output->left = glowSize;
