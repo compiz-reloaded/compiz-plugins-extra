@@ -129,6 +129,10 @@ if test "$use_group" = yes; then
   AC_DEFINE(USE_GROUP, 1, [Build group plugin])
 fi
 
+PKG_CHECK_MODULES(COMPIZCUBE, compiz-cube, [have_compiz_cube=yes], [have_compiz_cube=no])
+AM_CONDITIONAL(CUBEREFLEX_PLUGIN, test "x$have_compiz_cube" = "xyes")
+
+
 AC_ARG_ENABLE(schemas,
   [  --enable-schemas         Build gconf schemas],
   [use_schemas=$enableval], [use_schemas=no])
@@ -171,4 +175,5 @@ src/reflex/Makefile
 src/splash/Makefile
 src/trailfocus/Makefile
 src/showdesktop/Makefile
+src/cubereflex/Makefile
 ])

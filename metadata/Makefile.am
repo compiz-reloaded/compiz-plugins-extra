@@ -11,7 +11,8 @@ meta_DATA =	         \
 	reflex.xml \
 	splash.xml \
 	trailfocus.xml \
-	showdesktop.xml
+	showdesktop.xml \
+	cubereflex.xml
 
 EXTRA_DIST = $(meta_DATA)
 
