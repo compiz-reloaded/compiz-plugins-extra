@@ -3,7 +3,7 @@
   <plugin name="crashhandler" useBcop="true">
     <short>Crash handler</short>
     <long>Compiz crash handler plugin</long>
-	<category>Development</category>
+	<category>Utility</category>
     <display>
       <group>
         <short>Main</short>
