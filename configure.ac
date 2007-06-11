@@ -123,7 +123,7 @@ AC_SUBST(GL_CFLAGS)
 AC_SUBST(GL_LIBS)
 
 
-PKG_CHECK_MODULES(GROUP, cairo >= 1.0, [use_group=yes], [use_group=no])
+PKG_CHECK_MODULES(GROUP, compiz-text cairo >= 1.0, [use_group=yes], [use_group=no])
 AM_CONDITIONAL(GROUP_PLUGIN, test "x$use_group" = "xyes")
 if test "$use_group" = yes; then
   AC_DEFINE(USE_GROUP, 1, [Build group plugin])
