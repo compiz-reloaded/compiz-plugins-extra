@@ -1,4 +1,4 @@
-#include "group.h"
+#include "group-internal.h"
 
 /**
  *

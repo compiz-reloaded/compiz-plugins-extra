@@ -5,7 +5,7 @@
  *
  * Beryl group plugin
  *
- * group.h
+ * group-internal.h
  *
  * Copyright : (C) 2006 by Patrick Niklaus, Roi Cohen, Danny Baumann
  * Authors: Patrick Niklaus <patrick.niklaus@googlemail.com>

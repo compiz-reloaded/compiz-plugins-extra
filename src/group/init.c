@@ -24,7 +24,7 @@
  *
  **/
 
-#include "group.h"
+#include "group-internal.h"
 #include "group_glow.h"
 
 static const GlowTextureProperties glowTextureProperties[2] = {
