@@ -1,5 +1,3 @@
-#include "group.h"
-
 /**
  *
  * Beryl group plugin
