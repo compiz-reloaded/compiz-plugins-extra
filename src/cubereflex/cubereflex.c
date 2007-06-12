@@ -93,7 +93,7 @@ cubereflexClearTargetOutput (CompScreen *s, float xRotate, float vRotate)
 		glCullFace(GL_BACK);
 	
 	UNWRAP(rs, cs, clearTargetOutput);
-	(*cs->clearTargetOutput) (s, xRotate, vRotate);
+	(*cs->clearTargetOutput) (s, xRotate, 0.0);
 	WRAP(rs, cs, clearTargetOutput, cubereflexClearTargetOutput);
 
 	if (rs->reflection)
