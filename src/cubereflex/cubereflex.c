@@ -70,6 +70,8 @@ typedef struct _CubereflexScreen
 	CubeClearTargetOutputProc clearTargetOutput;
 
 	Bool reflection;
+	Bool first;
+	CompOutput *last;
 
 } CubereflexScreen;
 
@@ -111,8 +113,9 @@ static void cubereflexPaintTransformedOutput(CompScreen * s,
 	CUBE_SCREEN(s);
 	CompTransform sTransform = *transform;
 
-	if (cs->invert == 1)
+	if (cs->invert == 1 && rs->first)
 	{
+		rs->first = FALSE;
 		rs->reflection = TRUE;
 		
 		if (cs->grabIndex)
@@ -235,6 +238,39 @@ static void cubereflexPaintTransformedOutput(CompScreen * s,
 	WRAP(rs, s, paintTransformedOutput, cubereflexPaintTransformedOutput);
 }
 
+static Bool cubereflexPaintOutput(CompScreen * s,
+								  const ScreenPaintAttrib * sAttrib,
+								  const CompTransform    *transform,
+								  Region region, CompOutput *output,
+								  unsigned int mask)
+{
+	Bool status;
+
+	CUBEREFLEX_SCREEN(s);
+
+	if (rs->last != output)
+		rs->first = TRUE;
+	rs->last = output;
+
+	UNWRAP(rs, s, paintOutput);
+	status = (*s->paintOutput) (s, sAttrib, transform, region, output, mask);
+	WRAP(rs, s, paintOutput, cubereflexPaintOutput);
+
+	return status;
+}
+
+static void cubereflexDonePaintScreen(CompScreen * s)
+{
+	CUBEREFLEX_SCREEN(s);
+
+	rs->first = FALSE;
+	
+	UNWRAP(rs, s, donePaintScreen);
+	(*s->donePaintScreen) (s);
+	WRAP(rs, s, donePaintScreen, cubereflexDonePaintScreen);
+}
+
+
 static Bool cubereflexInitDisplay(CompPlugin * p, CompDisplay * d)
 {
 	CubereflexDisplay *rd;
@@ -299,8 +335,12 @@ static Bool cubereflexInitScreen(CompPlugin * p, CompScreen * s)
 	s->privates[rd->screenPrivateIndex].ptr = rs;
 
 	rs->reflection = FALSE;
+	rs->first      = TRUE;
+	rs->last       = NULL;
 	
 	WRAP(rs, s, paintTransformedOutput, cubereflexPaintTransformedOutput);
+	WRAP(rs, s, paintOutput, cubereflexPaintOutput);
+	WRAP(rs, s, donePaintScreen, cubereflexDonePaintScreen);
 
 	WRAP(rs, cs, clearTargetOutput, cubereflexClearTargetOutput);
 	
@@ -313,6 +353,8 @@ static void cubereflexFiniScreen(CompPlugin * p, CompScreen * s)
 	CUBE_SCREEN(s);
 	
 	UNWRAP(rs, s, paintTransformedOutput);
+	UNWRAP(rs, s, paintOutput);
+	UNWRAP(rs, s, donePaintScreen);
 
 	UNWRAP(rs, cs, clearTargetOutput);
 	
