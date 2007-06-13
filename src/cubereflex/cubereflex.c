@@ -248,7 +248,7 @@ static Bool cubereflexPaintOutput(CompScreen * s,
 
 	CUBEREFLEX_SCREEN(s);
 
-	if (rs->last != output)
+	if (s->nOutputDev == 1 || rs->last != output)
 		rs->first = TRUE;
 	rs->last = output;
 
