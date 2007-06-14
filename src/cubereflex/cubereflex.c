@@ -73,6 +73,9 @@ typedef struct _CubereflexScreen
 	Bool first;
 	CompOutput *last;
 
+	float yTrans;
+	float zTrans;
+
 } CubereflexScreen;
 
 #define GET_CUBEREFLEX_DISPLAY(d) \
@@ -169,9 +172,13 @@ static void cubereflexPaintTransformedOutput(CompScreen * s,
 			matrixRotate (&pTransform, vRotate, cosf (xRotate2 * DEG2RAD),
 						0.0f, sinf (xRotate2 * DEG2RAD));
 			MULTMV(pTransform.m, point2);
+
+			rs->yTrans     = -point[1] - 0.5;
+			rs->zTrans     = (cubereflexGetAutoZoom(s)) ?
+							 -point2[2] + cs->distance : 0.0;
 			
 			matrixTranslate(&rTransform, 0.0, point[1] - 0.5,
-					-point2[2] + cs->distance);
+							rs->zTrans);
 			
 			matrixScale(&rTransform, 1.0, -1.0, 1.0);
 
@@ -192,8 +199,6 @@ static void cubereflexPaintTransformedOutput(CompScreen * s,
 			glLightfv (GL_LIGHT0, GL_POSITION, light0Position);
 			glPopMatrix();
 
-			matrixTranslate(&sTransform, 0.0, -point[1] - 0.5,
-					-point2[2] + cs->distance);
 		}
 		
 		rs->reflection = FALSE;
@@ -235,6 +240,9 @@ static void cubereflexPaintTransformedOutput(CompScreen * s,
 		glPopMatrix();
 		
 	}
+
+	
+	matrixTranslate(&sTransform, 0.0, rs->yTrans, rs->zTrans);
 	
 	UNWRAP(rs, s, paintTransformedOutput);
 	(*s->paintTransformedOutput) (s, sAttrib, &sTransform, region, output, mask);
@@ -266,7 +274,9 @@ static void cubereflexDonePaintScreen(CompScreen * s)
 {
 	CUBEREFLEX_SCREEN(s);
 
-	rs->first = TRUE;
+	rs->first      = TRUE;
+	rs->yTrans     = 0.0;
+	rs->zTrans     = 0.0;
 	
 	UNWRAP(rs, s, donePaintScreen);
 	(*s->donePaintScreen) (s);
@@ -340,6 +350,8 @@ static Bool cubereflexInitScreen(CompPlugin * p, CompScreen * s)
 	rs->reflection = FALSE;
 	rs->first      = TRUE;
 	rs->last       = NULL;
+	rs->yTrans     = 0.0;
+	rs->zTrans     = 0.0;
 	
 	WRAP(rs, s, paintTransformedOutput, cubereflexPaintTransformedOutput);
 	WRAP(rs, s, paintOutput, cubereflexPaintOutput);

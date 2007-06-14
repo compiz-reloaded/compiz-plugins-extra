@@ -49,6 +49,11 @@
 				<max>1.0</max>
 				<precision>0.01</precision>
 			</option>
+			<option name="auto_zoom" type="bool">
+				<short>Auto zoom</short>
+				<long>Zoom out automatically to myke the cube fit to the screen.</long>
+				<default>true</default>
+			</option>
 		</screen>
 	</plugin>
 </compiz>
