@@ -44,7 +44,7 @@
 			<option name="intensity" type="float">
 				<short>Intensity</short>
 				<long>Reflection intensity</long>
-				<default>0.8</default>
+				<default>0.4</default>
 				<min>0.0</min>
 				<max>1.0</max>
 				<precision>0.01</precision>

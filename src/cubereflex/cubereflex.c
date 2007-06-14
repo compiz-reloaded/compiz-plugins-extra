@@ -115,6 +115,7 @@ static void cubereflexPaintTransformedOutput(CompScreen * s,
 
 	if (cs->invert == 1 && rs->first)
 	{
+		float i;
 		rs->first = FALSE;
 		rs->reflection = TRUE;
 		
@@ -204,12 +205,14 @@ static void cubereflexPaintTransformedOutput(CompScreen * s,
 
 		glLoadIdentity();
 		glTranslatef(0.0, 0.0, -DEFAULT_Z_CAMERA);
+
+		i = cubereflexGetIntensity(s) * 2;
 		
 		glBegin(GL_QUADS);
-			glColor4f(0.0, 0.0, 0.0, 1.0 - cubereflexGetIntensity(s));
+			glColor4f(0.0, 0.0, 0.0, MAX(0.0, 1.0 - i));
 			glVertex2f(0.5, 0.0);
 			glVertex2f(-0.5, 0.0);
-			glColor4f(0.0, 0.0, 0.0, 1.0);
+			glColor4f(0.0, 0.0, 0.0, MIN(1.0, 1.0 - (i - 1.0)));
 			glVertex2f(-0.5, -0.5);
 			glVertex2f(0.5, -0.5);
 		glEnd();
