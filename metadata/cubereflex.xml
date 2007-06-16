@@ -54,6 +54,29 @@
 				<long>Zoom out automatically to myke the cube fit to the screen.</long>
 				<default>true</default>
 			</option>
+			<option name="mode" type="int">
+				<short>Reflection mode</short>
+				<long>Reflection mode.</long>
+				<default>0</default>
+				<min>0</min>
+				<max>3</max>
+				<desc>
+					<value>0</value>
+					<name>Jumpy</name>
+				</desc>
+				<desc>
+					<value>1</value>
+					<name>Jumpy reflection</name>
+				</desc>
+				<desc>
+					<value>2</value>
+					<name>Distance</name>
+				</desc>
+				<desc>
+					<value>3</value>
+					<name>Above</name>
+				</desc>
+			</option>
 		</screen>
 	</plugin>
 </compiz>

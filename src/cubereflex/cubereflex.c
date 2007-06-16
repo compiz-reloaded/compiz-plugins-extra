@@ -43,10 +43,10 @@ static const CompTransform identity = {
 };
 
 #define MULTMV(m, v) { \
-double v0 = m[0]*v[0] + m[4]*v[1] + m[8]*v[2] + m[12]*v[3]; \
-double v1 = m[1]*v[0] + m[5]*v[1] + m[9]*v[2] + m[13]*v[3]; \
-double v2 = m[2]*v[0] + m[6]*v[1] + m[10]*v[2] + m[14]*v[3]; \
-double v3 = m[3]*v[0] + m[7]*v[1] + m[11]*v[2] + m[15]*v[3]; \
+float v0 = m[0]*v[0] + m[4]*v[1] + m[8]*v[2] + m[12]*v[3]; \
+float v1 = m[1]*v[0] + m[5]*v[1] + m[9]*v[2] + m[13]*v[3]; \
+float v2 = m[2]*v[0] + m[6]*v[1] + m[10]*v[2] + m[14]*v[3]; \
+float v3 = m[3]*v[0] + m[7]*v[1] + m[11]*v[2] + m[15]*v[3]; \
 v[0] = v0; v[1] = v1; v[2] = v2; v[3] = v3; }
 
 static int displayPrivateIndex;
@@ -68,6 +68,7 @@ typedef struct _CubereflexScreen
 	PaintTransformedOutputProc paintTransformedOutput;
 
 	CubeClearTargetOutputProc clearTargetOutput;
+	CubeGetRotationProc	      getRotation;
 
 	Bool reflection;
 	Bool first;
@@ -75,6 +76,9 @@ typedef struct _CubereflexScreen
 
 	float yTrans;
 	float zTrans;
+
+	float backVRotate;
+	float vRot;
 
 } CubereflexScreen;
 
@@ -89,6 +93,69 @@ typedef struct _CubereflexScreen
 		CubereflexScreen *rs = GET_CUBEREFLEX_SCREEN(s, GET_CUBEREFLEX_DISPLAY(s->display))
 
 static void
+drawBasicGround (CompScreen *s)
+{
+	float i;
+	
+	glPushMatrix();
+		
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	glLoadIdentity();
+	glTranslatef(0.0, 0.0, -DEFAULT_Z_CAMERA);
+
+	i = cubereflexGetIntensity(s) * 2;
+
+	glBegin(GL_QUADS);
+		glColor4f(0.0, 0.0, 0.0, MAX(0.0, 1.0 - i));
+		glVertex2f(0.5, 0.0);
+		glVertex2f(-0.5, 0.0);
+		glColor4f(0.0, 0.0, 0.0, MIN(1.0, 1.0 - (i - 1.0)));
+		glVertex2f(-0.5, -0.5);
+		glVertex2f(0.5, -0.5);
+	glEnd();
+
+	if (cubereflexGetGroundSize(s) > 0.0)
+	{
+		glBegin(GL_QUADS);
+			glColor4usv(cubereflexGetGroundColor1(s));
+			glVertex2f(-0.5, -0.5);
+			glVertex2f(0.5, -0.5);
+			glColor4usv(cubereflexGetGroundColor2(s));
+			glVertex2f(0.5, -0.5 + cubereflexGetGroundSize(s));
+			glVertex2f(-0.5,-0.5 + cubereflexGetGroundSize(s));
+		glEnd();
+	}
+
+	glColor4usv(defaultColor);
+	glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+	glDisable(GL_BLEND);
+	glPopMatrix();
+}
+
+static void
+cubereflexGetRotation (CompScreen *s,
+		   float      *x,
+		   float      *v)
+{
+    CUBE_SCREEN (s);
+    CUBEREFLEX_SCREEN (s);
+
+    UNWRAP (rs, cs, getRotation);
+    (*cs->getRotation) (s, x, v);
+    WRAP (rs, cs, getRotation, cubereflexGetRotation);
+
+	if (cubereflexGetMode(s) == ModeAbove && *v > 0.0 && rs->reflection)
+	{
+		rs->vRot = *v;
+		*v = 0.0;
+	}
+	else
+		rs->vRot = 0.0;
+}
+
+static void
 cubereflexClearTargetOutput (CompScreen *s, float xRotate, float vRotate)
 {
 	CUBEREFLEX_SCREEN(s);
@@ -98,7 +165,7 @@ cubereflexClearTargetOutput (CompScreen *s, float xRotate, float vRotate)
 		glCullFace(GL_BACK);
 	
 	UNWRAP(rs, cs, clearTargetOutput);
-	(*cs->clearTargetOutput) (s, xRotate, 0.0);
+	(*cs->clearTargetOutput) (s, xRotate, rs->backVRotate);
 	WRAP(rs, cs, clearTargetOutput, cubereflexClearTargetOutput);
 
 	if (rs->reflection)
@@ -118,7 +185,6 @@ static void cubereflexPaintTransformedOutput(CompScreen * s,
 
 	if (cs->invert == 1 && rs->first)
 	{
-		float i;
 		rs->first = FALSE;
 		rs->reflection = TRUE;
 		
@@ -134,19 +200,25 @@ static void cubereflexPaintTransformedOutput(CompScreen * s,
 			(*s->paintTransformedOutput) (s, sAttrib, &rTransform, region, output, mask);
 			WRAP(rs, s, paintTransformedOutput, cubereflexPaintTransformedOutput);
 			glCullFace(GL_BACK);
+			drawBasicGround(s);
 		}
 		else
 		{
 			CompTransform rTransform = *transform;
 			CompTransform pTransform = identity;
 			float angle = 360.0 / ((float)s->hsize * cs->nOutput);
-			float xRotate,xRotate2,vRotate;
+			float xRot,vRot,xRotate,xRotate2,vRotate;
+			float rYTrans;
 			double point[4] = {-0.5, -0.5, cs->distance, 1.0};
 			double point2[4] = {-0.5, 0.5, cs->distance, 1.0};
 			
-			(*cs->getRotation) (s, &xRotate, &vRotate);
+			(*cs->getRotation) (s, &xRot, &vRot);
 
-			xRotate2 = xRotate;
+			rs->backVRotate = 0.0;
+
+			xRotate = xRot;
+			xRotate2 = xRot;
+			vRotate = vRot;
 			
 			if (vRotate < 0.0)
 				xRotate += 180;
@@ -173,15 +245,53 @@ static void cubereflexPaintTransformedOutput(CompScreen * s,
 						0.0f, sinf (xRotate2 * DEG2RAD));
 			MULTMV(pTransform.m, point2);
 
-			rs->yTrans     = -point[1] - 0.5;
+			switch (cubereflexGetMode(s))
+			{
+				case ModeJumpyReflection:
+					rs->yTrans     = 0.0;
+					rYTrans        = (point[1] * 2.0);
+					break;
+				case ModeDistance:
+					rs->yTrans     = 0.0;
+					rYTrans        = sqrt(0.5 + (cs->distance * cs->distance))
+									  * -2.0;
+					break;
+				default:
+					rs->yTrans     = -point[1] - 0.5;
+					rYTrans        = point[1] - 0.5;
+					break;
+					
+			}
 			rs->zTrans     = (cubereflexGetAutoZoom(s)) ?
 							 -point2[2] + cs->distance : 0.0;
-			
-			matrixTranslate(&rTransform, 0.0, point[1] - 0.5,
-							rs->zTrans);
-			
-			matrixScale(&rTransform, 1.0, -1.0, 1.0);
 
+			if (cubereflexGetMode(s) == ModeAbove)
+				rs->zTrans      = 0.0;
+			
+			if (cubereflexGetMode(s) == ModeAbove && rs->vRot > 0.0)
+			{
+				rs->backVRotate = rs->vRot;
+				rs->yTrans      = 0.0;
+				rYTrans         = 0.0;
+				pTransform = identity;
+				(*s->applyScreenTransform) (s, sAttrib, output, &pTransform);
+				point[0] = point[1] = 0.0;
+				point[2] = -cs->distance;
+				point[3] = 1.0;
+				MULTMV(pTransform.m, point);
+				
+				matrixTranslate(&rTransform, 0.0, 0.0, point[2]);
+				matrixRotate (&rTransform, rs->vRot, 1.0, 0.0, 0.0);
+				matrixScale(&rTransform, 1.0, -1.0, 1.0);
+				matrixTranslate(&rTransform, 0.0, 1.0, 0.0);
+				matrixTranslate(&rTransform, 0.0, 0.0, -point[2]);
+			}
+			else
+			{
+				matrixTranslate(&rTransform, 0.0, rYTrans,
+								rs->zTrans);
+				matrixScale(&rTransform, 1.0, -1.0, 1.0);
+			}
 			glPushMatrix();
 			glLoadIdentity();
 			glScalef(1.0, -1.0, 1.0);
@@ -199,46 +309,69 @@ static void cubereflexPaintTransformedOutput(CompScreen * s,
 			glLightfv (GL_LIGHT0, GL_POSITION, light0Position);
 			glPopMatrix();
 
+			if (cubereflexGetMode(s) == ModeAbove && rs->vRot > 0.0)
+			{
+				int j;
+				float i,c;
+				float v = MIN(1.0,rs->vRot / 30.0);
+				float col1[4],col2[4];
+				
+				glPushMatrix();
+					
+				glEnable(GL_BLEND);
+				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+				glLoadIdentity();
+				glTranslatef(0.0, 0.0, -DEFAULT_Z_CAMERA);
+
+				i = cubereflexGetIntensity(s) * 2;
+				c = cubereflexGetIntensity(s);
+				
+				glBegin(GL_QUADS);
+					glColor4f(0.0, 0.0, 0.0,
+							  ((1 - v) * MAX(0.0, 1.0 - i)) + (v * c));
+					glVertex2f(0.5, v / 2.0);
+					glVertex2f(-0.5, v / 2.0);
+					glColor4f(0.0, 0.0, 0.0,
+							  ((1 - v) * MIN(1.0, 1.0 - (i - 1.0))) + (v * c));
+					glVertex2f(-0.5, -0.5);
+					glVertex2f(0.5, -0.5);
+				glEnd();
+
+				for (j = 0; j < 4; j++)
+				{
+					col1[j] = (1.0 - v) * cubereflexGetGroundColor1(s)[j] +
+							  (v * (cubereflexGetGroundColor1(s)[j] +
+							  cubereflexGetGroundColor2(s)[j]) * 0.5);
+					col1[j] /= 0xffff;
+					col2[j] = (1.0 - v) * cubereflexGetGroundColor2(s)[j] +
+							  (v * (cubereflexGetGroundColor1(s)[j] +
+							  cubereflexGetGroundColor2(s)[j]) * 0.5);
+					col2[j] /= 0xffff;
+				}
+				if (cubereflexGetGroundSize(s) > 0.0)
+				{
+					glBegin(GL_QUADS);
+						glColor4fv(col1);
+						glVertex2f(-0.5, -0.5);
+						glVertex2f(0.5, -0.5);
+						glColor4fv(col2);
+						glVertex2f(0.5, -0.5 +
+								   ((1 - v) * cubereflexGetGroundSize(s)) + v);
+						glVertex2f(-0.5,-0.5 +
+								   ((1 - v) * cubereflexGetGroundSize(s)) + v);
+					glEnd();
+				}
+
+				glColor4usv(defaultColor);
+				glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+				glDisable(GL_BLEND);
+				glPopMatrix();
+			}
+			else
+				drawBasicGround(s);
 		}
-		
 		rs->reflection = FALSE;
-		
-		glPushMatrix();
-		
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-		glLoadIdentity();
-		glTranslatef(0.0, 0.0, -DEFAULT_Z_CAMERA);
-
-		i = cubereflexGetIntensity(s) * 2;
-		
-		glBegin(GL_QUADS);
-			glColor4f(0.0, 0.0, 0.0, MAX(0.0, 1.0 - i));
-			glVertex2f(0.5, 0.0);
-			glVertex2f(-0.5, 0.0);
-			glColor4f(0.0, 0.0, 0.0, MIN(1.0, 1.0 - (i - 1.0)));
-			glVertex2f(-0.5, -0.5);
-			glVertex2f(0.5, -0.5);
-		glEnd();
-
-		if (cubereflexGetGroundSize(s) > 0.0)
-		{
-			glBegin(GL_QUADS);
-				glColor4usv(cubereflexGetGroundColor1(s));
-				glVertex2f(-0.5, -0.5);
-				glVertex2f(0.5, -0.5);
-				glColor4usv(cubereflexGetGroundColor2(s));
-				glVertex2f(0.5, -0.5 + cubereflexGetGroundSize(s));
-				glVertex2f(-0.5,-0.5 + cubereflexGetGroundSize(s));
-			glEnd();
-		}
-
-		glColor4usv(defaultColor);
-		glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-		glDisable(GL_BLEND);
-		glPopMatrix();
-		
 	}
 
 	
@@ -358,6 +491,7 @@ static Bool cubereflexInitScreen(CompPlugin * p, CompScreen * s)
 	WRAP(rs, s, donePaintScreen, cubereflexDonePaintScreen);
 
 	WRAP(rs, cs, clearTargetOutput, cubereflexClearTargetOutput);
+    WRAP(rs, cs, getRotation, cubereflexGetRotation);
 	
 	return TRUE;
 }
@@ -372,6 +506,7 @@ static void cubereflexFiniScreen(CompPlugin * p, CompScreen * s)
 	UNWRAP(rs, s, donePaintScreen);
 
 	UNWRAP(rs, cs, clearTargetOutput);
+	UNWRAP(rs, cs, getRotation);
 	
 	free(rs);
 }
