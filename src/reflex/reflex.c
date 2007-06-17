@@ -112,7 +112,6 @@ getReflexFragmentFunction (CompScreen * s, CompTexture * texture,
 		ok &= addFetchOpToFunctionData (data, "output", NULL, target);
 		ok &= addColorOpToFunctionData (data, "output", "output");
 
-		// coord <-- (pos + d) * t = pos * t + d * t
 		snprintf (str, 1024,
 				  "MAD coord, fragment.position, program.env[%d],"
 				  " program.env[%d];", param, param + 1);
@@ -224,7 +223,7 @@ reflexDrawWindowTexture (CompWindow * w,
 			(*s->programEnvParameter4f) (GL_FRAGMENT_PROGRAM_ARB, param,
 										 tx, ty, 0.0f, 0.0f);
 			(*s->programEnvParameter4f) (GL_FRAGMENT_PROGRAM_ARB, param + 1,
-										 dx * tx, 0.0f, 0.0f, 0.0f);
+										 dx, 0.0f, 0.0f, 0.0f);
 			(*s->programEnvParameter4f) (GL_FRAGMENT_PROGRAM_ARB, param + 2,
 										 reflexGetThreshold (s), 0.0f, 0.0f,
 										 0.0f);
