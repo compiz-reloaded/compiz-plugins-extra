@@ -106,25 +106,24 @@ getReflexFragmentFunction (CompScreen * s, CompTexture * texture,
 		char str[1024];
 
 		ok &= addTempHeaderOpToFunctionData (data, "image");
-		ok &= addTempHeaderOpToFunctionData (data, "coord");
-		ok &= addTempHeaderOpToFunctionData (data, "mask");
+		ok &= addTempHeaderOpToFunctionData (data, "tmp");
 
 		ok &= addFetchOpToFunctionData (data, "output", NULL, target);
 		ok &= addColorOpToFunctionData (data, "output", "output");
 
 		snprintf (str, 1024,
-				  "MAD coord, fragment.position, program.env[%d],"
+				  "MAD tmp, fragment.position, program.env[%d],"
 				  " program.env[%d];", param, param + 1);
 		ok &= addDataOpToFunctionData (data, str);
 
 		snprintf (str, 1024,
-				  "TEX image, coord, texture[%d], %s;", unit, targetString);
+				  "TEX image, tmp, texture[%d], %s;", unit, targetString);
 		ok &= addDataOpToFunctionData (data, str);
 
 		snprintf (str, 1024,
-				  "MUL_SAT mask, output.a, program.env[%d].r;"
+				  "MUL_SAT tmp, output.a, program.env[%d].b;"
 				  "MAD image, -output.a, image, image;"
-				  "MAD output, image, mask.a, output;", param + 2);
+				  "MAD output, image, tmp.a, output;", param + 1);
 		ok &= addDataOpToFunctionData (data, str);
 
 		if (!ok)
@@ -210,7 +209,7 @@ reflexDrawWindowTexture (CompWindow * w,
 
 
 		unit = allocFragmentTextureUnits (&fa, 1);
-		param = allocFragmentParameters (&fa, 3);
+		param = allocFragmentParameters (&fa, 2);
 
 		function =
 			getReflexFragmentFunction (w->screen, texture, param, unit);
@@ -223,10 +222,9 @@ reflexDrawWindowTexture (CompWindow * w,
 			(*s->programEnvParameter4f) (GL_FRAGMENT_PROGRAM_ARB, param,
 										 tx, ty, 0.0f, 0.0f);
 			(*s->programEnvParameter4f) (GL_FRAGMENT_PROGRAM_ARB, param + 1,
-										 dx, 0.0f, 0.0f, 0.0f);
-			(*s->programEnvParameter4f) (GL_FRAGMENT_PROGRAM_ARB, param + 2,
-										 reflexGetThreshold (s), 0.0f, 0.0f,
-										 0.0f);
+										 dx, 0.0f,
+										 reflexGetThreshold (s), 0.0f);
+			
 		}
 		UNWRAP (rs, w->screen, drawWindowTexture);
 		(*w->screen->drawWindowTexture) (w, texture, &fa, mask);
