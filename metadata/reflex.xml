@@ -4,6 +4,13 @@
     <short>Reflection</short>
     <long>Draws reflections</long>
 	<category>Effects</category>
+    <deps>
+      <relation type="after">
+        <plugin>svg</plugin>
+        <plugin>png</plugin>
+		<plugin>imgjpeg</plugin>
+      </relation>
+    </deps>
     <screen>
       <group>
         <short>Main</short>
