@@ -336,6 +336,8 @@ void groupTabSetVisibility(GroupSelection *group, Bool visible, unsigned int mas
 	else if (visible &&
 		(bar->state == PaintOff || bar->state == PaintFadeOut))
 	{
+		bar->bgAnimation = AnimationReflex;
+		bar->bgAnimationTime = groupGetReflexTime(group->screen) * 1000.0;
 		bar->state = PaintFadeIn;
 		groupSwitchTopTabInput(group, FALSE);
  	}
@@ -690,6 +692,8 @@ void groupHandleTabBarAnimation(GroupSelection *group, int msSinceLastPaint)
 
 			groupRenderTabBarBackground(group);
 		}
+
+		groupDamageTabBarRegion(group);
 	}
 }
 
