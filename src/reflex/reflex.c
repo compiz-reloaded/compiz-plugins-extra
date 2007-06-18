@@ -188,10 +188,16 @@ reflexDrawWindowTexture (CompWindow * w,
 		int param;
 		float tx, ty, dx, mx;
 
-		mx = w->attrib.x + (w->width / 2);
-		mx /= s->width / 2.0;
-		mx -= 1.0;
-		mx *= -0.065;
+		if (reflexGetMoving(s))
+		{
+			mx = w->attrib.x + (w->width / 2);
+			mx /= s->width / 2.0;
+			mx -= 1.0;
+			mx *= -0.065;
+		}
+		else
+			mx = 0.0;
+	
 
 		if (rs->image.target == GL_TEXTURE_2D)
 		{

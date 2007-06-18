@@ -42,6 +42,11 @@
           <min>1</min>
           <max>10</max>
         </option>
+		<option name="moving" type="bool">
+          <short>Moving reflection</short>
+          <long>Move the reflection on window move.</long>
+          <default>true</default>
+        </option>
       </group>
     </screen>
   </plugin>
