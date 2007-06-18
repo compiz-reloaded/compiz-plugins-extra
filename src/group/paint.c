@@ -492,24 +492,19 @@ void groupRenderTabBarBackground(GroupSelection *group)
 		case AnimationReflex:
 		{
 			double animationProgress = bar->bgAnimationTime / (groupGetReflexTime(group->screen) * 1000.0);
-			double posX = (width+240) * animationProgress;
-			double alpha = sin(PI * animationProgress) * 0.75;
+			double posX = (width+120) * animationProgress;
+			double alpha = sin(PI * animationProgress) * 0.55;
 			if (alpha <= 0)
 				break;
 
 			cairo_save(cr);
 			cairo_clip(cr);
-			cairo_translate(cr, posX - 120.0, 0.0);
-			cairo_move_to(cr, 60.0, 0.0);
-			cairo_line_to(cr, 120.0, 0.0);
-			cairo_line_to(cr, 60.0, height);
-			cairo_line_to(cr, 0.0, height);
-			cairo_close_path(cr);
-
 			cairo_pattern_t *pattern;
-			pattern = cairo_pattern_create_linear(0.0, 0.0, 0.0, height);
-			cairo_pattern_add_color_stop_rgba(pattern, 0.0f, 1.0, 1.0, 1.0, alpha);
+			pattern = cairo_pattern_create_linear(posX-60.0, 0.0, posX, height);
+			cairo_pattern_add_color_stop_rgba(pattern, 0.0f, 1.0, 1.0, 1.0, 0.0);
+			cairo_pattern_add_color_stop_rgba(pattern, 0.5f, 1.0, 1.0, 1.0, alpha);
 			cairo_pattern_add_color_stop_rgba(pattern, 1.0f, 1.0, 1.0, 1.0, 0.0);
+			cairo_rectangle(cr, 0.0, 0.0, width, height);
 			cairo_set_source(cr, pattern);
 			cairo_fill(cr);
 			cairo_restore(cr);
