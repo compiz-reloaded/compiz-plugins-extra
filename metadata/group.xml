@@ -323,6 +323,11 @@
         </subgroup>
         <subgroup>
           <short>Appearance</short>
+          <option name="bar_animations" type="bool">
+            <short>Use tab bar animations</short>
+            <long>Play animations on the tab bar e.g. on fade in.</long>
+            <default>true</default>
+          </option>
           <option name="thumb_size" type="int">
             <short>Thumb Size</short>
             <long>The size of the window thumbs in the task bar</long>
