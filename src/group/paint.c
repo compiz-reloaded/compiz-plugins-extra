@@ -1052,6 +1052,9 @@ void groupDonePaintScreen(CompScreen * s)
 					groupDamageTabBarRegion (group);
 				}
 			}
+
+			if (group->tabBar->bgAnimation)
+				groupDamageTabBarRegion(group);
 		}
 	}
 }

@@ -692,8 +692,6 @@ void groupHandleTabBarAnimation(GroupSelection *group, int msSinceLastPaint)
 
 			groupRenderTabBarBackground(group);
 		}
-
-		groupDamageTabBarRegion(group);
 	}
 }
 
