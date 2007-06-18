@@ -1433,17 +1433,8 @@ void groupWindowResizeNotify(CompWindow * w, int dx, int dy, int dwidth, int dhe
 				int nx = 0;
 				int ny = 0;
 
-				if (groupGetRelativeDistance(w->screen)) {
-					int distX = cw->serverX - (w->serverX - dx);
-					int distY = cw->serverY - (w->serverY - dy);
-					int ndistX = distX * ((float) w->serverWidth / (float) (w->serverWidth - dwidth));
-					int ndistY = distY * ((float) w->serverHeight / (float) (w->serverHeight - dheight));
-					nx = w->serverX + ndistX;
-					ny = w->serverY + ndistY;
-				} else {
-					nx = cw->serverX + dx;
-					ny = cw->serverY + dy;
-				}
+				nx = cw->serverX + dx;
+				ny = cw->serverY + dy;
 
 				int nwidth = cw->serverWidth + dwidth;
 				int nheight = cw->serverHeight + dheight;

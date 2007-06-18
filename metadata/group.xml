@@ -163,11 +163,6 @@
           <long>If there is only 1 window left in the group, it will be ungrouped.</long>
           <default>true</default>
         </option>
-        <option name="relative_distance" type="bool">
-          <short>Compute distance relative</short>
-          <long>The distance between the windows is computed relative to the window size. This allows you to have windows staying next to each other.</long>
-          <default>false</default>
-        </option>
         <option name="window_match" type="match">
           <short>Group Window Match</short>
           <long>Windows that should be allowed to be grouped</long>
