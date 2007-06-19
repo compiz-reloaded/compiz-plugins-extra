@@ -1050,6 +1050,10 @@ void groupDonePaintScreen(CompScreen * s)
 
 			if (group->tabBar->bgAnimation)
 				groupDamageTabBarRegion(group);
+
+			if (gs->draggedSlot) {
+				groupDamageTabBarRegion(group);
+			}
 		}
 	}
 }
