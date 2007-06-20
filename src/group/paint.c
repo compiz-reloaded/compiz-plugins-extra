@@ -405,9 +405,21 @@ void groupRenderTabBarBackground(GroupSelection *group)
 			y1 = height - border_width/2.0;
 			radius = (y1 - y0) / 2;
 
+			double ratio = (double)width/(double)height;
+			double transX = (width) - (width*ratio);
+
 			cairo_move_to(cr, x1, y1);
 			cairo_line_to(cr, x1, y0);
+			if (width < height) {
+				cairo_translate(cr, transX, 0);
+				cairo_scale(cr, ratio, 1.0);
+			}
 			cairo_arc(cr, x1 - radius, y0, radius, 0.0, M_PI * 0.5);
+			if (width < height) {
+				cairo_scale(cr, 1.0/ratio, 1.0);
+				cairo_translate(cr, -transX, 0);
+				cairo_scale(cr, ratio, 1.0);
+			}
 			cairo_arc_negative(cr, x0 + radius, y1, radius, M_PI * 1.5, M_PI);
 			cairo_close_path (cr);
 
