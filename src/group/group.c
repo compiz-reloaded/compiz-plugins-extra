@@ -76,8 +76,10 @@ groupDragHoverTimeout(void* closure)
 	GROUP_SCREEN(w->screen);
 	GROUP_WINDOW(w);
 
-	gw->group->tabBar->bgAnimation = AnimationPulse;
-	gw->group->tabBar->bgAnimationTime = groupGetPulseTime(w->screen) * 1000;
+	if (groupGetBarAnimations(w->screen)) {
+		gw->group->tabBar->bgAnimation = AnimationPulse;
+		gw->group->tabBar->bgAnimationTime = groupGetPulseTime(w->screen) * 1000;
+	}
 
 	activateWindow(w);
 	gs->dragHoverTimeoutHandle = 0;
