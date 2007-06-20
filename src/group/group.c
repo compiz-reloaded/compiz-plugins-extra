@@ -59,7 +59,7 @@ screenGrabExist (CompScreen *s, ...)
 }
 
 /*
- * groupFindWindowIndex
+ * groupDragHoverTimeout
  *
  * Description:
  * Activates a window after a certain time a slot has been dragged over it.
@@ -74,6 +74,10 @@ groupDragHoverTimeout(void* closure)
 		return FALSE;
 
 	GROUP_SCREEN(w->screen);
+	GROUP_WINDOW(w);
+
+	gw->group->tabBar->bgAnimation = AnimationPulse;
+	gw->group->tabBar->bgAnimationTime = groupGetPulseTime(w->screen) * 1000;
 
 	activateWindow(w);
 	gs->dragHoverTimeoutHandle = 0;
