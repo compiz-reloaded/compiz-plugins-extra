@@ -487,7 +487,7 @@ void groupRenderTabBarBackground(GroupSelection *group)
 		case AnimationPulse:
 		{
 			double animationProgress = bar->bgAnimationTime / (groupGetPulseTime(group->screen) * 1000.0);
-			double alpha = fabs(sin(PI*3 * animationProgress)) * 0.75;
+			double alpha = fabs(sin(PI * animationProgress)) * 0.75;
 			if (alpha <= 0)
 				break;
 
