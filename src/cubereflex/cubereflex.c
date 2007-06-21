@@ -69,6 +69,7 @@ typedef struct _CubereflexScreen
 
 	CubeClearTargetOutputProc clearTargetOutput;
 	CubeGetRotationProc	      getRotation;
+	CubeCheckOrientationProc  checkOrientation;
 
 	Bool reflection;
 	Bool first;
@@ -132,6 +133,31 @@ drawBasicGround (CompScreen *s)
 	glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 	glDisable(GL_BLEND);
 	glPopMatrix();
+}
+
+static Bool
+cubereflexCheckOrientation (CompScreen              *s,
+							const ScreenPaintAttrib *sAttrib,
+							const CompTransform     *transform,
+							CompOutput              *outputPtr,
+							const float             points[3][3])
+{
+	CUBEREFLEX_SCREEN(s);
+	CUBE_SCREEN(s);
+
+	Bool status;
+
+	
+	UNWRAP(rs, cs, checkOrientation);
+	status = (*cs->checkOrientation) (s, sAttrib, transform,
+									  outputPtr, points);
+	WRAP(rs, cs, checkOrientation, cubereflexCheckOrientation);
+
+	if (rs->reflection)
+	{
+		return !status;
+	}
+	return status;
 }
 
 static void
@@ -492,6 +518,7 @@ static Bool cubereflexInitScreen(CompPlugin * p, CompScreen * s)
 
 	WRAP(rs, cs, clearTargetOutput, cubereflexClearTargetOutput);
     WRAP(rs, cs, getRotation, cubereflexGetRotation);
+	WRAP(rs, cs, checkOrientation, cubereflexCheckOrientation);
 	
 	return TRUE;
 }
@@ -507,6 +534,7 @@ static void cubereflexFiniScreen(CompPlugin * p, CompScreen * s)
 
 	UNWRAP(rs, cs, clearTargetOutput);
 	UNWRAP(rs, cs, getRotation);
+	UNWRAP(rs, cs, checkOrientation);
 	
 	free(rs);
 }
