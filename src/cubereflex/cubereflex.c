@@ -140,7 +140,7 @@ cubereflexCheckOrientation (CompScreen              *s,
 							const ScreenPaintAttrib *sAttrib,
 							const CompTransform     *transform,
 							CompOutput              *outputPtr,
-							const float             points[3][3])
+							float                   points[3][3])
 {
 	CUBEREFLEX_SCREEN(s);
 	CUBE_SCREEN(s);
