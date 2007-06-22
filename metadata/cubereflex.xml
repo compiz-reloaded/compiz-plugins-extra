@@ -55,6 +55,11 @@
 				<long>Zoom out automatically to myke the cube fit to the screen.</long>
 				<default>true</default>
 			</option>
+			<option name="zoom_manual_only" type="bool">
+				<short>Auto zoom only on Mouse Rotate</short>
+				<long>Zoom out automatically only on mouse rotate.</long>
+				<default>true</default>
+			</option>
 			<option name="mode" type="int">
 				<short>Reflection mode</short>
 				<long>Reflection mode.</long>

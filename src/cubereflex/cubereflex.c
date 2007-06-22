@@ -288,8 +288,13 @@ static void cubereflexPaintTransformedOutput(CompScreen * s,
 					break;
 					
 			}
-			rs->zTrans     = (cubereflexGetAutoZoom(s)) ?
-							 -point2[2] + cs->distance : 0.0;
+
+			if (!cubereflexGetAutoZoom(s) ||
+				((cs->rotationState == RotationChange) &&
+				cubereflexGetZoomManualOnly(s)))
+				rs->zTrans = 0.0;
+			else
+				rs->zTrans = -point2[2] + cs->distance;
 
 			if (cubereflexGetMode(s) == ModeAbove)
 				rs->zTrans      = 0.0;
