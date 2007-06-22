@@ -25,6 +25,8 @@
 #include "group-internal.h"
 #include "group_glow.h"
 
+int groupDisplayPrivateIndex;
+
 static const GlowTextureProperties glowTextureProperties[2] = {
 	// GlowTextureRectangular
 	{glowTexRect, 32, 21},
@@ -153,7 +155,7 @@ Bool groupInitDisplay(CompPlugin * p, CompDisplay * d)
 	groupSetIgnoreTerminate(d, groupUnsetIgnore);
 	groupSetChangeColorInitiate(d, groupChangeColor);
 
-	d->privates[displayPrivateIndex].ptr = gd;
+	d->privates[groupDisplayPrivateIndex].ptr = gd;
 
 	srand (time(NULL));
 
@@ -396,8 +398,8 @@ void groupFiniWindow(CompPlugin * p, CompWindow * w)
  */
 Bool groupInit(CompPlugin * p)
 {
-	displayPrivateIndex = allocateDisplayPrivateIndex();
-	if (displayPrivateIndex < 0)
+	groupDisplayPrivateIndex = allocateDisplayPrivateIndex();
+	if (groupDisplayPrivateIndex < 0)
 		return FALSE;
 
 	return TRUE;
@@ -409,8 +411,7 @@ Bool groupInit(CompPlugin * p)
  */
 void groupFini(CompPlugin * p)
 {
-	if (displayPrivateIndex >= 0)
-		freeDisplayPrivateIndex(displayPrivateIndex);
+	freeDisplayPrivateIndex(groupDisplayPrivateIndex);
 }
 
 /*

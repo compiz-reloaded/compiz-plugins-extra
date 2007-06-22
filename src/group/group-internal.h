@@ -52,12 +52,22 @@
  * Helpers
  *
  */
-#define GET_GROUP_DISPLAY(d) ((GroupDisplay *) (d)->privates[displayPrivateIndex].ptr)
-#define GROUP_DISPLAY(d) GroupDisplay *gd = GET_GROUP_DISPLAY (d)
-#define GET_GROUP_SCREEN(s, gd) ((GroupScreen *) (s)->privates[ (gd)->screenPrivateIndex].ptr)
-#define GROUP_SCREEN(s) GroupScreen *gs = GET_GROUP_SCREEN (s, GET_GROUP_DISPLAY (s->display))
-#define GET_GROUP_WINDOW(w, gs) ((GroupWindow *) (w)->privates[ (gs)->windowPrivateIndex].ptr)
-#define GROUP_WINDOW(w) GroupWindow *gw = GET_GROUP_WINDOW (w, GET_GROUP_SCREEN  (w->screen, GET_GROUP_DISPLAY (w->screen->display)))
+#define GET_GROUP_DISPLAY(d) \
+    ((GroupDisplay *) (d)->privates[groupDisplayPrivateIndex].ptr)
+#define GROUP_DISPLAY(d) \
+    GroupDisplay *gd = GET_GROUP_DISPLAY (d)
+
+#define GET_GROUP_SCREEN(s, gd) \
+    ((GroupScreen *) (s)->privates[ (gd)->screenPrivateIndex].ptr)
+#define GROUP_SCREEN(s) \
+    GroupScreen *gs = GET_GROUP_SCREEN (s, GET_GROUP_DISPLAY (s->display))
+
+#define GET_GROUP_WINDOW(w, gs) \
+    ((GroupWindow *) (w)->privates[ (gs)->windowPrivateIndex].ptr)
+#define GROUP_WINDOW(w) \
+    GroupWindow *gw = GET_GROUP_WINDOW (w, \
+					  GET_GROUP_SCREEN  (w->screen, \
+					  GET_GROUP_DISPLAY (w->screen->display)))
 
 #define WIN_X(w) (w->attrib.x)
 #define WIN_Y(w) (w->attrib.y)
@@ -167,7 +177,7 @@ struct _GroupPendingUngrabs {
 /*
  * Pointer to display list
  */
-int displayPrivateIndex;
+extern int groupDisplayPrivateIndex;
 
 /*
  * PaintState
