@@ -370,20 +370,22 @@ void groupDeleteGroupWindow(CompWindow * w, Bool allowRegroup)
 		}
 
 		if (group->nWins == 1 && groupGetAutoUngroup(w->screen)) {
-			if (group->changeTab) {
-				/* a change animation is pending: this most
-				   likely means that a window must be moved
-				   back onscreen, so we do that here */
-				CompWindow *lw = group->windows[0];
+			if (!allowRegroup || !groupGetAutotabCreate (w->screen)) {
+				if (group->changeTab) {
+					/* a change animation is pending: this most
+					   likely means that a window must be moved
+					   back onscreen, so we do that here */
+					CompWindow *lw = group->windows[0];
 
-				gs->queued = TRUE;
-				groupSetWindowVisibility(lw, TRUE);
-				moveWindow(lw, group->oldTopTabCenterX - WIN_X(lw) - WIN_WIDTH(lw) / 2,
-					group->oldTopTabCenterY - WIN_Y(lw) - WIN_HEIGHT(lw) / 2, TRUE, TRUE);
-				syncWindowPosition(lw);
-				gs->queued = FALSE;
+					gs->queued = TRUE;
+					groupSetWindowVisibility(lw, TRUE);
+					moveWindow(lw, group->oldTopTabCenterX - WIN_X(lw) - WIN_WIDTH(lw) / 2,
+							   group->oldTopTabCenterY - WIN_Y(lw) - WIN_HEIGHT(lw) / 2, TRUE, TRUE);
+					syncWindowPosition(lw);
+					gs->queued = FALSE;
+				}
+				groupDeleteGroup(group);
 			}
-			groupDeleteGroup(group);
 		} else if (group->nWins <= 0) {
 			free(group->windows);
 			group->windows = NULL;
