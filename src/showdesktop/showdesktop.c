@@ -519,7 +519,7 @@ static Bool showdesktopPaintWindow(CompWindow *w,
 			mask |= PAINT_WINDOW_TRANSFORMED_MASK;
 
 			matrixTranslate (&wTransform, w->attrib.x, w->attrib.y, 0.0f);
-			matrixScale (&wTransform, 1.0f, 1.0f, 0.0f);
+			matrixScale (&wTransform, 1.0f, 1.0f, 1.0f);
 			matrixTranslate (&wTransform, sw->tx + offsetX - w->attrib.x, 
 					sw->ty + offsetY - w->attrib.y, 0.0f);
 		}
