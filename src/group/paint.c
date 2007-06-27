@@ -95,7 +95,7 @@ void groupPaintThumb(GroupSelection *group, GroupTabBarSlot *slot, const CompTra
 		initFragmentAttrib(&fragment, &sAttrib);
 
 		matrixTranslate(&wTransform, sAttrib.xTranslate, sAttrib.yTranslate, 0.0f);
-		matrixScale(&wTransform, sAttrib.xScale, sAttrib.yScale, 0.0f);
+		matrixScale(&wTransform, sAttrib.xScale, sAttrib.yScale, 1.0f);
 		matrixTranslate(&wTransform, -(WIN_X(w) + WIN_WIDTH(w) / 2),
 					     -(WIN_Y(w) - w->output.top), 0.0f);
 
@@ -791,7 +791,7 @@ void groupPaintTabBar(GroupSelection * group, const WindowPaintAttrib *wAttrib,
 				CompTransform wTransform = *transform;
 
 				matrixTranslate (&wTransform, WIN_X(topTab), WIN_Y(topTab), 0.0f);
-				matrixScale (&wTransform, attrib.xScale, attrib.yScale, 0.0f);
+				matrixScale (&wTransform, attrib.xScale, attrib.yScale, 1.0f);
 				matrixTranslate (&wTransform,
 					attrib.xTranslate / attrib.xScale - WIN_X(topTab),
 					attrib.yTranslate / attrib.yScale - WIN_Y(topTab), 0.0f);
