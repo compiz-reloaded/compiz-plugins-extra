@@ -52,7 +52,7 @@
 			</option>
 			<option name="auto_zoom" type="bool">
 				<_short>Auto zoom</_short>
-				<_long>Zoom out automatically to myke the cube fit to the screen.</_long>
+				<_long>Zoom out automatically to make the cube fit to the screen.</_long>
 				<default>true</default>
 			</option>
 			<option name="zoom_manual_only" type="bool">
