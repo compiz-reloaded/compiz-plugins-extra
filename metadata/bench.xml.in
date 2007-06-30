@@ -17,7 +17,7 @@
         </option>
         <option name="disable_limiter" type="bool">
           <_short>Disable limiter</_short>
-          <_long>Disable beryl integrated FPS limiter</_long>
+          <_long>Disable Compiz integrated FPS limiter</_long>
           <default>true</default>
         </option>
         <subgroup>
