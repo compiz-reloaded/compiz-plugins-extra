@@ -1,70 +1,70 @@
 <?xml version="1.0"?>
 <compiz>
   <plugin name="splash" useBcop="true">
-    <short>Splash</short>
-    <long>A simple splash plugin</long>
+    <_short>Splash</_short>
+    <_long>A simple splash plugin</_long>
 	<category>Extras</category>
     <display>
       <group>
-        <short>Main</short>
+        <_short>Main</_short>
         <option name="initiate" type="action">
-          <short>Initiate Splash</short>
-          <long>Start Splash.</long>
+          <_short>Initiate Splash</_short>
+          <_long>Start Splash.</_long>
           <allowed key="true"/>
           <default>
             <key>&lt;Control&gt;F11</key>
           </default>
         </option>
         <option name="firststart" type="bool">
-          <short>Show on first start</short>
-          <long>Show splash on first start.</long>
+          <_short>Show on first start</_short>
+          <_long>Show splash on first start.</_long>
           <default>true</default>
         </option>
       </group>
       <group>
-        <short>Images</short>
+        <_short>Images</_short>
         <option name="background" type="string">
-          <short>Background File</short>
-          <long>Background image File.</long>
+          <_short>Background File</_short>
+          <_long>Background image File.</_long>
           <hints>file;image;</hints>
           <default>/data/splash_background.png</default>
         </option>
         <option name="logo" type="string">
-          <short>Logo File</short>
-          <long>Logo image File.</long>
+          <_short>Logo File</_short>
+          <_long>Logo image File.</_long>
           <hints>file;image;</hints>
           <default>/data/splash_logo.png</default>
         </option>
       </group>
       <group>
-        <short>Appearance</short>
+        <_short>Appearance</_short>
         <option name="fade_time" type="float">
-          <short>Fade Time</short>
-          <long>Fade In/Out Time.</long>
+          <_short>Fade Time</_short>
+          <_long>Fade In/Out Time.</_long>
           <default>1.0</default>
           <min>0.0</min>
           <max>100.0</max>
           <precision>0.1</precision>
         </option>
         <option name="display_time" type="float">
-          <short>Display Time</short>
-          <long>Display In/Out Time.</long>
+          <_short>Display Time</_short>
+          <_long>Display In/Out Time.</_long>
           <default>2.0</default>
           <min>0.0</min>
           <max>100.0</max>
           <precision>0.1</precision>
         </option>
         <option name="saturation" type="float">
-          <short>Saturation</short>
-          <long>Background saturation.</long>
+          <_short>Saturation</_short>
+          <_long>Background saturation.</_long>
           <default>50.0</default>
           <min>0.0</min>
           <max>100.0</max>
           <precision>0.1</precision>
         </option>
         <option name="brightness" type="float">
-          <short>Brightness</short>
-          <long>Background brightness.</long>
+          <_short>Brightness</_short>
+          <_long>Background brightness.</_long>
           <default>50.0</default>
           <min>0.0</min>
           <max>100.0</max>
