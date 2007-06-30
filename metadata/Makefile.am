@@ -1,24 +1,28 @@
-metadir = $(metadatadir)
-meta_DATA =	         \
-	addhelper.xml \
-	bench.xml \
-	crashhandler.xml \
-	extrawm.xml \
-	fadedesktop.xml \
-	firepaint.xml \
-	group.xml \
-	mblur.xml \
-	reflex.xml \
-	splash.xml \
-	trailfocus.xml \
-	showdesktop.xml \
-	cubereflex.xml
+xmldir       = $(metadatadir)
+xml_in_files = 	         \
+	addhelper.xml.in \
+	bench.xml.in \
+	crashhandler.xml.in \
+	extrawm.xml.in \
+	fadedesktop.xml.in \
+	firepaint.xml.in \
+	group.xml.in \
+	mblur.xml.in \
+	reflex.xml.in \
+	splash.xml.in \
+	trailfocus.xml.in \
+	showdesktop.xml.in \
+	cubereflex.xml.in
 
-EXTRA_DIST = $(meta_DATA)
+xml_files    = $(xml_in_files:.xml.in=.xml)
+xml_DATA     = $(xml_files)
+
+@INTLTOOL_XML_RULE@
 
 if USE_SCHEMAS
 schemadir   = $(GCONF_SCHEMA_FILE_DIR)
-schema_DATA = $(patsubst %.xml,compiz-%.schemas,$(meta_DATA))
+schema_files = $(patsubst %.xml.in,compiz-%.schemas,$(xml_in_files))
+schema_DATA  = $(schema_files)
 
 %.schemas: $(meta_DATA)
 	xsltproc -o $@ $(xsltdir)/schemas.xslt $(subst compiz-,,$*).xml;
@@ -30,3 +34,13 @@ install-data-local:
        fi
 endif
 endif
+
+EXTRA_DIST =		\
+	$(xml_files)    \
+	$(xml_in_files) \
+	$(schema_files)
+
+DISTCLEANFILES =	\
+	$(xml_files)    \
+	$(schema_files)
+

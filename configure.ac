@@ -16,12 +16,12 @@ AC_PROG_CPP
 AC_PROG_LIBTOOL
 AC_HEADER_STDC
 AC_CHECK_HEADERS([stdlib.h sys/time.h unistd.h])
-#IT_PROG_INTLTOOL([0.35.0])
-#AC_SUBST(ALL_LINGUAS)
-#AM_GLIB_GNU_GETTEXT
-#GETTEXT_PACKAGE=compcomm-plugins-extra
-#AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [Gettext package.])
-#AC_SUBST(GETTEXT_PACKAGE)
+IT_PROG_INTLTOOL([0.35.0])
+AC_SUBST(ALL_LINGUAS)
+AM_GLIB_GNU_GETTEXT
+GETTEXT_PACKAGE=compiz-fusion-plugins-extra
+AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [Gettext package.])
+AC_SUBST(GETTEXT_PACKAGE)
 
 if test "x$GCC" = "xyes"; then
   case " $CFLAGS " in
@@ -176,4 +176,5 @@ src/splash/Makefile
 src/trailfocus/Makefile
 src/showdesktop/Makefile
 src/cubereflex/Makefile
+po/Makefile.in
 ])
