@@ -1,17 +1,17 @@
 <?xml version="1.0"?>
 <compiz>
   <plugin name="mblur" useBcop="true">
-    <short>Motion blur</short>
-    <long>Motion blur effect</long>
+    <_short>Motion blur</_short>
+    <_long>Motion blur effect</_long>
 	<category>Effects</category>
     <display>
       <group>
-        <short>Main</short>
+        <_short>Main</_short>
         <subgroup>
-          <short>Activate</short>
+          <_short>Activate</_short>
           <option name="initiate" type="action">
-            <short>Toggle Motion Blur</short>
-            <long>Toggle motion Blur effect.</long>
+            <_short>Toggle Motion Blur</_short>
+            <_long>Toggle motion Blur effect.</_long>
             <allowed key="true"/>
             <default>
               <key>&lt;Control&gt;F12</key>
@@ -22,27 +22,27 @@
     </display>
     <screen>
       <group>
-        <short>Main</short>
+        <_short>Main</_short>
         <subgroup>
-          <short>Visibility/Performance</short>
+          <_short>Visibility/Performance</_short>
           <option name="mode" type="int">
-            <short>Motion Blur mode</short>
-            <long>Motion Blur render mode.</long>
+            <_short>Motion Blur mode</_short>
+            <_long>Motion Blur render mode.</_long>
 			<default>0</default>
 			<min>0</min>
 			<max>1</max>
 			<desc>
 				<value>0</value>
-				<name>Texture Copy</name>
+				<_name>Texture Copy</_name>
 			</desc>
 			<desc>
 				<value>1</value>
-				<name>Accumulation buffer</name>
+				<_name>Accumulation buffer</_name>
 			</desc>
           </option>
           <option name="strength" type="float">
-            <short>Motion Blur Strength</short>
-            <long>Motion Blur strength.</long>
+            <_short>Motion Blur Strength</_short>
+            <_long>Motion Blur strength.</_long>
             <default>20.0</default>
             <min>0.0</min>
             <max>100.0</max>
@@ -50,10 +50,10 @@
           </option>
         </subgroup>
         <subgroup>
-          <short>Activate</short>
+          <_short>Activate</_short>
           <option name="on_transformed_screen" type="bool">
-            <short>Motion Blur on Transformed Screen</short>
-            <long>Execute Motion Blur if the screen is transformed.</long>
+            <_short>Motion Blur on Transformed Screen</_short>
+            <_long>Execute Motion Blur if the screen is transformed.</_long>
             <default>false</default>
           </option>
         </subgroup>
