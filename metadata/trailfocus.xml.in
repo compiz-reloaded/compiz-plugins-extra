@@ -55,14 +55,14 @@
           <_short>Brightness</_short>
           <option name="max_brightness" type="int">
             <_short>Brightness Level of Focused Windows</_short>
-            <_long>Brightness of the currently focused window. Windows will get opacity levels between the focused and minimum.</_long>
+            <_long>Brightness of the currently focused window. Windows will get brightness levels between the focused and minimum.</_long>
             <default>100</default>
             <min>1</min>
             <max>100</max>
           </option>
           <option name="min_brightness" type="int">
             <_short>Brightness Level of Unfocused Windows</_short>
-            <_long>Brightness of the least focused window. Windows will get opacity levels between the focused and minimum.</_long>
+            <_long>Brightness of the least focused window. Windows will get brightness levels between the focused and minimum.</_long>
             <default>100</default>
             <min>1</min>
             <max>100</max>
@@ -72,14 +72,14 @@
           <_short>Saturation</_short>
           <option name="max_saturation" type="int">
             <_short>Saturation Level of Focused Windows</_short>
-            <_long>Saturation of the currently focused window. Windows will get opacity levels between the focused and minimum.</_long>
+            <_long>Saturation of the currently focused window. Windows will get saturation levels between the focused and minimum.</_long>
             <default>100</default>
             <min>1</min>
             <max>100</max>
           </option>
           <option name="min_saturation" type="int">
             <_short>Saturation Level of Unfocused Windows</_short>
-            <_long>Saturation of the least focused window. Windows will get opacity levels between the focused and minimum.</_long>
+            <_long>Saturation of the least focused window. Windows will get saturation levels between the focused and minimum.</_long>
             <default>100</default>
             <min>1</min>
             <max>100</max>
