@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <compiz>
 	<plugin name="cubereflex" useBcop="true">
-		<short>Cube Reflection</short>
-		<long>Compiz cube reflection</long>
+		<_short>Cube Reflection</_short>
+		<_long>Compiz cube reflection</_long>
 		<category>Effects</category>
 		<deps>
 		<relation type="after">
@@ -15,8 +15,8 @@
 		</deps>
 		<screen>
 			<option name="ground_color1" type="color">
-				<short>Ground color(near)</short>
-				<long>Color of the ground (near).</long>
+				<_short>Ground color(near)</_short>
+				<_long>Color of the ground (near).</_long>
 				<default>
 					<red>0xb333</red>
 					<green>0xb333</green>
@@ -25,8 +25,8 @@
 				</default>
 			</option>
 			<option name="ground_color2" type="color">
-				<short>Ground color(far)</short>
-				<long>Color of the ground (far).</long>
+				<_short>Ground color(far)</_short>
+				<_long>Color of the ground (far).</_long>
 				<default>
 					<red>0xb333</red>
 					<green>0xb333</green>
@@ -35,52 +35,52 @@
 				</default>
 			</option>
 			<option name="ground_size" type="float">
-				<short>Reflection ground size</short>
-				<long>Reflection ground size.</long>
+				<_short>Reflection ground size</_short>
+				<_long>Reflection ground size.</_long>
 				<default>0.5</default>
 				<min>0.0</min>
 				<max>1.0</max>
 				<precision>0.01</precision>
 			</option>
 			<option name="intensity" type="float">
-				<short>Intensity</short>
-				<long>Reflection intensity</long>
+				<_short>Intensity</_short>
+				<_long>Reflection intensity</_long>
 				<default>0.4</default>
 				<min>0.0</min>
 				<max>1.0</max>
 				<precision>0.01</precision>
 			</option>
 			<option name="auto_zoom" type="bool">
-				<short>Auto zoom</short>
-				<long>Zoom out automatically to myke the cube fit to the screen.</long>
+				<_short>Auto zoom</_short>
+				<_long>Zoom out automatically to myke the cube fit to the screen.</_long>
 				<default>true</default>
 			</option>
 			<option name="zoom_manual_only" type="bool">
-				<short>Auto zoom only on Mouse Rotate</short>
-				<long>Zoom out automatically only on mouse rotate.</long>
+				<_short>Auto zoom only on Mouse Rotate</_short>
+				<_long>Zoom out automatically only on mouse rotate.</_long>
 				<default>true</default>
 			</option>
 			<option name="mode" type="int">
-				<short>Reflection mode</short>
-				<long>Reflection mode.</long>
+				<_short>Reflection mode</_short>
+				<_long>Reflection mode.</_long>
 				<default>0</default>
 				<min>0</min>
 				<max>3</max>
 				<desc>
 					<value>0</value>
-					<name>Jumpy</name>
+					<_name>Jumpy</_name>
 				</desc>
 				<desc>
 					<value>1</value>
-					<name>Jumpy reflection</name>
+					<_name>Jumpy reflection</_name>
 				</desc>
 				<desc>
 					<value>2</value>
-					<name>Distance</name>
+					<_name>Distance</_name>
 				</desc>
 				<desc>
 					<value>3</value>
-					<name>Above</name>
+					<_name>Above</_name>
 				</desc>
 			</option>
 		</screen>
