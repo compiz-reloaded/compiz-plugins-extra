@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <compiz>
   <plugin name="reflex" useBcop="true">
-    <short>Reflection</short>
-    <long>Draws reflections</long>
+    <_short>Reflection</_short>
+    <_long>Draws reflections</_long>
 	<category>Effects</category>
     <deps>
       <relation type="after">
@@ -13,38 +13,38 @@
     </deps>
     <screen>
       <group>
-        <short>Main</short>
+        <_short>Main</_short>
         <option name="file" type="string">
-          <short>Reflection Image</short>
-          <long>Reflection Image file</long>
+          <_short>Reflection Image</_short>
+          <_long>Reflection Image file</_long>
           <hints>file;image;</hints>
           <default>/data/emboss.png</default>
         </option>
         <option name="match" type="match">
-          <short>Window match</short>
-          <long>Reflection Window Match</long>
+          <_short>Window match</_short>
+          <_long>Reflection Window Match</_long>
           <default>any</default>
         </option>
         <option name="window" type="bool">
-          <short>Reflection for Windows</short>
-          <long>Draw Reflection for windows.</long>
+          <_short>Reflection for Windows</_short>
+          <_long>Draw Reflection for windows.</_long>
           <default>false</default>
         </option>
         <option name="decoration" type="bool">
-          <short>Reflection for Decorations</short>
-          <long>Draw Reflection for decorations.</long>
+          <_short>Reflection for Decorations</_short>
+          <_long>Draw Reflection for decorations.</_long>
           <default>true</default>
         </option>
         <option name="threshold" type="int">
-          <short>Alpha Dependence Threshold</short>
-          <long>Alpha dependence threshold.</long>
+          <_short>Alpha Dependence Threshold</_short>
+          <_long>Alpha dependence threshold.</_long>
           <default>2</default>
           <min>1</min>
           <max>10</max>
         </option>
 		<option name="moving" type="bool">
-          <short>Moving reflection</short>
-          <long>Move the reflection on window move.</long>
+          <_short>Moving reflection</_short>
+          <_long>Move the reflection on window move.</_long>
           <default>true</default>
         </option>
       </group>
