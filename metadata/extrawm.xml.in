@@ -1,43 +1,43 @@
 <?xml version="1.0"?>
 <compiz>
   <plugin name="extrawm" useBcop="true">
-    <short>Extra WM Actions</short>
-    <long>Provides less commonly used WM actions</long>
+    <_short>Extra WM Actions</_short>
+    <_long>Provides less commonly used WM actions</_long>
 	<category>Window Management</category>
     <display>
       <option name="activate" type="action">
-        <short>Activate Window</short>
-        <long>Activate a given window</long>
+        <_short>Activate Window</_short>
+        <_long>Activate a given window</_long>
         <allowed/>
         <default/>
       </option>
       <option name="toggle_redirect" type="action">
-        <short>Toggle Redirect</short>
-        <long>Toggle window redirect</long>
+        <_short>Toggle Redirect</_short>
+        <_long>Toggle window redirect</_long>
         <allowed key="true"/>
         <default>
           <key/>
         </default>
       </option>
       <option name="toggle_fullscreen" type="action">
-        <short>Toggle Fullscreen</short>
-        <long>Toggle window fullscreen</long>
+        <_short>Toggle Fullscreen</_short>
+        <_long>Toggle window fullscreen</_long>
         <allowed key="true"/>
         <default>
           <key/>
         </default>
       </option>
       <option name="toggle_always_on_top" type="action">
-        <short>Toggle Always-On-Top</short>
-        <long>Toggle always on top for the active window</long>
+        <_short>Toggle Always-On-Top</_short>
+        <_long>Toggle always on top for the active window</_long>
         <allowed key="true"/>
         <default>
           <key/>
         </default>
       </option>
       <option name="toggle_sticky" type="action">
-        <short>Toggle Sticky</short>
-        <long>Toggle window stickyness</long>
+        <_short>Toggle Sticky</_short>
+        <_long>Toggle window stickyness</_long>
         <allowed key="true"/>
         <default>
           <key/>
