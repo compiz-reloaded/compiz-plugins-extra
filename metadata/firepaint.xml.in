@@ -1,20 +1,20 @@
 <compiz>
     <plugin name="firepaint" useBcop="true">
-	<short>Paint fire on the screen</short>
-	<long>Paint fire or other particles on the screen</long>
+	<_short>Paint fire on the screen</_short>
+	<_long>Paint fire or other particles on the screen</_long>
 	<category>Effects</category>
 	<display>
 	    <option type="action" name="initiate">
-		<short>Initiate</short>
-		<long>Initiate fire drawing</long>
+		<_short>Initiate</_short>
+		<_long>Initiate fire drawing</_long>
 		<allowed key="true" button="true"/>
 		<default>
 		    <button>&lt;Super&gt;&lt;Shift&gt;Button1</button>
 		</default>
 	    </option>
 	    <option type="action" name="clear">
-		<short>Clear</short>
-		<long>Clear</long>
+		<_short>Clear</_short>
+		<_long>Clear</_long>
 		<allowed key="true" button="true"/>
 		<default>
 		    <key>&lt;Super&gt;&lt;Shift&gt;c</key>
@@ -23,39 +23,39 @@
 	</display>
 	<screen>
 	    <option name="num_Particles" type="int">
-		<short>Number of particles</short>
-		<long>Maximum number of active particles</long>
+		<_short>Number of particles</_short>
+		<_long>Maximum number of active particles</_long>
 		<default>3000</default>
 		<min>100</min>
 		<max>20000</max>
 	    </option>
 	    <option name="fire_size" type="float">
-		<short>Fire Particle Size</short>
-		<long>Fire particle size.</long>
+		<_short>Fire Particle Size</_short>
+		<_long>Fire particle size.</_long>
 		<default>15.0</default>
 		<min>0.1</min>
 		<max>40</max>
 		<precision>0.1</precision>
 	    </option>
 	    <option name="fire_slowdown" type="float">
-		<short>Fire Particle Slowdown</short>
-		<long>Fire particle slowdown.</long>
+		<_short>Fire Particle Slowdown</_short>
+		<_long>Fire particle slowdown.</_long>
 		<default>0.5</default>
 		<min>0.1</min>
 		<max>10</max>
 		<precision>0.1</precision>
 	    </option>
 	    <option name="fire_life" type="float">
-		<short>Fire Particle Life</short>
-		<long>Fire particle life.</long>
+		<_short>Fire Particle Life</_short>
+		<_long>Fire particle life.</_long>
 		<default>0.7</default>
 		<min>0.1</min>
 		<max>0.95</max>
 		<precision>0.05</precision>
 	    </option>
 	    <option name="fire_color" type="color">
-		<short>Fire Particle Color</short>
-		<long>Fire particle color.</long>
+		<_short>Fire Particle Color</_short>
+		<_long>Fire particle color.</_long>
 		<default>
 		    <red>0xffff</red>
 		    <green>0x3333</green>
@@ -64,13 +64,13 @@
 		</default>
 	    </option>
 	    <option name="fire_mystical" type="bool">
-		<short>Randomly Colored Fire</short>
-		<long>Have random colors for the fire effect, also known as Mystical Fire.</long>
+		<_short>Randomly Colored Fire</_short>
+		<_long>Have random colors for the fire effect, also known as Mystical Fire.</_long>
 		<default>false</default>
 	    </option>
 	    <option name="bg_brightness" type="int">
-		<short>Background brightness</short>
-		<long>Background brightness during paint</long>
+		<_short>Background brightness</_short>
+		<_long>Background brightness during paint</_long>
 		<default>50</default>
 		<min>0</min>
 		<max>100</max>
