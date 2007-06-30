@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <compiz>
   <plugin name="addhelper" useBcop="true">
-    <short>AddHelper</short>
-	<long>Make it slightly easier to concentrate by dimming all but the active window.</long>
+    <_short>AddHelper</_short>
+	<_long>Make it slightly easier to concentrate by dimming all but the active window.</_long>
 	<category>Accessibility</category>
 	<deps>
 		<relation type="after">
@@ -11,10 +11,10 @@
 	</deps>
     <display>
       <group>
-        <short>Bindings</short>
+        <_short>Bindings</_short>
         <option name="toggle" type="action">
-          <short>Toggle AddHelper</short>
-          <long>Use this to enable/disable AddHelper on the fly.</long>
+          <_short>Toggle AddHelper</_short>
+          <_long>Use this to enable/disable AddHelper on the fly.</_long>
           <allowed key="true"/>
           <default>
             <key>&lt;Super&gt;p</key>
@@ -22,29 +22,29 @@
         </option>
       </group>
       <group>
-        <short>Misc. options</short>
+        <_short>Misc. options</_short>
         <option name="window_types" type="match">
-          <short>Window Types</short>
-          <long>Window types that should be Opacified.</long>
+          <_short>Window Types</_short>
+          <_long>Window types that should be Opacified.</_long>
           <default>Toolbar | Utility | Dialog | ModalDialog | Fullscreen | Normal</default>
         </option>
         <option name="brightness" type="int">
-          <short>Brightness</short>
-          <long>Brightness of faded windows</long>
+          <_short>Brightness</_short>
+          <_long>Brightness of faded windows</_long>
           <default>30</default>
           <min>1</min>
           <max>100</max>
         </option>
         <option name="saturation" type="int">
-          <short>Saturation</short>
-          <long>Saturation of faded windows</long>
+          <_short>Saturation</_short>
+          <_long>Saturation of faded windows</_long>
           <default>50</default>
           <min>0</min>
           <max>100</max>
         </option>
         <option name="opacity" type="int">
-          <short>Opacity</short>
-          <long>Opacity of faded windows</long>
+          <_short>Opacity</_short>
+          <_long>Opacity of faded windows</_long>
           <default>100</default>
           <min>1</min>
           <max>100</max>
