@@ -1139,30 +1139,29 @@ void groupHandleEvent(CompDisplay * d, XEvent * event)
 	GROUP_DISPLAY(d);
 
 	switch (event->type) {
-		case MotionNotify:
+	case MotionNotify:
+	{
+		CompScreen *s = findScreenAtDisplay(d, event->xmotion.root);
+		if (s)
+			groupHandleMotionEvent(s, pointerX, pointerY);
+
+		break;
+	}
+
+	case ButtonPress:
+		groupHandleButtonPressEvent(d, event);
+		break;
+
+	case ButtonRelease:
+		groupHandleButtonReleaseEvent(d, event);
+		break;
+
+	case MapNotify:
+	{
+		CompWindow *cw, *w;
+		w = findWindowAtDisplay(d, event->xmap.window);
+		if (w)
 		{
-			CompScreen *s = findScreenAtDisplay(d, event->xmotion.root);
-			if (s)
-				groupHandleMotionEvent(s, pointerX, pointerY);
-
-			break;
-		}
-
-		case ButtonPress:
-			groupHandleButtonPressEvent(d, event);
-			break;
-
-		case ButtonRelease:
-			groupHandleButtonReleaseEvent(d, event);
-			break;
-
-		case MapNotify:
-		{
-			CompWindow *cw;
-			CompWindow *w = findWindowAtDisplay(d, event->xmap.window);
-			if (!w)
-				break;
-
 			for (cw = w->screen->windows; cw; cw = cw->next)
 			{
 				if (w->id == cw->frame)
@@ -1172,23 +1171,28 @@ void groupHandleEvent(CompDisplay * d, XEvent * event)
 						XUnmapWindow(cw->screen->display->display, cw->frame);
 				}
 			}
-			break;
 		}
+		break;
+	}
 
-		case UnmapNotify:
+	case UnmapNotify:
+	{
+		CompWindow *w = findWindowAtDisplay(d, event->xunmap.window);
+		if (w)
 		{
-			CompWindow *w = findWindowAtDisplay(d, event->xunmap.window);
-			if (!w)
-				break;
 			GROUP_WINDOW(w);
 
-			if (w->pendingUnmaps) {
-				if (w->shaded) {
+			if (w->pendingUnmaps) 
+			{
+				if (w->shaded) 
+				{
 					gw->windowState = WindowShaded;
 
 					if (gw->group && groupGetShadeAll(w->screen))
 						groupShadeWindows(w, gw->group, TRUE);
-				} else if (w->minimized) {
+				} 
+				else if (w->minimized) 
+				{
 					gw->windowState = WindowMinimized;
 
 					if (gw->group && groupGetMinimizeAll(w->screen))
@@ -1196,44 +1200,56 @@ void groupHandleEvent(CompDisplay * d, XEvent * event)
 				}
 			}
 
-			if (gw->group) {
-				if (gw->group->tabBar && IS_TOP_TAB(w, gw->group)) {
+			if (gw->group) 
+			{
+				if (gw->group->tabBar && IS_TOP_TAB(w, gw->group)) 
+				{
 					/* on unmap of the top tab, hide the tab bar and the
 					   input prevention window */
 					groupTabSetVisibility(gw->group, FALSE, PERMANENT);
 				}
-				if (!w->pendingUnmaps) {
-					//close event
-					gw->ungroup = TRUE;	// This will prevent setting up animations on group.
+				if (!w->pendingUnmaps) 
+				{
+					/* close event */
+
+					/* prevent animations on this group */
+					gw->ungroup = TRUE;
+
 					groupDeleteGroupWindow(w, FALSE);
 					gw->ungroup = FALSE;
 					damageScreen(w->screen);
 				}
 			}
-			break;
 		}
+		break;
+	}
 
-		case ClientMessage:
-			if (event->xclient.message_type == d->winActiveAtom) {
-				CompWindow *w = findWindowAtDisplay(d, event->xclient.window);
-				if (!w)
-					return;
-
+	case ClientMessage:
+		if (event->xclient.message_type == d->winActiveAtom) 
+		{
+			CompWindow *w = findWindowAtDisplay(d, event->xclient.window);
+			if (w)
+			{
 				GROUP_WINDOW(w);
 
-				if (gw->group && gw->group->tabBar && HAS_TOP_WIN(gw->group)) {
+				if (gw->group && gw->group->tabBar && HAS_TOP_WIN(gw->group))
+				{
 					CompWindow *tw = TOP_TAB(gw->group);
 
-					if (w->id != tw->id) {
+					if (w->id != tw->id) 
+					{
 						/* if a non top-tab has been activated, switch to the
 						   top-tab instead - but only if is visible */
-						if (tw->shaded) {
+						if (tw->shaded) 
+						{
 							changeWindowState(tw, tw->state & ~CompWindowStateShadedMask);
 							updateWindowAttributes(tw, CompStackingUpdateModeNone);
-						} else if (tw->minimized)
+						} 
+						else if (tw->minimized)
 							unminimizeWindow(tw);
 
-						if (!(tw->state & CompWindowStateHiddenMask)) {
+						if (!(tw->state & CompWindowStateHiddenMask)) 
+						{
 							if (!gw->group->changeTab)
 								gw->group->activateTab = gw->slot;
 							sendWindowActivationRequest(tw->screen, tw->id);
@@ -1241,23 +1257,26 @@ void groupHandleEvent(CompDisplay * d, XEvent * event)
 					}
 				}
 			}
-			break;
+		}
+		break;
 
-		default:
-			if (event->type == d->shapeEvent + ShapeNotify) {
-				XShapeEvent *se = (XShapeEvent*)event;
-				if (se->kind == ShapeInput) {
-					CompWindow *w = findWindowAtDisplay(d, se->window);
+	default:
+		if (event->type == d->shapeEvent + ShapeNotify) 
+		{
+			XShapeEvent *se = (XShapeEvent*)event;
+			if (se->kind == ShapeInput) 
+			{
+				CompWindow *w = findWindowAtDisplay(d, se->window);
+				if (w) 
+				{
+					GROUP_WINDOW(w);
 
-					if (w) {
-						GROUP_WINDOW(w);
-
-						if (gw->windowHideInfo)
-							groupClearWindowInputShape(w, gw->windowHideInfo);
-					}
+					if (gw->windowHideInfo)
+						groupClearWindowInputShape(w, gw->windowHideInfo);
 				}
 			}
-			break;
+		}
+		break;
 	}
 
 	UNWRAP(gd, d, handleEvent);
@@ -1265,52 +1284,61 @@ void groupHandleEvent(CompDisplay * d, XEvent * event)
 	WRAP(gd, d, handleEvent, groupHandleEvent);
 
 	switch (event->type) {
-		case FocusIn:
+	case FocusIn:
+	{
+		CompWindow *w = findWindowAtDisplay(d, event->xfocus.window);
+		if (w)
 		{
-			CompWindow *w = findWindowAtDisplay(d, event->xfocus.window);
-			if (!w)
-				break;
-
 			GROUP_WINDOW(w);
-			if (gw->group && !gw->group->tabBar) {
+
+			if (gw->group && !gw->group->tabBar) 
+			{
 				if (groupGetRaiseAll(w->screen))
 					groupRaiseWindows(w, gw->group);
 			}
-			break;
 		}
+		break;
+	}
 
-		case PropertyNotify:
-			if (event->xproperty.atom == d->winActiveAtom) {
-				CompWindow *w = findWindowAtDisplay(d, d->activeWindow);
-				if (!w)
-					break;
-
+	case PropertyNotify:
+		if (event->xproperty.atom == d->winActiveAtom) 
+		{
+			CompWindow *w = findWindowAtDisplay(d, d->activeWindow);
+			if (w)
+			{
 				GROUP_WINDOW(w);
 
-				if (gw->group && gw->group->activateTab) {
+				if (gw->group && gw->group->activateTab) 
+				{
 					groupChangeTab(gw->group->activateTab, RotateUncertain);
 					gw->group->activateTab = NULL;
 				}
-			} else if (event->xproperty.atom == d->wmNameAtom) {
-				CompWindow *w = findWindowAtDisplay(d, d->activeWindow);
-				if (!w)
-					break;
-
+			}
+		} 
+		else if (event->xproperty.atom == d->wmNameAtom) 
+		{
+			CompWindow *w = findWindowAtDisplay(d, event->xproperty.window);
+			if (w)
+			{
 				GROUP_WINDOW(w);
 
-				if (gw->group && gw->group->tabBar) {
+				if (gw->group && gw->group->tabBar &&
+				    gw->group->tabBar->textSlot    &&
+				    gw->group->tabBar->textSlot->window == w) 
+				{
 					// make sure we are using the updated name
 					groupRenderWindowTitle(gw->group);
+					groupDamageTabBarRegion(gw->group);
 				}
 			}
-			break;
+		}
+		break;
 
-		case EnterNotify:
+	case EnterNotify:
+	{
+		CompWindow *w = findWindowAtDisplay(d, event->xcrossing.window);
+		if (w)
 		{
-			CompWindow *w = findWindowAtDisplay(d, event->xcrossing.window);
-			if (!w)
-				break;
-
 			GROUP_WINDOW(w);
 			GROUP_SCREEN(w->screen);
 
@@ -1320,10 +1348,10 @@ void groupHandleEvent(CompDisplay * d, XEvent * event)
 			if (w->id != w->screen->grabWindow)
 				groupUpdateTabBars(w->screen, w->id);
 
-			if (gw->group) {
-				GROUP_SCREEN(w->screen);
-
-				if (gs->draggedSlot && gs->dragged && IS_TOP_TAB(w, gw->group)) {
+			if (gw->group) 
+			{
+				if (gs->draggedSlot && gs->dragged && IS_TOP_TAB(w, gw->group)) 
+				{
 					int hoverTime = groupGetDragHoverTime(w->screen) * 1000;
 					if (gs->dragHoverTimeoutHandle)
 						compRemoveTimeout(gs->dragHoverTimeoutHandle);
@@ -1333,34 +1361,35 @@ void groupHandleEvent(CompDisplay * d, XEvent * event)
 							compAddTimeout(hoverTime, groupDragHoverTimeout, w);
 				}
 			}
-
-			break;
 		}
+		break;
+	}
 
-		case ConfigureNotify:
+	case ConfigureNotify:
+	{
+		CompWindow *w = findWindowAtDisplay(d, event->xconfigure.window);
+		if (w)
 		{
-			CompWindow *w = findWindowAtDisplay(d, event->xconfigure.window);
-
-			if (!w)
-				break;
-
 			GROUP_WINDOW(w);
 
-			if (gw->group && gw->group->tabBar && IS_TOP_TAB(w, gw->group) && gw->group->inputPrevention)
+			if (gw->group && gw->group->tabBar && IS_TOP_TAB(w, gw->group) && 
+				gw->group->inputPrevention)
 			{
 			    XWindowChanges xwc;
 
 			    xwc.stack_mode = Above;
 			    xwc.sibling = w->id;
 
-		    	    XConfigureWindow (w->screen->display->display, gw->group->inputPrevention,
-					      CWSibling | CWStackMode, &xwc);
+				XConfigureWindow (w->screen->display->display, 
+								  gw->group->inputPrevention,
+								  CWSibling | CWStackMode, &xwc);
 			}
-			break;
 		}
+		break;
+	}
 
-		default:
-			break;
+	default:
+		break;
 	}
 }
 
