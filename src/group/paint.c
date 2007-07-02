@@ -627,16 +627,10 @@ void groupPaintTabBar(GroupSelection * group, const WindowPaintAttrib *wAttrib,
 
 	int i;
 	int alpha;
-	float w_scale;
-	float h_scale;
+	float wScale, hScale;
 	GroupCairoLayer *layer;
 
 	REGION box;
-
-	WindowPaintAttrib attrib = *wAttrib;
-	attrib.opacity = OPAQUE;
-	attrib.saturation = COLOR;
-	attrib.brightness = BRIGHT;
 
 #define PAINT_BG     0
 #define PAINT_SEL    1
@@ -651,7 +645,7 @@ void groupPaintTabBar(GroupSelection * group, const WindowPaintAttrib *wAttrib,
 	glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
 	for (i = 0; i < PAINT_MAX; i++) {
-		alpha = 0xffff;
+		alpha = OPAQUE;
 
 		if (bar->state == PaintFadeIn)
 			alpha -= alpha * bar->animationTime /
@@ -660,12 +654,12 @@ void groupPaintTabBar(GroupSelection * group, const WindowPaintAttrib *wAttrib,
 			alpha = alpha * bar->animationTime /
 				(groupGetFadeTime(s) * 1000);
 
+		wScale = hScale = 1.0f;
+		layer = NULL;
+
 		switch (i) {
 			case PAINT_BG:
 				layer = bar->bgLayer;
-
-				h_scale = 1.0f;
-				w_scale = 1.0f;
 
 				// handle the repaint of the background
 				int newWidth = bar->region->extents.x2 - bar->region->extents.x1;
@@ -673,7 +667,7 @@ void groupPaintTabBar(GroupSelection * group, const WindowPaintAttrib *wAttrib,
 				if (layer && (newWidth > layer->texWidth))
 					newWidth = layer->texWidth;
 
-				w_scale = (double) (bar->region->extents.x2 - bar->region->extents.x1) / (double) newWidth;
+				wScale = (double) (bar->region->extents.x2 - bar->region->extents.x1) / (double) newWidth;
 				if (newWidth != bar->oldWidth || bar->bgAnimation)
 					groupRenderTabBarBackground(group);
 				bar->oldWidth = newWidth;
@@ -684,15 +678,11 @@ void groupPaintTabBar(GroupSelection * group, const WindowPaintAttrib *wAttrib,
 				if (group->topTab != gs->draggedSlot) {
 					layer = bar->selectionLayer;
 
-					h_scale = 1.0f;
-					w_scale = 1.0f;
-
 					box.extents.x1 = group->topTab->region->extents.x1;
 					box.extents.x2 = group->topTab->region->extents.x2;
 					box.extents.y1 = group->topTab->region->extents.y1;
 					box.extents.y2 = group->topTab->region->extents.y2;
-				} else
-					layer = NULL;
+				}
 				break;
 
 			case PAINT_THUMBS:
@@ -715,18 +705,11 @@ void groupPaintTabBar(GroupSelection * group, const WindowPaintAttrib *wAttrib,
 
 				glEnable(GL_BLEND);
 				glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-
-				layer = NULL;
-				w_scale = 1.0f;
-				h_scale = 1.0f;
 				break;
 
 			case PAINT_TEXT:
 				if (bar->textLayer && (bar->textLayer->state != PaintOff)) {
 					layer = bar->textLayer;
-
-					h_scale = 1.0f;
-					w_scale = 1.0f;
 
 					box.extents.x1 = bar->region->extents.x1 + 5;
 					box.extents.x2 = bar->region->extents.x1 + bar->textLayer->texWidth + 5;
@@ -743,14 +726,7 @@ void groupPaintTabBar(GroupSelection * group, const WindowPaintAttrib *wAttrib,
 					else if (group->tabBar->textLayer->state == PaintFadeOut)
 						alpha = alpha * bar->textLayer->animationTime /
 							(groupGetFadeTextTime(s) * 1000);
-				} else
-					layer = NULL;
-				break;
-
-			default:
-				layer = NULL;
-				w_scale = 1.0f;
-				h_scale = 1.0f;
+				}
 				break;
 		}
 
@@ -760,28 +736,22 @@ void groupPaintTabBar(GroupSelection * group, const WindowPaintAttrib *wAttrib,
 			// remove the old x1 and y1 so we have a relative value
 			box.extents.x2 -= box.extents.x1;
 			box.extents.y2 -= box.extents.y1;
-			box.extents.x1 = (box.extents.x1 - topTab->attrib.x) / w_scale + topTab->attrib.x;
-			box.extents.y1 = (box.extents.y1 - topTab->attrib.y) / h_scale + topTab->attrib.y;
+			box.extents.x1 = (box.extents.x1 - topTab->attrib.x) / wScale + topTab->attrib.x;
+			box.extents.y1 = (box.extents.y1 - topTab->attrib.y) / hScale + topTab->attrib.y;
 			// now add the new x1 and y1 so we have a absolute value again,
 			// also we don't want to stretch the texture...
-			if (box.extents.x2*w_scale < layer->texWidth)
+			if (box.extents.x2 * wScale < layer->texWidth)
 				box.extents.x2 += box.extents.x1;
 			else
 				box.extents.x2 = box.extents.x1 + layer->texWidth;
-			if (box.extents.y2*h_scale < layer->texHeight)
+			if (box.extents.y2 * hScale < layer->texHeight)
 				box.extents.y2 += box.extents.y1;
 			else
 				box.extents.y2 = box.extents.y1 + layer->texHeight;
 
-
 			matrix.x0 -= box.extents.x1 * matrix.xx;
 			matrix.y0 -= box.extents.y1 * matrix.yy;
-
-			attrib.xScale = w_scale;
-			attrib.yScale = h_scale;
-
 			topTab->vCount = 0;
-
 
 			addWindowGeometry(topTab, &matrix, 1, &box, clipRegion);
 
@@ -791,29 +761,24 @@ void groupPaintTabBar(GroupSelection * group, const WindowPaintAttrib *wAttrib,
 				CompTransform wTransform = *transform;
 
 				matrixTranslate (&wTransform, WIN_X(topTab), WIN_Y(topTab), 0.0f);
-				matrixScale (&wTransform, attrib.xScale, attrib.yScale, 1.0f);
+				matrixScale (&wTransform, wScale, hScale, 1.0f);
 				matrixTranslate (&wTransform,
-					attrib.xTranslate / attrib.xScale - WIN_X(topTab),
-					attrib.yTranslate / attrib.yScale - WIN_Y(topTab), 0.0f);
+					wAttrib->xTranslate / wScale - WIN_X(topTab),
+					wAttrib->yTranslate / hScale - WIN_Y(topTab), 0.0f);
 
 				glPushMatrix();
 				glLoadMatrixf(wTransform.m);
 
-				initFragmentAttrib(&fragment, &attrib);
+				initFragmentAttrib(&fragment, wAttrib);
 
-				screenTexEnvMode (s, GL_MODULATE);
-
-				alpha = alpha * wAttrib->opacity / 0xffff;
-				glColor4us(alpha, alpha, alpha, alpha);
+				alpha = alpha * ((float)wAttrib->opacity / OPAQUE);
+				fragment.opacity = alpha;
 
 				(*group->screen->drawWindowTexture) (topTab, &layer->texture,
 						&fragment, mask | PAINT_WINDOW_TRANSLUCENT_MASK |
 						PAINT_WINDOW_TRANSFORMED_MASK);
 
 				glPopMatrix();
-
-				screenTexEnvMode(s, GL_REPLACE);
-				glColor4usv(defaultColor);
 			}
 		}
 	}
