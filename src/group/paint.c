@@ -1300,10 +1300,7 @@ groupPaintWindow(CompWindow * w,
 		Region region, unsigned int mask)
 {
 	Bool status;
-	Bool doRotate;
-	Bool doFade;
-	CompTransform *realTransform;
-	WindowPaintAttrib *realAttrib;
+	Bool doRotate, doFade, showTabbar;
 
 	GROUP_SCREEN(w->screen);
 	GROUP_WINDOW(w);
@@ -1312,11 +1309,12 @@ groupPaintWindow(CompWindow * w,
 		(IS_TOP_TAB(w, gw->group) || IS_PREV_TOP_TAB(w, gw->group));
 	doFade = gw->group && (gw->group->tabbingState != PaintOff) &&
 		(gw->animateState & (IS_ANIMATED | FINISHED_ANIMATION));
+	showTabbar = gw->group && gw->group->tabBar;
 
 	if (gw->windowHideInfo)
 		mask |= PAINT_WINDOW_NO_CORE_INSTANCE_MASK;
 
-	if (gw->inSelection || doRotate || doFade)
+	if (gw->inSelection || doRotate || doFade || showTabbar)
 	{
 		WindowPaintAttrib wAttrib = *attrib;
 		CompTransform wTransform = *transform;
@@ -1398,42 +1396,40 @@ groupPaintWindow(CompWindow * w,
 			matrixTranslate(&wTransform, -(WIN_REAL_X(w) + WIN_REAL_WIDTH(w) / 2.0f),
 		                                 -(WIN_REAL_Y(w) + WIN_REAL_HEIGHT(w) / 2.0f), 0.0f);
 
-			glPushMatrix();
-			glLoadMatrixf(wTransform.m);
-
 			mask |= PAINT_WINDOW_TRANSFORMED_MASK;
 		}
 
-		realAttrib = &wAttrib;
-		realTransform = &wTransform;
+		UNWRAP(gs, w->screen, paintWindow);
+		status = (*w->screen->paintWindow) (w, &wAttrib, &wTransform, 
+											region, mask);
+
+		if (showTabbar)
+		{
+			if (HAS_TOP_WIN(gw->group) && IS_TOP_TAB(w, gw->group))
+			{
+				if ((gw->group->changeState == PaintOff) || 
+					(gw->group->changeState == PaintFadeOut))
+				{
+					groupPaintTabBar(gw->group, &wAttrib, &wTransform, 
+									 mask, region);
+				}
+			}
+			else if (IS_PREV_TOP_TAB(w, gw->group))
+			{
+				if (gw->group->changeState == PaintFadeIn)
+					groupPaintTabBar(gw->group, &wAttrib, &wTransform, 
+									 mask, region);
+			}
+		}
+
+		WRAP(gs, w->screen, paintWindow, groupPaintWindow);
 	}
 	else
 	{
-		realAttrib    = (WindowPaintAttrib *) attrib;
-		realTransform = (CompTransform *) transform;
+		UNWRAP(gs, w->screen, paintWindow);
+		status = (*w->screen->paintWindow) (w, attrib, transform, region, mask);
+		WRAP(gs, w->screen, paintWindow, groupPaintWindow);
 	}
-
-	UNWRAP(gs, w->screen, paintWindow);
-	status = (*w->screen->paintWindow) (w, realAttrib, realTransform, region, mask);
-
-	if (gw->group && gw->group->tabBar)
-	{
-		if (HAS_TOP_WIN(gw->group) && IS_TOP_TAB(w, gw->group))
-		{
-			if ((gw->group->changeState == PaintOff) || (gw->group->changeState == PaintFadeOut))
-				groupPaintTabBar(gw->group, realAttrib, realTransform, mask, region);
-		}
-		else if (IS_PREV_TOP_TAB(w, gw->group))
-		{
-			if (gw->group->changeState == PaintFadeIn)
-				groupPaintTabBar(gw->group, realAttrib, realTransform, mask, region);
-		}
-	}
-
-	WRAP(gs, w->screen, paintWindow, groupPaintWindow);
-
-	if(doRotate)
-		glPopMatrix();
 
 	return status;
 }
