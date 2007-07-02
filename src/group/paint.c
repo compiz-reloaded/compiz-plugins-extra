@@ -1301,112 +1301,132 @@ groupPaintWindow(CompWindow * w,
 {
 	Bool status;
 	Bool doRotate;
+	Bool doFade;
+	CompTransform *realTransform;
+	WindowPaintAttrib *realAttrib;
+
 	GROUP_SCREEN(w->screen);
 	GROUP_WINDOW(w);
 
-	WindowPaintAttrib gAttrib = *attrib;
-	CompTransform wTransform = *transform;
-
-	if (gw->inSelection) {
-		int opacity = groupGetSelectOpacity(w->screen);
-		int saturation = groupGetSelectSaturation(w->screen);
-		int brightness = groupGetSelectBrightness(w->screen);
-
-		opacity = OPAQUE * opacity / 100;
-		saturation = COLOR * saturation / 100;
-		brightness = BRIGHT * brightness / 100;
-
-		gAttrib.opacity = opacity;
-		gAttrib.saturation = saturation;
-		gAttrib.brightness = brightness;
-	} else if (gw->group && gw->group->tabbingState != PaintOff &&
-		(gw->animateState & (IS_ANIMATED | FINISHED_ANIMATION))) {
-		//fade the window out
-		float opacity;
-
-		int origDistanceX = (gw->orgPos.x - gw->destination.x);
-		int origDistanceY = (gw->orgPos.y - gw->destination.y);
-		float origDistance = sqrt(pow(origDistanceX, 2) + pow(origDistanceY,2));
-
-		float distanceX = (WIN_X(w) - gw->destination.x);
-		float distanceY = (WIN_Y(w) - gw->destination.y);
-		float distance = sqrt(pow(distanceX, 2) + pow(distanceY, 2));
-
-		if(distance > origDistance)
-			opacity = 100.0f;
-		else {
-			if(!origDistanceX && !origDistanceY) {
-				if (IS_TOP_TAB(w, gw->group) && (gw->group->tabbingState == PaintFadeIn))
-					opacity = 100.0f;
-				else
-					opacity = 0.0f;
-			} else
-				opacity = 100.0f * distance / origDistance;
-
-			if (gw->group->tabbingState == PaintFadeOut)
-				opacity = 100.0f - opacity;
-		}
-
-		gAttrib.opacity = gAttrib.opacity * opacity / 100;
-	}
-
 	doRotate = gw->group && (gw->group->changeState != PaintOff) &&
 		(IS_TOP_TAB(w, gw->group) || IS_PREV_TOP_TAB(w, gw->group));
-
-	if (doRotate)
-	{
-		float rotateAngle;
-		float timeLeft = gw->group->changeAnimationTime;
-		float animationProgress;
-		float animWidth, animHeight;
-		float animScaleX, animScaleY;
-
-		if(gw->group->changeState == PaintFadeIn)
-			timeLeft += groupGetChangeAnimationTime(w->screen) * 500.0f;
-
-		animationProgress = (1 - (timeLeft / (groupGetChangeAnimationTime(w->screen) * 1000.0f))); // 0 at the beginning, 1 at the end.
-
-		rotateAngle = animationProgress * 180.0f;
-		if (IS_TOP_TAB(w, gw->group))
-			rotateAngle += 180.0f;
-
-		if (gw->group->changeAnimationDirection < 0)
-			rotateAngle *= -1.0f;
-
-		animWidth = (1 - animationProgress) * WIN_REAL_WIDTH(PREV_TOP_TAB(gw->group)) + animationProgress * WIN_REAL_WIDTH(TOP_TAB(gw->group));
-		animHeight = (1 - animationProgress) * WIN_REAL_HEIGHT(PREV_TOP_TAB(gw->group)) + animationProgress * WIN_REAL_HEIGHT(TOP_TAB(gw->group));
-
-		animScaleX = animWidth / WIN_REAL_WIDTH(w);
-		animScaleY = animHeight / WIN_REAL_HEIGHT(w);
-
-		matrixScale(&wTransform, 1.0f, 1.0f, 1.0f / w->screen->width);
-		matrixTranslate(&wTransform, WIN_REAL_X(w) + WIN_REAL_WIDTH(w) / 2.0f,
-		                             WIN_REAL_Y(w) + WIN_REAL_HEIGHT(w) / 2.0f, 0.0f);
-		matrixRotate(&wTransform, rotateAngle, 0.0f, 1.0f, 0.0f);
-		matrixScale(&wTransform, animScaleX, animScaleY, 1.0f);
-		matrixTranslate(&wTransform, -(WIN_REAL_X(w) + WIN_REAL_WIDTH(w) / 2.0f),
-		                             -(WIN_REAL_Y(w) + WIN_REAL_HEIGHT(w) / 2.0f), 0.0f);
-
-		glPushMatrix();
-		glLoadMatrixf(wTransform.m);
-
-		mask |= PAINT_WINDOW_TRANSFORMED_MASK;
-	}
+	doFade = gw->group && (gw->group->tabbingState != PaintOff) &&
+		(gw->animateState & (IS_ANIMATED | FINISHED_ANIMATION));
 
 	if (gw->windowHideInfo)
 		mask |= PAINT_WINDOW_NO_CORE_INSTANCE_MASK;
 
-	UNWRAP(gs, w->screen, paintWindow);
+	if (gw->inSelection || doRotate || doFade)
+	{
+		WindowPaintAttrib wAttrib = *attrib;
+		CompTransform wTransform = *transform;
 
-	status = (*w->screen->paintWindow) (w, &gAttrib, &wTransform, region, mask);
+		if (gw->inSelection)
+		{
+			wAttrib.opacity    = OPAQUE * groupGetSelectOpacity (w->screen) / 100;
+			wAttrib.saturation = COLOR * groupGetSelectSaturation (w->screen) / 100;
+			wAttrib.brightness = BRIGHT * groupGetSelectBrightness (w->screen) / 100;
+		}
 
-	if (gw->group && gw->group->tabBar) {
-		if (HAS_TOP_WIN(gw->group) && IS_TOP_TAB(w, gw->group)) {
-			if ((gw->group->changeState == PaintOff) || (gw->group->changeState == PaintFadeOut))
-				groupPaintTabBar(gw->group, attrib, &wTransform, mask, region);
-		} else if (IS_PREV_TOP_TAB(w, gw->group)) {
+		if (doFade)
+		{
+			/* fade the window out */
+			float opacity;
+
+			int origDistanceX = (gw->orgPos.x - gw->destination.x);
+			int origDistanceY = (gw->orgPos.y - gw->destination.y);
+			float origDistance = sqrt(pow(origDistanceX, 2) + pow(origDistanceY,2));
+
+			float distanceX = (WIN_X(w) - gw->destination.x);
+			float distanceY = (WIN_Y(w) - gw->destination.y);
+			float distance = sqrt(pow(distanceX, 2) + pow(distanceY, 2));
+
+			if(distance > origDistance)
+				opacity = 100.0f;
+			else
+			{
+				if(!origDistanceX && !origDistanceY)
+				{
+					if (IS_TOP_TAB(w, gw->group) && (gw->group->tabbingState == PaintFadeIn))
+						opacity = 100.0f;
+					else
+						opacity = 0.0f;
+				} else
+					opacity = 100.0f * distance / origDistance;
+
+				if (gw->group->tabbingState == PaintFadeOut)
+					opacity = 100.0f - opacity;
+			}
+
+			wAttrib.opacity = wAttrib.opacity * opacity / 100;
+		}
+
+		if (doRotate)
+		{
+			float rotateAngle;
+			float timeLeft = gw->group->changeAnimationTime;
+			float animationProgress;
+			float animWidth, animHeight;
+			float animScaleX, animScaleY;
+
 			if (gw->group->changeState == PaintFadeIn)
-				groupPaintTabBar(gw->group, attrib, &wTransform, mask, region);
+				timeLeft += groupGetChangeAnimationTime(w->screen) * 500.0f;
+
+			/* 0 at the beginning, 1 at the end */
+			animationProgress = (1 - (timeLeft / (groupGetChangeAnimationTime(w->screen) * 1000.0f)));
+
+			rotateAngle = animationProgress * 180.0f;
+			if (IS_TOP_TAB(w, gw->group))
+				rotateAngle += 180.0f;
+
+			if (gw->group->changeAnimationDirection < 0)
+				rotateAngle *= -1.0f;
+
+			animWidth = (1 - animationProgress) * WIN_REAL_WIDTH(PREV_TOP_TAB(gw->group)) +
+				        animationProgress * WIN_REAL_WIDTH(TOP_TAB(gw->group));
+			animHeight = (1 - animationProgress) * WIN_REAL_HEIGHT(PREV_TOP_TAB(gw->group)) +
+				         animationProgress * WIN_REAL_HEIGHT(TOP_TAB(gw->group));
+
+			animScaleX = animWidth / WIN_REAL_WIDTH(w);
+			animScaleY = animHeight / WIN_REAL_HEIGHT(w);
+
+			matrixScale(&wTransform, 1.0f, 1.0f, 1.0f / w->screen->width);
+			matrixTranslate(&wTransform, WIN_REAL_X(w) + WIN_REAL_WIDTH(w) / 2.0f,
+							             WIN_REAL_Y(w) + WIN_REAL_HEIGHT(w) / 2.0f, 0.0f);
+			matrixRotate(&wTransform, rotateAngle, 0.0f, 1.0f, 0.0f);
+			matrixScale(&wTransform, animScaleX, animScaleY, 1.0f);
+			matrixTranslate(&wTransform, -(WIN_REAL_X(w) + WIN_REAL_WIDTH(w) / 2.0f),
+		                                 -(WIN_REAL_Y(w) + WIN_REAL_HEIGHT(w) / 2.0f), 0.0f);
+
+			glPushMatrix();
+			glLoadMatrixf(wTransform.m);
+
+			mask |= PAINT_WINDOW_TRANSFORMED_MASK;
+		}
+
+		realAttrib = &wAttrib;
+		realTransform = &wTransform;
+	}
+	else
+	{
+		realAttrib    = (WindowPaintAttrib *) attrib;
+		realTransform = (CompTransform *) transform;
+	}
+
+	UNWRAP(gs, w->screen, paintWindow);
+	status = (*w->screen->paintWindow) (w, realAttrib, realTransform, region, mask);
+
+	if (gw->group && gw->group->tabBar)
+	{
+		if (HAS_TOP_WIN(gw->group) && IS_TOP_TAB(w, gw->group))
+		{
+			if ((gw->group->changeState == PaintOff) || (gw->group->changeState == PaintFadeOut))
+				groupPaintTabBar(gw->group, realAttrib, realTransform, mask, region);
+		}
+		else if (IS_PREV_TOP_TAB(w, gw->group))
+		{
+			if (gw->group->changeState == PaintFadeIn)
+				groupPaintTabBar(gw->group, realAttrib, realTransform, mask, region);
 		}
 	}
 
