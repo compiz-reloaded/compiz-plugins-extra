@@ -125,7 +125,6 @@ void groupRenderTopTabHighlight(GroupSelection *group)
 	    return;
 
 	bar = group->tabBar;
-	layer = bar->selectionLayer;
 
 	width = group->topTab->region->extents.x2 - group->topTab->region->extents.x1;
 	height = group->topTab->region->extents.y2 - group->topTab->region->extents.y1;
@@ -133,6 +132,7 @@ void groupRenderTopTabHighlight(GroupSelection *group)
 	bar->selectionLayer = groupRebuildCairoLayer(group->screen, bar->selectionLayer, width, height);
 	if (!bar->selectionLayer)
 		return;
+	layer = bar->selectionLayer;
 
 	cr = bar->selectionLayer->cairo;
 

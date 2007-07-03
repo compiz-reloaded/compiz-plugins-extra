@@ -1899,6 +1899,7 @@ GroupCairoLayer* groupCreateCairoLayer(CompScreen *s, int width, int height)
 
 	layer->surface	= NULL;
 	layer->cairo	= NULL;
+	layer->buffer   = NULL;
 	layer->animationTime = 0;
 	layer->state = PaintOff;
 	layer->texWidth = width;
@@ -1908,18 +1909,21 @@ GroupCairoLayer* groupCreateCairoLayer(CompScreen *s, int width, int height)
 
 	layer->buffer = calloc(4 * width * height, sizeof(unsigned char));
 	if (!layer->buffer) {
+		printf("ERROR: Failed to alloc buffer!\n");
 		groupDestroyCairoLayer(s, layer);
 		return NULL;
 	}
 
 	layer->surface = cairo_image_surface_create_for_data(layer->buffer, CAIRO_FORMAT_ARGB32, width, height, 4*width);
 	if (cairo_surface_status(layer->surface) != CAIRO_STATUS_SUCCESS) {
+		printf("ERROR: Failed to create surface!\n");
 		groupDestroyCairoLayer(s, layer);
         return NULL;
 	}
 
 	layer->cairo = cairo_create(layer->surface);
 	if (cairo_status(layer->cairo) != CAIRO_STATUS_SUCCESS) {
+		printf("ERROR: Failed to create context!\n");
 		groupDestroyCairoLayer(s, layer);
         return NULL;
 	}
