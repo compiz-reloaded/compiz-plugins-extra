@@ -213,7 +213,6 @@ typedef enum {
 } GroupAnimationType;
 
 typedef struct _GroupCairoLayer {
-	//Pixmap			pixmap;
 	unsigned char	*buffer;
 	CompTexture		texture;
 	cairo_surface_t		*surface;
