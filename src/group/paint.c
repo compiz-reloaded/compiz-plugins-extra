@@ -116,6 +116,7 @@ void groupPaintThumb(GroupSelection *group, GroupTabBarSlot *slot,
 void groupRenderTopTabHighlight(GroupSelection *group)
 {
 	GroupTabBar *bar;
+	GroupCairoLayer *layer;
 	cairo_t *cr;
 	int width, height;
 
@@ -124,6 +125,7 @@ void groupRenderTopTabHighlight(GroupSelection *group)
 	    return;
 
 	bar = group->tabBar;
+	layer = bar->selectionLayer;
 
 	width = group->topTab->region->extents.x2 - group->topTab->region->extents.x1;
 	height = group->topTab->region->extents.y2 - group->topTab->region->extents.y1;
@@ -155,6 +157,8 @@ void groupRenderTopTabHighlight(GroupSelection *group)
 		(group->color[2] / 65535.0f),
 		(group->color[3] / 65535.0f));
 	cairo_stroke(cr);
+
+	imageBufferToTexture(group->screen, &layer->texture, (char*) layer->buffer, layer->texWidth, layer->texHeight);
 }
 
 /*
@@ -535,6 +539,7 @@ void groupRenderTabBarBackground(GroupSelection *group)
 	}
 
 	cairo_restore(cr);
+	imageBufferToTexture(group->screen, &layer->texture, (char*) layer->buffer, layer->texWidth, layer->texHeight);
 }
 
 /*
@@ -605,7 +610,7 @@ void groupRenderWindowTitle(GroupSelection *group)
 
 	layer->texWidth = width;
 	layer->texHeight = height;
-	layer->pixmap = (Pixmap) data;
+	//layer->pixmap = (Pixmap) data;
 
 	if(data)
 		bindPixmapToTexture(group->screen, &layer->texture, (Pixmap) data, 

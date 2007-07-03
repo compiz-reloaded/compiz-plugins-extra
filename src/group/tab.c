@@ -1878,8 +1878,11 @@ void groupDestroyCairoLayer(CompScreen *s, GroupCairoLayer *layer)
 
 	finiTexture(s, &layer->texture);
 
-	if (layer->pixmap)
-		XFreePixmap(s->display->display, layer->pixmap);
+	//if (layer->pixmap)
+	//	XFreePixmap(s->display->display, layer->pixmap);
+	
+	if (layer->buffer)
+		free(layer->buffer);
 
 	free(layer);
 }
@@ -1903,38 +1906,42 @@ GroupCairoLayer* groupCreateCairoLayer(CompScreen *s, int width, int height)
 	layer->state = PaintOff;
 	layer->texWidth = width;
 	layer->texHeight = height;
-	layer->pixmap = None;
+	//layer->pixmap = None;
 
 	initTexture(s, &layer->texture);
 
-	XRenderPictFormat *format;
+	/*XRenderPictFormat *format;
 	format = XRenderFindStandardFormat (display, PictStandardARGB32);
 	layer->pixmap = XCreatePixmap (display, s->root, width, height, 32);
 	if (!layer->pixmap) {
 		free (layer);
 		return NULL;
-	}
+	}*/
 
-	if (!bindPixmapToTexture(s, &layer->texture, layer->pixmap,
+	layer->buffer = calloc(4 * width * height, sizeof(unsigned char));
+
+	/*if (!bindPixmapToTexture(s, &layer->texture, layer->pixmap,
 							 width, height, 32))
 	{
 		XFreePixmap (display, layer->pixmap);
 		free (layer);
 		return NULL;
-	}
+	}*/
 
-	layer->surface =
-		cairo_xlib_surface_create_with_xrender_format(display, layer->pixmap, screen, format, width, height);
+	layer->surface = cairo_image_surface_create_for_data(layer->buffer, CAIRO_FORMAT_ARGB32, width, height, 4*width);
+
+	/*layer->surface =
+		cairo_xlib_surface_create_with_xrender_format(display, layer->pixmap, screen, format, width, height);*/
 
 	if (cairo_surface_status(layer->surface) != CAIRO_STATUS_SUCCESS) {
-		XFreePixmap(display, layer->pixmap);
+		//XFreePixmap(display, layer->pixmap);
 		free(layer);
         return NULL;
 	}
 
 	layer->cairo = cairo_create(layer->surface);
 	if (cairo_status(layer->cairo) != CAIRO_STATUS_SUCCESS) {
-		XFreePixmap(display, layer->pixmap);
+		//XFreePixmap(display, layer->pixmap);
 		free(layer);
         return NULL;
 	}
