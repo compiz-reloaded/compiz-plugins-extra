@@ -779,7 +779,7 @@ void groupPaintTabBar(GroupSelection * group, const WindowPaintAttrib *wAttrib,
 				glPushMatrix();
 				glLoadMatrixf(wTransform.m);
 
-				initFragmentAttrib(&fragment, &attrib);
+				initFragmentAttrib(&fragment, wAttrib);
 				fragment.opacity = OPAQUE;
 				fragment.brightness = BRIGHT;
 				fragment.saturation = COLOR;
