@@ -83,6 +83,7 @@ typedef struct _ShowdesktopScreen
 	PaintWindowProc paintWindow;
 	EnterShowDesktopModeProc enterShowDesktopMode;
 	LeaveShowDesktopModeProc leaveShowDesktopMode;
+	GetAllowedActionsForWindowProc getAllowedActionsForWindow;
 
 	int state;
 	int moreAdjust;
@@ -99,6 +100,9 @@ typedef struct _ShowdesktopWindow
 
 	GLfloat xVelocity, yVelocity;
 	GLfloat tx, ty;
+
+	unsigned int notAllowedMask;
+	unsigned int stateMask;
 
 	float delta;
 	Bool adjust;
@@ -145,16 +149,28 @@ static Bool isSDWin(CompWindow * w)
 	return TRUE;
 }
 
-static void setSkipPagerHint(CompWindow *w, Bool enable)
+static void setSDWindowHints(CompWindow *w, Bool enterSDMode)
 {
 	unsigned int state = w->state;
 
-    if (enable)
+	SD_WINDOW (w);
+
+    if (enterSDMode)
+	{
+		sw->stateMask = state & CompWindowStateSkipPagerMask;
 		state |= CompWindowStateSkipPagerMask;
+		sw->notAllowedMask = CompWindowActionMoveMask |
+			                 CompWindowActionResizeMask;
+	}
     else
+	{
 		state &= ~CompWindowStateSkipPagerMask;
+		state |= (sw->stateMask & CompWindowStateSkipPagerMask);
+		sw->notAllowedMask = 0;
+	}
 
 	changeWindowState(w, state);
+	recalcWindowActions (w);
 }
 
 static void repositionSDPlacer(CompWindow * w, int oldState)
@@ -261,7 +277,7 @@ static int prepareSDWindows(CompScreen * s, int oldState)
 		sw->placer->placed = TRUE;
 		sw->adjust = TRUE;
 		w->inShowDesktopMode = TRUE;
-		setSkipPagerHint(w, TRUE);
+		setSDWindowHints (w, TRUE);
 
 		if (sw->tx)
 			sw->tx -= (sw->placer->onScreenX - sw->placer->offScreenX);
@@ -555,30 +571,6 @@ static void showdesktopHandleEvent(CompDisplay *d, XEvent *event)
 
 	switch(event->type)
 	{
-		case ButtonPress:
-			{
-				CompScreen *s = findScreenAtDisplay(d, event->xbutton.root);
-				if (s)
-				{
-					SD_SCREEN(s);
-					if (ss->state != SD_STATE_OFF)
-						event->xbutton.window = None;
-				}
-			}
-			break;
-		case ClientMessage:
-			if ((event->xclient.message_type == d->restackWindowAtom) ||
-				(event->xclient.message_type == d->moveResizeWindowAtom))
-			{
-				CompWindow *w = findWindowAtDisplay(d, event->xclient.window);
-				if (w)
-				{
-					SD_SCREEN(w->screen);
-					if (ss->state != SD_STATE_OFF)
-						event->xclient.window = None;
-				}
-			}
-			break;
 		case PropertyNotify:
 			if (event->xproperty.atom == d->desktopViewportAtom)
 			{
@@ -597,6 +589,22 @@ static void showdesktopHandleEvent(CompDisplay *d, XEvent *event)
 	UNWRAP(sd, d, handleEvent);
 	(*d->handleEvent)(d, event);
 	WRAP(sd, d, handleEvent, showdesktopHandleEvent);
+}
+
+static unsigned int
+showdesktopGetAllowedActionsForWindow (CompWindow *w)
+{
+	unsigned int actions;
+
+	SD_SCREEN (w->screen);
+	SD_WINDOW (w);
+
+	UNWRAP (ss, w->screen, getAllowedActionsForWindow);
+	actions = (*w->screen->getAllowedActionsForWindow) (w);
+	WRAP (ss, w->screen, getAllowedActionsForWindow,
+		  showdesktopGetAllowedActionsForWindow);
+
+	return (actions & ~sw->notAllowedMask);
 }
 
 static void showdesktopEnterShowDesktopMode(CompScreen *s)
@@ -656,7 +664,7 @@ static void showdesktopLeaveShowDesktopMode(CompScreen *s, CompWindow *w)
 						sw->placer->onScreenY - cw->attrib.y, TRUE, TRUE);
 				syncWindowPosition(cw);
 		
-				setSkipPagerHint(cw, FALSE);
+				setSDWindowHints (cw, FALSE);
 				cw->inShowDesktopMode = FALSE;
 			}
 		}
@@ -731,6 +739,8 @@ static Bool showdesktopInitScreen(CompPlugin * p, CompScreen * s)
 	WRAP(ss, s, paintWindow, showdesktopPaintWindow);
 	WRAP(ss, s, enterShowDesktopMode, showdesktopEnterShowDesktopMode);
 	WRAP(ss, s, leaveShowDesktopMode, showdesktopLeaveShowDesktopMode);
+	WRAP(ss, s, getAllowedActionsForWindow,
+		 showdesktopGetAllowedActionsForWindow);
 
 	s->privates[sd->screenPrivateIndex].ptr = ss;
 
@@ -749,6 +759,7 @@ static void showdesktopFiniScreen(CompPlugin * p, CompScreen * s)
 	UNWRAP(ss, s, paintWindow);
 	UNWRAP(ss, s, enterShowDesktopMode);
 	UNWRAP(ss, s, leaveShowDesktopMode);
+	UNWRAP(ss, s, getAllowedActionsForWindow);
 
 	freeWindowPrivateIndex(s, ss->windowPrivateIndex);
 
@@ -772,6 +783,9 @@ static Bool showdesktopInitWindow(CompPlugin * p, CompWindow * w)
 	sw->xVelocity = sw->yVelocity = 0.0f;
 	sw->delta = 1.0f;
 	sw->placer = NULL;
+
+	sw->stateMask = 0;
+	sw->notAllowedMask = 0;
 
 	w->privates[ss->windowPrivateIndex].ptr = sw;
 
