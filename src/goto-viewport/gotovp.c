@@ -144,6 +144,8 @@ gotovpTerm (CompDisplay *d,
 	if (!s)
 		return FALSE;
 
+	gd->activeScreen = 0;
+
 	if (gd->destination < 1 || gd->destination > (s->hsize * s->vsize))
 		return FALSE;
 
@@ -151,8 +153,6 @@ gotovpTerm (CompDisplay *d,
 	ny = (gd->destination - 1 ) / s->hsize;
 
 	gotovpGotoViewport (s, nx, ny);
-
-	gd->activeScreen = 0;
 
 	return FALSE;
 }
