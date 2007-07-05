@@ -1,0 +1,17 @@
+<compiz>
+	<plugin name="gotovp" useBcop="true">
+		<_short>Goto Viewport</_short>
+		<_long>Goto viewport specified by numbers</_long>
+		<category>Utility</category>
+		<display>
+			<option name="begin" type="action">
+				<_short>Begin</_short>
+				<_long>Begin entering viewport</_long>
+				<allowed key="true"/>
+				<default>
+					<key>&lt;Super&gt;v</key>
+				</default>
+			</option>
+		</display>
+	</plugin>
+</compiz>
