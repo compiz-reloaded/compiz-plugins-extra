@@ -103,6 +103,7 @@ typedef struct _ShowdesktopWindow
 
 	unsigned int notAllowedMask;
 	unsigned int stateMask;
+	Bool wasManaged;
 
 	float delta;
 	Bool adjust;
@@ -171,6 +172,14 @@ static void setSDWindowHints(CompWindow *w, Bool enterSDMode)
 
 	changeWindowState(w, state);
 	recalcWindowActions (w);
+
+	if (enterSDMode)
+	{
+		sw->wasManaged = w->managed;
+		w->managed = FALSE;
+	}
+	else
+		w->managed = sw->wasManaged;
 }
 
 static void repositionSDPlacer(CompWindow * w, int oldState)
