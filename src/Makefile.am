@@ -1,2 +1,15 @@
 ## Process this file with automake to produce Makefile.in
-SUBDIRS = addhelper bench crashhandler extrawm fadedesktop firepaint group mblur reflex splash trailfocus showdesktop cubereflex
+SUBDIRS = addhelper \
+	  bench \
+	  crashhandler \
+	  cubereflex \
+	  extrawm \
+	  fadedesktop \
+	  firepaint \
+	  goto-viewport \
+	  group \
+	  mblur \
+	  reflex \
+	  showdesktop \
+	  splash \
+	  trailfocus
