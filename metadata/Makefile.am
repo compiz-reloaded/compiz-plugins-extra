@@ -3,6 +3,7 @@ xml_in_files = 	         \
 	addhelper.xml.in \
 	bench.xml.in \
 	crashhandler.xml.in \
+	cubereflex.xml.in \
 	extrawm.xml.in \
 	fadedesktop.xml.in \
 	firepaint.xml.in \
@@ -10,10 +11,9 @@ xml_in_files = 	         \
 	group.xml.in \
 	mblur.xml.in \
 	reflex.xml.in \
-	splash.xml.in \
-	trailfocus.xml.in \
 	showdesktop.xml.in \
-	cubereflex.xml.in
+	splash.xml.in \
+	trailfocus.xml.in
 
 xml_files    = $(xml_in_files:.xml.in=.xml)
 xml_DATA     = $(xml_files)
