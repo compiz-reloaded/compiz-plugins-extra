@@ -30,6 +30,8 @@
 #define _GNU_SOURCE
 #include <math.h>
 #include <string.h>
+#include <wchar.h>
+#include <X11/Xlib.h>
 
 #include <compiz.h>
 #include <scale.h>
@@ -58,12 +60,15 @@ typedef struct _ScaleFilterInfo {
     CompMatch match;
     CompMatch *origMatch;
 
-    char filterString[MAX_FILTER_STRING_LEN];
-    int  filterStringLength;
+    wchar_t filterString[MAX_FILTER_STRING_LEN];
+    int     filterStringLength;
 } ScaleFilterInfo;
 
 typedef struct _ScaleFilterDisplay {
     int screenPrivateIndex;
+
+    XIM xim;
+    XIC xic;
 
     HandleEventProc       handleEvent;
     HandleCompizEventProc handleCompizEvent;
@@ -117,6 +122,7 @@ scalefilterRenderFilterText (CompScreen *s)
     int            x1, x2, y1, y2;
     int            width, height;
     REGION         reg;
+    char           buffer[MAX_FILTER_STRING_LEN];
 
     FILTER_SCREEN (s);
 
@@ -163,8 +169,9 @@ scalefilterRenderFilterText (CompScreen *s)
     tA.family = "Sans";
     tA.ellipsize = TRUE;
 
+    wcstombs (buffer, fs->filterInfo->filterString, MAX_FILTER_STRING_LEN);
     tA.renderMode = TextRenderNormal;
-    tA.data = (void*)fs->filterInfo->filterString;
+    tA.data = (void*)buffer;
 
     if ((*s->display->fileToImage) (s->display, TEXT_ID, (char *)&tA,
 				    &fs->filterInfo->textWidth,
@@ -321,7 +328,8 @@ scalefilterUpdateFilter (CompScreen *s,
     matchInit (match);
 
     strncpy (filterMatch, "title=", MAX_FILTER_TEXT_LEN);
-    strncat (filterMatch, fs->filterInfo->filterString, MAX_FILTER_TEXT_LEN);
+    wcstombs (filterMatch + 6, fs->filterInfo->filterString,
+	      MAX_FILTER_STRING_LEN);
     matchAddFromString (match, filterMatch);
     matchAddGroup (match, MATCH_OP_AND_MASK, &fs->scaleMatch);
     matchUpdate (s->display, match);
@@ -431,17 +439,34 @@ scalefilterHandleEvent (CompDisplay *d,
 	        SCALE_SCREEN (s);
 		if (ss->grabIndex)
 		{
-		    Bool needRelayout = FALSE;
-		    Bool dropKeyEvent = FALSE;
-		    char buffer[1];
-		    KeySym ks;
-		    int count, timeout;
 		    ScaleFilterInfo *info;
+		    XKeyEvent       *keyEvent = (XKeyEvent *) event;
+		    Bool            needRelayout = FALSE;
+		    Bool            dropKeyEvent = FALSE;
+		    int             count, timeout;
+		    char            buffer[10];
+		    wchar_t         wbuffer[10];
+		    KeySym          ks;
 
 		    FILTER_SCREEN (s);
 
 		    info = fs->filterInfo;
-		    count = XLookupString (&(event->xkey), buffer, 1, &ks, NULL);
+		    memset (buffer, 0, sizeof(buffer));
+
+		    if (fd->xic)
+		    {
+			Status status;
+
+			XSetICFocus (fd->xic);
+			count = Xutf8LookupString (fd->xic, keyEvent,
+						   buffer, 9, &ks, &status);
+			XUnsetICFocus (fd->xic);
+		    }
+		    else
+			count = XLookupString (keyEvent, buffer, 9, &ks, NULL);
+
+		    mbstowcs (wbuffer, buffer, 9);
+
 		    if (ks == XK_Escape)
 		    {
 			if (info)
@@ -508,7 +533,7 @@ scalefilterHandleEvent (CompDisplay *d,
 
 			if (info->filterStringLength < MAX_FILTER_SIZE)
 			{
-    			    info->filterString[info->filterStringLength++] = buffer[0];
+    			    info->filterString[info->filterStringLength++] = wbuffer[0];
     			    info->filterString[info->filterStringLength] = '\0';
 			    needRelayout = TRUE;
 			}
@@ -712,6 +737,16 @@ scalefilterInitDisplay (CompPlugin  *p,
 	return FALSE;
     }
 
+    fd->xim = XOpenIM (d->display, NULL, NULL, NULL);
+    if (fd->xim)
+	fd->xic = XCreateIC (fd->xim,
+			     XNClientWindow, d->screens->root,
+			     XNInputStyle,
+			     XIMPreeditNothing  | XIMStatusNothing,
+			     NULL);
+    else
+	fd->xic = NULL;
+
     WRAP (fd, d, handleEvent, scalefilterHandleEvent);
     WRAP (fd, d, handleCompizEvent, scalefilterHandleCompizEvent);
 
@@ -728,6 +763,11 @@ scalefilterFiniDisplay (CompPlugin  *p,
 
     UNWRAP (fd, d, handleEvent);
     UNWRAP (fd, d, handleCompizEvent);
+
+    if (fd->xic)
+	XDestroyIC (fd->xic);
+    if (fd->xim)
+	XCloseIM (fd->xim);
 
     freeScreenPrivateIndex (d, fd->screenPrivateIndex);
 
