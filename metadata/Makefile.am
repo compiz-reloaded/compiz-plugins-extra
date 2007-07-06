@@ -11,6 +11,7 @@ xml_in_files = 	         \
 	group.xml.in \
 	mblur.xml.in \
 	reflex.xml.in \
+	scalefilter.xml.in \
 	showdesktop.xml.in \
 	splash.xml.in \
 	trailfocus.xml.in

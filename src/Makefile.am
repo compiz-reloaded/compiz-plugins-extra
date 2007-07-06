@@ -10,6 +10,7 @@ SUBDIRS = addhelper \
 	  group \
 	  mblur \
 	  reflex \
+	  scalefilter \
 	  showdesktop \
 	  splash \
 	  trailfocus

@@ -174,6 +174,7 @@ src/goto-viewport/Makefile
 src/group/Makefile
 src/mblur/Makefile
 src/reflex/Makefile
+src/scalefilter/Makefile
 src/showdesktop/Makefile
 src/splash/Makefile
 src/trailfocus/Makefile
