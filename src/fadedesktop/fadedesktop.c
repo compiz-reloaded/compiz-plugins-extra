@@ -1,11 +1,11 @@
 /**
  *
- * Beryl fade to desktop plugin
+ * Compiz fade to desktop plugin
  *
  * fadedesktop.c
  *
  * Copyright (c) 2006 Robert Carr <racarr@beryl-project.org>
- * 		 2007 Danny Baumann <maniac@beryl-project.org>
+ * 		         2007 Danny Baumann <maniac@beryl-project.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
