@@ -1,5 +1,5 @@
 /*
- * Beryl splash plugin
+ * Compiz splash plugin
  *
  * splash.c
  *
