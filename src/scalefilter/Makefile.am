@@ -18,7 +18,7 @@ INCLUDES =                              \
 moduledir = $(plugindir)
 
 
-module_LTLIBRARIES = libtrailfocus.la
+module_LTLIBRARIES = libscalefilter.la
 
 CLEANFILES = *_options.c *_options.h
 
