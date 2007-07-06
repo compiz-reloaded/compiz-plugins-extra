@@ -1,6 +1,6 @@
 <compiz>
 	<plugin name="scalefilter" useBcop="true">
-		<_short>Scale Window Title Filter<_/short>
+		<_short>Scale Window Title Filter</_short>
 		<_long>Window title filter facility for the scale plugin</_long>
 		<category>Utility</category>
 		<deps>
@@ -14,43 +14,43 @@
 		</deps>
 		<screen>
 			<group>
-				<_short>Behaviour<_/short>
+				<_short>Behaviour</_short>
 				<option name="timeout" type="int">
-					<_short>Filter Type Timeout<_/short>
+					<_short>Filter Type Timeout</_short>
 					<_long>Time (in ms) after which the filter typing is automatically ended</_long>
 					<min>0</min>
 					<max>10000</max>
 					<default>0</default>
 				</option>
 				<option name="filter_display" type="bool">
-					<_short>Show Filter Text<_/short>
+					<_short>Show Filter Text</_short>
 					<_long>Show filter text.</_long>
 					<default>true</default>
 				</option>
 			</group>
 			<group>
-				<_short>Appearance<_/short>
+				<_short>Appearance</_short>
 				<option name="font_bold" type="bool">
-					<_short>Bold Font<_/short>
+					<_short>Bold Font</_short>
 					<_long>Use bold font for window title display</_long>
 					<default>true</default>
 				</option>
 				<option name="font_size" type="int">
-					<_short>Font Size<_/short>
+					<_short>Font Size</_short>
 					<_long>Font size for window title display</_long>
 					<min>6</min>
 					<max>48</max>
 					<default>24</default>
 				</option>
 				<option name="border_size" type="int">
-					<_short>Title Border Size<_/short>
+					<_short>Title Border Size</_short>
 					<_long>Size of the border around the window title</_long>
 					<min>1</min>
 					<max>20</max>
 					<default>5</default>
 				</option>
 				<option name="font_color" type="color">
-					<_short>Font Color<_/short>
+					<_short>Font Color</_short>
 					<_long>Font color of the window title</_long>
 					<default>
 						<red>0xffff</red>
@@ -60,7 +60,7 @@
 					</default>
 				</option>
 				<option name="back_color" type="color">
-					<_short>Background Color<_/short>
+					<_short>Background Color</_short>
 					<_long>Background color of the window title</_long>
 					<default>
 						<red>0x0000</red>
