@@ -166,6 +166,7 @@ src/Makefile
 src/addhelper/Makefile
 src/bench/Makefile
 src/crashhandler/Makefile
+src/cubereflex/Makefile
 src/extrawm/Makefile
 src/fadedesktop/Makefile
 src/firepaint/Makefile
@@ -173,9 +174,8 @@ src/goto-viewport/Makefile
 src/group/Makefile
 src/mblur/Makefile
 src/reflex/Makefile
+src/showdesktop/Makefile
 src/splash/Makefile
 src/trailfocus/Makefile
-src/showdesktop/Makefile
-src/cubereflex/Makefile
 po/Makefile.in
 ])
