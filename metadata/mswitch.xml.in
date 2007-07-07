@@ -2,6 +2,7 @@
   <plugin name="mswitch" useBcop="true">
     <_short>Mouse switch</_short>
     <_long>Switch viewport in response to mouse gesture</_long>
+    <category>Desktop</category>
     <display>
       <option name="begin" type="action">
 	<_short>Begin Gesture</_short>
