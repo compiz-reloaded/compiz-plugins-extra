@@ -31,6 +31,7 @@
 #include <math.h>
 #include <string.h>
 #include <wchar.h>
+#include <locale.h>
 #include <X11/Xlib.h>
 
 #include <compiz.h>
@@ -60,7 +61,7 @@ typedef struct _ScaleFilterInfo {
     CompMatch match;
     CompMatch *origMatch;
 
-    wchar_t filterString[MAX_FILTER_STRING_LEN];
+    wchar_t filterString[2 * MAX_FILTER_STRING_LEN];
     int     filterStringLength;
 } ScaleFilterInfo;
 
@@ -122,7 +123,7 @@ scalefilterRenderFilterText (CompScreen *s)
     int            x1, x2, y1, y2;
     int            width, height;
     REGION         reg;
-    char           buffer[MAX_FILTER_STRING_LEN];
+    char           buffer[2 * MAX_FILTER_STRING_LEN];
 
     FILTER_SCREEN (s);
 
@@ -320,7 +321,7 @@ void
 scalefilterUpdateFilter (CompScreen *s,
 	   		 CompMatch  *match)
 {
-    char filterMatch[MAX_FILTER_TEXT_LEN];
+    char filterMatch[2 * MAX_FILTER_TEXT_LEN];
 
     FILTER_SCREEN (s);
 
@@ -330,7 +331,7 @@ scalefilterUpdateFilter (CompScreen *s,
     strncpy (filterMatch, "title=", MAX_FILTER_TEXT_LEN);
     wcstombs (filterMatch + 6, fs->filterInfo->filterString,
 	      MAX_FILTER_STRING_LEN);
-    matchAddFromString (match, filterMatch);
+    matchAddExp (match, 0, filterMatch);
     matchAddGroup (match, MATCH_OP_AND_MASK, &fs->scaleMatch);
     matchUpdate (s->display, match);
 }
@@ -451,7 +452,8 @@ scalefilterHandleEvent (CompDisplay *d,
 		    FILTER_SCREEN (s);
 
 		    info = fs->filterInfo;
-		    memset (buffer, 0, sizeof(buffer));
+		    memset (buffer, 0, sizeof (buffer));
+		    memset (wbuffer, 0, sizeof (wbuffer));
 
 		    if (fd->xic)
 		    {
@@ -463,7 +465,9 @@ scalefilterHandleEvent (CompDisplay *d,
 			XUnsetICFocus (fd->xic);
 		    }
 		    else
+		    {
 			count = XLookupString (keyEvent, buffer, 9, &ks, NULL);
+		    }
 
 		    mbstowcs (wbuffer, buffer, 9);
 
@@ -746,6 +750,9 @@ scalefilterInitDisplay (CompPlugin  *p,
 			     NULL);
     else
 	fd->xic = NULL;
+
+    if (fd->xic)
+	setlocale (LC_ALL, "");
 
     WRAP (fd, d, handleEvent, scalefilterHandleEvent);
     WRAP (fd, d, handleCompizEvent, scalefilterHandleCompizEvent);
