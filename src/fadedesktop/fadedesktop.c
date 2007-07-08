@@ -88,6 +88,24 @@ typedef struct _FadeDesktopWindow
 static int displayPrivateIndex;
 
 
+static void
+fadeDesktopActivateEvent (CompScreen *s,
+						  Bool       activating)
+{
+	CompOption o[2];
+
+	o[0].type = CompOptionTypeInt;
+	o[0].name = "root";
+	o[0].value.i = s->root;
+
+	o[1].type = CompOptionTypeBool;
+	o[1].name = "active";
+	o[1].value.b = activating;
+
+	(*s->display->handleCompizEvent)
+		(s->display, "fadedesktop", "activate", o, 2);
+}
+
 static Bool isFDWin(CompWindow *w)
 {
 	if (w->attrib.override_redirect)
@@ -170,6 +188,7 @@ static void fadeDesktopDonePaintScreen(CompScreen *s)
 				fs->state = FD_STATE_ON;
 			else
 				fs->state = FD_STATE_OFF;
+			fadeDesktopActivateEvent (s, FALSE);
 		}
 		else
 			damageScreen(s);
@@ -217,8 +236,10 @@ static void fadeDesktopEnterShowDesktopMode(CompScreen *s)
 
 	if ((fs->state == FD_STATE_OFF) || (fs->state == FD_STATE_IN))
 	{
-		fs->state = FD_STATE_OUT;
+		if (fs->state == FD_STATE_OFF)
+			fadeDesktopActivateEvent (s, TRUE);
 
+		fs->state = FD_STATE_OUT;
 		fs->fadeTime = fadedesktopGetFadetime(s) - fs->fadeTime;
 
 		for (w = s->windows; w; w = w->next)
@@ -251,6 +272,9 @@ static void fadeDesktopLeaveShowDesktopMode(CompScreen *s, CompWindow *w)
 
 		if (fs->state != FD_STATE_IN)
 		{
+			if (fs->state == FD_STATE_ON)
+				fadeDesktopActivateEvent (s, TRUE);
+
 			fs->state = FD_STATE_IN;
 			fs->fadeTime = fadedesktopGetFadetime(s) - fs->fadeTime;
 		}
