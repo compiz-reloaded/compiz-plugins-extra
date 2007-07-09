@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <compiz>
   <plugin name="addhelper" useBcop="true">
-    <_short>AddHelper</_short>
+    <_short>A.D.D. Helper</_short>
 	<_long>Make it slightly easier to concentrate by dimming all but the active window.</_long>
 	<category>Accessibility</category>
 	<deps>
