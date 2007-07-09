@@ -752,7 +752,7 @@ scalefilterInitDisplay (CompPlugin  *p,
 	fd->xic = NULL;
 
     if (fd->xic)
-	setlocale (LC_ALL, "");
+	setlocale (LC_CTYPE, "");
 
     WRAP (fd, d, handleEvent, scalefilterHandleEvent);
     WRAP (fd, d, handleCompizEvent, scalefilterHandleCompizEvent);
