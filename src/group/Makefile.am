@@ -11,7 +11,7 @@ libgroup_la_SOURCES = group_options.c \
 		      queues.c        \
 		      selection.c     \
 		      tab.c           \
-		      group.h         \
+		      group-internal.h \
 		      group_glow.h 
 endif
 
