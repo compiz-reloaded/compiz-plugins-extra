@@ -161,6 +161,66 @@ static CompScreen *pushWindow(CompDisplay * d, Window id)
 	return w->screen;
 }
 
+/* Ppop a window-id from the trailfocus window-stack (not to be
+ * confused with the real window stack).  Only keep one copy of a
+ * window on the stack. Also fill the empty space with the next
+ * window on the real window stack.
+ */
+static CompScreen *popWindow(CompDisplay * d, Window id)
+{
+	int i, winMax;
+	CompWindow *w;
+	CompScreen *s;
+
+	w = findWindowAtDisplay(d, id);
+	if (!w)
+		return NULL;
+
+	s = w->screen;
+
+	TRAILFOCUS_SCREEN(s);
+
+	winMax = trailfocusGetWindowsCount(s);
+	for (i = 0; i < winMax; i++)
+		if (ts->win[i] == id)
+			break;
+
+	if (i == winMax)
+		return NULL;
+
+	for (i++ ; i < winMax; i++)
+		ts->win[i - 1] = ts->win[i];
+
+	ts->win[winMax - 1] = None;
+
+	/* find window from the stacking order next to the last window
+	   in the stack to fill the empty space */
+	for (i = winMax - 1; i >= 0; i--)
+	    if (ts->win[i])
+		break;
+
+	if (ts->win[i])
+	{
+	    w = findWindowAtDisplay (d, ts->win[i]);
+	    if (w)
+	    {
+		CompWindow *cw;
+
+		for (cw = w->next; cw; cw = cw->next)
+		{
+		    if (matchEval(trailfocusGetWindowMatch(s), cw) &&
+			!w->invisible && !w->hidden && !w->minimized)
+		    {
+			ts->win[winMax - 1] = cw->id;
+			break;
+		    }
+		}
+	    }
+	}
+
+	return s;
+}
+
 /* Find a window on a screen.... Unlike the findWindowAtScreen which
  * core provides, we don't intend to search for the same window several
  * times in a row so we optimize for* the normal situation of searching for 
@@ -220,6 +280,11 @@ static void trailfocusHandleEvent(CompDisplay * d, XEvent * event)
 	{
 	case FocusIn:
 		s = pushWindow(d, event->xfocus.window);
+		if (s)
+			setWindows(s);
+		break;
+	case DestroyNotify:
+		s = popWindow(d, event->xdestroywindow.window);
 		if (s)
 			setWindows(s);
 		break;
