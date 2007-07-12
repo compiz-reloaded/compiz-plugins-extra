@@ -321,15 +321,26 @@ void
 scalefilterUpdateFilter (CompScreen *s,
 	   		 CompMatch  *match)
 {
-    char filterMatch[2 * MAX_FILTER_TEXT_LEN];
+    char         filterMatch[2 * MAX_FILTER_TEXT_LEN];
+    unsigned int offset;
 
     FILTER_SCREEN (s);
 
     matchFini (match);
     matchInit (match);
 
-    strncpy (filterMatch, "title=", MAX_FILTER_TEXT_LEN);
-    wcstombs (filterMatch + 6, fs->filterInfo->filterString,
+    if (scalefilterGetFilterCaseInsensitive (s))
+    {
+	strncpy (filterMatch, "ititle=", MAX_FILTER_TEXT_LEN);
+	offset = 7;
+    }
+    else
+    {
+    	strncpy (filterMatch, "title=", MAX_FILTER_TEXT_LEN);
+	offset = 6;
+    }
+
+    wcstombs (filterMatch + offset, fs->filterInfo->filterString,
 	      MAX_FILTER_STRING_LEN);
     matchAddExp (match, 0, filterMatch);
     matchAddGroup (match, MATCH_OP_AND_MASK, &fs->scaleMatch);
