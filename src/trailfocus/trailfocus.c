@@ -133,8 +133,7 @@ static void setWindows(CompScreen * s)
  */
 static CompScreen *pushWindow(CompDisplay * d, Window id)
 {
-	int i;
-	int tmp, winMax;
+	int i, winMax;
 	CompWindow *w;
 
 	w = findWindowAtDisplay(d, id);
@@ -143,10 +142,10 @@ static CompScreen *pushWindow(CompDisplay * d, Window id)
 
 	TRAILFOCUS_SCREEN(w->screen);
 
+	winMax = trailfocusGetWindowsCount(w->screen);
 	if (!matchEval(trailfocusGetWindowMatch(w->screen), w))
 		return NULL;
 
-	tmp = winMax = trailfocusGetWindowsCount(w->screen);
 	for (i = 0; i < winMax; i++)
 		if (ts->win[i] == id)
 			break;
@@ -199,23 +198,20 @@ static CompScreen *popWindow(CompDisplay * d, Window id)
 	    if (ts->win[i])
 		break;
 
-	if (ts->win[i])
+    w = findWindowAtDisplay (d, ts->win[i]);
+	if (w)
 	{
-	    w = findWindowAtDisplay (d, ts->win[i]);
-	    if (w)
-	    {
-		CompWindow *cw;
+	    CompWindow *cw;
 
-		for (cw = w->next; cw; cw = cw->next)
-		{
-		    if (matchEval(trailfocusGetWindowMatch(s), cw) &&
-			!w->invisible && !w->hidden && !w->minimized)
-		    {
-			ts->win[winMax - 1] = cw->id;
-			break;
-		    }
+	    for (cw = w->next; cw; cw = cw->next)
+	    {
+			if (matchEval(trailfocusGetWindowMatch(s), cw) &&
+				!w->invisible && !w->hidden && !w->minimized)
+			{
+				ts->win[winMax - 1] = cw->id;
+				break;
+			}
 		}
-	    }
 	}
 
 	return s;
