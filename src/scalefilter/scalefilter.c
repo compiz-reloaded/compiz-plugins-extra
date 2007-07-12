@@ -492,6 +492,19 @@ scalefilterHandleEvent (CompDisplay *d,
     			    needRelayout = TRUE;
     			    dropKeyEvent = TRUE;
 			}
+			else if (fs->matchApplied)
+			{
+			    /* remove filter applied previously
+			       if currently not in input mode */
+    			    matchFini (&ss->match);
+    			    matchInit (&ss->match);
+    			    matchCopy (&ss->match, &fs->scaleMatch);
+			    matchUpdate (s->display, &ss->match);
+    			    ss->currentMatch = &ss->match;
+			    fs->matchApplied = FALSE;
+			    needRelayout = TRUE;
+			    dropKeyEvent = TRUE;
+			}
 		    }
 		    else if (ks == XK_Return)
 		    {
@@ -515,18 +528,6 @@ scalefilterHandleEvent (CompDisplay *d,
 			{
 			    /* remove last character in string */
 			    info->filterString[--(info->filterStringLength)] = '\0';
-			    needRelayout = TRUE;
-			}
-			else if (fs->matchApplied)
-			{
-			    /* remove filter applied previously
-			       if currently not in input mode */
-    			    matchFini (&ss->match);
-    			    matchInit (&ss->match);
-    			    matchCopy (&ss->match, &fs->scaleMatch);
-			    matchUpdate (s->display, &ss->match);
-    			    ss->currentMatch = &ss->match;
-			    fs->matchApplied = FALSE;
 			    needRelayout = TRUE;
 			}
 		    }
