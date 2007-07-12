@@ -606,53 +606,62 @@ Bool
 groupGroupWindows(CompDisplay * d, CompAction * action,
 		  CompActionState state, CompOption * option, int nOption)
 {
-	GROUP_DISPLAY(d);
+	CompScreen *s;
+	Window xid;
 
-	if (gd->tmpSel.nWins > 0) {
-		int i;
-		CompWindow *cw;
-		GroupSelection *group = NULL;
-		Bool tabbed = FALSE;
+	xid = getIntOptionNamed (option, nOption, "root", 0);
+	s = findScreenAtDisplay (d, xid);
 
-		for(i = 0; i < gd->tmpSel.nWins; i++)
-		{
-			cw = gd->tmpSel.windows[i];
-			GROUP_WINDOW(cw);
+	if (s)
+	{
+		GROUP_SCREEN(s);
 
-			if (gw->group)
+		if (gs->tmpSel.nWins > 0) {
+			int i;
+			CompWindow *cw;
+			GroupSelection *group = NULL;
+			Bool tabbed = FALSE;
+
+			for(i = 0; i < gs->tmpSel.nWins; i++)
 			{
-				if(!tabbed || group->tabBar)
-					group = gw->group;
+				cw = gs->tmpSel.windows[i];
+				GROUP_WINDOW(cw);
 
-				if(group->tabBar)
-					tabbed = TRUE;
+				if (gw->group)
+				{
+					if(!tabbed || group->tabBar)
+						group = gw->group;
+
+					if(group->tabBar)
+						tabbed = TRUE;
+				}
 			}
-		}
 
-		// we need to do one first to get the pointer of a new group
-		cw = gd->tmpSel.windows[0];
-		GROUP_WINDOW (cw);
-
-		groupAddWindowToGroup(cw, group, 0);
-		addWindowDamage(cw);
-
-		gw->inSelection = FALSE;
-
-		group = gw->group;
-		for (i = 1; i < gd->tmpSel.nWins; i++) {
-			cw = gd->tmpSel.windows[i];
+			// we need to do one first to get the pointer of a new group
+			cw = gs->tmpSel.windows[0];
 			GROUP_WINDOW (cw);
 
 			groupAddWindowToGroup(cw, group, 0);
 			addWindowDamage(cw);
 
 			gw->inSelection = FALSE;
-		}
 
-		// exit selection
-		free(gd->tmpSel.windows);
-		gd->tmpSel.windows = NULL;
-		gd->tmpSel.nWins = 0;
+			group = gw->group;
+			for (i = 1; i < gs->tmpSel.nWins; i++) {
+				cw = gs->tmpSel.windows[i];
+				GROUP_WINDOW (cw);
+
+				groupAddWindowToGroup(cw, group, 0);
+				addWindowDamage(cw);
+
+				gw->inSelection = FALSE;
+			}
+
+			// exit selection
+			free(gs->tmpSel.windows);
+			gs->tmpSel.windows = NULL;
+			gs->tmpSel.nWins = 0;
+		}
 	}
 
 	return FALSE;

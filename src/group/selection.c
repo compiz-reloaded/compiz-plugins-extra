@@ -110,24 +110,24 @@ CompWindow **groupFindWindowsInRegion(CompScreen * s, Region reg, int *c)
  * groupDeleteSelectionWindow
  *
  */
-void groupDeleteSelectionWindow(CompDisplay * d, CompWindow * w)
+void groupDeleteSelectionWindow(CompWindow * w)
 {
-	GROUP_DISPLAY(d);
+	GROUP_SCREEN(w->screen);
 	GROUP_WINDOW(w);
 
-	if (gd->tmpSel.nWins > 0 && gd->tmpSel.windows) {
-		CompWindow **buf = gd->tmpSel.windows;
-		gd->tmpSel.windows = (CompWindow **) calloc(gd->tmpSel.nWins - 1, sizeof(CompWindow *));
+	if (gs->tmpSel.nWins > 0 && gs->tmpSel.windows) {
+		CompWindow **buf = gs->tmpSel.windows;
+		gs->tmpSel.windows = (CompWindow **) calloc(gs->tmpSel.nWins - 1, sizeof(CompWindow *));
 
 		int counter = 0;
 		int i;
-		for (i = 0; i < gd->tmpSel.nWins; i++) {
+		for (i = 0; i < gs->tmpSel.nWins; i++) {
 			if (buf[i]->id == w->id)
 				continue;
-			gd->tmpSel.windows[counter++] = buf[i];
+			gs->tmpSel.windows[counter++] = buf[i];
 		}
 
-		gd->tmpSel.nWins = counter;
+		gs->tmpSel.nWins = counter;
 		free(buf);
 	}
 
@@ -138,15 +138,15 @@ void groupDeleteSelectionWindow(CompDisplay * d, CompWindow * w)
  * groupAddWindowToSelection
  *
  */
-void groupAddWindowToSelection(CompDisplay * d, CompWindow * w)
+void groupAddWindowToSelection(CompWindow * w)
 {
-	GROUP_DISPLAY(d);
+	GROUP_SCREEN(w->screen);
 	GROUP_WINDOW(w);
 
-	gd->tmpSel.windows = (CompWindow **) realloc(gd->tmpSel.windows, sizeof(CompWindow *) * (gd->tmpSel.nWins + 1));
+	gs->tmpSel.windows = (CompWindow **) realloc(gs->tmpSel.windows, sizeof(CompWindow *) * (gs->tmpSel.nWins + 1));
 
-	gd->tmpSel.windows[gd->tmpSel.nWins] = w;
-	gd->tmpSel.nWins++;
+	gs->tmpSel.windows[gs->tmpSel.nWins] = w;
+	gs->tmpSel.nWins++;
 
 	gw->inSelection = TRUE;
 }
@@ -155,23 +155,23 @@ void groupAddWindowToSelection(CompDisplay * d, CompWindow * w)
  * groupSelectWindow
  *
  */
-void groupSelectWindow(CompDisplay * d, CompWindow * w)
+void groupSelectWindow(CompWindow * w)
 {
-	GROUP_DISPLAY(d);
+	GROUP_SCREEN(w->screen);
 	GROUP_WINDOW(w);
 
 	// select singe window
 	if (matchEval(groupGetWindowMatch(w->screen), w) &&
 	    !w->invisible && !gw->inSelection && !gw->group) {
 
-		groupAddWindowToSelection(d, w);
+		groupAddWindowToSelection(w);
 		addWindowDamage(w);
 	}
 	// unselect single window
 	else if (matchEval(groupGetWindowMatch(w->screen), w) &&
 		 !w->invisible && gw->inSelection && !gw->group) {
 
-		groupDeleteSelectionWindow(d, w);
+		groupDeleteSelectionWindow(w);
 		addWindowDamage(w);
 	}
 	// select group
@@ -182,7 +182,7 @@ void groupSelectWindow(CompDisplay * d, CompWindow * w)
 		for (i = 0; i < gw->group->nWins; i++) {
 			CompWindow *cw = gw->group->windows[i];
 
-			groupAddWindowToSelection(d, cw);
+			groupAddWindowToSelection(cw);
 			addWindowDamage(cw);
 		}
 	}
@@ -192,12 +192,12 @@ void groupSelectWindow(CompDisplay * d, CompWindow * w)
 
 		// Faster than doing groupDeleteSelectionWindow for each window in this group.
 		GroupSelection *group = gw->group;
-		CompWindow **buf = gd->tmpSel.windows;
-		gd->tmpSel.windows = (CompWindow **) calloc(gd->tmpSel.nWins - gw->group->nWins, sizeof(CompWindow *));
+		CompWindow **buf = gs->tmpSel.windows;
+		gs->tmpSel.windows = (CompWindow **) calloc(gs->tmpSel.nWins - gw->group->nWins, sizeof(CompWindow *));
 
 		int counter = 0;
 		int i;
-		for (i = 0; i < gd->tmpSel.nWins; i++) {
+		for (i = 0; i < gs->tmpSel.nWins; i++) {
 			CompWindow *cw = buf[i];
 			GROUP_WINDOW(cw);
 
@@ -207,9 +207,9 @@ void groupSelectWindow(CompDisplay * d, CompWindow * w)
 				continue;
 			}
 
-			gd->tmpSel.windows[counter++] = buf[i];
+			gs->tmpSel.windows[counter++] = buf[i];
 		}
-		gd->tmpSel.nWins = counter;
+		gs->tmpSel.nWins = counter;
 		free(buf);
 	}
 
@@ -226,7 +226,7 @@ groupSelectSingle(CompDisplay * d, CompAction * action,
 	CompWindow *w = (CompWindow *) findWindowAtDisplay(d, d->activeWindow);
 
 	if (w)
-		groupSelectWindow(d, w);
+		groupSelectWindow(w);
 
 	return TRUE;
 }
@@ -308,7 +308,7 @@ groupSelectTerminate(CompDisplay * d, CompAction * action,
 					for (i = 0; i < count; i++) {
 						CompWindow *cw = ws[i];
 
-						groupSelectWindow(d, cw);
+						groupSelectWindow(cw);
 					}
 					if (groupGetAutoGroup(s)) {
 						groupGroupWindows(d, NULL, 0, NULL, 0);

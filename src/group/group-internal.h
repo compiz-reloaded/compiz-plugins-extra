@@ -357,7 +357,6 @@ typedef struct _GroupDisplay {
 	int screenPrivateIndex;
 	HandleEventProc handleEvent;
 
-	GroupSelection tmpSel;
 	Bool ignoreMode;
 
 	GlowTextureProperties *glowTextureProperties;
@@ -390,6 +389,7 @@ typedef struct _GroupScreen {
 	GroupPendingUngrabs *pendingUngrabs;
 
 	GroupSelection *groups;
+	GroupSelection tmpSel;
 
 	Bool queued;
 	Bool tabBarVisible;
@@ -579,9 +579,9 @@ void groupDequeueUngrabNotifies (CompScreen *s);
  * selection.c
  */
 CompWindow **groupFindWindowsInRegion(CompScreen * s, Region reg, int *c);
-void groupDeleteSelectionWindow(CompDisplay * d, CompWindow * w);
-void groupAddWindowToSelection(CompDisplay * d, CompWindow * w);
-void groupSelectWindow(CompDisplay * d, CompWindow * w);
+void groupDeleteSelectionWindow(CompWindow * w);
+void groupAddWindowToSelection(CompWindow * w);
+void groupSelectWindow(CompWindow * w);
 Bool groupSelectSingle(CompDisplay * d, CompAction * action, CompActionState state, CompOption * option, int nOption);
 Bool groupSelect(CompDisplay * d, CompAction * action, CompActionState state, CompOption * option, int nOption);
 Bool groupSelectTerminate(CompDisplay * d, CompAction * action, CompActionState state, CompOption * option, int nOption);

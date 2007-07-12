@@ -130,9 +130,6 @@ Bool groupInitDisplay(CompPlugin * p, CompDisplay * d)
 
 	gd->glowTextureProperties = (GlowTextureProperties*) glowTextureProperties;
 
-	gd->tmpSel.windows = NULL;
-	gd->tmpSel.nWins = 0;
-
 	//gd->revGroups = NULL;
 
 	gd->ignoreMode = FALSE;
@@ -229,6 +226,9 @@ Bool groupInitScreen(CompPlugin * p, CompScreen * s)
 	groupSetBorderRadiusNotify(s, groupScreenOptionChanged);
 
 	gs->groups = NULL;
+
+	gs->tmpSel.windows = NULL;
+	gs->tmpSel.nWins = 0;
 
 	gs->grabIndex = 0;
 	gs->grabState = ScreenGrabNone;
