@@ -203,7 +203,7 @@ static CompScreen *popWindow(CompDisplay * d, Window id)
 	{
 	    CompWindow *cw;
 
-	    for (cw = w->next; cw; cw = cw->next)
+	    for (cw = w->prev; cw; cw = cw->prev)
 	    {
 			if (matchEval(trailfocusGetWindowMatch(s), cw) &&
 				!w->invisible && !w->hidden && !w->minimized)
