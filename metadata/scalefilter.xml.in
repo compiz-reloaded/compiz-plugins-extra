@@ -25,7 +25,7 @@
 				<option name="filter_case_insensitive" type="bool">
 					<_short>Filter Case Insensitive</_short>
 					<_long>Use case insensitive string matching when filtering.</_long>
-					<default>true</default>
+					<default>false</default>
 				</option>
 				<option name="filter_display" type="bool">
 					<_short>Show Filter Text</_short>
