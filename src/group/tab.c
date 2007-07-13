@@ -1212,10 +1212,10 @@ void groupDrawTabAnimation(CompScreen * s, int msSinceLastPaint)
  */
 void groupUpdateTabBars(CompScreen *s, Window enteredWin)
 {
-	GROUP_SCREEN(s);
 	CompWindow *w;
 	GroupSelection *hoveredGroup = NULL;
-	int mouseX = -1, mouseY;
+
+	GROUP_SCREEN(s);
 
 	/* first check if the entered window is a frame */
 	for (w = s->windows; w; w = w->next)
@@ -1231,6 +1231,7 @@ void groupUpdateTabBars(CompScreen *s, Window enteredWin)
 		GROUP_WINDOW(w);
 		if (gw->group && gw->group->tabBar)
 		{
+			int mouseX, mouseY;
 			/* it is grouped and tabbed, so now we have to
 			   check if we hovered the title bar or the frame */
 			if (groupGetCurrentMousePosition(s, &mouseX, &mouseY))
