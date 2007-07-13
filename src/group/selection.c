@@ -322,7 +322,7 @@ groupSelectTerminate (CompDisplay     *d,
 	Window     xid;
 
 	xid = getIntOptionNamed(option, nOption, "root", 0);
-	s = findScreenAtDisplay (s, xid);
+	s = findScreenAtDisplay (d, xid);
 
 	if (s)
 	{
