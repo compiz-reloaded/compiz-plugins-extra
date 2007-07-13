@@ -29,14 +29,18 @@
  *
  */
 
-void groupEnqueueMoveNotify (CompWindow *w, int dx, int dy, Bool immediate, Bool sync)
+void
+groupEnqueueMoveNotify (CompWindow *w,
+						int        dx,
+						int        dy,
+						Bool       immediate,
+						Bool       sync)
 {
 	GroupPendingMoves *move;
 
 	GROUP_SCREEN (w->screen);
 
-	move = malloc (sizeof(GroupPendingMoves));
-
+	move = malloc (sizeof (GroupPendingMoves));
 	if (!move)
 		return;
 
@@ -62,7 +66,8 @@ void groupEnqueueMoveNotify (CompWindow *w, int dx, int dy, Bool immediate, Bool
 	addWindowDamage (w);
 }
 
-void groupDequeueMoveNotifies (CompScreen *s)
+void
+groupDequeueMoveNotifies (CompScreen *s)
 {
 	GroupPendingMoves *move;
 
@@ -77,7 +82,7 @@ void groupDequeueMoveNotifies (CompScreen *s)
 
 		moveWindow (move->w, move->dx, move->dy, TRUE, move->immediate);
 		if (move->sync)
-		    syncWindowPosition(move->w);
+		    syncWindowPosition (move->w);
 
 		free (move);
 	}
@@ -85,15 +90,18 @@ void groupDequeueMoveNotifies (CompScreen *s)
 	gs->queued = FALSE;
 }
 
-void groupEnqueueGrabNotify (CompWindow *w, int x, int y,
-	unsigned int state, unsigned int mask)
+void
+groupEnqueueGrabNotify (CompWindow   *w,
+						int          x,
+						int          y,
+						unsigned int state,
+						unsigned int mask)
 {
 	GroupPendingGrabs *grab;
 
 	GROUP_SCREEN (w->screen);
 
-	grab = malloc (sizeof(GroupPendingGrabs));
-
+	grab = malloc (sizeof (GroupPendingGrabs));
 	if (!grab)
 		return;
 
@@ -118,7 +126,8 @@ void groupEnqueueGrabNotify (CompWindow *w, int x, int y,
 	addWindowDamage (w);
 }
 
-void groupDequeueGrabNotifies (CompScreen *s)
+void
+groupDequeueGrabNotifies (CompScreen *s)
 {
 	GroupPendingGrabs *grab;
 
@@ -131,7 +140,9 @@ void groupDequeueGrabNotifies (CompScreen *s)
 		grab = gs->pendingGrabs;
 		gs->pendingGrabs = gs->pendingGrabs->next;
 
-		(*(grab->w)->screen->windowGrabNotify) (grab->w, grab->x, grab->y, grab->state, grab->mask);
+		(*(grab->w)->screen->windowGrabNotify) (grab->w,
+												grab->x, grab->y,
+												grab->state, grab->mask);
 
 		free (grab);
 	}
@@ -139,13 +150,14 @@ void groupDequeueGrabNotifies (CompScreen *s)
 	gs->queued = FALSE;
 }
 
-void groupEnqueueUngrabNotify (CompWindow *w)
+void
+groupEnqueueUngrabNotify (CompWindow *w)
 {
 	GroupPendingUngrabs *ungrab;
 
 	GROUP_SCREEN (w->screen);
 
-	ungrab = malloc (sizeof(GroupPendingUngrabs));
+	ungrab = malloc (sizeof (GroupPendingUngrabs));
 
 	if (!ungrab)
 		return;
@@ -168,7 +180,8 @@ void groupEnqueueUngrabNotify (CompWindow *w)
 	addWindowDamage (w);
 }
 
-void groupDequeueUngrabNotifies (CompScreen *s)
+void
+groupDequeueUngrabNotifies (CompScreen *s)
 {
 	GroupPendingUngrabs *ungrab;
 
