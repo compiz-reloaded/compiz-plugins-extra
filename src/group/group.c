@@ -448,6 +448,10 @@ void groupDeleteGroup(GroupSelection *group)
 	} else {
 		gs->groups = NULL;
 	}
+
+	if (group == gs->lastHoveredGroup)
+		gs->lastHoveredGroup = NULL;
+
 	free(group);
 }
 
