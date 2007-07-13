@@ -334,42 +334,49 @@ void groupDeleteGroupWindow(CompWindow * w, Bool allowRegroup)
 	if (group->nWins && group->windows) {
 		CompWindow **buf = group->windows;
 
-		group->windows = (CompWindow **) calloc(group->nWins - 1, sizeof(CompWindow *));
-
-		int counter = 0;
-		int i;
-		for (i = 0; i < group->nWins; i++) {
-			if (buf[i]->id == w->id)
-				continue;
-			group->windows[counter++] = buf[i];
-		}
-		group->nWins = counter;
-
-		if (group->nWins == 1)
+		if (group->nWins > 1)
 		{
-			damageWindowOutputExtents(group->windows[0]);	// Glow was removed from this window too.
-			updateWindowOutputExtents(group->windows[0]);
-		}
+			int counter = 0;
+			int i;
 
-		if (group->nWins == 1 && groupGetAutoUngroup(w->screen)) {
-			if (!allowRegroup || !groupGetAutotabCreate (w->screen)) {
-				if (group->changeTab) {
-					/* a change animation is pending: this most
-					   likely means that a window must be moved
-					   back onscreen, so we do that here */
-					CompWindow *lw = group->windows[0];
+			group->windows = calloc(group->nWins - 1, sizeof(CompWindow *));
 
-					gs->queued = TRUE;
-					groupSetWindowVisibility(lw, TRUE);
-					moveWindow(lw, group->oldTopTabCenterX - WIN_X(lw) - WIN_WIDTH(lw) / 2,
-							   group->oldTopTabCenterY - WIN_Y(lw) - WIN_HEIGHT(lw) / 2, TRUE, TRUE);
-					syncWindowPosition(lw);
-					gs->queued = FALSE;
-				}
-				groupDeleteGroup(group);
+			for (i = 0; i < group->nWins; i++) {
+				if (buf[i]->id == w->id)
+					continue;
+				group->windows[counter++] = buf[i];
 			}
-		} else if (group->nWins <= 0) {
-			free(group->windows);
+			group->nWins = counter;
+
+			if (group->nWins == 1)
+			{
+				/* Glow was removed from this window, too */
+				damageWindowOutputExtents(group->windows[0]);
+				updateWindowOutputExtents(group->windows[0]);
+
+				if (groupGetAutoUngroup(w->screen)) {
+					if (!allowRegroup || !groupGetAutotabCreate (w->screen)) {
+						if (group->changeTab) {
+							/* a change animation is pending: this most
+							   likely means that a window must be moved
+							   back onscreen, so we do that here */
+							CompWindow *lw = group->windows[0];
+
+							gs->queued = TRUE;
+							groupSetWindowVisibility(lw, TRUE);
+							moveWindow(lw,
+									   group->oldTopTabCenterX - WIN_X(lw) - WIN_WIDTH(lw) / 2,
+									   group->oldTopTabCenterY - WIN_Y(lw) - WIN_HEIGHT(lw) / 2, TRUE, TRUE);
+							syncWindowPosition(lw);
+							gs->queued = FALSE;
+						}
+						groupDeleteGroup(group);
+					}
+				}
+			}
+		}
+		else
+		{
 			group->windows = NULL;
 			groupDeleteGroup(group);
 		}
