@@ -114,7 +114,7 @@ static void groupScreenOptionChanged(CompScreen *s, CompOption *opt, GroupScreen
  * groupInitDisplay
  *
  */
-Bool groupInitDisplay(CompPlugin * p, CompDisplay * d)
+static Bool groupInitDisplay(CompPlugin * p, CompDisplay * d)
 {
 	GroupDisplay *gd;
 
@@ -163,7 +163,7 @@ Bool groupInitDisplay(CompPlugin * p, CompDisplay * d)
  * groupFiniDisplay
  *
  */
-void groupFiniDisplay(CompPlugin * p, CompDisplay * d)
+static void groupFiniDisplay(CompPlugin * p, CompDisplay * d)
 {
 	GROUP_DISPLAY(d);
 
@@ -178,7 +178,7 @@ void groupFiniDisplay(CompPlugin * p, CompDisplay * d)
  * groupInitScreen
  *
  */
-Bool groupInitScreen(CompPlugin * p, CompScreen * s)
+static Bool groupInitScreen(CompPlugin * p, CompScreen * s)
 {
 
 	GroupScreen *gs;
@@ -264,7 +264,7 @@ Bool groupInitScreen(CompPlugin * p, CompScreen * s)
  * groupFiniScreen
  *
  */
-void groupFiniScreen(CompPlugin * p, CompScreen * s)
+static void groupFiniScreen(CompPlugin * p, CompScreen * s)
 {
 	GROUP_SCREEN(s);
 
@@ -327,7 +327,7 @@ void groupFiniScreen(CompPlugin * p, CompScreen * s)
  * groupInitWindow
  *
  */
-Bool groupInitWindow(CompPlugin * p, CompWindow * w)
+static Bool groupInitWindow(CompPlugin * p, CompWindow * w)
 {
 	GroupWindow *gw;
 	GROUP_SCREEN(w->screen);
@@ -379,7 +379,7 @@ Bool groupInitWindow(CompPlugin * p, CompWindow * w)
  * groupFiniWindow
  *
  */
-void groupFiniWindow(CompPlugin * p, CompWindow * w)
+static void groupFiniWindow(CompPlugin * p, CompWindow * w)
 {
 	GROUP_WINDOW(w);
 
@@ -396,7 +396,7 @@ void groupFiniWindow(CompPlugin * p, CompWindow * w)
  * groupInit
  *
  */
-Bool groupInit(CompPlugin * p)
+static Bool groupInit(CompPlugin * p)
 {
 	groupDisplayPrivateIndex = allocateDisplayPrivateIndex();
 	if (groupDisplayPrivateIndex < 0)
@@ -409,7 +409,7 @@ Bool groupInit(CompPlugin * p)
  * groupFini
  *
  */
-void groupFini(CompPlugin * p)
+static void groupFini(CompPlugin * p)
 {
 	freeDisplayPrivateIndex(groupDisplayPrivateIndex);
 }

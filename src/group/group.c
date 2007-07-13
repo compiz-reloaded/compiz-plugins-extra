@@ -88,24 +88,6 @@ groupDragHoverTimeout(void* closure)
 }
 
 /*
- * groupFindWindowIndex
- *
- */
-int
-groupFindWindowIndex(CompWindow *w, GroupSelection *g)
-{
-	int i;
-
-	for(i = 0; i < g->nWins; i++)
-	{
-		if(g->windows[i]->id == w->id)
-			return i;
-	}
-
-	return -1;
-}
-
-/*
  * groupFindGroupByID
  *
  */

@@ -29,24 +29,30 @@
  *
  */
 static Bool
-groupWindowInRegion(CompWindow *w, Region src, float precision)
+groupWindowInRegion (CompWindow *w,
+					 Region     src,
+					 float      precision)
 {
-	Region buf = XCreateRegion();
-	XIntersectRegion(w->region, src, buf);
+	Region buf;
+	int    i;
+	int    area = 0;
+	BOX    *box;
+	
+	buf = XCreateRegion ();
+	XIntersectRegion (w->region, src, buf);
 
-	// buf area
-	int i;
-	int area = 0;
-	BOX *box;
-	for(i = 0; i < buf->numRects; i++) {
+	/* buf area */
+	for(i = 0; i < buf->numRects; i++)
+	{
 		box = &buf->rects[i];
-		area += (box->x2 - box->x1) * (box->y2 - box->y1); // width * height
+		area += (box->x2 - box->x1) * (box->y2 - box->y1); /* width * height */
 	}
 
-	XDestroyRegion(buf);
+	XDestroyRegion (buf);
 
-	if (area >= WIN_WIDTH(w) * WIN_HEIGHT(w) * precision) {
-		XSubtractRegion(src, w->region, src);
+	if (area >= WIN_WIDTH (w) * WIN_HEIGHT (w) * precision)
+	{
+		XSubtractRegion (src, w->region, src);
 		return TRUE;
 	}
 
@@ -57,12 +63,18 @@ groupWindowInRegion(CompWindow *w, Region src, float precision)
  * groupFindGroupInWindows
  *
  */
-static Bool groupFindGroupInWindows(GroupSelection *group, CompWindow **windows, int nWins)
+static Bool
+groupFindGroupInWindows (GroupSelection *group,
+						 CompWindow     **windows,
+						 int            nWins)
 {
 	int i;
-	for (i = 0; i < nWins; i++) {
+
+	for (i = 0; i < nWins; i++)
+	{
 		CompWindow *cw = windows[i];
-		GROUP_WINDOW(cw);
+		GROUP_WINDOW (cw);
+
 		if (gw->group == group)
 			return TRUE;
 	}
@@ -74,27 +86,34 @@ static Bool groupFindGroupInWindows(GroupSelection *group, CompWindow **windows,
  * groupFindWindowsInRegion
  *
  */
-CompWindow **groupFindWindowsInRegion(CompScreen * s, Region reg, int *c)
+static CompWindow**
+groupFindWindowsInRegion (CompScreen *s,
+						  Region     reg,
+						  int        *c)
 {
-	float precision = groupGetSelectPrecision(s) / 100.0f;
-
+	float      precision = groupGetSelectPrecision (s) / 100.0f;
 	CompWindow **ret = NULL;
-	int count = 0;
+	int        count = 0;
 	CompWindow *w;
-	for (w = s->reverseWindows; w; w = w->prev) {
-		if (matchEval(groupGetWindowMatch(s), w) &&
+
+	for (w = s->reverseWindows; w; w = w->prev)
+	{
+		if (matchEval (groupGetWindowMatch (s), w) &&
 		    !w->invisible &&
-		    groupWindowInRegion(w, reg, precision))
+		    groupWindowInRegion (w, reg, precision))
 		{
-			GROUP_WINDOW(w);
-			if (gw->group && groupFindGroupInWindows(gw->group, ret, count))
+			GROUP_WINDOW (w);
+			if (gw->group && groupFindGroupInWindows (gw->group, ret, count))
 				continue;
 
-			if (count == 0)	{
-				ret = calloc(1, sizeof(CompWindow));
+			if (count == 0)
+			{
+				ret = calloc (1, sizeof (CompWindow));
 				ret[0] = w;
-			} else {
-				ret = realloc(ret, sizeof(CompWindow) * (count + 1));
+			}
+			else
+			{
+				ret = realloc (ret, sizeof (CompWindow) * (count + 1));
 				ret[count] = w;
 			}
 
@@ -110,25 +129,31 @@ CompWindow **groupFindWindowsInRegion(CompScreen * s, Region reg, int *c)
  * groupDeleteSelectionWindow
  *
  */
-void groupDeleteSelectionWindow(CompWindow * w)
+static void
+groupDeleteSelectionWindow (CompWindow *w)
 {
-	GROUP_SCREEN(w->screen);
-	GROUP_WINDOW(w);
+	GROUP_SCREEN (w->screen);
+	GROUP_WINDOW (w);
 
-	if (gs->tmpSel.nWins > 0 && gs->tmpSel.windows) {
+	if (gs->tmpSel.nWins > 0 && gs->tmpSel.windows)
+	{
 		CompWindow **buf = gs->tmpSel.windows;
-		gs->tmpSel.windows = (CompWindow **) calloc(gs->tmpSel.nWins - 1, sizeof(CompWindow *));
+		int        counter = 0;
+		int        i;
 
-		int counter = 0;
-		int i;
-		for (i = 0; i < gs->tmpSel.nWins; i++) {
+		gs->tmpSel.windows = calloc (gs->tmpSel.nWins - 1,
+									 sizeof (CompWindow *));
+
+		for (i = 0; i < gs->tmpSel.nWins; i++)
+		{
 			if (buf[i]->id == w->id)
 				continue;
+
 			gs->tmpSel.windows[counter++] = buf[i];
 		}
 
 		gs->tmpSel.nWins = counter;
-		free(buf);
+		free (buf);
 	}
 
 	gw->inSelection = FALSE;
@@ -138,12 +163,15 @@ void groupDeleteSelectionWindow(CompWindow * w)
  * groupAddWindowToSelection
  *
  */
-void groupAddWindowToSelection(CompWindow * w)
+static void
+groupAddWindowToSelection (CompWindow *w)
 {
-	GROUP_SCREEN(w->screen);
-	GROUP_WINDOW(w);
+	GROUP_SCREEN (w->screen);
+	GROUP_WINDOW (w);
 
-	gs->tmpSel.windows = (CompWindow **) realloc(gs->tmpSel.windows, sizeof(CompWindow *) * (gs->tmpSel.nWins + 1));
+	gs->tmpSel.windows = realloc (gs->tmpSel.windows,
+								  sizeof (CompWindow *) *
+								  (gs->tmpSel.nWins + 1));
 
 	gs->tmpSel.windows[gs->tmpSel.nWins] = w;
 	gs->tmpSel.nWins++;
@@ -155,64 +183,71 @@ void groupAddWindowToSelection(CompWindow * w)
  * groupSelectWindow
  *
  */
-void groupSelectWindow(CompWindow * w)
+static void
+groupSelectWindow (CompWindow * w)
 {
-	GROUP_SCREEN(w->screen);
-	GROUP_WINDOW(w);
+	GROUP_SCREEN (w->screen);
+	GROUP_WINDOW (w);
 
 	// select singe window
-	if (matchEval(groupGetWindowMatch(w->screen), w) &&
-	    !w->invisible && !gw->inSelection && !gw->group) {
-
+	if (matchEval (groupGetWindowMatch (w->screen), w) &&
+	    !w->invisible && !gw->inSelection && !gw->group)
+	{
 		groupAddWindowToSelection(w);
 		addWindowDamage(w);
 	}
 	// unselect single window
-	else if (matchEval(groupGetWindowMatch(w->screen), w) &&
-		 !w->invisible && gw->inSelection && !gw->group) {
-
+	else if (matchEval (groupGetWindowMatch (w->screen), w) &&
+			 !w->invisible && gw->inSelection && !gw->group)
+	{
 		groupDeleteSelectionWindow(w);
 		addWindowDamage(w);
 	}
 	// select group
-	else if (matchEval(groupGetWindowMatch(w->screen), w) &&
-		 !w->invisible && !gw->inSelection && gw->group) {
-
+	else if (matchEval (groupGetWindowMatch (w->screen), w) &&
+			 !w->invisible && !gw->inSelection && gw->group)
+	{
 		int i;
-		for (i = 0; i < gw->group->nWins; i++) {
+		for (i = 0; i < gw->group->nWins; i++)
+		{
 			CompWindow *cw = gw->group->windows[i];
 
-			groupAddWindowToSelection(cw);
-			addWindowDamage(cw);
+			groupAddWindowToSelection (cw);
+			addWindowDamage (cw);
 		}
 	}
 	// Unselect group
-	else if (matchEval(groupGetWindowMatch(w->screen), w) &&
-		 !w->invisible && gw->inSelection && gw->group) {
+	else if (matchEval (groupGetWindowMatch (w->screen), w) &&
+			 !w->invisible && gw->inSelection && gw->group)
+	{
 
-		// Faster than doing groupDeleteSelectionWindow for each window in this group.
+		/* Faster than doing groupDeleteSelectionWindow
+		   for each window in this group. */
 		GroupSelection *group = gw->group;
-		CompWindow **buf = gs->tmpSel.windows;
-		gs->tmpSel.windows = (CompWindow **) calloc(gs->tmpSel.nWins - gw->group->nWins, sizeof(CompWindow *));
+		CompWindow     **buf = gs->tmpSel.windows;
+		int            counter = 0;
+		int            i;
 
-		int counter = 0;
-		int i;
-		for (i = 0; i < gs->tmpSel.nWins; i++) {
+		gs->tmpSel.windows = calloc (gs->tmpSel.nWins - gw->group->nWins,
+									 sizeof (CompWindow *));
+
+		for (i = 0; i < gs->tmpSel.nWins; i++)
+		{
 			CompWindow *cw = buf[i];
-			GROUP_WINDOW(cw);
+			GROUP_WINDOW (cw);
 
-			if (gw->group == group) {
+			if (gw->group == group)
+			{
 				gw->inSelection = FALSE;
-				addWindowDamage(cw);
+				addWindowDamage (cw);
 				continue;
 			}
 
 			gs->tmpSel.windows[counter++] = buf[i];
 		}
 		gs->tmpSel.nWins = counter;
-		free(buf);
+		free (buf);
 	}
-
 }
 
 /*
@@ -220,13 +255,18 @@ void groupSelectWindow(CompWindow * w)
  *
  */
 Bool
-groupSelectSingle(CompDisplay * d, CompAction * action,
-		  CompActionState state, CompOption * option, int nOption)
+groupSelectSingle (CompDisplay     *d,
+				   CompAction      *action,
+				   CompActionState state,
+				   CompOption      *option,
+				   int             nOption)
 {
-	CompWindow *w = (CompWindow *) findWindowAtDisplay(d, d->activeWindow);
+	CompWindow *w;
+	
+	w = findWindowAtDisplay (d, d->activeWindow);
 
 	if (w)
-		groupSelectWindow(w);
+		groupSelectWindow (w);
 
 	return TRUE;
 }
@@ -236,17 +276,23 @@ groupSelectSingle(CompDisplay * d, CompAction * action,
  *
  */
 Bool
-groupSelect(CompDisplay * d, CompAction * action, CompActionState state,
-	    CompOption * option, int nOption)
+groupSelect (CompDisplay     *d,
+			 CompAction      *action,
+			 CompActionState state,
+			 CompOption      *option,
+			 int             nOption)
 {
-	CompWindow *w = (CompWindow *) findWindowAtDisplay(d, d->activeWindow);
+	CompWindow *w;
+	
+	w = findWindowAtDisplay (d, d->activeWindow);
 	if (!w)
 		return FALSE;
 
-	GROUP_SCREEN(w->screen);
+	GROUP_SCREEN (w->screen);
 
-	if (gs->grabState == ScreenGrabNone) {
-		groupGrabScreen(w->screen, ScreenGrabSelect);
+	if (gs->grabState == ScreenGrabNone)
+	{
+		groupGrabScreen (w->screen, ScreenGrabSelect);
 
 		if (state & CompActionStateInitKey)
 			action->state |= CompActionStateTermKey;
@@ -266,64 +312,65 @@ groupSelect(CompDisplay * d, CompAction * action, CompActionState state,
  *
  */
 Bool
-groupSelectTerminate(CompDisplay * d, CompAction * action,
-		     CompActionState state, CompOption * option,
-		     int nOption)
+groupSelectTerminate (CompDisplay     *d,
+					  CompAction      *action,
+					  CompActionState state,
+					  CompOption      *option,
+					  int             nOption)
 {
 	CompScreen *s;
-	Window xid;
+	Window     xid;
 
 	xid = getIntOptionNamed(option, nOption, "root", 0);
+	s = findScreenAtDisplay (s, xid);
 
-	for (s = d->screens; s; s = s->next) {
-		if (xid && s->root != xid)
-			continue;
-		break;
-	}
+	if (s)
+	{
+		GROUP_SCREEN (s);
 
-	if (s) {
-		GROUP_SCREEN(s);
+		if (gs->grabState == ScreenGrabSelect)
+		{
+			groupGrabScreen (s, ScreenGrabNone);
 
-		if (gs->grabState == ScreenGrabSelect) {
-			groupGrabScreen(s, ScreenGrabNone);
-
-			if (gs->x1 != gs->x2 && gs->y1 != gs->y2) {
-				Region reg = XCreateRegion();
+			if (gs->x1 != gs->x2 && gs->y1 != gs->y2)
+			{
+				Region     reg = XCreateRegion ();
 				XRectangle rect;
+				int        count;
+				CompWindow **ws;
 
-				rect.x = MIN(gs->x1, gs->x2) - 2;
-				rect.y = MIN(gs->y1, gs->y2) - 2;
-				rect.width  = MAX(gs->x1, gs->x2) - MIN(gs->x1, gs->x2) + 4;
-				rect.height = MAX(gs->y1, gs->y2) - MIN(gs->y1, gs->y2) + 4;
-				XUnionRectWithRegion(&rect, reg, reg);
+				rect.x = MIN (gs->x1, gs->x2) - 2;
+				rect.y = MIN (gs->y1, gs->y2) - 2;
+				rect.width  = MAX (gs->x1, gs->x2) - MIN(gs->x1, gs->x2) + 4;
+				rect.height = MAX (gs->y1, gs->y2) - MIN(gs->y1, gs->y2) + 4;
+				XUnionRectWithRegion (&rect, reg, reg);
 
-				damageScreenRegion(s, reg);
+				damageScreenRegion (s, reg);
 
-				int count;
-				CompWindow **ws = groupFindWindowsInRegion(s, reg, &count);
-
-				if (ws) {
-					// select windows
+				ws = groupFindWindowsInRegion (s, reg, &count);
+				if (ws)
+				{
+					/* select windows */
 					int i;
-					for (i = 0; i < count; i++) {
+					for (i = 0; i < count; i++)
+					{
 						CompWindow *cw = ws[i];
 
-						groupSelectWindow(cw);
+						groupSelectWindow
+							(cw);
 					}
-					if (groupGetAutoGroup(s)) {
-						groupGroupWindows(d, NULL, 0, NULL, 0);
+					if (groupGetAutoGroup(s))
+					{
+						groupGroupWindows (d, NULL, 0, NULL, 0);
 					}
-					free(ws);
+					free (ws);
 				}
-
-				XDestroyRegion(reg);
+				XDestroyRegion (reg);
 			}
 		}
-
 	}
 
-	action->state &=
-	    ~(CompActionStateTermKey | CompActionStateTermButton);
+	action->state &= ~(CompActionStateTermKey | CompActionStateTermButton);
 
 	return FALSE;
 }
@@ -333,26 +380,29 @@ groupSelectTerminate(CompDisplay * d, CompAction * action,
  *
  */
 void
-groupDamageSelectionRect(CompScreen* s, int xRoot, int yRoot)
+groupDamageSelectionRect (CompScreen *s,
+						  int        xRoot,
+						  int        yRoot)
 {
-	GROUP_SCREEN(s);
 	REGION reg;
+	
+	GROUP_SCREEN (s);
 
 	reg.rects = &reg.extents;
 	reg.numRects = 1;
 
-	reg.extents.x1 = MIN(gs->x1, gs->x2) - 5;
-	reg.extents.y1 = MIN(gs->y1, gs->y2) - 5;
-	reg.extents.x2 = MAX(gs->x1, gs->x2) + 5;
-	reg.extents.y2 = MAX(gs->y1, gs->y2) + 5;
-	damageScreenRegion(s, &reg);
+	reg.extents.x1 = MIN (gs->x1, gs->x2) - 5;
+	reg.extents.y1 = MIN (gs->y1, gs->y2) - 5;
+	reg.extents.x2 = MAX (gs->x1, gs->x2) + 5;
+	reg.extents.y2 = MAX (gs->y1, gs->y2) + 5;
+	damageScreenRegion (s, &reg);
 
 	gs->x2 = xRoot;
 	gs->y2 = yRoot;
 
-	reg.extents.x1 = MIN(gs->x1, gs->x2) - 5;
-	reg.extents.y1 = MIN(gs->y1, gs->y2) - 5;
-	reg.extents.x2 = MAX(gs->x1, gs->x2) + 5;
-	reg.extents.y2 = MAX(gs->y1, gs->y2) + 5;
-	damageScreenRegion(s, &reg);
+	reg.extents.x1 = MIN (gs->x1, gs->x2) - 5;
+	reg.extents.y1 = MIN (gs->y1, gs->y2) - 5;
+	reg.extents.x2 = MAX (gs->x1, gs->x2) + 5;
+	reg.extents.y2 = MAX (gs->y1, gs->y2) + 5;
+	damageScreenRegion (s, &reg);
 }

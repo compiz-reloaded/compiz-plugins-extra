@@ -28,7 +28,7 @@
  * groupPaintThumb - taken from switcher and modified for tab bar
  *
  */
-void groupPaintThumb(GroupSelection *group, GroupTabBarSlot *slot,
+static void groupPaintThumb(GroupSelection *group, GroupTabBarSlot *slot,
 					 const CompTransform *transform, int targetOpacity)
 {
 	AddWindowGeometryProc oldAddWindowGeometry;
@@ -621,8 +621,10 @@ void groupRenderWindowTitle(GroupSelection *group)
  * groupPaintTabBar
  *
  */
-void groupPaintTabBar(GroupSelection * group, const WindowPaintAttrib *wAttrib,
-	const CompTransform *transform, unsigned int mask, Region clipRegion)
+static void groupPaintTabBar(GroupSelection * group, 
+							 const WindowPaintAttrib *wAttrib,
+							 const CompTransform *transform,
+							 unsigned int mask, Region clipRegion)
 {
 	CompWindow *topTab = TOP_TAB(group);
 	CompScreen *s = group->screen;
