@@ -844,12 +844,13 @@ groupPaintTabBar (GroupSelection          *group,
 				glPushMatrix ();
 				glLoadMatrixf (wTransform.m);
 
+				alpha = alpha * ((float)wAttrib->opacity / OPAQUE);
+
 				initFragmentAttrib (&fragment, wAttrib);
-				fragment.opacity = OPAQUE;
+				fragment.opacity = alpha;
 				fragment.brightness = BRIGHT;
 				fragment.saturation = COLOR;
 
-				alpha = alpha * ((float)wAttrib->opacity / OPAQUE);
 				glColor4us (alpha, alpha, alpha, alpha);
 
 				(*s->drawWindowTexture) (topTab, &layer->texture,
