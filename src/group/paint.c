@@ -855,6 +855,7 @@ groupPaintTabBar (GroupSelection          *group,
 				(*s->drawWindowTexture) (topTab, &layer->texture,
 								 		 &fragment, mask |
 										 PAINT_WINDOW_BLEND_MASK |
+										 PAINT_WINDOW_TRANSFORMED_MASK |
 										 PAINT_WINDOW_TRANSLUCENT_MASK);
 
 				glColor4usv (defaultColor);
