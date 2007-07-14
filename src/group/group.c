@@ -1179,6 +1179,16 @@ groupHandleButtonReleaseEvent (CompDisplay *d,
 	if (newRegion)
 		XDestroyRegion (newRegion);
 
+	if (gw->group && gw->group->topTab)
+	{
+		groupRecalcTabBarPos (gw->group,
+							  (gw->group->tabBar->region->extents.x1 +
+							   gw->group->tabBar->region->extents.x2) / 2,
+							  gw->group->tabBar->region->extents.x1,
+							  gw->group->tabBar->region->extents.x2);
+		groupRenderTabBarBackground(gw->group);
+	}
+
 	if (!inserted)
 	{
 		CompWindow     *draggedSlotWindow = gs->draggedSlot->window;
@@ -1193,20 +1203,12 @@ groupHandleButtonReleaseEvent (CompDisplay *d,
 		if (groupGetDndUngroupWindow (s) && !wasInTabBar)
 		{
 			groupDeleteGroupWindow (draggedSlotWindow, TRUE);
-		}
-		else if (gw->group && gw->group->topTab)
-		{
-			groupRecalcTabBarPos (gw->group,
-								  (gw->group->tabBar->region->extents.x1 +
-								   gw->group->tabBar->region->extents.x2) / 2,
-								  gw->group->tabBar->region->extents.x1,
-								  gw->group->tabBar->region->extents.x2);
-		}
+		} 
 
 		/* to remove the painted slot */
 		damageScreen (s);
 	}
-
+	
 	if (gs->grabState == ScreenGrabTabDrag)
 		groupGrabScreen (s, ScreenGrabNone);
 
