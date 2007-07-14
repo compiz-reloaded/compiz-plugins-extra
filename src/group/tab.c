@@ -2358,7 +2358,7 @@ groupResizeTabBarRegion (GroupSelection *group,
 	oldWidth = group->tabBar->region->extents.x2 -
 		       group->tabBar->region->extents.x1;
 
-	if (group->tabBar->bgLayer && oldWidth != box->width)
+	if (group->tabBar->bgLayer && oldWidth != box->width && syncIPW)
 	{
 		group->tabBar->bgLayer =
 			groupRebuildCairoLayer (group->screen,
