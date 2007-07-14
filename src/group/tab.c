@@ -383,7 +383,7 @@ groupTabSetVisibility (GroupSelection *group,
 		groupSwitchTopTabInput (group, TRUE);
  	}
 
-	if (bar->state != oldState && bar->state != PaintPermanentOn)
+	if (bar->state == PaintFadeIn || bar->state == PaintFadeOut)
 		bar->animationTime = (groupGetFadeTime (group->screen) * 1000) -
 			                 bar->animationTime;
 
