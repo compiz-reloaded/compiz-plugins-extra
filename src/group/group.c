@@ -651,13 +651,9 @@ groupAddWindowToGroup (CompWindow     *w,
 
 		/* relink stack */
 		if (gs->groups)
-		{
 			gs->groups->prev = g;
-			g->prev = NULL;
-		}
-		else
-			g->next = NULL;
-
+		
+		g->next = gs->groups;
 		g->prev = NULL;
 		gs->groups = g;
 
