@@ -707,9 +707,6 @@ groupPaintTabBar (GroupSelection          *group,
 	box.rects = &box.extents;
 	box.numRects = 1;
 
-	glEnable (GL_BLEND);
-	glBlendFunc (GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-
 	for (i = 0; i < PAINT_MAX; i++)
 	{
 		alpha = OPAQUE;
@@ -752,38 +749,26 @@ groupPaintTabBar (GroupSelection          *group,
 			if (group->topTab != gs->draggedSlot)
 			{
 				layer = bar->selectionLayer;
-
-				box.extents.x1 = group->topTab->region->extents.x1;
-				box.extents.x2 = group->topTab->region->extents.x2;
-				box.extents.y1 = group->topTab->region->extents.y1;
-				box.extents.y2 = group->topTab->region->extents.y2;
+				box.extents = group->topTab->region->extents;
 			}
 			break;
 
 		case PAINT_THUMBS:
 			{
 				GLenum oldTextureFilter;
-
-				glColor4usv (defaultColor);
-				glBlendFunc (GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-				glDisable (GL_BLEND);
-
 				oldTextureFilter = s->display->textureFilter;
 
 				if (groupGetMipmaps (s))
 					s->display->textureFilter = GL_LINEAR_MIPMAP_LINEAR;
 
-				for(slot = bar->slots; slot; slot = slot->next)
+				for (slot = bar->slots; slot; slot = slot->next)
 				{
-					if(slot != gs->draggedSlot || !gs->dragged)
+					if (slot != gs->draggedSlot || !gs->dragged)
 						groupPaintThumb (group, slot, transform,
 										 wAttrib->opacity);
 				}
 
 				s->display->textureFilter = oldTextureFilter;
-
-				glEnable (GL_BLEND);
-				glBlendFunc (GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 				break;
 			}
 
@@ -839,7 +824,7 @@ groupPaintTabBar (GroupSelection          *group,
 
 			matrix.x0 -= box.extents.x1 * matrix.xx;
 			matrix.y0 -= box.extents.y1 * matrix.yy;
-			topTab->vCount = 0;
+			topTab->vCount = topTab->indexCount = 0;
 
 			addWindowGeometry (topTab, &matrix, 1, &box, clipRegion);
 
@@ -869,18 +854,14 @@ groupPaintTabBar (GroupSelection          *group,
 
 				(*s->drawWindowTexture) (topTab, &layer->texture,
 								 		 &fragment, mask |
-										 PAINT_WINDOW_TRANSLUCENT_MASK |
-										 PAINT_WINDOW_TRANSFORMED_MASK);
+										 PAINT_WINDOW_BLEND_MASK |
+										 PAINT_WINDOW_TRANSLUCENT_MASK);
 
 				glColor4usv (defaultColor);
 				glPopMatrix ();
 			}
 		}
 	}
-
-	glColor4usv (defaultColor);
-	glBlendFunc (GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-	glDisable (GL_BLEND);
 }
 
 /*
