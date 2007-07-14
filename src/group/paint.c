@@ -803,11 +803,11 @@ groupPaintTabBar (GroupSelection          *group,
 					box.extents.x2 = bar->region->extents.x2;
 
 				/* recalculate the alpha again for text fade... */
-				if (bar->textLayer->state == PaintFadeIn)
-					alpha -= alpha * bar->textLayer->animationTime /
+				if (layer->state == PaintFadeIn)
+					alpha -= alpha * layer->animationTime /
 						     (groupGetFadeTextTime(s) * 1000);
-				else if (group->tabBar->textLayer->state == PaintFadeOut)
-					alpha = alpha * bar->textLayer->animationTime /
+				else if (layer->state == PaintFadeOut)
+					alpha = alpha * layer->animationTime /
 						    (groupGetFadeTextTime(s) * 1000);
 			}
 			break;
