@@ -468,10 +468,6 @@ CompPluginVTable groupVTable = {
 	0,
 	0,
 	0,
-	0,
-	0,
-	0,
-	0,
 	0
 };
 
