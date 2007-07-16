@@ -6,6 +6,7 @@
 #define _GNU_SOURCE
 #include <stdio.h>
 #include <compiz.h>
+#include <X11/keysymdef.h>
 
 #include "gotovp_options.h"
 
