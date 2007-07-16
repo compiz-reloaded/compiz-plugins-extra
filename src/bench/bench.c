@@ -592,10 +592,6 @@ CompPluginVTable benchVTable = {
     0,
     0,
     0,
-    0,
-    0,
-    0,
-    0
 };
 
 CompPluginVTable *
