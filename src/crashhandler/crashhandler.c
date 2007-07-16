@@ -161,10 +161,6 @@ CompPluginVTable crashhandlerVTable = {
     0,
     0,
     0,
-    0,
-    0,
-    0,
-    0,
     0
 };
 
