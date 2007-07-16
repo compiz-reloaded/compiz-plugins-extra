@@ -865,11 +865,7 @@ static CompPluginVTable showdesktopVTable = {
     NULL,
     NULL,
     NULL,
-    NULL,
-    0,				/* deps */
-    0,				/* sizeof (deps) / sizeof (deps[0]) */
-    0,
-    0
+    NULL
 };
 
 /* send plugin info */
