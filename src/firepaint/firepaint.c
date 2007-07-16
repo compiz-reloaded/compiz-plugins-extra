@@ -913,10 +913,6 @@ CompPluginVTable fireVTable = {
     0,
     0,
     0,
-    0,
-    0,
-    0,
-    0,
     0
 };
 
