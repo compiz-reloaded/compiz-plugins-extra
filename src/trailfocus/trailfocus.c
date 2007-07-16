@@ -538,10 +538,6 @@ CompPluginVTable trailfocusVTable = {
 	0,							// trailfocusGetDisplayOptions,
 	0,							// trailfocusSetDisplayOptions,
 	0, 
-	0,
-	0,
-	0,
-	0,
 	0
 };
 
