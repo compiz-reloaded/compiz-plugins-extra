@@ -580,10 +580,6 @@ CompPluginVTable gearsVTable = {
     0,
     0,
     0,
-    0,
-    0,
-    0,
-    0,
     0
 };
 
