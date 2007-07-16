@@ -339,10 +339,6 @@ CompPluginVTable addhelperVTable = {
 	0, // addhelperSetDisplayOptions
 	0, // addhelperGetScreenOptions,
 	0, // addhelperSetScreenOptions,
-	0,
-	0,
-	0,
-	0
 };
 
 CompPluginVTable *getCompPluginInfo(void)
