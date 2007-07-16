@@ -618,10 +618,6 @@ CompPluginVTable cubereflexVTable = {
     0,
     0,
     0,
-    0,
-    0,
-    0,
-    0,
     0
 };
 
