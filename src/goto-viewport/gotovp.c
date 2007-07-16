@@ -230,10 +230,6 @@ static CompPluginVTable gotovpVTable =
 	0,
 	0,
 	0,
-	0,
-	0,
-	0,
-	0,
 	0
 };
 
