@@ -129,10 +129,6 @@ CompPluginVTable mswitchVTable = {
 	0,
 	0,
 	0,
-	0,
-	0,
-	0,
-	0,
 	0
 };
 
