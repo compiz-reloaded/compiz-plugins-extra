@@ -433,10 +433,6 @@ CompPluginVTable mblurVTable = {
     0,
     0,
     0,
-    0,
-    0,
-    0,
-    0,
     0
 };
 
