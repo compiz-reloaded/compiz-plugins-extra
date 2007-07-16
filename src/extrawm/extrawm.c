@@ -208,10 +208,6 @@ CompPluginVTable extraWMVTable = {
 	0,
 	0,
 	0,
-	0,
-	0,
-	0,
-	0,
 	0
 };
 
