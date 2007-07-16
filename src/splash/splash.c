@@ -662,11 +662,7 @@ CompPluginVTable splashVTable = {
     0,
     0,
     0,
-    0,
-    0,
-    0,
-    0,
-    0,
+    0
 };
 
 CompPluginVTable *
