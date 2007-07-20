@@ -737,9 +737,9 @@ groupPaintTabBar (GroupSelection          *group,
 				wScale = (double) (bar->region->extents.x2 -
 								   bar->region->extents.x1) / (double) newWidth;
 
-				// FIXME maybe move this over to groupResizeTabBarRegion
-				// the only problem is that we would have 2 redraws if
-				// there is an animation
+				/* FIXME: maybe move this over to groupResizeTabBarRegion -
+				   the only problem is that we would have 2 redraws if
+				   there is an animation */
 				if (newWidth != bar->oldWidth || bar->bgAnimation)
 					groupRenderTabBarBackground (group);
 

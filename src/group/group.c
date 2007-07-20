@@ -1058,7 +1058,7 @@ groupHandleButtonReleaseEvent (CompDisplay *d,
 
 		wasInTabBar = TRUE;
 
-		for(slot = group->tabBar->slots; slot; slot = slot->next)
+		for (slot = group->tabBar->slots; slot; slot = slot->next)
 		{
 			GroupTabBarSlot *tmpDraggedSlot;
 			GroupSelection  *tmpGroup;
@@ -1072,7 +1072,9 @@ groupHandleButtonReleaseEvent (CompDisplay *d,
 			slotRegion = XCreateRegion();
 
 			if (slot->prev && slot->prev != gs->draggedSlot)
+			{
 				rect.x = slot->prev->region->extents.x2;
+			}
 			else if (slot->prev && slot->prev == gs->draggedSlot &&
 					 gs->draggedSlot->prev)
 			{
@@ -1084,7 +1086,9 @@ groupHandleButtonReleaseEvent (CompDisplay *d,
 			rect.y = slot->region->extents.y1;
 
 			if (slot->next && slot->next != gs->draggedSlot)
+			{
 				rect.width = slot->next->region->extents.x1 - rect.x;
+			}
 			else if (slot->next && slot->next == gs->draggedSlot &&
 					 gs->draggedSlot->next)
 			{
@@ -1109,7 +1113,7 @@ groupHandleButtonReleaseEvent (CompDisplay *d,
 
 			tmpDraggedSlot = gs->draggedSlot;
 
-			if(group != gw->group)
+			if (group != gw->group)
 			{
 				GroupSelection *tmpGroup = gw->group;
 
@@ -1161,7 +1165,7 @@ groupHandleButtonReleaseEvent (CompDisplay *d,
 											 tmpDraggedSlot, slot);
 
 			/* Hide tab-bars. */
-			for(tmpGroup = gs->groups; tmpGroup; tmpGroup = tmpGroup->next)
+			for (tmpGroup = gs->groups; tmpGroup; tmpGroup = tmpGroup->next)
 			{
 				if (group == tmpGroup)
 					groupTabSetVisibility (tmpGroup, TRUE, 0);
@@ -1184,7 +1188,7 @@ groupHandleButtonReleaseEvent (CompDisplay *d,
 		CompWindow     *draggedSlotWindow = gs->draggedSlot->window;
 		GroupSelection *tmpGroup;
 
-		for(tmpGroup = gs->groups; tmpGroup; tmpGroup = tmpGroup->next)
+		for (tmpGroup = gs->groups; tmpGroup; tmpGroup = tmpGroup->next)
 			groupTabSetVisibility (tmpGroup, FALSE, PERMANENT);
 
 		gs->draggedSlot = NULL;
