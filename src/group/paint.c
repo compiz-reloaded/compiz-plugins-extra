@@ -851,10 +851,6 @@ groupPaintTabBar (GroupSelection          *group,
 
 				initFragmentAttrib (&fragment, wAttrib);
 				fragment.opacity = alpha;
-				fragment.brightness = BRIGHT;
-				fragment.saturation = COLOR;
-
-				glColor4us (alpha, alpha, alpha, alpha);
 
 				(*s->drawWindowTexture) (topTab, &layer->texture,
 								 		 &fragment, mask |
@@ -862,7 +858,6 @@ groupPaintTabBar (GroupSelection          *group,
 										 PAINT_WINDOW_TRANSFORMED_MASK |
 										 PAINT_WINDOW_TRANSLUCENT_MASK);
 
-				glColor4usv (defaultColor);
 				glPopMatrix ();
 			}
 		}
