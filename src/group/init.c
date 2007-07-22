@@ -287,7 +287,7 @@ groupFiniScreen (CompPlugin *p,
 	{
 		GroupSelection *group, *nextGroup;
 
-		for(group = gs->groups; group;)
+		for (group = gs->groups; group;)
 		{
 			if (group->tabBar)
 			{

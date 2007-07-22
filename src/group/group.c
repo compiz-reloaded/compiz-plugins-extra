@@ -560,7 +560,7 @@ groupAddWindowToGroup (CompWindow     *w,
 		updateWindowOutputExtents (w);
 		groupUpdateWindowProperty (w);
 
-		if(group->nWins == 2)
+		if (group->nWins == 2)
 		{
 			/* first window in the group got its glow, too */
 			updateWindowOutputExtents (group->windows[0]);
@@ -570,7 +570,7 @@ groupAddWindowToGroup (CompWindow     *w,
 		{
 			CompWindow *topTab = TOP_TAB (group);
 
-			if(!gw->slot)
+			if (!gw->slot)
 				groupCreateSlot (group, w);
 
 			gw->destination.x = WIN_X (topTab) + (WIN_WIDTH (topTab) / 2) -
@@ -694,7 +694,7 @@ groupGroupWindows (CompDisplay     *d,
 			GroupSelection *group = NULL;
 			Bool           tabbed = FALSE;
 
-			for(i = 0; i < gs->tmpSel.nWins; i++)
+			for (i = 0; i < gs->tmpSel.nWins; i++)
 			{
 				cw = gs->tmpSel.windows[i];
 				GROUP_WINDOW (cw);
@@ -1036,7 +1036,7 @@ groupHandleButtonReleaseEvent (CompDisplay *d,
 	groupGetDrawOffsetForSlot (gs->draggedSlot, &vx, &vy);
 	XOffsetRegion (newRegion, vx, vy);
 
-	for(group = gs->groups; group; group = group->next)
+	for (group = gs->groups; group; group = group->next)
 	{
 		Bool            inTabBar;
 		Region          clip, buf;
@@ -1069,7 +1069,7 @@ groupHandleButtonReleaseEvent (CompDisplay *d,
 			XRectangle      rect;
 			Bool            inSlot;
 
-			if(slot == gs->draggedSlot)
+			if (slot == gs->draggedSlot)
 				continue;
 
 			slotRegion = XCreateRegion();
@@ -1252,12 +1252,12 @@ groupHandleMotionEvent (CompScreen *s,
 		dx = xRoot - gs->prevX;
 		dy = yRoot - gs->prevY;
 
-		if(gs->dragged || abs (dx) > RADIUS || abs (dy) > RADIUS)
+		if (gs->dragged || abs (dx) > RADIUS || abs (dy) > RADIUS)
 		{
 			gs->prevX = xRoot;
 			gs->prevY = yRoot;
 
-			if(!gs->dragged)
+			if (!gs->dragged)
 			{
 				GroupSelection *group;
 				BoxRec         *box;
@@ -1266,7 +1266,7 @@ groupHandleMotionEvent (CompScreen *s,
 
 				gs->dragged = TRUE;
 
-				for(group = gs->groups; group; group = group->next)
+				for (group = gs->groups; group; group = group->next)
 					groupTabSetVisibility (group, TRUE, PERMANENT);
 
 				box = &gw->group->tabBar->region->extents;
@@ -1750,7 +1750,7 @@ groupWindowMoveNotify (CompWindow *w,
 							   (groupGetSpringModelOnMove (w->screen)) ? 0 : dx,
 							   dy, TRUE);
 
-		for(slot = bar->slots; slot; slot = slot->next)
+		for (slot = bar->slots; slot; slot = slot->next)
 		{
 			if (groupGetSpringModelOnMove (w->screen))
 				XOffsetRegion (slot->region, 0, dy);

@@ -665,7 +665,7 @@ groupRenderWindowTitle (GroupSelection *group)
 	layer->texWidth = width;
 	layer->texHeight = height;
 
-	if(data)
+	if (data)
 		bindPixmapToTexture (group->screen, &layer->texture, (Pixmap) data,
 							 layer->texWidth, layer->texHeight, 32);
 }
@@ -1454,7 +1454,7 @@ groupPaintWindow (CompWindow              *w,
 	{
 		WindowPaintAttrib wAttrib = *attrib;
 		CompTransform     wTransform = *transform;
-		float             animProgress;
+		float             animProgress = 0.0f;
 
 		if (gw->inSelection)
 		{
@@ -1499,7 +1499,7 @@ groupPaintWindow (CompWindow              *w,
 					progress = 1.0f - progress;
 			}
 
-			if (gw->group->tabbingState == PaintFadeOut)
+			if (gw->group->tabbingState == PaintFadeIn)
 				animProgress = 1.0f - progress;
 			else
 				animProgress = progress;
@@ -1507,43 +1507,35 @@ groupPaintWindow (CompWindow              *w,
 			wAttrib.opacity = (float)wAttrib.opacity * progress;
 		}
 
+		if (doRotate)
+		{
+			float timeLeft = gw->group->changeAnimationTime;
+			int   animTime = groupGetChangeAnimationTime (s) * 500;
+
+			if (gw->group->changeState == PaintFadeIn)
+				timeLeft += animTime;
+
+			/* 0 at the beginning, 1 at the end */
+			animProgress = 1 - (timeLeft / (2 * animTime));
+		}
+
 		if (doRotate || doTabbing)
 		{
-			float      rotateAngle;
 			float      animWidth, animHeight;
 			float      animScaleX, animScaleY;
 			CompWindow *morphBase, *morphTarget;
-
-			/* 0 at the beginning, 1 at the end */
-			if (doRotate)
-			{
-				float timeLeft = gw->group->changeAnimationTime;
-				int   animTime = groupGetChangeAnimationTime (s) * 500;
-
-				if (gw->group->changeState == PaintFadeIn)
-					timeLeft += animTime;
-
-				animProgress = 1 - (timeLeft / (2 * animTime));
-
-				rotateAngle = animProgress * 180.0f;
-				if (IS_TOP_TAB (w, gw->group))
-					rotateAngle += 180.0f;
-
-				if (gw->group->changeAnimationDirection < 0)
-					rotateAngle *= -1.0f;
-			}
 
 			if (doTabbing)
 			{
 				if (gw->group->tabbingState == PaintFadeIn)
 				{
-					morphTarget = w;
-					morphBase   = TOP_TAB (gw->group);
+					morphBase   = w;
+					morphTarget = TOP_TAB (gw->group);
 				}
 				else
 				{
-					morphBase   = w;
-					morphTarget = gw->group->lastTopTab;
+					morphTarget = w;
+					morphBase   = gw->group->lastTopTab;
 				}
 			}
 			else
@@ -1569,7 +1561,16 @@ groupPaintWindow (CompWindow              *w,
 							 0.0f);
 
 			if (doRotate)
+			{
+				float rotateAngle = animProgress * 180.0f;
+				if (IS_TOP_TAB (w, gw->group))
+					rotateAngle += 180.0f;
+
+				if (gw->group->changeAnimationDirection < 0)
+					rotateAngle *= -1.0f;
+
 				matrixRotate (&wTransform, rotateAngle, 0.0f, 1.0f, 0.0f);
+			}
 
 			matrixScale (&wTransform, animScaleX, animScaleY, 1.0f);
 

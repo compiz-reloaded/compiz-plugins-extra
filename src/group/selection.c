@@ -42,7 +42,7 @@ groupWindowInRegion (CompWindow *w,
 	XIntersectRegion (w->region, src, buf);
 
 	/* buf area */
-	for(i = 0; i < buf->numRects; i++)
+	for (i = 0; i < buf->numRects; i++)
 	{
 		box = &buf->rects[i];
 		area += (box->x2 - box->x1) * (box->y2 - box->y1); /* width * height */

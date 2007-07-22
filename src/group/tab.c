@@ -74,7 +74,7 @@ groupGetClippingRegion (CompWindow *w)
 	CompWindow *cw;
 	Region     clip = XCreateRegion();
 
-	for(cw = w->next; cw; cw = cw->next)
+	for (cw = w->next; cw; cw = cw->next)
 	{
 		if (!cw->invisible && !(cw->state & CompWindowStateHiddenMask))
 		{
@@ -489,7 +489,7 @@ groupHandleScreenActions (CompScreen *s)
 	/* we need to do it from top to buttom of the stack to avoid problems
 	   with a reload of Compiz and tabbed static groups. (topTab will always
 	   be above the other windows in the group) */
-	for(w = s->reverseWindows; w; w = w->prev)
+	for (w = s->reverseWindows; w; w = w->prev)
 	{
 		GROUP_WINDOW (w);
 
@@ -816,11 +816,11 @@ groupHandleTabChange (CompScreen     *s,
 
 	topTab = TOP_TAB (group);
 
-	if(group->tabbingState != PaintOff)
+	if (group->tabbingState != PaintOff)
 	{
 		/* if the previous top-tab window is being removed
 		   from the group, move the new top-tab window onscreen. */
-		if(group->ungroupState == UngroupSingle && !group->prevTopTab)
+		if (group->ungroupState == UngroupSingle && !group->prevTopTab)
 		{
 			gs->queued = TRUE;
 			groupSetWindowVisibility (topTab, TRUE);
@@ -988,7 +988,7 @@ groupHandleTab (CompScreen     *s,
 		return;
 	}
 
-	for(slot = group->tabBar->slots; slot; slot = slot->next)
+	for (slot = group->tabBar->slots; slot; slot = slot->next)
 	{
 		CompWindow *w = slot->window;
 		if (!w)
@@ -1033,7 +1033,7 @@ groupHandleTabbingAnimation (CompScreen     *s,
 	/* Not animated any more. */
 	group->tabbingState = PaintOff;
 
-	for(i = 0; i < group->nWins; i++)
+	for (i = 0; i < group->nWins; i++)
 	{
 		CompWindow *w = group->windows[i];
 		GROUP_WINDOW (w);
@@ -1103,7 +1103,7 @@ groupHandleUngroup (CompScreen     *s,
 	if ((group->ungroupState == UngroupSingle) &&
 		group->doTabbing && group->changeTab)
 	{
-		for(i = 0; i < group->nWins; i++)
+		for (i = 0; i < group->nWins; i++)
 		{
 			CompWindow *w = group->windows[i];
 			GROUP_WINDOW (w);
@@ -1134,7 +1134,7 @@ groupHandleUngroup (CompScreen     *s,
 		{
 			morePending = FALSE;
 
-			for(i = 0;i < group->nWins; i++)
+			for (i = 0;i < group->nWins; i++)
 			{
 				CompWindow *w = group->windows[i];
 				GROUP_WINDOW (w);
@@ -1188,7 +1188,7 @@ groupHandleChanges (CompScreen *s)
 
 	GROUP_SCREEN (s);
 
-	for(group = gs->groups; group; group = group ? group->next : NULL)
+	for (group = gs->groups; group; group = group ? group->next : NULL)
 	{
 		groupHandleUntab (s, group);
 		groupHandleTab (s, group);
@@ -1272,7 +1272,7 @@ groupDrawTabAnimation (CompScreen *s,
 
 	GROUP_SCREEN(s);
 
-	for(group = gs->groups; group; group = group->next)
+	for (group = gs->groups; group; group = group->next)
 	{
 		int   steps;
 		float amount, chunk;
@@ -1290,10 +1290,10 @@ groupDrawTabAnimation (CompScreen *s,
 		{
 			group->doTabbing = FALSE;
 
-			for(i = 0; i < group->nWins; i++)
+			for (i = 0; i < group->nWins; i++)
 			{
 				CompWindow *cw = group->windows[i];
-				if(!cw)
+				if (!cw)
 					continue;
 
 				GROUP_WINDOW (cw);
@@ -1581,7 +1581,7 @@ groupApplyConstrainingToWindows (GroupSelection *group,
 		if (w->id == constrainedWindow)
 			continue;
 
-		if(!(gw->animateState & IS_ANIMATED))
+		if (!(gw->animateState & IS_ANIMATED))
 			continue;
 
 		if (gw->animateState & DONT_CONSTRAIN)
@@ -1819,10 +1819,10 @@ groupTabGroup (CompWindow *main)
 		groupRenderTopTabHighlight (group);
 	}
 
-	if(!HAS_TOP_WIN (group))
+	if (!HAS_TOP_WIN (group))
 		return;
 
-	for(slot = group->tabBar->slots; slot; slot = slot->next)
+	for (slot = group->tabBar->slots; slot; slot = slot->next)
 	{
 		CompWindow *cw = slot->window;
 		int        x, y;
@@ -1896,7 +1896,7 @@ groupUntabGroup(GroupSelection *group)
 	group->lastTopTab = TOP_TAB (group);
 	group->topTab = NULL;
 
-	for(slot = group->tabBar->slots; slot; slot = slot->next)
+	for (slot = group->tabBar->slots; slot; slot = slot->next)
 	{
 		CompWindow *cw = slot->window;
 
@@ -2414,7 +2414,7 @@ groupInsertTabBarSlotBefore (GroupTabBar     *bar,
 
 	GROUP_WINDOW (w);
 
-	if(prev)
+	if (prev)
 	{
 		slot->prev = prev;
 		prev->next = slot;
@@ -2814,7 +2814,7 @@ groupApplyForces (CompScreen      *s,
 			bar->rightSpeed += rightForce;
 	}
 
-	for(slot = bar->slots; slot; slot = slot->next)
+	for (slot = bar->slots; slot; slot = slot->next)
 	{
 		centerX = (slot->region->extents.x1 + slot->region->extents.x2) / 2;
 		centerY = (slot->region->extents.y1 + slot->region->extents.y2) / 2;
@@ -2844,7 +2844,7 @@ groupApplyForces (CompScreen      *s,
 
 			while (slot2)
 			{
-				if(slot2 != draggedSlot)
+				if (slot2 != draggedSlot)
 					slot2->speed += draggedSlotForce;
 
 				slot2 = (draggedSlotForce < 0) ? slot2->prev : slot2->next;
@@ -3002,7 +3002,7 @@ groupInitTabBar (GroupSelection *group,
 
 	bar->region = XCreateRegion();
 
-	for(i = 0; i < group->nWins; i++)
+	for (i = 0; i < group->nWins; i++)
 		groupCreateSlot (group, group->windows[i]);
 
 	groupRecalcTabBarPos (group,
@@ -3094,7 +3094,7 @@ groupChangeTabLeft(CompDisplay * d, CompAction * action, CompActionState state,
 	CompWindow *w, *topTab;
 	
 	w = topTab = findWindowAtDisplay (d, d->activeWindow);
-	if(!w)
+	if (!w)
 		return TRUE;
 
 	GROUP_WINDOW (w);
@@ -3134,7 +3134,7 @@ groupChangeTabRight (CompDisplay     *d,
 	CompWindow *w, *topTab;
 	
 	w = topTab = findWindowAtDisplay (d, d->activeWindow);
-	if(!w)
+	if (!w)
 		return TRUE;
 
 	GROUP_WINDOW (w);
@@ -3212,7 +3212,7 @@ groupCreateInputPreventionWindow (GroupSelection *group)
 void
 groupDestroyInputPreventionWindow (GroupSelection *group)
 {
-	if(group->inputPrevention)
+	if (group->inputPrevention)
 	{
 		XDestroyWindow (group->screen->display->display,
 						group->inputPrevention);
