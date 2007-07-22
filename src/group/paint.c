@@ -1542,7 +1542,7 @@ groupPaintWindow (CompWindow              *w,
 			animScaleX = animWidth / WIN_REAL_WIDTH (w);
 			animScaleY = animHeight / WIN_REAL_HEIGHT (w);
 
-			matrixScale (&wTransform, 1.0f, 1.0f, 1.0f / s->width);
+			//matrixScale (&wTransform, 1.0f, 1.0f, 1.0f / s->width);
 			matrixTranslate (&wTransform,
 							 WIN_REAL_X (w) + WIN_REAL_WIDTH (w) / 2.0f,
 				 			 WIN_REAL_Y (w) + WIN_REAL_HEIGHT (w) / 2.0f,

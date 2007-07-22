@@ -1274,7 +1274,7 @@ groupDrawTabAnimation (CompScreen *s,
 
 	for(group = gs->groups; group; group = group->next)
 	{
-		int   steps, dx, dy;
+		int   steps;
 		float amount, chunk;
 
 		if (group->tabbingState == PaintOff)
