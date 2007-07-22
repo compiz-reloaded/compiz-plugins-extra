@@ -1028,14 +1028,23 @@ groupHandleTabbingAnimation (CompScreen     *s,
 	if (group->tabbingState == PaintOff || group->doTabbing)
 		return;
 
+	GROUP_SCREEN (s);
+
 	/* Not animated any more. */
 	group->tabbingState = PaintOff;
-	groupSyncWindows (group);
 
 	for(i = 0; i < group->nWins; i++)
 	{
 		CompWindow *w = group->windows[i];
 		GROUP_WINDOW (w);
+
+		/* move window to target position */
+		gs->queued = TRUE;
+		moveWindow (w, gw->destination.x - WIN_X (w), 
+					gw->destination.y - WIN_Y (w),
+					TRUE, TRUE);
+		gs->queued = FALSE;
+		syncWindowPosition (w);
 
 		gw->animateState = 0;
 	}
@@ -1301,14 +1310,7 @@ groupDrawTabAnimation (CompScreen *s,
 				gw->tx += gw->xVelocity * chunk;
 				gw->ty += gw->yVelocity * chunk;
 
-				dx = (cw->serverX + gw->tx) - cw->attrib.x;
-				dy = (cw->serverY + gw->ty) - cw->attrib.y;
-
 				group->doTabbing |= (gw->animateState & IS_ANIMATED);
-
-				gs->queued = TRUE;
-				moveWindow (cw, dx, dy, FALSE, FALSE);
-				gs->queued = FALSE;
 			}
 			if (!group->doTabbing)
 				break;

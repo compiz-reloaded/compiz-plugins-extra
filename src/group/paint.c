@@ -991,8 +991,11 @@ groupPaintOutput (CompScreen              *s,
 
 	for (group = gs->groups; group; group = group->next)
 	{
-		if (group->changeState != PaintOff)
+		if (group->changeState != PaintOff ||
+			group->tabbingState != PaintOff)
+		{
 			mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_MASK;
+		}
 	}
 
 	if (gs->tabBarVisible)
@@ -1425,7 +1428,7 @@ groupPaintWindow (CompWindow              *w,
 				  unsigned int            mask)
 {
 	Bool       status;
-	Bool       doRotate, doFade, showTabbar;
+	Bool       doRotate, doTabbing, showTabbar;
 	CompScreen *s = w->screen;
 
 	GROUP_SCREEN (s);
@@ -1434,8 +1437,8 @@ groupPaintWindow (CompWindow              *w,
 	doRotate = gw->group && (gw->group->changeState != PaintOff) &&
 		       (IS_TOP_TAB (w, gw->group) || IS_PREV_TOP_TAB (w, gw->group));
 
-	doFade = gw->group && (gw->group->tabbingState != PaintOff) &&
-		     (gw->animateState & (IS_ANIMATED | FINISHED_ANIMATION));
+	doTabbing = gw->group && (gw->group->tabbingState != PaintOff) &&
+		        (gw->animateState & (IS_ANIMATED | FINISHED_ANIMATION));
 
 	showTabbar = gw->group && gw->group->tabBar &&
 		         (((HAS_TOP_WIN (gw->group) && IS_TOP_TAB (w, gw->group)) &&
@@ -1447,7 +1450,7 @@ groupPaintWindow (CompWindow              *w,
 	if (gw->windowHideInfo)
 		mask |= PAINT_WINDOW_NO_CORE_INSTANCE_MASK;
 
-	if (gw->inSelection || doRotate || doFade || showTabbar)
+	if (gw->inSelection || doRotate || doTabbing || showTabbar)
 	{
 		WindowPaintAttrib wAttrib = *attrib;
 		CompTransform     wTransform = *transform;
@@ -1459,23 +1462,23 @@ groupPaintWindow (CompWindow              *w,
 			wAttrib.brightness = BRIGHT * groupGetSelectBrightness (s) / 100;
 		}
 
-		if (doFade)
+		if (doTabbing)
 		{
 			/* fade the window out */
-			float opacity;
+			float progress;
 			int   distanceX, distanceY;
 			float origDistance, distance;
 
-			distanceX = (WIN_X (w) - gw->destination.x);
-			distanceY = (WIN_Y (w) - gw->destination.y);
+			distanceX = (WIN_X (w) + gw->tx - gw->destination.x);
+			distanceY = (WIN_Y (w) + gw->ty - gw->destination.y);
 			distance = sqrt(pow (distanceX, 2) + pow (distanceY, 2));
 
 			distanceX = (gw->orgPos.x - gw->destination.x);
 			distanceY = (gw->orgPos.y - gw->destination.y);
 			origDistance = sqrt (pow (distanceX, 2) + pow (distanceY, 2));
 
-			if(distance > origDistance)
-				opacity = 100.0f;
+			if (distance > origDistance)
+				progress = 1.0f;
 			else
 			{
 				if (!distanceX && !distanceY)
@@ -1483,19 +1486,26 @@ groupPaintWindow (CompWindow              *w,
 					if (IS_TOP_TAB (w, gw->group) &&
 						(gw->group->tabbingState == PaintFadeIn))
 					{
-						opacity = 100.0f;
+						progress = 1.0f;
 					}
 					else
-						opacity = 0.0f;
+						progress = 0.0f;
 				}
 				else
-					opacity = 100.0f * distance / origDistance;
+					progress = distance / origDistance;
 
 				if (gw->group->tabbingState == PaintFadeOut)
-					opacity = 100.0f - opacity;
+					progress = 1.0f - progress;
 			}
 
-			wAttrib.opacity = wAttrib.opacity * opacity / 100;
+			wAttrib.opacity = (float)wAttrib.opacity * progress;
+			mask |= PAINT_WINDOW_TRANSFORMED_MASK;
+
+			matrixTranslate (&wTransform, WIN_X (w), WIN_Y (w), 0.0f);
+			matrixScale (&wTransform, 1.0f, 1.0f, 1.0f);
+			matrixTranslate (&wTransform,
+							 gw->tx - WIN_X (w),
+							 gw->ty - WIN_Y (w), 0.0f);
 		}
 
 		if (doRotate)
