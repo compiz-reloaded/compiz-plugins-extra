@@ -1438,7 +1438,9 @@ groupPaintWindow (CompWindow              *w,
 		       (IS_TOP_TAB (w, gw->group) || IS_PREV_TOP_TAB (w, gw->group));
 
 	doTabbing = gw->group && (gw->group->tabbingState != PaintOff) &&
-		        (gw->animateState & (IS_ANIMATED | FINISHED_ANIMATION));
+		        (gw->animateState & (IS_ANIMATED | FINISHED_ANIMATION)) &&
+				!(IS_TOP_TAB (w, gw->group) &&
+				  (gw->group->tabbingState == PaintFadeIn));
 
 	showTabbar = gw->group && gw->group->tabBar &&
 		         (((HAS_TOP_WIN (gw->group) && IS_TOP_TAB (w, gw->group)) &&
@@ -1478,31 +1480,13 @@ groupPaintWindow (CompWindow              *w,
 			distanceY = (gw->orgPos.y - gw->destination.y);
 			origDistance = sqrt (pow (distanceX, 2) + pow (distanceY, 2));
 
-			if (distance > origDistance)
+			if (!distanceX && !distanceY)
 				progress = 1.0f;
 			else
-			{
-				if (!distanceX && !distanceY)
-				{
-					if (IS_TOP_TAB (w, gw->group) &&
-						(gw->group->tabbingState == PaintFadeIn))
-					{
-						progress = 1.0f;
-					}
-					else
-						progress = 0.0f;
-				}
-				else
-					progress = distance / origDistance;
+				progress = 1.0f - (distance / origDistance);
 
-				if (gw->group->tabbingState == PaintFadeOut)
-					progress = 1.0f - progress;
-			}
-
-			if (gw->group->tabbingState == PaintFadeIn)
-				animProgress = 1.0f - progress;
-			else
-				animProgress = progress;
+			progress = MIN (progress, 1.0f);
+			animProgress = progress;
 
 			wAttrib.opacity = (float)wAttrib.opacity * progress;
 		}
