@@ -1488,6 +1488,9 @@ groupPaintWindow (CompWindow              *w,
 			progress = MIN (progress, 1.0f);
 			animProgress = progress;
 
+			if (gw->group->tabbingState == PaintFadeIn)
+				progress = 1.0f - progress;
+
 			wAttrib.opacity = (float)wAttrib.opacity * progress;
 		}
 
