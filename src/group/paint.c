@@ -1454,6 +1454,7 @@ groupPaintWindow (CompWindow              *w,
 	{
 		WindowPaintAttrib wAttrib = *attrib;
 		CompTransform     wTransform = *transform;
+		float             animProgress;
 
 		if (gw->inSelection)
 		{
@@ -1498,57 +1499,83 @@ groupPaintWindow (CompWindow              *w,
 					progress = 1.0f - progress;
 			}
 
-			wAttrib.opacity = (float)wAttrib.opacity * progress;
-			mask |= PAINT_WINDOW_TRANSFORMED_MASK;
+			if (gw->group->tabbingState == PaintFadeOut)
+				animProgress = 1.0f - progress;
+			else
+				animProgress = progress;
 
-			matrixTranslate (&wTransform, WIN_X (w), WIN_Y (w), 0.0f);
-			matrixScale (&wTransform, 1.0f, 1.0f, 1.0f);
-			matrixTranslate (&wTransform,
-							 gw->tx - WIN_X (w),
-							 gw->ty - WIN_Y (w), 0.0f);
+			wAttrib.opacity = (float)wAttrib.opacity * progress;
 		}
 
-		if (doRotate)
+		if (doRotate || doTabbing)
 		{
-			float rotateAngle;
-			float timeLeft = gw->group->changeAnimationTime;
-			float animationProgress;
-			float animWidth, animHeight;
-			float animScaleX, animScaleY;
-
-			if (gw->group->changeState == PaintFadeIn)
-				timeLeft += groupGetChangeAnimationTime (s) * 500.0f;
+			float      rotateAngle;
+			float      animWidth, animHeight;
+			float      animScaleX, animScaleY;
+			CompWindow *morphBase, *morphTarget;
 
 			/* 0 at the beginning, 1 at the end */
-			animationProgress =
-				1 - (timeLeft / (groupGetChangeAnimationTime (s) * 1000.0f));
+			if (doRotate)
+			{
+				float timeLeft = gw->group->changeAnimationTime;
+				int   animTime = groupGetChangeAnimationTime (s) * 500;
 
-			rotateAngle = animationProgress * 180.0f;
-			if (IS_TOP_TAB (w, gw->group))
-				rotateAngle += 180.0f;
+				if (gw->group->changeState == PaintFadeIn)
+					timeLeft += animTime;
 
-			if (gw->group->changeAnimationDirection < 0)
-				rotateAngle *= -1.0f;
+				animProgress = 1 - (timeLeft / (2 * animTime));
 
-			animWidth = (1 - animationProgress) *
-				        WIN_REAL_WIDTH (PREV_TOP_TAB (gw->group)) +
-						animationProgress *
-						WIN_REAL_WIDTH (TOP_TAB (gw->group));
-			animHeight = (1 - animationProgress) *
-				         WIN_REAL_HEIGHT (PREV_TOP_TAB (gw->group)) +
-				         animationProgress *
-						 WIN_REAL_HEIGHT (TOP_TAB (gw->group));
+				rotateAngle = animProgress * 180.0f;
+				if (IS_TOP_TAB (w, gw->group))
+					rotateAngle += 180.0f;
+
+				if (gw->group->changeAnimationDirection < 0)
+					rotateAngle *= -1.0f;
+			}
+
+			if (doTabbing)
+			{
+				if (gw->group->tabbingState == PaintFadeIn)
+				{
+					morphTarget = w;
+					morphBase   = TOP_TAB (gw->group);
+				}
+				else
+				{
+					morphBase   = w;
+					morphTarget = gw->group->lastTopTab;
+				}
+			}
+			else
+			{
+				morphBase   = PREV_TOP_TAB (gw->group);
+				morphTarget = TOP_TAB (gw->group);
+			}
+
+			animWidth = (1 - animProgress) * WIN_REAL_WIDTH (morphBase) +
+						animProgress * WIN_REAL_WIDTH (morphTarget);
+			animHeight = (1 - animProgress) * WIN_REAL_HEIGHT (morphBase) +
+				         animProgress * WIN_REAL_HEIGHT (morphTarget);
 
 			animScaleX = animWidth / WIN_REAL_WIDTH (w);
 			animScaleY = animHeight / WIN_REAL_HEIGHT (w);
 
-			//matrixScale (&wTransform, 1.0f, 1.0f, 1.0f / s->width);
+			if (doRotate)
+				matrixScale (&wTransform, 1.0f, 1.0f, 1.0f / s->width);
+	
 			matrixTranslate (&wTransform,
 							 WIN_REAL_X (w) + WIN_REAL_WIDTH (w) / 2.0f,
 				 			 WIN_REAL_Y (w) + WIN_REAL_HEIGHT (w) / 2.0f,
 							 0.0f);
-			matrixRotate (&wTransform, rotateAngle, 0.0f, 1.0f, 0.0f);
+
+			if (doRotate)
+				matrixRotate (&wTransform, rotateAngle, 0.0f, 1.0f, 0.0f);
+
 			matrixScale (&wTransform, animScaleX, animScaleY, 1.0f);
+
+			if (doTabbing)
+				matrixTranslate (&wTransform, gw->tx, gw->ty, 0.0f);
+
 			matrixTranslate (&wTransform,
 							 -(WIN_REAL_X (w) + WIN_REAL_WIDTH (w) / 2.0f),
 				 			 -(WIN_REAL_Y (w) + WIN_REAL_HEIGHT (w) / 2.0f),

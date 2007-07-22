@@ -1893,6 +1893,7 @@ groupUntabGroup(GroupSelection *group)
 	group->oldTopTabCenterX = WIN_X (prevTopTab) + WIN_WIDTH (prevTopTab) / 2;
 	group->oldTopTabCenterY = WIN_Y (prevTopTab) + WIN_HEIGHT (prevTopTab) / 2;
 
+	group->lastTopTab = TOP_TAB (group);
 	group->topTab = NULL;
 
 	for(slot = group->tabBar->slots; slot; slot = slot->next)

@@ -311,6 +311,9 @@ struct _GroupSelection {
 	GroupTabBarSlot* topTab;
 	GroupTabBarSlot* prevTopTab;
 
+	/* needed for untabbing animation */
+	CompWindow *lastTopTab;
+
 	/* Those two are only for the change-tab animation,
 	   when the tab was changed again during animation.
 	   Another animation should be started again,
