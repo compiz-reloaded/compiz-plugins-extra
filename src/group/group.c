@@ -232,15 +232,25 @@ static void
 groupRaiseWindows (CompWindow     *top,
 				   GroupSelection *group)
 {
-	int i;
-	for (i = 0; i < group->nWins; i++)
-	{
-		CompWindow *w = group->windows[i];
-		if (w->id == top->id)
-			continue;
+	CompWindow **stack;
+	CompWindow *w;
+	int        count = 0, i;
 
-		restackWindowBelow (w, top);
+	if (group->nWins == 1)
+		return;
+
+	stack = malloc ((group->nWins - 1) * sizeof (CompWindow*));
+	for (w = group->screen->windows; w; w = w->next)
+	{
+		GROUP_WINDOW (w);
+		if ((w->id != top->id) && (gw->group == group))
+			stack[count++] = w;
 	}
+
+	for (i = 0; i < count; i++)
+		restackWindowBelow (stack[i], top);
+
+	free (stack);
 }
 
 /*
