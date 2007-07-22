@@ -367,6 +367,8 @@ typedef struct _GroupDisplay {
 
 	GlowTextureProperties *glowTextureProperties;
 
+	GroupSelection *lastRestackedGroup;
+
 	Atom groupWinPropertyAtom;
 } GroupDisplay;
 

@@ -454,6 +454,7 @@ groupDeleteGroup (GroupSelection *group)
 	GroupSelection *next, *prev;
 
 	GROUP_SCREEN (group->screen);
+	GROUP_DISPLAY (group->screen->display);
 
 	if (group->windows != NULL)
 	{
@@ -519,6 +520,8 @@ groupDeleteGroup (GroupSelection *group)
 
 	if (group == gs->lastHoveredGroup)
 		gs->lastHoveredGroup = NULL;
+	if (group == gd->lastRestackedGroup)
+		gd->lastRestackedGroup = NULL;
 
 	free (group);
 }
@@ -1461,23 +1464,6 @@ groupHandleEvent (CompDisplay *d,
 	WRAP (gd, d, handleEvent, groupHandleEvent);
 
 	switch (event->type) {
-	case FocusIn:
-		{
-			CompWindow *w;
-			w = findWindowAtDisplay (d, event->xfocus.window);
-			if (w)
-			{
-				GROUP_WINDOW (w);
-
-				if (gw->group && !gw->group->tabBar)
-				{
-					if (groupGetRaiseAll (w->screen))
-						groupRaiseWindows (w, gw->group);
-				}
-			}
-			break;
-		}
-
 	case PropertyNotify:
 		if (event->xproperty.atom == d->winActiveAtom)
 		{
@@ -1552,6 +1538,7 @@ groupHandleEvent (CompDisplay *d,
 	case ConfigureNotify:
 		{
 			CompWindow *w;
+
 			w = findWindowAtDisplay (d, event->xconfigure.window);
 			if (w)
 			{
@@ -1568,6 +1555,18 @@ groupHandleEvent (CompDisplay *d,
 					XConfigureWindow (w->screen->display->display,
 									  gw->group->inputPrevention,
 									  CWSibling | CWStackMode, &xwc);
+				}
+
+				if (event->xconfigure.above != None)
+				{
+					if (gw->group && !gw->group->tabBar &&
+						(gw->group != gd->lastRestackedGroup))
+					{
+						if (groupGetRaiseAll (w->screen))
+							groupRaiseWindows (w, gw->group);
+					}
+					if (w->managed)
+						gd->lastRestackedGroup = gw->group;
 				}
 			}
 			break;

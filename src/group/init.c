@@ -141,6 +141,7 @@ groupInitDisplay (CompPlugin  *p,
 
 	gd->glowTextureProperties = (GlowTextureProperties*) glowTextureProperties;
 	gd->ignoreMode = FALSE;
+	gd->lastRestackedGroup = NULL;
 	gd->groupWinPropertyAtom = XInternAtom (d->display, "_COMPIZ_GROUP", 0);
 
 	WRAP (gd, d, handleEvent, groupHandleEvent);
