@@ -1485,9 +1485,9 @@ groupPaintWindow (CompWindow              *w,
 			else
 				progress = 1.0f - (distance / origDistance);
 
-			progress = MIN (progress, 1.0f);
 			animProgress = progress;
 
+			progress = MAX (progress, 0.0f);
 			if (gw->group->tabbingState == PaintFadeIn)
 				progress = 1.0f - progress;
 
@@ -1536,6 +1536,8 @@ groupPaintWindow (CompWindow              *w,
 			animHeight = (1 - animProgress) * WIN_REAL_HEIGHT (morphBase) +
 				         animProgress * WIN_REAL_HEIGHT (morphTarget);
 
+			animWidth = MAX (1.0f, animWidth);
+			animHeight = MAX (1.0f, animHeight);
 			animScaleX = animWidth / WIN_REAL_WIDTH (w);
 			animScaleY = animHeight / WIN_REAL_HEIGHT (w);
 
