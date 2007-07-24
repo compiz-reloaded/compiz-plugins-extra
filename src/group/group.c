@@ -213,18 +213,6 @@ groupGrabScreen (CompScreen           *s,
 }
 
 /*
- * groupSyncWindows
- *
- */
-void
-groupSyncWindows (GroupSelection *group)
-{
-	int i;
-	for (i = 0; i < group->nWins; i++)
-		syncWindowPosition (group->windows[i]);
-}
-
-/*
  * groupRaiseWindows
  *
  */

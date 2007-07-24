@@ -506,9 +506,6 @@ groupAddWindowToGroup (CompWindow     *w,
 					   GroupSelection *group,
 					   long int       initialIdent);
 
-void
-groupSyncWindows (GroupSelection *group);
-
 Bool
 groupGroupWindows (CompDisplay     *d,
 				   CompAction      *action,
