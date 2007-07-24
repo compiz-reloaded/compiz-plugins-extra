@@ -1218,8 +1218,7 @@ adjustTabVelocity (CompWindow *w)
 	x1 = gw->destination.x;
 	y1 = gw->destination.y;
 
-	dx = x1 - (w->serverX + gw->tx);
-
+	dx = x1 - (WIN_X (w) + gw->tx);
 	adjust = dx * 0.15f;
 	amount = fabs (dx) * 1.5f;
 	if (amount < 0.5f)
@@ -1229,8 +1228,7 @@ adjustTabVelocity (CompWindow *w)
 
 	gw->xVelocity = (amount * gw->xVelocity + adjust) / (amount + 1.0f);
 
-	dy = y1 - (w->serverY + gw->ty);
-
+	dy = y1 - (WIN_Y (w) + gw->ty);
 	adjust = dy * 0.15f;
 	amount = fabs (dy) * 1.5f;
 	if (amount < 0.5f)
@@ -3071,7 +3069,23 @@ groupInitTab (CompDisplay     *d,
 		return TRUE;
 
 	if (gw->group->tabbingState != PaintOff)
-		groupSyncWindows (gw->group);
+	{
+		int         i;
+		CompWindow  *cw;
+		GroupWindow *gcw;
+
+		GROUP_SCREEN (w->screen);
+
+		for (i = 0; i < gw->group->nWins; i++)
+		{
+			cw = gw->group->windows[i];
+
+			gcw = GET_GROUP_WINDOW (cw, gs);
+			if (gcw->animateState & (IS_ANIMATED | FINISHED_ANIMATION))
+				moveWindow (cw, gcw->tx, gcw->ty, FALSE, TRUE);
+
+		}
+	}
 
 	if (!gw->group->tabBar)
 		groupTabGroup (w);
