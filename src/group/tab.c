@@ -1786,7 +1786,14 @@ groupTabGroup (CompWindow *main)
 		layer->state = PaintOff;
 		layer->animationTime = 0;
 		groupRenderWindowTitle (group);
-		layer->animationTime = groupGetFadeTextTime (main->screen) * 1000;
+	}
+	if (group->tabBar->textLayer)
+	{
+		GroupCairoLayer *layer;
+		
+		layer = group->tabBar->textLayer;
+		layer->animationTime = groupGetFadeTextTime (main->screen) *
+				       1000;
 		layer->state = PaintFadeIn;
 	}
 
