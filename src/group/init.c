@@ -259,6 +259,8 @@ groupInitScreen (CompPlugin *p,
 	gs->prevX = 0;
 	gs->prevY = 0;
 
+	gs->showDelayTimeoutHandle = 0;
+
 	gs->screenActions = (CHECK_WINDOW_PROPERTIES | APPLY_AUTO_TABBING);
 
 	initTexture (s, &gs->glowTexture);
