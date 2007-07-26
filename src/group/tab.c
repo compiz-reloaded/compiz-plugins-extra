@@ -440,18 +440,10 @@ groupGetDrawOffsetForSlot (GroupTabBarSlot *slot,
 		return;
 	}
 
-	if (gw->group)
-	{
-		x = WIN_X (topTab) + WIN_WIDTH (topTab) / 2 -
-			WIN_WIDTH (w) / 2;
-		y = WIN_Y (topTab) + WIN_HEIGHT (topTab) / 2 -
-			WIN_HEIGHT (w) / 2;
-	}
-	else
-	{
-		x = w->serverX;
-		y = w->serverY;
-	}
+	x = WIN_X (topTab) + WIN_WIDTH (topTab) / 2 -
+		WIN_WIDTH (w) / 2;
+	y = WIN_Y (topTab) + WIN_HEIGHT (topTab) / 2 -
+		WIN_HEIGHT (w) / 2;
 
 	viewportForGeometry (w->screen, 
 						 x, y, w->serverWidth, w->serverHeight,
