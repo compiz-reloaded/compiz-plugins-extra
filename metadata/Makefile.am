@@ -7,6 +7,7 @@ xml_in_files = 	         \
 	extrawm.xml.in \
 	fadedesktop.xml.in \
 	firepaint.xml.in \
+	gears.xml.in \
 	gotovp.xml.in \
 	group.xml.in \
 	mblur.xml.in \

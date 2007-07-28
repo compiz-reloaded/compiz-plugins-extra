@@ -6,6 +6,7 @@ SUBDIRS = addhelper \
 	  extrawm \
 	  fadedesktop \
 	  firepaint \
+	  gears \
 	  goto-viewport \
 	  group \
 	  mblur \

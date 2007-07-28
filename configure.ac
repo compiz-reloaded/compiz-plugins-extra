@@ -170,6 +170,7 @@ src/cubereflex/Makefile
 src/extrawm/Makefile
 src/fadedesktop/Makefile
 src/firepaint/Makefile
+src/gears/Makefile
 src/goto-viewport/Makefile
 src/group/Makefile
 src/mblur/Makefile
