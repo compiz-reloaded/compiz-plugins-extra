@@ -1039,6 +1039,7 @@ groupHandleTabbingAnimation (CompScreen     *s,
 		syncWindowPosition (w);
 
 		gw->animateState = 0;
+		gw->tx = gw->ty = gw->xVelocity = gw->yVelocity = 0.0f;
 	}
 }
 
@@ -1202,15 +1203,13 @@ adjustTabVelocity (CompWindow *w)
 
 	GROUP_WINDOW (w);
 
-	x1 = y1 = 0.0;
-
 	if (!(gw->animateState & IS_ANIMATED))
 		return 0;
 
 	x1 = gw->destination.x;
 	y1 = gw->destination.y;
 
-	dx = x1 - (WIN_X (w) + gw->tx);
+	dx = x1 - (gw->orgPos.x + gw->tx);
 	adjust = dx * 0.15f;
 	amount = fabs (dx) * 1.5f;
 	if (amount < 0.5f)
@@ -1220,7 +1219,7 @@ adjustTabVelocity (CompWindow *w)
 
 	gw->xVelocity = (amount * gw->xVelocity + adjust) / (amount + 1.0f);
 
-	dy = y1 - (WIN_Y (w) + gw->ty);
+	dy = y1 - (gw->orgPos.y + gw->ty);
 	adjust = dy * 0.15f;
 	amount = fabs (dy) * 1.5f;
 	if (amount < 0.5f)
@@ -1822,35 +1821,36 @@ groupTabGroup (CompWindow *main)
 	for (slot = group->tabBar->slots; slot; slot = slot->next)
 	{
 		CompWindow *cw = slot->window;
-		int        x, y;
 
 		GROUP_WINDOW (cw);
 
-		x = WIN_X(cw);
-		y = WIN_Y(cw);
-
 		if (gw->animateState & IS_ANIMATED)
-		{
-			x = gw->destination.x;
-			y = gw->destination.y;
-		}
+			moveWindow (cw, 
+						gw->destination.x - WIN_X (cw),
+						gw->destination.y - WIN_Y (cw),
+						FALSE, TRUE);
 
 		/* center the window to the main window */
 		gw->destination.x = WIN_X (main) +
 			                (WIN_WIDTH (main) / 2) - (WIN_WIDTH (cw) / 2);
-		gw->destination.y = WIN_Y(main) +
+		gw->destination.y = WIN_Y (main) +
 			                (WIN_HEIGHT (main) / 2) - (WIN_HEIGHT (cw) / 2);
 
 		/* Distance from destination. */
-		gw->mainTabOffset.x = x - gw->destination.x;
-		gw->mainTabOffset.y = y - gw->destination.y;
+		gw->mainTabOffset.x = WIN_X (cw) - gw->destination.x;
+		gw->mainTabOffset.y = WIN_Y (cw) - gw->destination.y;
+
+		if (gw->tx || gw->ty)
+		{
+			gw->tx -= (WIN_X (cw) - gw->orgPos.x);
+			gw->ty -= (WIN_Y (cw) - gw->orgPos.y);
+		}
 
 		gw->orgPos.x = WIN_X (cw);
 		gw->orgPos.y = WIN_Y (cw);
 
-		gw->tx = gw->ty = gw->xVelocity = gw->yVelocity = 0.0f;
-
 		gw->animateState |= IS_ANIMATED;
+		gw->xVelocity = gw->yVelocity = 0.0f;
 	}
 
 	groupStartTabbingAnimation (group, TRUE);
@@ -1901,10 +1901,15 @@ groupUntabGroup(GroupSelection *group)
 
 		gs->queued = TRUE;
 		groupSetWindowVisibility (cw, TRUE);
+		if (gw->animateState & IS_ANIMATED)
+			moveWindow (cw, 
+						gw->destination.x - WIN_X (cw),
+						gw->destination.y - WIN_Y (cw),
+						FALSE, TRUE);
 		moveWindow (cw,
 					group->oldTopTabCenterX - WIN_X (cw) - WIN_WIDTH (cw) / 2,
 					group->oldTopTabCenterY - WIN_Y (cw) - WIN_HEIGHT (cw) / 2,
-					TRUE, TRUE);
+					FALSE, TRUE);
 		syncWindowPosition (cw);
 		gs->queued = FALSE;
 
@@ -1916,18 +1921,20 @@ groupUntabGroup(GroupSelection *group)
 		gw->orgPos.x = group->oldTopTabCenterX - WIN_WIDTH (cw) / 2;
 		gw->orgPos.y = group->oldTopTabCenterY - WIN_HEIGHT (cw) / 2;
 
-		gw->destination.x = WIN_X (prevTopTab) + WIN_WIDTH (prevTopTab) / 2 -
-			                WIN_WIDTH (cw) / 2 + gw->mainTabOffset.x -
-							mainOrgPosX;
-		gw->destination.y = WIN_Y (prevTopTab) + WIN_HEIGHT (prevTopTab) / 2 -
-			                WIN_HEIGHT (cw) / 2 + gw->mainTabOffset.y -
-							mainOrgPosY;
+		gw->destination.x = gw->orgPos.x + gw->mainTabOffset.x;
+		gw->destination.y = gw->orgPos.y + gw->mainTabOffset.y;
+	
+		if (gw->tx || gw->ty)
+		{
+			gw->tx -= (gw->orgPos.x - oldX);
+			gw->ty -= (gw->orgPos.y - oldY);
+		}
 
 		gw->mainTabOffset.x = oldX;
 		gw->mainTabOffset.y = oldY;
 
 		gw->animateState |= IS_ANIMATED;
-		gw->tx = gw->ty = gw->xVelocity = gw->yVelocity = 0.0f;
+		gw->xVelocity = gw->yVelocity = 0.0f;
 	}
 
 	group->tabbingState = PaintOff;
@@ -3066,25 +3073,6 @@ groupInitTab (CompDisplay     *d,
 
 	if (!gw->group)
 		return TRUE;
-
-	if (gw->group->tabbingState != PaintOff)
-	{
-		int         i;
-		CompWindow  *cw;
-		GroupWindow *gcw;
-
-		GROUP_SCREEN (w->screen);
-
-		for (i = 0; i < gw->group->nWins; i++)
-		{
-			cw = gw->group->windows[i];
-
-			gcw = GET_GROUP_WINDOW (cw, gs);
-			if (gcw->animateState & (IS_ANIMATED | FINISHED_ANIMATION))
-				moveWindow (cw, gcw->tx, gcw->ty, FALSE, TRUE);
-
-		}
-	}
 
 	if (!gw->group->tabBar)
 		groupTabGroup (w);

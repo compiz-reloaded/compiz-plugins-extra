@@ -1562,7 +1562,9 @@ groupPaintWindow (CompWindow              *w,
 			}
 
 			if (doTabbing)
-				matrixTranslate (&wTransform, gw->tx, gw->ty, 0.0f);
+				matrixTranslate (&wTransform, 
+								 gw->orgPos.x + gw->tx - WIN_X (w),
+								 gw->orgPos.y + gw->ty - WIN_Y (w), 0.0f);
 
 			matrixScale (&wTransform, animScaleX, animScaleY, 1.0f);
 
