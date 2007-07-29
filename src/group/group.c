@@ -1997,7 +1997,10 @@ groupWindowUngrabNotify (CompWindow *w)
 	WRAP( gs, w->screen, windowUngrabNotify, groupWindowUngrabNotify);
 }
 
-Bool groupDamageWindowRect(CompWindow * w, Bool initial, BoxPtr rect)
+Bool
+groupDamageWindowRect (CompWindow *w,
+					   Bool       initial,
+					   BoxPtr     rect)
 {
 	Bool status;
 
@@ -2020,15 +2023,18 @@ Bool groupDamageWindowRect(CompWindow * w, Bool initial, BoxPtr rect)
 			}
 		}
 
-		if ((gw->windowState == WindowMinimized) && gw->group)
+		if (gw->group)
 		{
-			if (groupGetMinimizeAll (w->screen))
-				groupMinimizeWindows (w, gw->group, FALSE);
-		}
-		else if ((gw->windowState == WindowShaded) && gw->group)
-		{
-			if (groupGetShadeAll (w->screen))
-				groupShadeWindows (w, gw->group, FALSE);
+			if (gw->windowState == WindowMinimized)
+			{
+				if (groupGetMinimizeAll (w->screen))
+					groupMinimizeWindows (w, gw->group, FALSE);
+			}
+			else if (gw->windowState == WindowShaded)
+			{
+				if (groupGetShadeAll (w->screen))
+					groupShadeWindows (w, gw->group, FALSE);
+			}
 		}
 
 		gw->windowState = WindowNormal;
@@ -2056,7 +2062,6 @@ Bool groupDamageWindowRect(CompWindow * w, Bool initial, BoxPtr rect)
 	}
 
 	return status;
-
 }
 
 void
