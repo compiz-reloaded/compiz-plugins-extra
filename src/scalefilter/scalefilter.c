@@ -32,7 +32,9 @@
 #include <string.h>
 #include <wchar.h>
 #include <locale.h>
+
 #include <X11/Xlib.h>
+#include <X11/keysymdef.h>
 
 #include <compiz.h>
 #include <scale.h>
