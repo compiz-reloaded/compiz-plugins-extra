@@ -983,7 +983,8 @@ groupPaintOutput (CompScreen              *s,
 	GroupSelection *group;
 	Bool           status;
 
-	GROUP_SCREEN(s);
+	GROUP_SCREEN (s);
+	GROUP_DISPLAY (s->display);
 
 	gs->painted = FALSE;
 	gs->vpX = s->x;
@@ -998,8 +999,8 @@ groupPaintOutput (CompScreen              *s,
 		}
 	}
 
-	if (gs->tabBarVisible)
-			mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_MASK;
+	if (gs->tabBarVisible || gd->resizeInfo)
+		mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_MASK;
 
 	UNWRAP (gs, s, paintOutput);
 	status = (*s->paintOutput) (s, sAttrib, transform, region, output, mask);
@@ -1452,7 +1453,7 @@ groupPaintWindow (CompWindow              *w,
 	if (gw->windowHideInfo)
 		mask |= PAINT_WINDOW_NO_CORE_INSTANCE_MASK;
 
-	if (gw->inSelection || doRotate || doTabbing || showTabbar)
+	if (gw->inSelection || gw->resizeGeometry || doRotate || doTabbing || showTabbar)
 	{
 		WindowPaintAttrib wAttrib = *attrib;
 		CompTransform     wTransform = *transform;
@@ -1506,7 +1507,41 @@ groupPaintWindow (CompWindow              *w,
 			animProgress = 1 - (timeLeft / (2 * animTime));
 		}
 
-		if (doRotate || doTabbing)
+		if (gw->resizeGeometry)
+		{
+			int   xOrigin, yOrigin;
+			float xScale, yScale;
+			float stretchWidth, stretchHeight;
+		    int   width, height;
+
+			width  = w->width  + w->input.left + w->input.right;
+			height = w->height + w->input.top  + w->input.bottom;
+
+			stretchWidth  = gw->resizeGeometry->width + 
+				            w->serverBorderWidth * 2 + 
+				            w->input.right + w->input.left;
+			stretchHeight = gw->resizeGeometry->height +
+				            w->serverBorderWidth * 2 + 
+				            w->input.bottom + w->input.top;
+
+			xScale = (width)  ? stretchWidth / (float) width  : 1.0f;
+			yScale = (height) ? stretchHeight / (float) height : 1.0f;
+
+			xOrigin = w->attrib.x - w->input.left;
+			yOrigin = w->attrib.y - w->input.top;
+
+			matrixTranslate (&wTransform, xOrigin, yOrigin, 0.0f);
+			matrixScale (&wTransform, xScale, yScale, 1.0f);
+			matrixTranslate (&wTransform,
+							 (gw->resizeGeometry->x - w->attrib.x) / 
+							 xScale - xOrigin,
+							 (gw->resizeGeometry->y - w->attrib.y) /
+							 yScale - yOrigin,
+							 0.0f);
+
+			mask |= PAINT_WINDOW_TRANSFORMED_MASK;
+		}
+		else if (doRotate || doTabbing)
 		{
 			float      animWidth, animHeight;
 			float      animScaleX, animScaleY;

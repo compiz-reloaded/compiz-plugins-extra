@@ -139,10 +139,16 @@ groupInitDisplay (CompPlugin  *p,
 		return FALSE;
 	}
 
-	gd->glowTextureProperties = (GlowTextureProperties*) glowTextureProperties;
+	gd->glowTextureProperties = 
+	    (GlowTextureProperties*) glowTextureProperties;
 	gd->ignoreMode = FALSE;
 	gd->lastRestackedGroup = NULL;
-	gd->groupWinPropertyAtom = XInternAtom (d->display, "_COMPIZ_GROUP", 0);
+	gd->resizeInfo = NULL;
+
+	gd->groupWinPropertyAtom = XInternAtom (d->display,
+						"_COMPIZ_GROUP", 0);
+	gd->resizeNotifyAtom     = XInternAtom (d->display,
+						"_COMPIZ_RESIZE_NOTIFY", 0);
 
 	WRAP (gd, d, handleEvent, groupHandleEvent);
 
@@ -384,6 +390,7 @@ static Bool groupInitWindow(CompPlugin * p, CompWindow * w)
 	gw->destination.y = 0;
 
 	gw->windowHideInfo = NULL;
+	gw->resizeGeometry = NULL;
 
 	if (w->minimized)
 		gw->windowState = WindowMinimized;

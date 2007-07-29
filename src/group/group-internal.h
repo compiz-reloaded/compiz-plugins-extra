@@ -358,6 +358,11 @@ typedef struct _GroupWindowHideInfo {
 	int        inputRectOrdering;
 } GroupWindowHideInfo;
 
+typedef struct _GroupResizeInfo {
+	CompWindow *resizedWindow;
+	XRectangle origGeometry;
+} GroupResizeInfo;
+
 /*
  * GroupDisplay structure
  */
@@ -368,11 +373,14 @@ typedef struct _GroupDisplay {
 
 	Bool ignoreMode;
 
+	GroupResizeInfo *resizeInfo;
+
 	GlowTextureProperties *glowTextureProperties;
 
 	GroupSelection *lastRestackedGroup;
 
 	Atom groupWinPropertyAtom;
+	Atom resizeNotifyAtom;
 } GroupDisplay;
 
 /*
@@ -446,6 +454,8 @@ typedef struct _GroupWindow {
 
 	GroupWindowState    windowState;
 	GroupWindowHideInfo *windowHideInfo;
+
+	XRectangle *resizeGeometry;
 
 	/* For tab animation */
 	Bool   ungroup;
