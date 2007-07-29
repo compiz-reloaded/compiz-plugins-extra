@@ -841,6 +841,16 @@ groupDrawWindow (CompWindow           *w,
 				 Region               region,
 				 unsigned int         mask);
 
+void
+groupGetStretchRectangle (CompWindow *w,
+				   		  BoxPtr     pBox,
+						  float      *xScale,
+						  float      *yScale);
+
+void
+groupDamagePaintRectangle (CompScreen *s,
+						   BoxPtr     pBox);
+
 Bool
 groupPaintWindow (CompWindow              *w,
 				  const WindowPaintAttrib *attrib,

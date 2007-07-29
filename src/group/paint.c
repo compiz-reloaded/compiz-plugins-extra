@@ -1417,6 +1417,71 @@ groupDrawWindow(CompWindow           *w,
 	return status;
 }
 
+void
+groupGetStretchRectangle (CompWindow *w,
+				   		  BoxPtr     pBox,
+						  float      *xScaleRet,
+						  float      *yScaleRet)
+{
+    BoxRec box;
+	int    width, height;
+	float  xScale, yScale;
+
+	GROUP_WINDOW (w);
+
+	box.x1 = gw->resizeGeometry->x - w->input.left;
+    box.y1 = gw->resizeGeometry->y - w->input.top;
+    box.x2 = gw->resizeGeometry->x +
+  		     gw->resizeGeometry->width + w->serverBorderWidth * 2 +
+			 w->input.right;
+
+    if (w->shaded)
+    {
+		box.y2 = gw->resizeGeometry->y + w->height + w->input.bottom;
+    }
+    else
+    {
+		box.y2 = gw->resizeGeometry->y +
+ 			     gw->resizeGeometry->height + w->serverBorderWidth * 2 +
+		   		 w->input.bottom;
+    }
+
+    width  = w->width  + w->input.left + w->input.right;
+    height = w->height + w->input.top  + w->input.bottom;
+
+    xScale = (width)  ? (box.x2 - box.x1) / (float) width  : 1.0f;
+    yScale = (height) ? (box.y2 - box.y1) / (float) height : 1.0f;
+
+    pBox->x1 = box.x1 - (w->output.left - w->input.left) * xScale;
+    pBox->y1 = box.y1 - (w->output.top - w->input.top) * yScale;
+    pBox->x2 = box.x2 + w->output.right * xScale;
+    pBox->y2 = box.y2 + w->output.bottom * yScale;
+
+	if (xScaleRet)
+		*xScaleRet = xScale;
+	if (yScaleRet)
+		*yScaleRet = yScale;
+}
+
+void
+groupDamagePaintRectangle (CompScreen *s,
+						   BoxPtr     pBox)
+{
+    REGION reg;
+
+    reg.rects    = &reg.extents;
+    reg.numRects = 1;
+
+    reg.extents = *pBox;
+
+    reg.extents.x1 -= 1;
+    reg.extents.y1 -= 1;
+    reg.extents.x2 += 1;
+    reg.extents.y2 += 1;
+
+    damageScreenRegion (s, &reg);
+}
+
 /*
  * groupPaintWindow
  *
@@ -1509,23 +1574,11 @@ groupPaintWindow (CompWindow              *w,
 
 		if (gw->resizeGeometry)
 		{
-			int   xOrigin, yOrigin;
-			float xScale, yScale;
-			float stretchWidth, stretchHeight;
-		    int   width, height;
+			int    xOrigin, yOrigin;
+			float  xScale, yScale;
+			BoxRec box;
 
-			width  = w->width  + w->input.left + w->input.right;
-			height = w->height + w->input.top  + w->input.bottom;
-
-			stretchWidth  = gw->resizeGeometry->width + 
-				            w->serverBorderWidth * 2 + 
-				            w->input.right + w->input.left;
-			stretchHeight = gw->resizeGeometry->height +
-				            w->serverBorderWidth * 2 + 
-				            w->input.bottom + w->input.top;
-
-			xScale = (width)  ? stretchWidth / (float) width  : 1.0f;
-			yScale = (height) ? stretchHeight / (float) height : 1.0f;
+			groupGetStretchRectangle (w, &box, &xScale, &yScale);
 
 			xOrigin = w->attrib.x - w->input.left;
 			yOrigin = w->attrib.y - w->input.top;

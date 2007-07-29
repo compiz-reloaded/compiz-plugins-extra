@@ -2040,6 +2040,14 @@ groupDamageWindowRect (CompWindow *w,
 		gw->windowState = WindowNormal;
 	}
 
+	if (gw->resizeGeometry)
+	{
+		BoxRec box;
+
+		groupGetStretchRectangle (w, &box, NULL, NULL);
+		groupDamagePaintRectangle (w->screen, &box);
+	}
+
 	if (gw->slot)
 	{
 		int    vx, vy;
