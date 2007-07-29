@@ -1718,28 +1718,7 @@ groupWindowResizeNotify (CompWindow *w,
 						 int        dheight)
 {
 	GROUP_SCREEN (w->screen);
-	GROUP_DISPLAY (w->screen->display);
 	GROUP_WINDOW (w);
-
-	if (gw->group && !gd->ignoreMode)
-	{
-		if (((gw->lastState & MAXIMIZE_STATE) != (w->state & MAXIMIZE_STATE)) &&
-			groupGetMaximizeUnmaximizeAll (w->screen))
-		{
-			int i;
-			for (i = 0; i < gw->group->nWins; i++)
-			{
-				CompWindow *cw = gw->group->windows[i];
-				if (!cw)
-					continue;
-
-				if (cw->id == w->id)
-					continue;
-
-				maximizeWindow (cw, w->state & MAXIMIZE_STATE);
-			}
-		}
-	}
 
 	if (gw->resizeGeometry)
 	{
@@ -2083,13 +2062,34 @@ Bool groupDamageWindowRect(CompWindow * w, Bool initial, BoxPtr rect)
 void
 groupWindowStateChangeNotify (CompWindow *w)
 {
-	 GROUP_SCREEN (w->screen);
-	 GROUP_WINDOW (w);
+	GROUP_DISPLAY (w->screen->display);
+	GROUP_SCREEN (w->screen);
+	GROUP_WINDOW (w);
 
-	 gw->lastState = w->lastState;
+	if (gw->group && !gd->ignoreMode)
+	{
+		if (((gw->lastState & MAXIMIZE_STATE) != (w->state & MAXIMIZE_STATE)) &&
+			groupGetMaximizeUnmaximizeAll (w->screen))
+		{
+			int i;
+			for (i = 0; i < gw->group->nWins; i++)
+			{
+				CompWindow *cw = gw->group->windows[i];
+				if (!cw)
+					continue;
 
-	 UNWRAP (gs, w->screen, windowStateChangeNotify);
-	 (*w->screen->windowStateChangeNotify) (w);
-	 WRAP (gs, w->screen, windowStateChangeNotify,
-		   groupWindowStateChangeNotify);
+				if (cw->id == w->id)
+					continue;
+
+				maximizeWindow (cw, w->state & MAXIMIZE_STATE);
+			}
+		}
+	}
+
+	gw->lastState = w->state;
+
+	UNWRAP (gs, w->screen, windowStateChangeNotify);
+	(*w->screen->windowStateChangeNotify) (w);
+	WRAP (gs, w->screen, windowStateChangeNotify,
+		  groupWindowStateChangeNotify);
 }
