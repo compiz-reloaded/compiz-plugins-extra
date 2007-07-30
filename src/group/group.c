@@ -185,8 +185,9 @@ groupUpdateWindowProperty (CompWindow *w)
 }
 
 static unsigned int
-groupUpdateResizeRectangle (CompWindow *w, 
-							XRectangle *masterGeometry)
+groupUpdateResizeRectangle (CompWindow *w,
+							XRectangle *masterGeometry,
+							Bool damage)
 {
 	XRectangle   newGeometry;
 	unsigned int mask = 0;
@@ -216,6 +217,15 @@ groupUpdateResizeRectangle (CompWindow *w,
 
 		newGeometry.width  = newWidth;
 		newGeometry.height = newHeight;
+	}
+
+	if (damage)
+	{
+		if (memcmp (&newGeometry, gw->resizeGeometry,
+					sizeof (newGeometry)) != 0)
+		{
+			addWindowDamage (w);
+		}
 	}
 
 	if (newGeometry.x != gw->resizeGeometry->x)
@@ -1484,7 +1494,7 @@ groupHandleEvent (CompDisplay *d,
 						gcw = GET_GROUP_WINDOW (cw, gs);
 						if (gcw->resizeGeometry)
 						{
-							if (groupUpdateResizeRectangle (cw, &rect))
+							if (groupUpdateResizeRectangle (cw, &rect, TRUE))
 								addWindowDamage (cw);
 						}
 					}
@@ -1954,7 +1964,7 @@ groupWindowUngrabNotify (CompWindow *w)
 						gw->resizeGeometry->width  = WIN_WIDTH (cw);
 						gw->resizeGeometry->height = WIN_HEIGHT (cw);
 
-						mask = groupUpdateResizeRectangle (cw, &rect);
+						mask = groupUpdateResizeRectangle (cw, &rect, FALSE);
 						if (mask)
 						{
 							XWindowChanges xwc;
