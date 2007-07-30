@@ -191,6 +191,7 @@ groupUpdateResizeRectangle (CompWindow *w,
 	XRectangle   newGeometry;
 	unsigned int mask = 0;
 	int          newWidth, newHeight;
+	int          widthDiff, heightDiff;
 
 	GROUP_WINDOW (w);
 	GROUP_DISPLAY (w->screen->display);
@@ -202,19 +203,17 @@ groupUpdateResizeRectangle (CompWindow *w,
 									  gd->resizeInfo->origGeometry.x);
 	newGeometry.y      = WIN_Y (w) + (masterGeometry->y -
 									  gd->resizeInfo->origGeometry.y);
-	newGeometry.width  = WIN_WIDTH (w) + (masterGeometry->width -
-										  gd->resizeInfo->origGeometry.width);
-	newGeometry.height = WIN_HEIGHT (w) + (masterGeometry->height -
-									 	   gd->resizeInfo->origGeometry.height);
 
-	constrainNewWindowSize (w, 
-							newGeometry.width, newGeometry.height,
-							&newWidth, &newHeight);
+	widthDiff = masterGeometry->width - gd->resizeInfo->origGeometry.width;
+	newGeometry.width = MAX (1, WIN_WIDTH (w) + widthDiff);
+	heightDiff = masterGeometry->height - gd->resizeInfo->origGeometry.height;
+	newGeometry.height = MAX (1, WIN_HEIGHT (w) + heightDiff);
 
-	if (constrainNewWindowSize (w, 
+	if (constrainNewWindowSize (w,
 								newGeometry.width, newGeometry.height,
 								&newWidth, &newHeight))
 	{
+
 		newGeometry.width  = newWidth;
 		newGeometry.height = newHeight;
 	}
