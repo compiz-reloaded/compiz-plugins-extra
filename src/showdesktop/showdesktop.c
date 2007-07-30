@@ -84,6 +84,7 @@ typedef struct _ShowdesktopScreen
     EnterShowDesktopModeProc       enterShowDesktopMode;
     LeaveShowDesktopModeProc       leaveShowDesktopMode;
     GetAllowedActionsForWindowProc getAllowedActionsForWindow;
+    FocusWindowProc                focusWindow;
 
     int state;
     int moreAdjust;
@@ -709,6 +710,28 @@ showdesktopLeaveShowDesktopMode (CompScreen *s,
     WRAP (ss, s, leaveShowDesktopMode, showdesktopLeaveShowDesktopMode);
 }
 
+static Bool
+showdesktopFocusWindow (CompWindow *w)
+{
+    CompScreen *s = w->screen;
+    Bool       ret;
+
+    SD_SCREEN (s);
+    SD_WINDOW (w);
+
+    if (w->inShowDesktopMode)
+	w->managed = sw->wasManaged;
+
+    UNWRAP (ss, s, focusWindow);
+    ret = (*s->focusWindow) (w);
+    WRAP (ss, s, focusWindow, showdesktopFocusWindow);
+
+    if (w->inShowDesktopMode)
+	w->managed = FALSE;
+
+    return ret;
+}
+
 /* display initialization */
 
 static Bool
@@ -776,6 +799,7 @@ showdesktopInitScreen (CompPlugin * p,
     WRAP (ss, s, paintWindow, showdesktopPaintWindow);
     WRAP (ss, s, enterShowDesktopMode, showdesktopEnterShowDesktopMode);
     WRAP (ss, s, leaveShowDesktopMode, showdesktopLeaveShowDesktopMode);
+    WRAP (ss, s, focusWindow, showdesktopFocusWindow);
     WRAP (ss, s, getAllowedActionsForWindow,
 	  showdesktopGetAllowedActionsForWindow);
 
@@ -797,6 +821,7 @@ showdesktopFiniScreen (CompPlugin * p,
     UNWRAP (ss, s, paintWindow);
     UNWRAP (ss, s, enterShowDesktopMode);
     UNWRAP (ss, s, leaveShowDesktopMode);
+    UNWRAP (ss, s, focusWindow);
     UNWRAP (ss, s, getAllowedActionsForWindow);
 
     freeWindowPrivateIndex (s, ss->windowPrivateIndex);
