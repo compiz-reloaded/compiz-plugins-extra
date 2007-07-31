@@ -1824,8 +1824,8 @@ groupTabGroup (CompWindow *main)
 
 		GROUP_WINDOW (cw);
 
-		if (gw->animateState & IS_ANIMATED)
-			moveWindow (cw, 
+		if (gw->animateState & (IS_ANIMATED | FINISHED_ANIMATION))
+			moveWindow (cw,
 						gw->destination.x - WIN_X (cw),
 						gw->destination.y - WIN_Y (cw),
 						FALSE, TRUE);
@@ -1901,8 +1901,8 @@ groupUntabGroup(GroupSelection *group)
 
 		gs->queued = TRUE;
 		groupSetWindowVisibility (cw, TRUE);
-		if (gw->animateState & IS_ANIMATED)
-			moveWindow (cw, 
+		if (gw->animateState & (IS_ANIMATED | FINISHED_ANIMATION))
+			moveWindow (cw,
 						gw->destination.x - WIN_X (cw),
 						gw->destination.y - WIN_Y (cw),
 						FALSE, TRUE);
