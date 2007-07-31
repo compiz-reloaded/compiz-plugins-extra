@@ -102,6 +102,7 @@ typedef struct _ShowdesktopWindow
 
     unsigned int notAllowedMask;
     unsigned int stateMask;
+    Bool         showdesktoped;
     Bool         wasManaged;
 
     float delta;
@@ -157,6 +158,8 @@ setSDWindowHints (CompWindow *w,
     unsigned int state = w->state;
 
     SD_WINDOW (w);
+
+    sw->showdesktoped = enterSDMode;
 
     if (enterSDMode)
     {
@@ -719,14 +722,14 @@ showdesktopFocusWindow (CompWindow *w)
     SD_SCREEN (s);
     SD_WINDOW (w);
 
-    if (w->inShowDesktopMode)
+    if (sw->showdesktoped)
 	w->managed = sw->wasManaged;
 
     UNWRAP (ss, s, focusWindow);
     ret = (*s->focusWindow) (w);
     WRAP (ss, s, focusWindow, showdesktopFocusWindow);
 
-    if (w->inShowDesktopMode)
+    if (sw->showdesktoped)
 	w->managed = FALSE;
 
     return ret;
@@ -842,6 +845,7 @@ showdesktopInitWindow (CompPlugin * p,
     if (!sw)
 	return FALSE;
 
+    sw->showdesktoped = FALSE;
     sw->adjust = FALSE;
     sw->delta  = 1.0f;
     sw->placer = NULL;
