@@ -437,6 +437,131 @@ scalefilterFilterTimeout (void *closure)
 }
 
 static void
+scalefilterHandleKeyPress (CompScreen *s,
+			   XKeyEvent  *event)
+{
+    ScaleFilterInfo *info;
+    Bool            needRelayout = FALSE;
+    Bool            dropKeyEvent = FALSE;
+    int             count, timeout;
+    char            buffer[10];
+    wchar_t         wbuffer[10];
+    KeySym          ks;
+
+    FILTER_DISPLAY (s->display);
+    FILTER_SCREEN (s);
+    SCALE_SCREEN (s);
+
+    info = fs->filterInfo;
+    memset (buffer, 0, sizeof (buffer));
+    memset (wbuffer, 0, sizeof (wbuffer));
+
+    if (fd->xic)
+    {
+	Status status;
+
+	XSetICFocus (fd->xic);
+	count = Xutf8LookupString (fd->xic, event, buffer, 9, &ks, &status);
+	XUnsetICFocus (fd->xic);
+    }
+    else
+    {
+	count = XLookupString (event, buffer, 9, &ks, NULL);
+    }
+
+    mbstowcs (wbuffer, buffer, 9);
+
+    if (ks == XK_Escape)
+    {
+	if (info)
+	{
+	    /* Escape key - drop current filter */
+	    ss->currentMatch = info->origMatch;
+	    scalefilterFiniFilterInfo (s, TRUE);
+	    needRelayout = TRUE;
+	    dropKeyEvent = TRUE;
+	}
+	else if (fs->matchApplied)
+	{
+	    /* remove filter applied previously
+	       if currently not in input mode */
+	    matchFini (&ss->match);
+	    matchInit (&ss->match);
+	    matchCopy (&ss->match, &fs->scaleMatch);
+	    matchUpdate (s->display, &ss->match);
+
+	    ss->currentMatch = &ss->match;
+	    fs->matchApplied = FALSE;
+	    needRelayout = TRUE;
+	    dropKeyEvent = TRUE;
+	}
+    }
+    else if (ks == XK_Return)
+    {
+	if (info)
+	{
+	    /* Return key - apply current filter persistently */
+	    matchFini (&ss->match);
+	    matchInit (&ss->match);
+	    matchCopy (&ss->match, &info->match);
+	    matchUpdate (s->display, &ss->match);
+
+	    ss->currentMatch = &ss->match;
+	    fs->matchApplied = TRUE;
+	    dropKeyEvent = TRUE;
+	    needRelayout = TRUE;
+	    scalefilterFiniFilterInfo (s, TRUE);
+	}
+    }
+    else if (ks == XK_BackSpace)
+    {
+	if (info && info->filterStringLength > 0)
+	{
+	    /* remove last character in string */
+	    info->filterString[--(info->filterStringLength)] = '\0';
+	    needRelayout = TRUE;
+	}
+    }
+    else if (count > 0)
+    {
+	if (!info)
+	{
+	    fs->filterInfo = info = malloc (sizeof (ScaleFilterInfo));
+	    scalefilterInitFilterInfo (s);
+	}
+	else if (info->timeoutHandle)
+	    compRemoveTimeout (info->timeoutHandle);
+
+	timeout = scalefilterGetTimeout (s);
+	if (timeout > 0)
+	    info->timeoutHandle = compAddTimeout (timeout,
+				     		  scalefilterFilterTimeout, s);
+
+	if (info->filterStringLength < MAX_FILTER_SIZE)
+	{
+	    info->filterString[info->filterStringLength++] = wbuffer[0];
+	    info->filterString[info->filterStringLength] = '\0';
+	    needRelayout = TRUE;
+	}
+    }
+
+    /* set the event type invalid if we
+       don't want other plugins see it */
+    if (dropKeyEvent)
+	event->type = LASTEvent+1;
+
+    if (needRelayout)
+    {
+	scalefilterRenderFilterText (s);
+
+	if (fs->filterInfo)
+	    scalefilterUpdateFilter (s, &fs->filterInfo->match);
+
+	scalefilterRelayout (s);
+    }
+}
+
+static void
 scalefilterHandleEvent (CompDisplay *d,
 	 		XEvent      *event)
 {
@@ -453,124 +578,8 @@ scalefilterHandleEvent (CompDisplay *d,
 	        SCALE_SCREEN (s);
 		if (ss->grabIndex)
 		{
-		    ScaleFilterInfo *info;
-		    XKeyEvent       *keyEvent = (XKeyEvent *) event;
-		    Bool            needRelayout = FALSE;
-		    Bool            dropKeyEvent = FALSE;
-		    int             count, timeout;
-		    char            buffer[10];
-		    wchar_t         wbuffer[10];
-		    KeySym          ks;
-
-		    FILTER_SCREEN (s);
-
-		    info = fs->filterInfo;
-		    memset (buffer, 0, sizeof (buffer));
-		    memset (wbuffer, 0, sizeof (wbuffer));
-
-		    if (fd->xic)
-		    {
-			Status status;
-
-			XSetICFocus (fd->xic);
-			count = Xutf8LookupString (fd->xic, keyEvent,
-						   buffer, 9, &ks, &status);
-			XUnsetICFocus (fd->xic);
-		    }
-		    else
-		    {
-			count = XLookupString (keyEvent, buffer, 9, &ks, NULL);
-		    }
-
-		    mbstowcs (wbuffer, buffer, 9);
-
-		    if (ks == XK_Escape)
-		    {
-			if (info)
-			{
-    			    /* Escape key - drop current filter */
-    			    ss->currentMatch = info->origMatch;
-    			    scalefilterFiniFilterInfo (s, TRUE);
-    			    needRelayout = TRUE;
-    			    dropKeyEvent = TRUE;
-			}
-			else if (fs->matchApplied)
-			{
-			    /* remove filter applied previously
-			       if currently not in input mode */
-    			    matchFini (&ss->match);
-    			    matchInit (&ss->match);
-    			    matchCopy (&ss->match, &fs->scaleMatch);
-			    matchUpdate (s->display, &ss->match);
-    			    ss->currentMatch = &ss->match;
-			    fs->matchApplied = FALSE;
-			    needRelayout = TRUE;
-			    dropKeyEvent = TRUE;
-			}
-		    }
-		    else if (ks == XK_Return)
-		    {
-			if (info)
-			{
-			    /* Return key - apply current filter persistently */
-			    matchFini (&ss->match);
-			    matchInit (&ss->match);
-			    matchCopy (&ss->match, &info->match);
-			    matchUpdate (s->display, &ss->match);
-			    ss->currentMatch = &ss->match;
-			    fs->matchApplied = TRUE;
-			    dropKeyEvent = TRUE;
-			    needRelayout = TRUE;
-			    scalefilterFiniFilterInfo (s, TRUE);
-			}
-		    }
-		    else if (ks == XK_BackSpace)
-		    {
-			if (info && info->filterStringLength > 0)
-			{
-			    /* remove last character in string */
-			    info->filterString[--(info->filterStringLength)] = '\0';
-			    needRelayout = TRUE;
-			}
-		    }
-		    else if (count > 0)
-		    {
-			if (!info)
-			{
-			    fs->filterInfo = info = malloc (sizeof (ScaleFilterInfo));
-			    scalefilterInitFilterInfo (s);
-			}
-			else if (info->timeoutHandle)
-			    compRemoveTimeout (info->timeoutHandle);
-
-			timeout = scalefilterGetTimeout (s);
-			if (timeout > 0)
-			    info->timeoutHandle =
-				compAddTimeout (timeout,
-				    		scalefilterFilterTimeout, s);
-
-			if (info->filterStringLength < MAX_FILTER_SIZE)
-			{
-    			    info->filterString[info->filterStringLength++] = wbuffer[0];
-    			    info->filterString[info->filterStringLength] = '\0';
-			    needRelayout = TRUE;
-			}
-		    }
-
-		    /* set the event type invalid if we
-		       don't want other plugins see it */
-		    if (dropKeyEvent)
-			event->type = LASTEvent+1;
-
-		    if (needRelayout)
-		    {
-			scalefilterRenderFilterText (s);
-
-			if (fs->filterInfo)
-			    scalefilterUpdateFilter (s, &fs->filterInfo->match);
-
-			scalefilterRelayout (s);
-		    }
+		    XKeyEvent *keyEvent = (XKeyEvent *) event;
+		    scalefilterHandleKeyPress (s, keyEvent);
 		}
 	    }
 	}
