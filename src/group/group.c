@@ -400,9 +400,6 @@ groupDeleteGroupWindow (CompWindow *w,
 			{
 				/* TODO: maybe add the IS_ANIMATED to the topTab
 				   for better constraining... */
-
-				CompWindow  *topTab = TOP_TAB (group);
-				GroupWindow *gtw = GET_GROUP_WINDOW (topTab, gs);
 				int         oldX = gw->orgPos.x;
 				int         oldY = gw->orgPos.y;
 
