@@ -1610,7 +1610,10 @@ groupPaintWindow (CompWindow              *w,
 				else
 				{
 					morphTarget = w;
-					morphBase   = gw->group->lastTopTab;
+					if (HAS_TOP_WIN (gw->group))
+						morphBase = TOP_TAB (gw->group);
+					else
+						morphBase = gw->group->lastTopTab;
 				}
 			}
 			else

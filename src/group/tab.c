@@ -1849,7 +1849,7 @@ groupTabGroup (CompWindow *main)
 		gw->orgPos.x = WIN_X (cw);
 		gw->orgPos.y = WIN_Y (cw);
 
-		gw->animateState |= IS_ANIMATED;
+		gw->animateState = IS_ANIMATED;
 		gw->xVelocity = gw->yVelocity = 0.0f;
 	}
 
@@ -1933,7 +1933,7 @@ groupUntabGroup(GroupSelection *group)
 		gw->mainTabOffset.x = oldX;
 		gw->mainTabOffset.y = oldY;
 
-		gw->animateState |= IS_ANIMATED;
+		gw->animateState = IS_ANIMATED;
 		gw->xVelocity = gw->yVelocity = 0.0f;
 	}
 

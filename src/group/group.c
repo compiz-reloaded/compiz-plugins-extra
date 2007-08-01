@@ -409,19 +409,20 @@ groupDeleteGroupWindow (CompWindow *w,
 				gw->orgPos.x = group->oldTopTabCenterX - WIN_WIDTH (w) / 2;
 				gw->orgPos.y = group->oldTopTabCenterY - WIN_HEIGHT (w) / 2;
 
-				gw->destination.x = group->oldTopTabCenterX -
-					                WIN_WIDTH (w)/2 + gw->mainTabOffset.x -
-					                gtw->mainTabOffset.x;
-				gw->destination.y = group->oldTopTabCenterY -
-					                WIN_HEIGHT (w)/2 + gw->mainTabOffset.y -
-									gtw->mainTabOffset.y;
+				gw->destination.x = gw->orgPos.x + gw->mainTabOffset.x;
+				gw->destination.y = gw->orgPos.y + gw->mainTabOffset.y;
 
 				gw->mainTabOffset.x = oldX;
 				gw->mainTabOffset.y = oldY;
 
-				gw->animateState |= IS_ANIMATED;
+				if (gw->tx || gw->ty)
+				{
+					gw->tx -= (gw->orgPos.x - oldX);
+					gw->ty -= (gw->orgPos.y - oldY);
+				}
 
-				gw->tx = gw->ty = gw->xVelocity = gw->yVelocity = 0.0f;
+				gw->animateState = IS_ANIMATED;
+				gw->xVelocity = gw->yVelocity = 0.0f;
 			}
 
 			/* Although when there is no top-tab, it will never really
@@ -617,6 +618,8 @@ groupAddWindowToGroup (CompWindow     *w,
 
 	if (group)
 	{
+		CompWindow *topTab = NULL;
+
 		group->windows = realloc (group->windows,
 								  sizeof (CompWindow *) * (group->nWins + 1));
 		group->windows[group->nWins] = w;
@@ -632,29 +635,39 @@ groupAddWindowToGroup (CompWindow     *w,
 			updateWindowOutputExtents (group->windows[0]);
 		}
 
-		if (group->tabBar && group->topTab)
+		if (group->tabBar)
 		{
-			CompWindow *topTab = TOP_TAB (group);
+			if (HAS_TOP_WIN (group))
+				topTab = TOP_TAB (group);
+			else if (HAS_PREV_TOP_WIN (group))
+			{
+				topTab = PREV_TOP_TAB (group);
+				group->topTab = group->prevTopTab;
+				group->prevTopTab = NULL;
+			}
 
-			if (!gw->slot)
-				groupCreateSlot (group, w);
+			if (topTab)
+			{
+				if (!gw->slot)
+					groupCreateSlot (group, w);
 
-			gw->destination.x = WIN_X (topTab) + (WIN_WIDTH (topTab) / 2) -
-				                (WIN_WIDTH (w) / 2);
-			gw->destination.y = WIN_Y (topTab) + (WIN_HEIGHT (topTab) / 2) -
-				                (WIN_HEIGHT (w) / 2);
-			gw->mainTabOffset.x = WIN_X (w) - gw->destination.x;
-			gw->mainTabOffset.y = WIN_Y (w) - gw->destination.y;
-			gw->orgPos.x = WIN_X (w);
-			gw->orgPos.y = WIN_Y (w);
+				gw->destination.x = WIN_X (topTab) + (WIN_WIDTH (topTab) / 2) -
+					                (WIN_WIDTH (w) / 2);
+				gw->destination.y = WIN_Y (topTab) + (WIN_HEIGHT (topTab) / 2) -
+				                    (WIN_HEIGHT (w) / 2);
+				gw->mainTabOffset.x = WIN_X (w) - gw->destination.x;
+				gw->mainTabOffset.y = WIN_Y (w) - gw->destination.y;
+				gw->orgPos.x = WIN_X (w);
+				gw->orgPos.y = WIN_Y (w);
 
-			gw->tx = gw->ty = gw->xVelocity = gw->yVelocity = 0.0f;
+				gw->xVelocity = gw->yVelocity = 0.0f;
 
-			gw->animateState = IS_ANIMATED;
+				gw->animateState = IS_ANIMATED;
 
-			groupStartTabbingAnimation (group, TRUE);
+				groupStartTabbingAnimation (group, TRUE);
 
-			addWindowDamage (w);
+				addWindowDamage (w);
+			}
 		}
 	}
 	else
