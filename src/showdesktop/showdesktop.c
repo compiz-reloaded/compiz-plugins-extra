@@ -137,7 +137,7 @@ static int displayPrivateIndex;
 
 /* non interfacing code, aka the logic of the plugin */
 static Bool
-isSDWin (CompWindow * w)
+isSDWin (CompWindow *w)
 {
     if (!(*w->screen->focusWindow) (w))
 	return FALSE;
@@ -153,7 +153,7 @@ isSDWin (CompWindow * w)
 
 static void
 setSDWindowHints (CompWindow *w,
-		  Bool enterSDMode)
+		  Bool       enterSDMode)
 {
     unsigned int state = w->state;
 
@@ -188,9 +188,11 @@ setSDWindowHints (CompWindow *w,
 }
 
 static void
-repositionSDPlacer (CompWindow * w, 
-		    int oldState)
+repositionSDPlacer (CompWindow *w, 
+		    int        oldState)
 {
+    CompScreen *s = w->screen;
+
     SD_WINDOW (w);
 
     if (!sw->placer)
@@ -200,71 +202,69 @@ repositionSDPlacer (CompWindow * w,
     {
 	sw->placer->onScreenX = w->attrib.x;
 	sw->placer->onScreenY = w->attrib.y;
-	sw->placer->origViewportX = w->screen->x;
-	sw->placer->origViewportY = w->screen->y;
+	sw->placer->origViewportX = s->x;
+	sw->placer->origViewportY = s->y;
     }
 
     switch (showdesktopGetDirection (w->screen))
     {
     case DirectionUp:
 	sw->placer->offScreenX = w->attrib.x;
-	sw->placer->offScreenY = w->screen->workArea.y - OFF_TOP (w) +
-	                         showdesktopGetWindowPartSize (w->screen);
+	sw->placer->offScreenY = s->workArea.y - OFF_TOP (w) +
+	                         showdesktopGetWindowPartSize (s);
 	break;
     case DirectionDown:
 	sw->placer->offScreenX = w->attrib.x;
-	sw->placer->offScreenY = w->screen->workArea.y +
-	                         w->screen->workArea.height + OFF_BOTTOM (w) -
-				 showdesktopGetWindowPartSize (w->screen);
+	sw->placer->offScreenY = s->workArea.y + 
+	                         s->workArea.height + OFF_BOTTOM (w) - 
+				 showdesktopGetWindowPartSize (s);
 	break;
     case DirectionLeft:
-	sw->placer->offScreenX = w->screen->workArea.x - OFF_LEFT (w) +
-	                         showdesktopGetWindowPartSize (w->screen);
+	sw->placer->offScreenX = s->workArea.x - OFF_LEFT (w) +
+	                         showdesktopGetWindowPartSize (s);
 	sw->placer->offScreenY = w->attrib.y;
 	break;
     case DirectionRight:
-	sw->placer->offScreenX = w->screen->workArea.x +
-	                         w->screen->workArea.width + OFF_RIGHT (w) -
-				 showdesktopGetWindowPartSize (w->screen);
+	sw->placer->offScreenX = s->workArea.x +
+	                         s->workArea.width + OFF_RIGHT (w) -
+				 showdesktopGetWindowPartSize (s);
 	sw->placer->offScreenY = w->attrib.y;
 	break;
     case DirectionUpDown:
 	sw->placer->offScreenX = w->attrib.x;
 	if (MOVE_UP (w))
-    	    sw->placer->offScreenY = w->screen->workArea.y - OFF_TOP (w) +
-		                     showdesktopGetWindowPartSize (w->screen);
+    	    sw->placer->offScreenY = s->workArea.y - OFF_TOP (w) +
+		                     showdesktopGetWindowPartSize (s);
 	else
-	    sw->placer->offScreenY = w->screen->workArea.y +
-		                     w->screen->workArea.height +
-				     OFF_BOTTOM (w) -
-				     showdesktopGetWindowPartSize (w->screen);
+	    sw->placer->offScreenY = s->workArea.y +
+		                     s->workArea.height + OFF_BOTTOM (w) -
+				     showdesktopGetWindowPartSize (s);
 	break;
     case DirectionLeftRight:
 	sw->placer->offScreenY = w->attrib.y;
 	if (MOVE_LEFT (w))
-    	    sw->placer->offScreenX = w->screen->workArea.x - OFF_LEFT (w) +
-		                     showdesktopGetWindowPartSize (w->screen);
+    	    sw->placer->offScreenX = s->workArea.x - OFF_LEFT (w) +
+		                     showdesktopGetWindowPartSize (s);
 	else
-	    sw->placer->offScreenX = w->screen->workArea.x +
-		                     w->screen->workArea.width + OFF_RIGHT (w) -
-				     showdesktopGetWindowPartSize (w->screen);
+	    sw->placer->offScreenX = s->workArea.x +
+		                     s->workArea.width + OFF_RIGHT (w) -
+				     showdesktopGetWindowPartSize (s);
 	break;
     case DirectionToCorners:
 	if (MOVE_LEFT (w))
-	    sw->placer->offScreenX = w->screen->workArea.x - OFF_LEFT (w) +
-		                     showdesktopGetWindowPartSize (w->screen);
+	    sw->placer->offScreenX = s->workArea.x - OFF_LEFT (w) +
+		                     showdesktopGetWindowPartSize (s);
 	else
-	    sw->placer->offScreenX = w->screen->workArea.x +
-		                     w->screen->workArea.width + OFF_RIGHT (w) -
-				     showdesktopGetWindowPartSize (w->screen);
+	    sw->placer->offScreenX = s->workArea.x +
+		                     s->workArea.width + OFF_RIGHT (w) -
+				     showdesktopGetWindowPartSize (s);
 	if (MOVE_UP(w))
-	    sw->placer->offScreenY = w->screen->workArea.y - OFF_TOP (w) +
-		                     showdesktopGetWindowPartSize (w->screen);
+	    sw->placer->offScreenY = s->workArea.y - OFF_TOP (w) +
+		                     showdesktopGetWindowPartSize (s);
 	else
-	    sw->placer->offScreenY = w->screen->workArea.y +
-		                     w->screen->workArea.height +
-				     OFF_BOTTOM (w) -
-		     		     showdesktopGetWindowPartSize (w->screen);
+	    sw->placer->offScreenY = s->workArea.y +
+		                     s->workArea.height + OFF_BOTTOM (w) -
+		     		     showdesktopGetWindowPartSize (s);
 	break;
     default:
 	break;
@@ -272,8 +272,8 @@ repositionSDPlacer (CompWindow * w,
 }
 
 static int
-prepareSDWindows (CompScreen * s,
-		  int oldState)
+prepareSDWindows (CompScreen *s,
+		  int        oldState)
 {
     CompWindow *w;
     int        count = 0;
@@ -288,6 +288,9 @@ prepareSDWindows (CompScreen * s,
 	if (!sw->placer)
 	    sw->placer = malloc (sizeof (ShowdesktopPlacer));
 
+	if (!sw->placer)
+	    continue;
+
 	repositionSDPlacer (w, oldState);
 
 	sw->placer->placed   = TRUE;
@@ -301,11 +304,11 @@ prepareSDWindows (CompScreen * s,
 	if (sw->ty)
 	    sw->ty -= (sw->placer->onScreenY - sw->placer->offScreenY);
 
-	moveWindow(w,
-		   sw->placer->offScreenX - w->attrib.x,
-		   sw->placer->offScreenY - w->attrib.y,
-		   TRUE, TRUE);
-	syncWindowPosition(w);
+	moveWindow (w,
+		    sw->placer->offScreenX - w->attrib.x,
+		    sw->placer->offScreenY - w->attrib.y,
+		    TRUE, TRUE);
+	syncWindowPosition (w);
 
 	count++;
     }
@@ -316,7 +319,7 @@ prepareSDWindows (CompScreen * s,
 /* plugin initialization */
 
 static Bool
-showdesktopInit (CompPlugin * p)
+showdesktopInit (CompPlugin *p)
 {
     displayPrivateIndex = allocateDisplayPrivateIndex ();
 
@@ -328,14 +331,14 @@ showdesktopInit (CompPlugin * p)
 
 /* plugin finalization */
 static void
-showdesktopFini (CompPlugin * p)
+showdesktopFini (CompPlugin *p)
 {
     freeDisplayPrivateIndex (displayPrivateIndex);
 }
 
 /* adjust velocity for each animation step (adapted from the scale plugin) */
 static int
-adjustSDVelocity (CompWindow * w)
+adjustSDVelocity (CompWindow *w)
 {
     float dx, dy, adjust, amount;
     float x1, y1;
@@ -398,7 +401,8 @@ adjustSDVelocity (CompWindow * w)
 /* this function gets called periodically (about every 15ms on this machine),
  * animation takes place here */
 static void
-showdesktopPreparePaintScreen (CompScreen * s, int msSinceLastPaint)
+showdesktopPreparePaintScreen (CompScreen *s,
+			       int        msSinceLastPaint)
 {
     SD_SCREEN (s);
 
@@ -444,12 +448,12 @@ showdesktopPreparePaintScreen (CompScreen * s, int msSinceLastPaint)
 }
 
 static Bool
-showdesktopPaintOutput(CompScreen              *s,
-	    	       const ScreenPaintAttrib *sAttrib,
-		       const CompTransform     *transform,
-		       Region                  region,
-		       CompOutput              *output,
-		       unsigned int            mask)
+showdesktopPaintOutput (CompScreen              *s,
+			const ScreenPaintAttrib *sAttrib,
+			const CompTransform     *transform,
+			Region                  region,
+			CompOutput              *output,
+			unsigned int            mask)
 {
     Bool status;
 
@@ -471,7 +475,7 @@ showdesktopPaintOutput(CompScreen              *s,
 /* this one gets called after the one above and periodically,
  * here the plugin checks if windows reached the end */
 static void
-showdesktopDonePaintScreen(CompScreen * s)
+showdesktopDonePaintScreen (CompScreen *s)
 {
     SD_SCREEN (s);
 
@@ -530,9 +534,10 @@ showdesktopPaintWindow (CompWindow              *w,
 			Region                  region,
 			unsigned int            mask)
 {
-    Bool status;
+    CompScreen *s = w->screen;
+    Bool       status;
 
-    SD_SCREEN (w->screen);
+    SD_SCREEN (s);
 
     if ((ss->state == SD_STATE_ACTIVATING) ||
 	(ss->state == SD_STATE_DEACTIVATING))
@@ -563,10 +568,9 @@ showdesktopPaintWindow (CompWindow              *w,
 			     sw->ty + offsetY - w->attrib.y, 0.0f);
 	}
 
-	UNWRAP (ss, w->screen, paintWindow);
-	status = (*w->screen->paintWindow) (w, &wAttrib, &wTransform,
-					    region, mask);
-	WRAP (ss, w->screen, paintWindow, showdesktopPaintWindow);
+	UNWRAP (ss, s, paintWindow);
+	status = (*s->paintWindow) (w, &wAttrib, &wTransform, region, mask);
+	WRAP (ss, s, paintWindow, showdesktopPaintWindow);
     }
     else if (ss->state == SD_STATE_ON)
     {
@@ -574,25 +578,25 @@ showdesktopPaintWindow (CompWindow              *w,
 
 	if (w->inShowDesktopMode)
 	    wAttrib.opacity = wAttrib.opacity *
-		              showdesktopGetWindowOpacity (w->screen);
+		              showdesktopGetWindowOpacity (s);
 
-	UNWRAP (ss, w->screen, paintWindow);
-	status = (*w->screen->paintWindow) (w, &wAttrib, transform, 
-					    region, mask);
-	WRAP (ss, w->screen, paintWindow, showdesktopPaintWindow);
+	UNWRAP (ss, s, paintWindow);
+	status = (*s->paintWindow) (w, &wAttrib, transform, region, mask);
+	WRAP (ss, s, paintWindow, showdesktopPaintWindow);
     }
     else
     {
-	UNWRAP (ss, w->screen, paintWindow);
-	status = (*w->screen->paintWindow) (w, attrib, transform, region, mask);
-	WRAP (ss, w->screen, paintWindow, showdesktopPaintWindow);
+	UNWRAP (ss, s, paintWindow);
+	status = (*s->paintWindow) (w, attrib, transform, region, mask);
+	WRAP (ss, s, paintWindow, showdesktopPaintWindow);
     }
 
     return status;
 }
 
 static void
-showdesktopHandleEvent (CompDisplay *d, XEvent *event)
+showdesktopHandleEvent (CompDisplay *d,
+			XEvent      *event)
 {
     SD_DISPLAY (d);
 
@@ -617,28 +621,29 @@ showdesktopHandleEvent (CompDisplay *d, XEvent *event)
     }
 
     UNWRAP (sd, d, handleEvent);
-    (*d->handleEvent)(d, event);
+    (*d->handleEvent) (d, event);
     WRAP (sd, d, handleEvent, showdesktopHandleEvent);
 }
 
 static unsigned int
 showdesktopGetAllowedActionsForWindow (CompWindow *w)
 {
+    CompScreen   *s = w->screen;
     unsigned int actions;
 
-    SD_SCREEN (w->screen);
+    SD_SCREEN (s);
     SD_WINDOW (w);
 
-    UNWRAP (ss, w->screen, getAllowedActionsForWindow);
-    actions = (*w->screen->getAllowedActionsForWindow) (w);
-    WRAP (ss, w->screen, getAllowedActionsForWindow,
+    UNWRAP (ss, s, getAllowedActionsForWindow);
+    actions = (*s->getAllowedActionsForWindow) (w);
+    WRAP (ss, s, getAllowedActionsForWindow,
 	  showdesktopGetAllowedActionsForWindow);
 
     return (actions & ~sw->notAllowedMask);
 }
 
 static void
-showdesktopEnterShowDesktopMode(CompScreen *s)
+showdesktopEnterShowDesktopMode (CompScreen *s)
 {
     int count = 0;
 
@@ -683,9 +688,7 @@ showdesktopLeaveShowDesktopMode (CompScreen *s,
 		sw->adjust         = TRUE;
 		sw->placer->placed = FALSE;
 
-		/* adjust onscreen position to
-		   handle viewport changes
-		   */
+		/* adjust onscreen position to handle viewport changes  */
 		sw->tx += (sw->placer->onScreenX - sw->placer->offScreenX);
 		sw->ty += (sw->placer->onScreenY - sw->placer->offScreenY);
 
@@ -694,11 +697,11 @@ showdesktopLeaveShowDesktopMode (CompScreen *s,
 		sw->placer->onScreenY += (sw->placer->origViewportY -
 					  cw->screen->y) * cw->screen->height;
 
-		moveWindow(cw,
-			   sw->placer->onScreenX - cw->attrib.x,
-   			   sw->placer->onScreenY - cw->attrib.y, 
-			   TRUE, TRUE);
-		syncWindowPosition(cw);
+		moveWindow (cw,
+			    sw->placer->onScreenX - cw->attrib.x,
+			    sw->placer->onScreenY - cw->attrib.y, 
+			    TRUE, TRUE);
+		syncWindowPosition (cw);
 		
 		setSDWindowHints (cw, FALSE);
 		cw->inShowDesktopMode = FALSE;
@@ -738,8 +741,8 @@ showdesktopFocusWindow (CompWindow *w)
 /* display initialization */
 
 static Bool
-showdesktopInitDisplay (CompPlugin * p,
-			CompDisplay * d)
+showdesktopInitDisplay (CompPlugin  *p,
+			CompDisplay *d)
 {
     ShowdesktopDisplay *sd;
 
@@ -762,12 +765,12 @@ showdesktopInitDisplay (CompPlugin * p,
 }
 
 static void
-showdesktopFiniDisplay (CompPlugin * p,
-			CompDisplay * d)
+showdesktopFiniDisplay (CompPlugin  *p,
+			CompDisplay *d)
 {
     SD_DISPLAY (d);
 
-    freeScreenPrivateIndex(d, sd->screenPrivateIndex);
+    freeScreenPrivateIndex (d, sd->screenPrivateIndex);
 
     UNWRAP (sd, d, handleEvent);
 
@@ -775,8 +778,8 @@ showdesktopFiniDisplay (CompPlugin * p,
 }
 
 static Bool
-showdesktopInitScreen (CompPlugin * p,
-		       CompScreen * s)
+showdesktopInitScreen (CompPlugin *p,
+		       CompScreen *s)
 {
     ShowdesktopScreen *ss;
 
@@ -813,8 +816,8 @@ showdesktopInitScreen (CompPlugin * p,
 
 /* Free screen resources */
 static void
-showdesktopFiniScreen (CompPlugin * p,
-		       CompScreen * s)
+showdesktopFiniScreen (CompPlugin *p,
+		       CompScreen *s)
 {
     SD_SCREEN (s);
 
@@ -834,8 +837,8 @@ showdesktopFiniScreen (CompPlugin * p,
 
 /* window init */
 static Bool
-showdesktopInitWindow (CompPlugin * p,
-		       CompWindow * w)
+showdesktopInitWindow (CompPlugin *p,
+		       CompWindow *w)
 {
     ShowdesktopWindow *sw;
 
@@ -863,8 +866,8 @@ showdesktopInitWindow (CompPlugin * p,
 
 /* Free window resources */
 static void
-showdesktopFiniWindow (CompPlugin * p,
-		       CompWindow * w)
+showdesktopFiniWindow (CompPlugin *p,
+		       CompWindow *w)
 {
     SD_WINDOW (w);
 
@@ -873,7 +876,7 @@ showdesktopFiniWindow (CompPlugin * p,
 
 static int
 showdesktopGetVersion (CompPlugin *plugin,
-		       int version)
+		       int        version)
 {
     return ABIVERSION;
 }
