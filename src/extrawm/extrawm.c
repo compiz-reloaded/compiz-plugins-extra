@@ -25,193 +25,190 @@
 #include <compiz.h>
 #include "extrawm_options.h"
 
-
 static Bool
-activateWin (CompDisplay * d,
-             CompAction * action,
+activateWin (CompDisplay     *d,
+             CompAction      *action,
              CompActionState state, 
-	     CompOption * option, 
-	     int nOption)
+	     CompOption      *option, 
+	     int             nOption)
 {
-        CompWindow *w;
-        Window xid;
+    CompWindow *w;
+    Window     xid;
 
-        xid = getIntOptionNamed(option, nOption, "window", 0);
+    xid = getIntOptionNamed (option, nOption, "window", 0);
+    w = findWindowAtDisplay (d, xid);
+    if (w)
+  	sendWindowActivationRequest (w->screen, w->id);
 
-        w = findWindowAtDisplay(d, xid);
-        if (w)
-                sendWindowActivationRequest(w->screen, w->id);
-
-        return TRUE;
+    return TRUE;
 }
 
 static void 
-fullscreenWindow (CompWindow * w, 
-		  int state)
+fullscreenWindow (CompWindow *w, 
+		  int        state)
 {
-        unsigned int newState = w->state;
+    unsigned int newState = w->state;
 	
-	if (w->attrib.override_redirect)
-		return;
+    if (w->attrib.override_redirect)
+	return;
 
-	/* It would be a bug, to put a shaded window to fullscreen. */
-	if (w->shaded)
-		return;
+    /* It would be a bug, to put a shaded window to fullscreen. */
+    if (w->shaded)
+	return;
 
-	state = constrainWindowState(state, w->actions);
-	state &= CompWindowStateFullscreenMask;
+    state = constrainWindowState (state, w->actions);
+    state &= CompWindowStateFullscreenMask;
 
-	if (state == (w->state & CompWindowStateFullscreenMask))
-		return;
+    if (state == (w->state & CompWindowStateFullscreenMask))
+	return;
        
-	newState &= ~CompWindowStateFullscreenMask;
-	newState |= state;
+    newState &= ~CompWindowStateFullscreenMask;
+    newState |= state;
 
-	changeWindowState(w, newState);
-	recalcWindowType(w);
-        recalcWindowActions(w);
-	updateWindowAttributes(w, CompStackingUpdateModeNormal);
+    changeWindowState (w, newState);
+    recalcWindowType (w);
+    recalcWindowActions (w);
+    updateWindowAttributes (w, CompStackingUpdateModeNormal);
 }
 
 static Bool
-toggleFullscreen (CompDisplay * d,
-		  CompAction * action,
+toggleFullscreen (CompDisplay     *d,
+		  CompAction      *action,
                   CompActionState state, 
-		  CompOption * option, 
-		  int nOption)
+		  CompOption      *option, 
+		  int             nOption)
 {
-        CompWindow *w;
-        Window xid;
+    CompWindow *w;
+    Window     xid;
 
-        xid = getIntOptionNamed(option, nOption, "window", 0);
+    xid = getIntOptionNamed (option, nOption, "window", 0);
 
-        w = findTopLevelWindowAtDisplay(d, xid);
-        if (w && (w->actions & CompWindowActionFullscreenMask))
-                fullscreenWindow(w, w->state ^ CompWindowStateFullscreenMask);
+    w = findTopLevelWindowAtDisplay (d, xid);
+    if (w && (w->actions & CompWindowActionFullscreenMask))
+	fullscreenWindow (w, w->state ^ CompWindowStateFullscreenMask);
 
-        return TRUE;
+    return TRUE;
 }
 
 static Bool
-toggleRedirect (CompDisplay * d,
-		CompAction * action,
+toggleRedirect (CompDisplay     *d,
+		CompAction      *action,
                 CompActionState state, 
-		CompOption * option, 
-		int nOption)
+		CompOption      *option, 
+		int             nOption)
 {
-        CompWindow *w;
-        Window xid;
+    CompWindow *w;
+    Window     xid;
 
-        xid = getIntOptionNamed(option, nOption, "window", 0);
+    xid = getIntOptionNamed (option, nOption, "window", 0);
+    w = findTopLevelWindowAtDisplay (d, xid);
+    if (w) 
+    {
+	if (w->redirected)
+	    unredirectWindow (w);
+	else
+	    redirectWindow (w);
+    }
 
-        w = findTopLevelWindowAtDisplay(d, xid);
-        if (w) 
-	{
-                if (w->redirected)
-                        unredirectWindow(w);
-                else
-                        redirectWindow(w);
-        }
-
-        return TRUE;
+    return TRUE;
 }
 
 static Bool
-toggleAlwaysOnTop (CompDisplay * d,
-	           CompAction * action,
+toggleAlwaysOnTop (CompDisplay     *d,
+	           CompAction      *action,
 	           CompActionState state, 
-		   CompOption * option, 
-		   int nOption)
+		   CompOption      *option, 
+		   int             nOption)
 {
-        CompWindow *w;
-        Window xid;
+    CompWindow *w;
+    Window     xid;
 
-        xid = getIntOptionNamed(option, nOption, "window", 0);
+    xid = getIntOptionNamed (option, nOption, "window", 0);
+    w = findTopLevelWindowAtDisplay (d, xid);
+    if (w)
+    {
+	unsigned int newState;
+	newState = w->state ^ CompWindowStateAboveMask;
+	changeWindowState (w, newState);
+	updateWindowAttributes (w, CompStackingUpdateModeNormal);
+    }
 
-        w = findTopLevelWindowAtDisplay(d, xid);
-        if (w)
-        {
-		unsigned int newState;
-                newState = w->state ^ CompWindowStateAboveMask;
-		changeWindowState (w, newState);
-		updateWindowAttributes (w, CompStackingUpdateModeNormal);
-        }
-
-        return TRUE;
+    return TRUE;
 }
 
 static Bool
-toggleSticky (CompDisplay * d,
-              CompAction * action,
+toggleSticky (CompDisplay     *d,
+              CompAction      *action,
               CompActionState state, 
-	      CompOption * option, 
-	      int nOption)
+	      CompOption      *option, 
+	      int             nOption)
 {
-        CompWindow *w;
-        Window xid;
+    CompWindow *w;
+    Window     xid;
 
-        xid = getIntOptionNamed(option, nOption, "window", 0);
+    xid = getIntOptionNamed (option, nOption, "window", 0);
+    w = findTopLevelWindowAtDisplay (d, xid);
+    if (w && (w->actions & CompWindowActionStickMask))
+    {
+	unsigned int newState;
+	newState = w->state ^ CompWindowStateStickyMask;
+	changeWindowState (w, newState);
+    }
 
-        w = findTopLevelWindowAtDisplay(d, xid);
-        if (w && (w->actions & CompWindowActionStickMask))
-        {
-                unsigned int newState;
-		newState = w->state ^ CompWindowStateStickyMask;
-                changeWindowState(w, newState);
-        }
-
-        return TRUE;
+    return TRUE;
 }
 
 static Bool 
-extraWMInit(CompPlugin * p)
+extraWMInit (CompPlugin *p)
 {
-	return TRUE;
+    return TRUE;
 }
 
 static void 
-extraWMFini(CompPlugin * p)
+extraWMFini (CompPlugin *p)
 {
 }
 
 static Bool
-extraWMInitDisplay (CompPlugin *p,
+extraWMInitDisplay (CompPlugin  *p,
 		    CompDisplay *d)
 {
-	extrawmSetToggleRedirectInitiate (d, toggleRedirect);
-	extrawmSetToggleAlwaysOnTopInitiate (d, toggleAlwaysOnTop);
-	extrawmSetToggleStickyInitiate (d, toggleSticky);
-	extrawmSetToggleFullscreenInitiate (d, toggleFullscreen);
-	extrawmSetActivateInitiate (d, activateWin);
+    extrawmSetToggleRedirectInitiate (d, toggleRedirect);
+    extrawmSetToggleAlwaysOnTopInitiate (d, toggleAlwaysOnTop);
+    extrawmSetToggleStickyInitiate (d, toggleSticky);
+    extrawmSetToggleFullscreenInitiate (d, toggleFullscreen);
+    extrawmSetActivateInitiate (d, activateWin);
 
-	return TRUE;
+    return TRUE;
 }
 
-static int extraWMGetVersion (CompPlugin * p, 
-			      int version)
+static int
+extraWMGetVersion (CompPlugin *p, 
+     		   int        version)
 {
-	return ABIVERSION;
+    return ABIVERSION;
 }
 
 CompPluginVTable extraWMVTable = {
-	"extrawm",
-	extraWMGetVersion,
-	0,
-	extraWMInit,
-	extraWMFini,
-	extraWMInitDisplay,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0
+    "extrawm",
+    extraWMGetVersion,
+    0,
+    extraWMInit,
+    extraWMFini,
+    extraWMInitDisplay,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
 };
 
-CompPluginVTable *getCompPluginInfo(void)
+CompPluginVTable*
+getCompPluginInfo (void)
 {
-	return &extraWMVTable;
+    return &extraWMVTable;
 }
