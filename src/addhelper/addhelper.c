@@ -134,7 +134,7 @@ static Bool addhelperPaintWindow(CompWindow *w, const WindowPaintAttrib *attrib,
 		// applies the lowest value
 		wAttrib.opacity = MIN(attrib->opacity, ad->opacity);
 		wAttrib.brightness = MIN(attrib->brightness, ad->brightness);
-		wAttrib.saturation = MIN(attrib->saturation, ad->brightness);
+		wAttrib.saturation = MIN(attrib->saturation, ad->saturation);
 
 		// continue painting with the modified attribute
 		UNWRAP(as, w->screen, paintWindow);
