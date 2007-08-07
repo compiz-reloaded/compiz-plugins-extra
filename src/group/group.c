@@ -1243,6 +1243,8 @@ groupHandleButtonReleaseEvent (CompDisplay *d,
 				groupInsertTabBarSlotBefore (group->tabBar,
 											 tmpDraggedSlot, slot);
 
+			groupDamageTabBarRegion (group);
+
 			/* Hide tab-bars. */
 			for (tmpGroup = gs->groups; tmpGroup; tmpGroup = tmpGroup->next)
 			{

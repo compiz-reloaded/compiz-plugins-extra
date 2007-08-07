@@ -730,7 +730,6 @@ groupPaintTabBar (GroupSelection          *group,
 
 				/* handle the repaint of the background */
 				newWidth = bar->region->extents.x2 - bar->region->extents.x1;
-
 				if (layer && (newWidth > layer->texWidth))
 					newWidth = layer->texWidth;
 

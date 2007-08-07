@@ -2377,6 +2377,9 @@ groupResizeTabBarRegion (GroupSelection *group,
 									groupGetThumbSize (group->screen),
 									box->height);
 		groupRenderTabBarBackground (group);
+
+		/* invalidate old width */
+		group->tabBar->oldWidth = 0;
 	}
 
 	EMPTY_REGION (group->tabBar->region);
