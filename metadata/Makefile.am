@@ -3,6 +3,7 @@ xml_in_files = 	         \
 	addhelper.xml.in \
 	bench.xml.in \
 	crashhandler.xml.in \
+	cubecaps.xml.in \
 	cubereflex.xml.in \
 	extrawm.xml.in \
 	fadedesktop.xml.in \

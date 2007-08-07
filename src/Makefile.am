@@ -2,6 +2,7 @@
 SUBDIRS = addhelper \
 	  bench \
 	  crashhandler \
+	  cubecaps \
 	  cubereflex \
 	  extrawm \
 	  fadedesktop \
