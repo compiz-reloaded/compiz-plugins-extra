@@ -215,10 +215,13 @@ cubecapsPaintCap (CompScreen	    *s,
 		  CubeCap	    *capOutside,
 		  CubeCap	    *capInside,
 		  unsigned short    *colorOutside,
-		  unsigned short    *colorInside)
+		  unsigned short    *colorInside,
+		  Bool		    clamp_to_border_outside,
+		  Bool		    clamp_to_border_inside)
 {
-    CubeCap *cap;
-    unsigned short opacity;
+    CubeCap	    *cap;
+    unsigned short  opacity;
+    Bool	    clamp_to_border;
 
     CUBE_SCREEN(s);
 
@@ -227,6 +230,7 @@ cubecapsPaintCap (CompScreen	    *s,
     if (cs->invert == 1)
     {
 	cap = capOutside;
+	clamp_to_border = clamp_to_border_outside;
 	if (opacity == OPAQUE)
 	    opacity = colorOutside[3];
 	glColor4us (colorOutside[0],
@@ -237,6 +241,7 @@ cubecapsPaintCap (CompScreen	    *s,
     else if (cs->invert != 1)
     {
 	cap = capInside;
+	clamp_to_border = clamp_to_border_inside;
 	if (opacity == OPAQUE)
 	    opacity = colorOutside[4];
 	glColor4us (colorInside[0],
@@ -278,12 +283,19 @@ cubecapsPaintCap (CompScreen	    *s,
 	/* Use CLAMP_TO_BORDER if available to avoid weird looking clamping 
 	 * of non-scaled images (it also improves scaled images a bit but 
 	 * that's much less obvious) */
-	if (s->textureBorderClamp)
+	if (clamp_to_border && s->textureBorderClamp)
 	{
 	    glTexParameteri (cap->texture.target, GL_TEXTURE_WRAP_S,
 			     GL_CLAMP_TO_BORDER);
 	    glTexParameteri (cap->texture.target, GL_TEXTURE_WRAP_T,
 			     GL_CLAMP_TO_BORDER);
+	}
+	else
+	{
+	    glTexParameteri (cap->texture.target, GL_TEXTURE_WRAP_S,
+			     GL_CLAMP_TO_EDGE);
+	    glTexParameteri (cap->texture.target, GL_TEXTURE_WRAP_T,
+			     GL_CLAMP_TO_EDGE);
 	}
 
 	if (s->hsize == 4)
@@ -397,7 +409,9 @@ cubecapsPaintTop (CompScreen		  *s,
 
     /* Actually paint the cap */
     cubecapsPaintCap (s, 0, &ccs->topCap, &ccs->bottomCap,
-		      cubecapsGetTopColor (s), cubecapsGetBottomColor (s));
+		      cubecapsGetTopColor (s), cubecapsGetBottomColor (s),
+		      cubecapsGetClampTopToBorder (s),
+		      cubecapsGetClampBottomToBorder (s));
 
     glPopMatrix ();
 
@@ -448,7 +462,9 @@ cubecapsPaintBottom (CompScreen		     *s,
 
     /* Actually paint the cap */
     cubecapsPaintCap (s, cs->nVertices >> 1, &ccs->bottomCap, &ccs->topCap,
-		      cubecapsGetBottomColor (s), cubecapsGetTopColor (s));
+		      cubecapsGetBottomColor (s), cubecapsGetTopColor (s),
+		      cubecapsGetClampBottomToBorder (s),
+		      cubecapsGetClampTopToBorder (s));
 
     glPopMatrix ();
 
