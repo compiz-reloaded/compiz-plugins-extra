@@ -8,6 +8,9 @@
 	<deps>
 	    <relation type="after">
 		    <plugin>cube</plugin>
+		    <plugin>svg</plugin>
+		    <plugin>png</plugin>
+		    <plugin>imgjpeg</plugin>
 	    </relation>
 	    <requirement>
 		    <plugin>cube</plugin>
