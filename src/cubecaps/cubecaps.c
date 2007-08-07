@@ -707,6 +707,9 @@ cubecapsInitScreen (CompPlugin *p,
     cubecapsInitCap (s, &ccs->topCap);
     cubecapsInitCap (s, &ccs->bottomCap);
 
+    ccs->topCap.files = cubecapsGetTopImages (s);
+    ccs->bottomCap.files = cubecapsGetBottomImages (s);
+
     cubecapsSetTopImagesNotify (s, cubecapsTopImagesChanged);
     cubecapsSetBottomImagesNotify (s, cubecapsBottomImagesChanged);
 
@@ -717,6 +720,9 @@ cubecapsInitScreen (CompPlugin *p,
     WRAP (ccs, cs, paintBottom, cubecapsPaintBottom);
 
     s->privates[ccd->screenPrivateIndex].ptr = ccs;
+
+    cubecapsChangeCap (s, &ccs->topCap, 0);
+    cubecapsChangeCap (s, &ccs->bottomCap, 0);
 
     return TRUE;
 }
