@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+<compiz>
+    <plugin name="cubecaps" useBcop="true">
+	<_short>Cube Caps</_short>
+	<_long>Render images on top and bottom of the cube</_long>
+	<category>Utility</category>
+	<feature>cubecaps</feature>
+	<deps>
+	    <relation type="after">
+		    <plugin>cube</plugin>
+	    </relation>
+	    <requirement>
+		    <plugin>cube</plugin>
+	    </requirement>
+	</deps>
+	<display>
+	    <option name="top_next" type="action">
+		<_short>Next top image</_short>
+		<_long>Advance to next image for top face of the cube</_long>
+		<allowed key="true" button="true" />
+		<passive_grab>false</passive_grab>
+		<default>
+		    <key>space</key>
+		</default>
+	    </option>
+	    <option name="top_prev" type="action">
+		<_short>Prev top image</_short>
+		<_long>Go back to previous image for top face of the cube</_long>
+		<allowed key="true" button="true" />
+		<passive_grab>false</passive_grab>
+		<default>
+		    <key>Backspace</key>
+		</default>
+	    </option>
+	    <option name="bottom_next" type="action">
+		<_short>Next bottom image</_short>
+		<_long>Advance to next image for bottom face of the cube</_long>
+		<allowed key="true" button="true" />
+		<passive_grab>false</passive_grab>
+		<default />
+	    </option>
+	    <option name="bottom_prev" type="action">
+		<_short>Prev bottom image</_short>
+		<_long>Go back to previous image for bottom face of the cube</_long>
+		<allowed key="true" button="true" />
+		<passive_grab>false</passive_grab>
+		<default />
+	    </option>
+	</display>
+	<screen>
+	    <option name="draw_top" type="bool">
+		<_short>Draw top face</_short>
+		<_long>Draw top face of the cube</_long>
+		<default>true</default>
+	    </option>
+	    <option name="draw_bottom" type="bool">
+		<_short>Draw bottom face</_short>
+		<_long>Draw bottom face of the cube</_long>
+		<default>true</default>
+	    </option>
+	    <option name="adjust_top" type="bool">
+		<_short>Adjust top image</_short>
+		<_long>Adjust top face image to rotation</_long>
+		<default>false</default>
+	    </option>
+	    <option name="adjust_bottom" type="bool">
+		<_short>Adjust bottom image</_short>
+		<_long>Adjust bottom face image to rotation</_long>
+		<default>false</default>
+	    </option>
+	    <option name="scale_top_image" type="bool">
+		<_short>Scale top image</_short>
+		<_long>Scale image to cover top face of cube</_long>
+		<default>false</default>
+	    </option>
+	    <option name="scale_bottom_image" type="bool">
+		<_short>Scale bottom image</_short>
+		<_long>Scale image to cover bottom face of cube</_long>
+		<default>false</default>
+	    </option>
+	    <option name="top_color" type="color">
+		<_short>Cube Top Color</_short>
+		<_long>Color of top face of the cube</_long>
+		<default>
+		    <red>0xfefe</red>
+		    <green>0xffff</green>
+		    <blue>0xc7c7</blue>
+		</default>
+	    </option>
+	    <option name="bottom_color" type="color">
+		<_short>Cube Bottom Color</_short>
+		<_long>Color of bottom face of the cube</_long>
+		<default>
+		    <red>0xfefe</red>
+		    <green>0xffff</green>
+		    <blue>0xc7c7</blue>
+		</default>
+	    </option>
+	    <option name="top_images" type="list">
+		<_short>Top image files</_short>
+		<_long>List of PNG and SVG files that should be rendered on top face of cube</_long>
+		<type>string</type>
+		<default>freedesktop</default>
+		<hints>file;</hints>
+	    </option>
+	    <option name="bottom_images" type="list">
+		<_short>Bottom image files</_short>
+		<_long>List of PNG and SVG files that should be rendered on bottom face of cube</_long>
+		<type>string</type>
+		<default>freedesktop</default>
+		<hints>file;</hints>
+	    </option>
+	</screen>
+    </plugin>
+</compiz>
