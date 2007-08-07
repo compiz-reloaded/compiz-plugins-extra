@@ -218,24 +218,31 @@ cubecapsPaintCap (CompScreen	    *s,
 		  unsigned short    *colorInside)
 {
     CubeCap *cap;
+    unsigned short opacity;
 
     CUBE_SCREEN(s);
+
+    opacity = cs->desktopOpacity;
 
     if (cs->invert == 1)
     {
 	cap = capOutside;
+	if (opacity == OPAQUE)
+	    opacity = colorOutside[3];
 	glColor4us (colorOutside[0],
 		    colorOutside[1],
 		    colorOutside[2],
-		    cs->desktopOpacity);
+		    opacity);
     }
     else if (cs->invert != 1)
     {
 	cap = capInside;
+	if (opacity == OPAQUE)
+	    opacity = colorOutside[4];
 	glColor4us (colorInside[0],
 		    colorInside[1],
 		    colorInside[2],
-		    cs->desktopOpacity);
+		    opacity);
     }
 
     glTranslatef (cs->outputXOffset, -cs->outputYOffset, 0.0f);
@@ -250,7 +257,7 @@ cubecapsPaintCap (CompScreen	    *s,
 	glEnable (GL_BLEND);
 	/* Draw cap once and reset color so that image will get correctly
 	 * blended, and for non-4-horizontal-viewports setups */
-	if (cs->desktopOpacity != OPAQUE)
+	if (opacity != OPAQUE)
 	{
 	    screenTexEnvMode (s, GL_MODULATE);
 	    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -330,7 +337,7 @@ cubecapsPaintCap (CompScreen	    *s,
 
 	disableTexture (s, &cap->texture);
 
-	if (cs->desktopOpacity != OPAQUE)
+	if (opacity != OPAQUE)
 	    screenTexEnvMode (s, GL_REPLACE);
 
 	glDisable (GL_BLEND);
