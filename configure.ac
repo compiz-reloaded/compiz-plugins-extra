@@ -161,6 +161,7 @@ fi
 
 AC_OUTPUT([
 Makefile
+images/Makefile
 metadata/Makefile
 src/Makefile
 src/addhelper/Makefile

@@ -1,5 +1,5 @@
 ## Process this file with automake to produce Makefile.in
-SUBDIRS = metadata po src
+SUBDIRS = metadata po src images
 
 EXTRA_DIST =            \
     VERSION             \
