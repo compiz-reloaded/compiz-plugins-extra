@@ -319,7 +319,7 @@ scalefilterDrawFilterText (CompScreen *s,
     glBlendFunc (oldBlendSrc, oldBlendDst);
 }
 
-void
+static void
 scalefilterUpdateFilter (CompScreen *s,
 	   		 CompMatch  *match)
 {
