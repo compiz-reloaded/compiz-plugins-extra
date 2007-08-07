@@ -85,18 +85,18 @@
 		<_short>Cube Top Color</_short>
 		<_long>Color of top face of the cube</_long>
 		<default>
-		    <red>0xfefe</red>
+		    <red>0xffff</red>
 		    <green>0xffff</green>
-		    <blue>0xc7c7</blue>
+		    <blue>0xffff</blue>
 		</default>
 	    </option>
 	    <option name="bottom_color" type="color">
 		<_short>Cube Bottom Color</_short>
 		<_long>Color of bottom face of the cube</_long>
 		<default>
-		    <red>0xfefe</red>
+		    <red>0xffff</red>
 		    <green>0xffff</green>
-		    <blue>0xc7c7</blue>
+		    <blue>0xffff</blue>
 		</default>
 	    </option>
 	    <option name="top_images" type="list">
