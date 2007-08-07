@@ -18,7 +18,7 @@ endif
 INCLUDES =                              \
 	@COMPIZ_CFLAGS@                      \
  	@GROUP_CFLAGS@         \
-	-DDATADIR='"$(datadir)"'            \
+	-DDATADIR='"$(compdatadir)"'        \
 	-DLIBDIR='"$(libdir)"'              \
 	-DLOCALEDIR="\"@datadir@/locale\""  \
 	-DIMAGEDIR='"$(imagedir)"'          \
