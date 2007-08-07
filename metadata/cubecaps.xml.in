@@ -103,14 +103,18 @@
 		<_short>Top image files</_short>
 		<_long>List of PNG and SVG files that should be rendered on top face of cube</_long>
 		<type>string</type>
-		<default>freedesktop</default>
+		<default>
+		    <value>fusioncap.png</value>
+		</default>
 		<hints>file;image;</hints>
 	    </option>
 	    <option name="bottom_images" type="list">
 		<_short>Bottom image files</_short>
 		<_long>List of PNG and SVG files that should be rendered on bottom face of cube</_long>
 		<type>string</type>
-		<default>freedesktop</default>
+		<default>
+		    <value>compizcap.png</value>
+		</default>
 		<hints>file;image;</hints>
 	    </option>
 	</screen>
