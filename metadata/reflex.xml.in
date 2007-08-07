@@ -19,7 +19,7 @@
 					<_short>Reflection Image</_short>
 					<_long>Reflection Image file</_long>
 					<hints>file;image;</hints>
-					<default>/data/emboss.png</default>
+					<default>reflection.png</default>
 				</option>
 				<option name="match" type="match">
 					<_short>Window match</_short>
@@ -39,7 +39,7 @@
 				<option name="threshold" type="int">
 					<_short>Alpha Dependence Threshold</_short>
 					<_long>Alpha dependence threshold.</_long>
-					<default>2</default>
+					<default>1</default>
 					<min>1</min>
 					<max>10</max>
 				</option>
