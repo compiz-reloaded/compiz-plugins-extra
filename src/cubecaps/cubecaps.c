@@ -243,7 +243,7 @@ cubecapsPaintCap (CompScreen	    *s,
 	cap = capInside;
 	clamp_to_border = clamp_to_border_inside;
 	if (opacity == OPAQUE)
-	    opacity = colorOutside[4];
+	    opacity = colorInside[4];
 	glColor4us (colorInside[0],
 		    colorInside[1],
 		    colorInside[2],
