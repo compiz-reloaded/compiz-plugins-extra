@@ -27,13 +27,13 @@
           <_short>Background File</_short>
           <_long>Background image File.</_long>
           <hints>file;image;</hints>
-          <default>/data/splash_background.png</default>
+          <default>splash_background.png</default>
         </option>
         <option name="logo" type="string">
           <_short>Logo File</_short>
           <_long>Logo image File.</_long>
           <hints>file;image;</hints>
-          <default>/data/splash_logo.png</default>
+          <default>splash_logo.png</default>
         </option>
       </group>
       <group>
