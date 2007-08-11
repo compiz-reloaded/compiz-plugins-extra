@@ -29,6 +29,9 @@
  *
  */
 
+/* forward declaration */
+static Bool groupDequeueTimer (void *closure);
+
 void
 groupEnqueueMoveNotify (CompWindow *w,
 						int        dx,
@@ -62,8 +65,11 @@ groupEnqueueMoveNotify (CompWindow *w,
 	else
 		gs->pendingMoves = move;
 
-	/* damageScreen to make sure the queue is emptied */
-	addWindowDamage (w);
+	if (!gs->dequeueTimerSet)
+	{
+		compAddTimeout (0, groupDequeueTimer, (void *) w->screen);
+		gs->dequeueTimerSet = TRUE;
+	}
 }
 
 void
@@ -122,11 +128,14 @@ groupEnqueueGrabNotify (CompWindow   *w,
 	else
 		gs->pendingGrabs = grab;
 
-	/* damageScreen to make sure the queue is emptied */
-	addWindowDamage (w);
+	if (!gs->dequeueTimerSet)
+	{
+		compAddTimeout (0, groupDequeueTimer, (void *) w->screen);
+		gs->dequeueTimerSet = TRUE;
+	}
 }
 
-void
+static void
 groupDequeueGrabNotifies (CompScreen *s)
 {
 	GroupPendingGrabs *grab;
@@ -172,15 +181,17 @@ groupEnqueueUngrabNotify (CompWindow *w)
 
 		temp->next = ungrab;
 	}
-
 	else
 		gs->pendingUngrabs = ungrab;
 
-	/* damageScreen to make sure the queue is emptied */
-	addWindowDamage (w);
+	if (!gs->dequeueTimerSet)
+	{
+		compAddTimeout (0, groupDequeueTimer, (void *) w->screen);
+		gs->dequeueTimerSet = TRUE;
+	}
 }
 
-void
+static void
 groupDequeueUngrabNotifies (CompScreen *s)
 {
 	GroupPendingUngrabs *ungrab;
@@ -200,4 +211,20 @@ groupDequeueUngrabNotifies (CompScreen *s)
 	}
 
 	gs->queued = FALSE;
+}
+
+static Bool
+groupDequeueTimer (void *closure)
+{
+	CompScreen *s = (CompScreen *) closure;
+
+	GROUP_SCREEN (s);
+
+	groupDequeueMoveNotifies (s);
+	groupDequeueGrabNotifies (s);
+	groupDequeueUngrabNotifies (s);
+
+	gs->dequeueTimerSet = FALSE;
+
+	return FALSE;
 }

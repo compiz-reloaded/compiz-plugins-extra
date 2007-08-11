@@ -406,6 +406,7 @@ typedef struct _GroupScreen {
 	GroupPendingMoves   *pendingMoves;
 	GroupPendingGrabs   *pendingGrabs;
 	GroupPendingUngrabs *pendingUngrabs;
+	Bool                dequeueTimerSet;
 
 	GroupSelection *groups;
 	GroupSelection tmpSel;
@@ -875,14 +876,7 @@ groupEnqueueGrabNotify (CompWindow   *w,
 						unsigned int mask);
 
 void
-groupDequeueGrabNotifies (CompScreen *s);
-
-void
 groupEnqueueUngrabNotify (CompWindow *w);
-
-void
-groupDequeueUngrabNotifies (CompScreen *s);
-
 
 /*
  * selection.c

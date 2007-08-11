@@ -313,6 +313,7 @@ groupInitScreen (CompPlugin *p,
 	gs->pendingMoves = NULL;
 	gs->pendingGrabs = NULL;
 	gs->pendingUngrabs = NULL;
+	gs->dequeueTimerSet = FALSE;
 
 	gs->draggedSlot = NULL;
 	gs->dragged = FALSE;
