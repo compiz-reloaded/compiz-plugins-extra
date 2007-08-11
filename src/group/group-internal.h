@@ -432,9 +432,6 @@ typedef struct _GroupScreen {
 	int             prevX, prevY; /* Buffer for mouse coordinates */
 
 	CompTexture glowTexture;
-
-	/* Pending screen wide actions */
-	unsigned int screenActions;
 } GroupScreen;
 
 /*
@@ -615,9 +612,6 @@ groupClearWindowInputShape (CompWindow          *w,
 
 void
 groupHandleChanges (CompScreen* s);
-
-void
-groupHandleScreenActions (CompScreen *s);
 
 void
 groupHandleHoverDetection (GroupSelection *group);

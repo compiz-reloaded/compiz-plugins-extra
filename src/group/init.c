@@ -119,6 +119,61 @@ groupScreenOptionChanged (CompScreen         *s,
 }
 
 /*
+ * groupApplyInitialActions
+ *
+ * timer callback for stuff that needs to be called after all
+ * screens and windows are initialized
+ *
+ */
+static Bool
+groupApplyInitialActions (void *closure)
+{
+	CompScreen *s = (CompScreen *) closure;
+	CompWindow *w;
+
+	/* we need to do it from top to buttom of the stack to avoid problems
+	   with a reload of Compiz and tabbed static groups. (topTab will always
+	   be above the other windows in the group) */
+	for (w = s->reverseWindows; w; w = w->prev)
+	{
+		Bool     tabbed;
+		long int id;
+		GLushort color[3];
+
+		GROUP_WINDOW (w);
+
+		/* read window property to see if window was grouped
+		   before - if it was, regroup */
+		if (groupCheckWindowProperty (w, &id, &tabbed, color))
+		{
+			GroupSelection *group = groupFindGroupByID (w->screen, id);
+			groupAddWindowToGroup (w, group, id);
+			if (tabbed)
+				groupTabGroup (w);
+
+			gw->group->color[0] = color[0];
+			gw->group->color[1] = color[1];
+			gw->group->color[2] = color[2];
+
+			groupRenderTopTabHighlight (gw->group);
+			damageScreen (w->screen);
+		}
+
+		if (groupGetAutotabCreate (s) && !w->invisible &&
+			matchEval (groupGetWindowMatch (s), w))
+		{
+			if (!gw->group && (gw->windowState == WindowNormal))
+			{
+				groupAddWindowToGroup (w, NULL, 0);
+				groupTabGroup (w);
+			}
+		}
+	}
+
+	return FALSE;
+}
+
+/*
  * groupInitDisplay
  *
  */
@@ -267,7 +322,9 @@ groupInitScreen (CompPlugin *p,
 
 	gs->showDelayTimeoutHandle = 0;
 
-	gs->screenActions = (CHECK_WINDOW_PROPERTIES | APPLY_AUTO_TABBING);
+	/* one-shot timeout for stuff that needs to be initialized after
+	   all screens and windows are initialized */
+	compAddTimeout (0, groupApplyInitialActions, (void *) s);
 
 	initTexture (s, &gs->glowTexture);
 
