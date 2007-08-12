@@ -957,14 +957,8 @@ groupPreparePaintScreen (CompScreen *s,
 		groupHandleTabBarAnimation (group, msSinceLastPaint);
 	}
 
-	groupHandleScreenActions (s);
-
 	groupHandleChanges (s);
 	groupDrawTabAnimation (s, msSinceLastPaint);
-
-	groupDequeueMoveNotifies (s);
-	groupDequeueGrabNotifies (s);
-	groupDequeueUngrabNotifies (s);
 }
 
 /*

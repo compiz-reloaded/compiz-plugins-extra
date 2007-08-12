@@ -2,6 +2,7 @@
 SUBDIRS = addhelper \
 	  bench \
 	  crashhandler \
+	  cubecaps \
 	  cubereflex \
 	  extrawm \
 	  fadedesktop \
@@ -14,4 +15,5 @@ SUBDIRS = addhelper \
 	  scalefilter \
 	  showdesktop \
 	  splash \
-	  trailfocus
+	  trailfocus \
+	  widget

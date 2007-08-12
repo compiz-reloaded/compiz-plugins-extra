@@ -131,6 +131,7 @@ fi
 
 PKG_CHECK_MODULES(COMPIZCUBE, compiz-cube, [have_compiz_cube=yes], [have_compiz_cube=no])
 AM_CONDITIONAL(CUBEREFLEX_PLUGIN, test "x$have_compiz_cube" = "xyes")
+AM_CONDITIONAL(CUBECAPS_PLUGIN, test "x$have_compiz_cube" = "xyes")
 
 
 AC_ARG_ENABLE(schemas,
@@ -167,6 +168,7 @@ src/Makefile
 src/addhelper/Makefile
 src/bench/Makefile
 src/crashhandler/Makefile
+src/cubecaps/Makefile
 src/cubereflex/Makefile
 src/extrawm/Makefile
 src/fadedesktop/Makefile
@@ -180,5 +182,6 @@ src/scalefilter/Makefile
 src/showdesktop/Makefile
 src/splash/Makefile
 src/trailfocus/Makefile
+src/widget/Makefile
 po/Makefile.in
 ])

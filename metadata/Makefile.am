@@ -3,6 +3,7 @@ xml_in_files = 	         \
 	addhelper.xml.in \
 	bench.xml.in \
 	crashhandler.xml.in \
+	cubecaps.xml.in \
 	cubereflex.xml.in \
 	extrawm.xml.in \
 	fadedesktop.xml.in \
@@ -15,7 +16,8 @@ xml_in_files = 	         \
 	scalefilter.xml.in \
 	showdesktop.xml.in \
 	splash.xml.in \
-	trailfocus.xml.in
+	trailfocus.xml.in \
+	widget.xml.in
 
 xml_files    = $(xml_in_files:.xml.in=.xml)
 xml_DATA     = $(xml_files)

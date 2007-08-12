@@ -1,9 +1,9 @@
 ## Process this file with automake to produce Makefile.in
 PFLAGS=-module -avoid-version -no-undefined
 
-libmblur_la_LDFLAGS = $(PFLAGS)
-libmblur_la_LIBADD = @COMPIZ_LIBS@
-libmblur_la_SOURCES = mblur_options.c mblur_options.h mblur.c
+libwidget_la_LDFLAGS = $(PFLAGS)
+libwidget_la_LIBADD = @COMPIZ_LIBS@
+libwidget_la_SOURCES = widget_options.c widget_options.h widget.c
 
 INCLUDES =                              \
 	@COMPIZ_CFLAGS@                  \
@@ -16,7 +16,7 @@ INCLUDES =                              \
 moduledir = $(plugindir)
 
 
-module_LTLIBRARIES = libmblur.la
+module_LTLIBRARIES = libwidget.la
 
 CLEANFILES = *_options.c *_options.h
 

@@ -406,6 +406,7 @@ typedef struct _GroupScreen {
 	GroupPendingMoves   *pendingMoves;
 	GroupPendingGrabs   *pendingGrabs;
 	GroupPendingUngrabs *pendingUngrabs;
+	Bool                dequeueTimerSet;
 
 	GroupSelection *groups;
 	GroupSelection tmpSel;
@@ -432,9 +433,6 @@ typedef struct _GroupScreen {
 	int             prevX, prevY; /* Buffer for mouse coordinates */
 
 	CompTexture glowTexture;
-
-	/* Pending screen wide actions */
-	unsigned int screenActions;
 } GroupScreen;
 
 /*
@@ -615,9 +613,6 @@ groupClearWindowInputShape (CompWindow          *w,
 
 void
 groupHandleChanges (CompScreen* s);
-
-void
-groupHandleScreenActions (CompScreen *s);
 
 void
 groupHandleHoverDetection (GroupSelection *group);
@@ -881,14 +876,7 @@ groupEnqueueGrabNotify (CompWindow   *w,
 						unsigned int mask);
 
 void
-groupDequeueGrabNotifies (CompScreen *s);
-
-void
 groupEnqueueUngrabNotify (CompWindow *w);
-
-void
-groupDequeueUngrabNotifies (CompScreen *s);
-
 
 /*
  * selection.c

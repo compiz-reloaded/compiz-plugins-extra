@@ -1,12 +1,15 @@
 ## Process this file with automake to produce Makefile.in
 PFLAGS=-module -avoid-version -no-undefined
 
-libmblur_la_LDFLAGS = $(PFLAGS)
-libmblur_la_LIBADD = @COMPIZ_LIBS@
-libmblur_la_SOURCES = mblur_options.c mblur_options.h mblur.c
+if CUBECAPS_PLUGIN
+libcubecaps_la_LDFLAGS = $(PFLAGS)
+libcubecaps_la_LIBADD = @COMPIZ_LIBS@ @COMPIZCUBE_LIBS@
+libcubecaps_la_SOURCES = cubecaps_options.c cubecaps_options.h cubecaps.c
+endif
 
 INCLUDES =                              \
 	@COMPIZ_CFLAGS@                  \
+	@COMPIZCUBE_CFLAGS@              \
 	-DDATADIR='"$(compdatadir)"'        \
 	-DLIBDIR='"$(libdir)"'              \
 	-DLOCALEDIR="\"@datadir@/locale\""  \
@@ -15,8 +18,9 @@ INCLUDES =                              \
 
 moduledir = $(plugindir)
 
-
-module_LTLIBRARIES = libmblur.la
+if CUBECAPS_PLUGIN
+module_LTLIBRARIES = libcubecaps.la
+endif
 
 CLEANFILES = *_options.c *_options.h
 
