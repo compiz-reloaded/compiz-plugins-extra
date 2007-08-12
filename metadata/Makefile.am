@@ -16,7 +16,8 @@ xml_in_files = 	         \
 	scalefilter.xml.in \
 	showdesktop.xml.in \
 	splash.xml.in \
-	trailfocus.xml.in
+	trailfocus.xml.in \
+	widget.xml.in
 
 xml_files    = $(xml_in_files:.xml.in=.xml)
 xml_DATA     = $(xml_files)

@@ -15,4 +15,5 @@ SUBDIRS = addhelper \
 	  scalefilter \
 	  showdesktop \
 	  splash \
-	  trailfocus
+	  trailfocus \
+	  widget

@@ -182,5 +182,6 @@ src/scalefilter/Makefile
 src/showdesktop/Makefile
 src/splash/Makefile
 src/trailfocus/Makefile
+src/widget/Makefile
 po/Makefile.in
 ])
