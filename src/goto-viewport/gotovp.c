@@ -160,6 +160,31 @@ gotovpTerm (CompDisplay *d,
 }
 
 static Bool
+gotovpSwitchTo (CompDisplay     *d,
+		CompAction      *action,
+		CompActionState state,
+		CompOption      *option,
+		int             nOption)
+{
+    GOTOVP_DISPLAY(d);
+
+    int i;
+
+    for (i = GotovpDisplayOptionSwitchTo1; i <= GotovpDisplayOptionSwitchTo2; i++)
+    {
+       if (action == &gotovpGetDisplayOption(d, i)->value.action)
+       {
+	  Window xid = getIntOptionNamed (option, nOption, "root", 0);
+	  gd->activeScreen = findScreenAtDisplay (d, xid);
+	  gd->destination = i - GotovpDisplayOptionSwitchTo1 + 1;
+           break;
+       }
+    }
+    return gotovpTerm(d,action,state,option,nOption);
+}
+
+
+static Bool
 gotovpInitDisplay (CompPlugin *p,
 				   CompDisplay *d)
 {
@@ -177,7 +202,19 @@ gotovpInitDisplay (CompPlugin *p,
 
 	gotovpSetBeginInitiate (d, gotovpBegin);
 	gotovpSetBeginTerminate (d, gotovpTerm);
-
+	gotovpSetSwitchTo1Initiate (d, gotovpSwitchTo);
+	gotovpSetSwitchTo2Initiate (d, gotovpSwitchTo);
+	gotovpSetSwitchTo3Initiate (d, gotovpSwitchTo);
+	gotovpSetSwitchTo4Initiate (d, gotovpSwitchTo);
+	gotovpSetSwitchTo5Initiate (d, gotovpSwitchTo);
+	gotovpSetSwitchTo6Initiate (d, gotovpSwitchTo);
+	gotovpSetSwitchTo7Initiate (d, gotovpSwitchTo);
+	gotovpSetSwitchTo8Initiate (d, gotovpSwitchTo);
+	gotovpSetSwitchTo9Initiate (d, gotovpSwitchTo);
+	gotovpSetSwitchTo10Initiate (d, gotovpSwitchTo);
+	gotovpSetSwitchTo11Initiate (d, gotovpSwitchTo);
+	gotovpSetSwitchTo12Initiate (d, gotovpSwitchTo);
+	
 	return TRUE;
 }
 

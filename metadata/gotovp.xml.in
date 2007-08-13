@@ -8,10 +8,67 @@
 				<_short>Begin</_short>
 				<_long>Begin entering viewport</_long>
 				<allowed key="true"/>
-				<default>
-					<key>&lt;Super&gt;v</key>
-				</default>
 			</option>
+                               <option name="switch_to_1" type="action">
+                                       <_short>Switch to 1 </_short>
+                                       <_long>Switch to 1</_long>
+                                       <allowed key="true"/>
+                               </option>
+                               <option name="switch_to_2" type="action">
+                                       <_short>Switch to 2 </_short>
+                                       <_long>Switch to 2</_long>
+                                       <allowed key="true"/>
+                               </option>
+                               <option name="switch_to_3" type="action">
+                                       <_short>Switch to 3 </_short>
+                                       <_long>Switch to 3</_long>
+                                       <allowed key="true"/>
+                               </option>
+                               <option name="switch_to_4" type="action">
+                                       <_short>Switch to 4 </_short>
+                                       <_long>Switch to 4</_long>
+                                       <allowed key="true"/>
+                               </option>
+                               <option name="switch_to_5" type="action">
+                                       <_short>Switch to 5 </_short>
+                                       <_long>Switch to 5</_long>
+                                       <allowed key="true"/>
+                               </option>
+                               <option name="switch_to_6" type="action">
+                                       <_short>Switch to 6 </_short>
+                                       <_long>Switch to 6</_long>
+                                       <allowed key="true"/>
+                               </option>
+                               <option name="switch_to_7" type="action">
+                                       <_short>Switch to 7 </_short>
+                                       <_long>Switch to 7</_long>
+                                       <allowed key="true"/>
+                               </option>
+                               <option name="switch_to_8" type="action">
+                                       <_short>Switch to 8 </_short>
+                                       <_long>Switch to 8</_long>
+                                       <allowed key="true"/>
+                               </option>
+                               <option name="switch_to_9" type="action">
+                                       <_short>Switch to 9 </_short>
+                                       <_long>Switch to 9</_long>
+                                       <allowed key="true"/>
+                               </option>
+                               <option name="switch_to_10" type="action">
+                                       <_short>Switch to 10 </_short>
+                                       <_long>Switch to 10</_long>
+                                       <allowed key="true"/>
+                               </option>
+                               <option name="switch_to_11" type="action">
+                                       <_short>Switch to 11 </_short>
+                                       <_long>Switch to 11</_long>
+                                       <allowed key="true"/>
+                               </option>
+                               <option name="switch_to_12" type="action">
+                                       <_short>Switch to 12 </_short>
+                                       <_long>Switch to 12</_long>
+                                       <allowed key="true"/>
+                               </option>
 		</display>
 	</plugin>
 </compiz>
