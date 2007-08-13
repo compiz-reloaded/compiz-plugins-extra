@@ -170,7 +170,7 @@ gotovpSwitchTo (CompDisplay     *d,
 
     int i;
 
-    for (i = GotovpDisplayOptionSwitchTo1; i <= GotovpDisplayOptionSwitchTo2; i++)
+    for (i = GotovpDisplayOptionSwitchTo1; i <= GotovpDisplayOptionSwitchTo12; i++)
     {
        if (action == &gotovpGetDisplayOption(d, i)->value.action)
        {
