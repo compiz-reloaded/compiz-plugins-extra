@@ -425,7 +425,9 @@ widgetMatchPropertyChanged (CompDisplay *d,
     /* one shot timeout which will update the widget status (timer
        is needed because we don't want to call wrapped functions
        recursively) */
-    ww->matchUpdateHandle = compAddTimeout (0, widgetUpdateMatch, (void *) w);
+    if (!ww->matchUpdateHandle)
+	ww->matchUpdateHandle = compAddTimeout (0, widgetUpdateMatch,
+						(void *) w);
 
     UNWRAP (wd, d, matchPropertyChanged);
     (*d->matchPropertyChanged) (d, w);
