@@ -9,7 +9,6 @@ xml_in_files = 	         \
 	fadedesktop.xml.in \
 	firepaint.xml.in \
 	gears.xml.in \
-	gotovp.xml.in \
 	group.xml.in \
 	mblur.xml.in \
 	reflex.xml.in \

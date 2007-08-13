@@ -8,7 +8,6 @@ SUBDIRS = addhelper \
 	  fadedesktop \
 	  firepaint \
 	  gears \
-	  goto-viewport \
 	  group \
 	  mblur \
 	  reflex \
