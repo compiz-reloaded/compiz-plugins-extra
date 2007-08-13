@@ -1797,7 +1797,6 @@ groupUntabGroup(GroupSelection *group)
 	if (!HAS_TOP_WIN (group))
 		return;
 
-	GROUP_WINDOW (TOP_TAB (group));
 	GROUP_SCREEN (TOP_TAB (group)->screen);
 
 	if (group->prevTopTab)
