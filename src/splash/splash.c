@@ -451,6 +451,7 @@ splashPaintOutput (CompScreen              *s,
 
     glDisable (GL_BLEND);
     glBlendFunc (GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    glColor4usv (defaultColor);
     glPopMatrix ();
     return status;
 }
