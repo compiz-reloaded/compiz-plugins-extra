@@ -1,7 +1,7 @@
 /*
  * Compiz reflection effect plugin
  *
- * mblur.c
+ * reflex.c
  *
  * Copyright : (C) 2007 by Dennis Kasprzyk
  * E-mail    : onestone@beryl-project.org
