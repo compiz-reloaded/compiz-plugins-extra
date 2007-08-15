@@ -1790,7 +1790,6 @@ groupTabGroup (CompWindow *main)
 void
 groupUntabGroup(GroupSelection *group)
 {
-	int             mainOrgPosX, mainOrgPosY;
 	int             oldX, oldY;
 	CompWindow      *prevTopTab;
 	GroupTabBarSlot *slot;
@@ -1798,11 +1797,7 @@ groupUntabGroup(GroupSelection *group)
 	if (!HAS_TOP_WIN (group))
 		return;
 
-	GROUP_WINDOW (TOP_TAB (group));
 	GROUP_SCREEN (TOP_TAB (group)->screen);
-
-	mainOrgPosX = gw->mainTabOffset.x;
-	mainOrgPosY = gw->mainTabOffset.y;
 
 	if (group->prevTopTab)
 		prevTopTab = PREV_TOP_TAB (group);
@@ -2039,14 +2034,9 @@ groupCreateCairoLayer (CompScreen *s,
 					   int        height)
 {
 	GroupCairoLayer *layer;
-	Screen          *screen;
-	Display         *display;
-	
+
 	
 	layer = malloc (sizeof (GroupCairoLayer));
-
-	display = s->display->display;
-	screen = ScreenOfDisplay (display, s->screenNum);
 
 	layer->surface	= NULL;
 	layer->cairo	= NULL;
