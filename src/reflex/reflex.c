@@ -1,7 +1,7 @@
 /*
  * Compiz reflection effect plugin
  *
- * reflex.c
+ * mblur.c
  *
  * Copyright : (C) 2007 by Dennis Kasprzyk
  * E-mail    : onestone@beryl-project.org
@@ -35,6 +35,9 @@ static int displayPrivateIndex = 0;
 
 typedef struct _ReflexDisplay
 {
+    MatchExpHandlerChangedProc matchExpHandlerChanged;
+    MatchPropertyChangedProc   matchPropertyChanged;
+
     int screenPrivateIndex;
 }
 ReflexDisplay;
@@ -56,6 +59,10 @@ typedef struct _ReflexScreen
 }
 ReflexScreen;
 
+typedef struct _ReflexWindow {
+    Bool active;
+} ReflexWindow;
+
 #define GET_REFLEX_DISPLAY(d)                                  \
     ((ReflexDisplay *) (d)->privates[displayPrivateIndex].ptr)
 
@@ -67,6 +74,14 @@ ReflexScreen;
 
 #define REFLEX_SCREEN(s)                                       \
     ReflexScreen *rs = GET_REFLEX_SCREEN (s, GET_REFLEX_DISPLAY (s->display))
+
+#define GET_REFLEX_WINDOW(w, rs)					 \
+    ((ReflexWindow *) (w)->privates[(rs)->windowPrivateIndex].ptr)
+
+#define REFLEX_WINDOW(w)					     \
+    ReflexWindow *rw = GET_REFLEX_WINDOW  (w,		     \
+		       GET_REFLEX_SCREEN  (w->screen,	     \
+		       GET_REFLEX_DISPLAY (w->screen->display)))
 
 static int
 getReflexFragmentFunction (CompScreen  *s,
@@ -151,10 +166,27 @@ getReflexFragmentFunction (CompScreen  *s,
 }
 
 static void
+reflexUpdateWindowMatch (CompWindow *w)
+{
+    Bool      active;
+
+    REFLEX_WINDOW (w);
+
+    active = matchEval (reflexGetMatch (w->screen), w);
+    if (active != rw->active)
+    {
+	rw->active = active;
+	addWindowDamage (w);
+    }
+}
+
+static void
 reflexScreenOptionChanged (CompScreen          *s,
 			   CompOption          *opt,
 			   ReflexScreenOptions num)
 {
+    CompWindow *w;
+
     REFLEX_SCREEN (s);
 
     switch (num)
@@ -168,6 +200,13 @@ reflexScreenOptionChanged (CompScreen          *s,
 	}
 	rs->imageLoaded = readImageToTexture (s, &rs->image, reflexGetFile (s),
 					      &rs->width, &rs->height);
+	damageScreen (s);
+	break;
+
+    case ReflexScreenOptionMatch:
+	for (w = s->windows; w; w = w->next)
+	    reflexUpdateWindowMatch (w);
+
 	damageScreen (s);
 	break;
 
@@ -185,11 +224,12 @@ reflexDrawWindowTexture (CompWindow           *w,
 {
     CompScreen *s = w->screen;
     REFLEX_SCREEN (s);
+    REFLEX_WINDOW (w);
 
     Bool enabled = (texture == w->texture) ?
 		   reflexGetWindow (s) : reflexGetDecoration (s);
 
-    if (enabled && matchEval (reflexGetMatch (s), w) && rs->imageLoaded &&
+    if (enabled && rw->active && rs->imageLoaded &&
 	w->screen->fragmentProgram)
     {
 	FragmentAttrib fa = *attrib;
@@ -259,7 +299,38 @@ reflexDrawWindowTexture (CompWindow           *w,
     }
 }
 
+static void
+reflexMatchExpHandlerChanged (CompDisplay *d)
+{
+    CompScreen *s;
+    CompWindow *w;
 
+    REFLEX_DISPLAY (d);
+
+    UNWRAP (rd, d, matchExpHandlerChanged);
+    (*d->matchExpHandlerChanged) (d);
+    WRAP (rd, d, matchExpHandlerChanged, reflexMatchExpHandlerChanged);
+
+    /* match options are up to date after the call to matchExpHandlerChanged */
+    for (s = d->screens; s; s = s->next)
+    {
+	for (w = s->windows; w; w = w->next)
+	    reflexUpdateWindowMatch (w);
+    }
+}
+
+static void
+reflexMatchPropertyChanged (CompDisplay *d,
+			    CompWindow  *w)
+{
+    REFLEX_DISPLAY (d);
+
+    reflexUpdateWindowMatch (w);
+
+    UNWRAP (rd, d, matchPropertyChanged);
+    (*d->matchPropertyChanged) (d, w);
+    WRAP (rd, d, matchPropertyChanged, reflexMatchPropertyChanged);
+}
 
 static Bool
 reflexInitDisplay (CompPlugin  *p,
@@ -282,6 +353,9 @@ reflexInitDisplay (CompPlugin  *p,
 
     d->privates[displayPrivateIndex].ptr = rd;
 
+    WRAP (rd, d, matchExpHandlerChanged, reflexMatchExpHandlerChanged);
+    WRAP (rd, d, matchPropertyChanged, reflexMatchPropertyChanged);
+
     return TRUE;
 }
 
@@ -291,6 +365,9 @@ reflexFiniDisplay (CompPlugin  *p,
 {
     REFLEX_DISPLAY (d);
     freeScreenPrivateIndex (d, rd->screenPrivateIndex);
+
+    UNWRAP (rd, d, matchExpHandlerChanged);
+    UNWRAP (rd, d, matchPropertyChanged);
 
     free (rd);
 }
@@ -322,6 +399,7 @@ reflexInitScreen (CompPlugin *p,
     rs->imageLoaded = readImageToTexture (s, &rs->image, reflexGetFile (s),
 					  &rs->width, &rs->height);
     reflexSetFileNotify (s, reflexScreenOptionChanged);
+    reflexSetMatchNotify (s, reflexScreenOptionChanged);
 
     s->privates[rd->screenPrivateIndex].ptr = rs;
 
@@ -347,6 +425,35 @@ reflexFiniScreen (CompPlugin *p,
 	destroyFragmentFunction (s, rs->function);
 
     free (rs);
+}
+
+static Bool
+reflexInitWindow (CompPlugin *p,
+		  CompWindow *w)
+{
+    ReflexWindow *rw;
+
+    REFLEX_SCREEN (w->screen);
+
+    rw = malloc (sizeof (ReflexWindow));
+    if (!rw)
+	return FALSE;
+
+    rw->active = FALSE;
+
+    w->privates[rs->windowPrivateIndex].ptr = rw;
+
+    reflexUpdateWindowMatch (w);
+
+    return TRUE;
+}
+
+static void
+reflexFiniWindow (CompPlugin *p,
+		  CompWindow *w)
+{
+    REFLEX_WINDOW (w);
+    free (rw);
 }
 
 static Bool
@@ -385,8 +492,8 @@ CompPluginVTable reflexVTable = {
     reflexFiniDisplay,
     reflexInitScreen,
     reflexFiniScreen,
-    0,
-    0,
+    reflexInitWindow,
+    reflexFiniWindow,
     0,
     0,
     0,
