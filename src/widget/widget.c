@@ -68,7 +68,6 @@ typedef struct _WidgetScreen
     PreparePaintScreenProc preparePaintScreen;
     DonePaintScreenProc    donePaintScreen;
     PaintWindowProc        paintWindow;
-    WindowAddNotifyProc    windowAddNotify;
 
     WidgetState state;
 
@@ -82,7 +81,9 @@ typedef struct _WidgetWindow
 {
     Bool                isWidget;
     Bool                wasUnmapped;
+    CompWindow          *parentWidget;
     CompTimeoutHandle   matchUpdateHandle;
+    CompTimeoutHandle   inferiorUpdateHandle;
     WidgetPropertyState propertyState;
 } WidgetWindow;
 
@@ -105,6 +106,41 @@ typedef struct _WidgetWindow
     WidgetWindow *ww = GET_WIDGET_WINDOW  (w,                    \
 		       GET_WIDGET_SCREEN  (w->screen,            \
 		       GET_WIDGET_DISPLAY (w->screen->display)))
+
+static void
+widgetUpdateTreeStatus (CompWindow *w)
+{
+    CompWindow   *p;
+    WidgetWindow *pww;
+
+    WIDGET_SCREEN (w->screen);
+
+    /* first clear out every reference to our window */
+    for (p = w->screen->windows; p; p = p->next)
+    {
+	pww = GET_WIDGET_WINDOW (p, ws);
+	if (pww->parentWidget == w)
+	    pww->parentWidget = NULL;
+    }
+
+    for (p = w->screen->windows; p; p = p->next)
+    {
+	Window clientLeader;
+
+	if (p->attrib.override_redirect)
+	    clientLeader = getClientLeader (p);
+	else
+	    clientLeader = p->clientLeader;
+
+	if ((clientLeader == w->clientLeader) && (w->id != p->id))
+	{
+	    WIDGET_SCREEN (w->screen);
+
+	    pww = GET_WIDGET_WINDOW (p, ws);
+	    pww->parentWidget = w;
+	}
+    }
+}
 
 static Bool
 widgetUpdateWidgetStatus (CompWindow *w)
@@ -271,6 +307,8 @@ widgetMatchExpHandlerChanged (CompDisplay *d)
 		map = !ww->isWidget || (ws->state != StateOff);
 		widgetUpdateWidgetMapState (w, map);
 
+		widgetUpdateTreeStatus (w);
+
 		(*d->matchPropertyChanged) (d, w);
 	    }
     }
@@ -354,8 +392,24 @@ widgetHandleEvent (CompDisplay *d,
 
 		    map = !ww->isWidget || (ws->state != StateOff);
 		    widgetUpdateWidgetMapState (w, map);
+		    widgetUpdateTreeStatus (w);
 		    (*d->matchPropertyChanged) (d, w);
 		}
+	    }
+	}
+	else if (event->xproperty.atom == d->wmClientLeaderAtom)
+	{
+	    CompWindow *w;
+
+	    w = findWindowAtDisplay (d, event->xproperty.window);
+	    if (w)
+	    {
+		WIDGET_WINDOW (w);
+
+		if (ww->isWidget)
+		    widgetUpdateTreeStatus (w);
+		else if (ww->parentWidget)
+		    widgetUpdateTreeStatus (ww->parentWidget);
 	    }
 	}
 	break;
@@ -377,7 +431,7 @@ widgetHandleEvent (CompDisplay *d,
 		    {
 			WIDGET_WINDOW (w);
 
-			if (!ww->isWidget)
+			if (!ww->isWidget && !ww->parentWidget)
 			{
 			    CompOption o;
 
@@ -418,12 +472,54 @@ widgetUpdateMatch (void *closure)
     WIDGET_WINDOW (w);
 
     if (widgetUpdateWidgetStatus (w))
+    {
+	widgetUpdateTreeStatus (w);
 	(*w->screen->display->matchPropertyChanged) (w->screen->display, w);
+    }
 
     ww->matchUpdateHandle = 0;
     return FALSE;
 }
 
+static Bool
+widgetUpdateInferiors (void *closure)
+{
+    CompWindow *w = (CompWindow *) closure;
+    Window     clientLeader;
+
+    WIDGET_WINDOW (w);
+
+    if (w->attrib.override_redirect)
+	clientLeader = getClientLeader (w);
+    else
+	clientLeader = w->clientLeader;
+
+    if (ww->isWidget)
+    {
+	widgetUpdateTreeStatus (w);
+    }
+    else if (clientLeader)
+    {
+	CompWindow *lw;
+
+	lw = findWindowAtScreen (w->screen, clientLeader);
+	if (lw)
+	{
+	    WidgetWindow *lww;
+
+	    WIDGET_SCREEN (w->screen);
+	    lww = GET_WIDGET_WINDOW (lw, ws);
+
+	    if (lww->isWidget)
+		ww->parentWidget = lw;
+	    else if (lww->parentWidget)
+		ww->parentWidget = lww->parentWidget;
+	}
+    }
+
+    ww->inferiorUpdateHandle = 0;
+    return FALSE;
+}
 
 static void
 widgetMatchPropertyChanged (CompDisplay *d,
@@ -442,20 +538,6 @@ widgetMatchPropertyChanged (CompDisplay *d,
     UNWRAP (wd, d, matchPropertyChanged);
     (*d->matchPropertyChanged) (d, w);
     WRAP (wd, d, matchPropertyChanged, widgetMatchPropertyChanged);
-}
-
-static void
-widgetWindowAddNotify (CompWindow *w)
-{
-    WIDGET_SCREEN (w->screen);
-    WIDGET_WINDOW (w);
-
-    if (ww->isWidget)
-	widgetUpdateWidgetMapState (w, (ws->state != StateOff));
-
-    UNWRAP (ws, w->screen, windowAddNotify);
-    (*w->screen->windowAddNotify) (w);
-    WRAP (ws, w->screen, windowAddNotify, widgetWindowAddNotify);
 }
 
 static Bool
@@ -487,7 +569,7 @@ widgetPaintWindow (CompWindow              *w,
 	    fadeProgress = 1.0f - fadeProgress;
 	}
 
-	if (!ww->isWidget)
+	if (!ww->isWidget && !ww->parentWidget)
 	{
 	    float progress;
 
@@ -581,6 +663,7 @@ widgetScreenOptionChanged (CompScreen           *s,
 		    map = !ww->isWidget || (ws->state != StateOff);
 		    widgetUpdateWidgetMapState (w, map);
 
+		    widgetUpdateTreeStatus (w);
 		    (*s->display->matchPropertyChanged) (s->display, w);
 		}
 	}
@@ -709,12 +792,18 @@ widgetInitWindow (CompPlugin *p,
         return FALSE;
 
     ww->isWidget = FALSE;
+    ww->parentWidget = NULL;
     ww->wasUnmapped = FALSE;
     ww->matchUpdateHandle = 0;
+    ww->inferiorUpdateHandle = 0;
 
     w->privates[ws->windowPrivateIndex].ptr = ww;
 
-    widgetUpdateWidgetPropertyState (w);
+    if (widgetUpdateWidgetPropertyState (w))
+	widgetUpdateWidgetMapState (w, (ws->state != StateOff));
+
+    ww->inferiorUpdateHandle = compAddTimeout (0, widgetUpdateInferiors,
+					       (void *) w);
 
     return TRUE;
 }
@@ -730,6 +819,9 @@ widgetFiniWindow (CompPlugin *p,
 
     if (ww->matchUpdateHandle)
 	compRemoveTimeout (ww->matchUpdateHandle);
+
+    if (ww->inferiorUpdateHandle)
+	compRemoveTimeout (ww->inferiorUpdateHandle);
 
     free (ww);
 }
