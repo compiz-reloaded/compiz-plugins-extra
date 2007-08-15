@@ -106,16 +106,8 @@ groupFindWindowsInRegion (CompScreen *s,
 			if (gw->group && groupFindGroupInWindows (gw->group, ret, count))
 				continue;
 
-			if (count == 0)
-			{
-				ret = calloc (1, sizeof (CompWindow));
-				ret[0] = w;
-			}
-			else
-			{
-				ret = realloc (ret, sizeof (CompWindow) * (count + 1));
-				ret[count] = w;
-			}
+			ret = realloc (ret, sizeof (CompWindow) * (count + 1));
+			ret[count] = w;
 
 			count++;
 		}
