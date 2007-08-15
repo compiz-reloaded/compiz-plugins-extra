@@ -131,7 +131,7 @@ widgetUpdateWidgetStatus (CompWindow *w)
     return retval;
 }
 
-static void
+static Bool
 widgetUpdateWidgetPropertyState (CompWindow *w)
 {
     CompDisplay   *d = w->screen->display;
@@ -144,7 +144,7 @@ widgetUpdateWidgetPropertyState (CompWindow *w)
     WIDGET_WINDOW (w);
 
     result = XGetWindowProperty (d->display, w->id, wd->compizWidgetAtom,
-				 0, 1L, FALSE, XA_CARDINAL, &retType,
+				 0, 1L, FALSE, AnyPropertyType, &retType,
 				 &format, &nitems, &remain, &data);
 
     if (result == Success && nitems && data)
@@ -159,7 +159,7 @@ widgetUpdateWidgetPropertyState (CompWindow *w)
     else
 	ww->propertyState = PropertyNotSet;
 
-    widgetUpdateWidgetStatus (w);
+    return widgetUpdateWidgetStatus (w);
 }
 
 static void
@@ -345,8 +345,17 @@ widgetHandleEvent (CompDisplay *d,
 	    w = findWindowAtDisplay (d, event->xproperty.window);
 	    if (w)
 	    {
-		widgetUpdateWidgetPropertyState (w);
-		(*d->matchPropertyChanged) (d, w);
+		if (widgetUpdateWidgetPropertyState (w))
+		{
+		    Bool map;
+
+		    WIDGET_SCREEN (w->screen);
+		    WIDGET_WINDOW (w);
+
+		    map = !ww->isWidget || (ws->state != StateOff);
+		    widgetUpdateWidgetMapState (w, map);
+		    (*d->matchPropertyChanged) (d, w);
+		}
 	    }
 	}
 	break;
