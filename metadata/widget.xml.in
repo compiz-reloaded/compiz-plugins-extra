@@ -26,6 +26,11 @@
 					<_long>Windows that always should be treated as widgets</_long>
 					<default></default>
 				</option>
+				<option name="end_on_click" type="bool">
+					<_short>End Widget Mode on Click</_short>
+					<_long>End widget mode when a non-widget window is clicked.</_long>
+					<default>true</default>
+				</option>
 			</group>
 			<group>
 				<_short>Appearance</_short>

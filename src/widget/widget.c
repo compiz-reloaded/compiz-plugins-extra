@@ -420,7 +420,7 @@ widgetHandleEvent (CompDisplay *d,
 	    /* terminate widget mode if a non-widget window
 	       was clicked */
 	    s = findScreenAtDisplay (d, event->xbutton.root);
-	    if (s)
+	    if (s && widgetGetEndOnClick (s))
 	    {
 		WIDGET_SCREEN (s);
 		if (ws->state == StateOn)
