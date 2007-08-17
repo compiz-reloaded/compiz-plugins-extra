@@ -72,25 +72,14 @@ Region
 groupGetClippingRegion (CompWindow *w)
 {
 	CompWindow *cw;
-	Region     clip;
-	
-	clip = XCreateRegion();
-	if (!clip)
-		return NULL;
+	Region     clip = XCreateRegion();
 
 	for (cw = w->next; cw; cw = cw->next)
 	{
 		if (!cw->invisible && !(cw->state & CompWindowStateHiddenMask))
 		{
 			XRectangle rect;
-			Region     buf;
-			
-			buf = XCreateRegion();
-			if (!buf)
-			{
-				XDestroyRegion(clip);
-				return NULL;
-			}
+			Region     buf = XCreateRegion();
 
 			rect.x = WIN_REAL_X (cw);
 			rect.y = WIN_REAL_Y (cw);
@@ -517,12 +506,6 @@ groupHandleHoverDetection (GroupSelection *group)
 				   covers a port of that slot, this part won't be used
 				   for in-slot-detection. */
 				Region reg = XCreateRegion();
-				if (!reg)
-				{
-					XDestroyRegion(clip);
-					return;
-				}
-
 				XSubtractRegion (slot->region, clip, reg);
 
 				if (XPointInRegion (reg, mouseX, mouseY))
@@ -933,8 +916,7 @@ groupHandleTab (CompScreen     *s,
 		GROUP_WINDOW (w);
 
 		if (slot == group->topTab ||
-			!(gw->animateState & FINISHED_ANIMATION) ||
-			(w == group->ungroupedWindow))
+			!(gw->animateState & FINISHED_ANIMATION) || gw->ungroup)
 		{
 			continue;
 		}
@@ -1031,32 +1013,62 @@ groupHandleUntab (CompScreen     *s,
  *
  */
 static Bool
-groupHandleUngroup (GroupSelection *group)
+groupHandleUngroup (CompScreen     *s,
+					GroupSelection *group)
 {
+	int i;
+
+	GROUP_SCREEN (s);
+
 	if ((group->ungroupState == UngroupSingle) &&
 		group->doTabbing && group->changeTab)
 	{
-		CompWindow *w = group->ungroupedWindow;
+		for (i = 0; i < group->nWins; i++)
+		{
+			CompWindow *w = group->windows[i];
+			GROUP_WINDOW (w);
 
-		GROUP_SCREEN (group->screen);
-
-		gs->queued = TRUE;
-		groupSetWindowVisibility (w, TRUE);
-		moveWindow (w,
-					group->oldTopTabCenterX - WIN_X (w) - WIN_WIDTH (w) / 2,
-					group->oldTopTabCenterY - WIN_Y (w) - WIN_HEIGHT (w) / 2,
-					TRUE, TRUE);
-		syncWindowPosition (w);
-		gs->queued = FALSE;
+			if (gw->ungroup)
+			{
+				gs->queued = TRUE;
+				groupSetWindowVisibility (w, TRUE);
+				moveWindow (w,
+							group->oldTopTabCenterX -
+							WIN_X (w) - WIN_WIDTH (w) / 2,
+							group->oldTopTabCenterY -
+							WIN_Y (w) - WIN_HEIGHT (w) / 2,
+							TRUE, TRUE);
+				syncWindowPosition (w);
+				gs->queued = FALSE;
+			}
+		}
 
 		group->changeTab = FALSE;
 	}
 
 	if ((group->ungroupState == UngroupSingle) && !group->doTabbing)
 	{
-		groupDeleteGroupWindow (group->ungroupedWindow, TRUE);
+		Bool morePending;
 
-		group->ungroupedWindow = NULL;
+		do
+		{
+			morePending = FALSE;
+
+			for (i = 0;i < group->nWins; i++)
+			{
+				CompWindow *w = group->windows[i];
+				GROUP_WINDOW (w);
+
+				if (gw->ungroup)
+				{
+					groupDeleteGroupWindow (w, TRUE);
+					gw->ungroup = FALSE;
+					morePending = TRUE;
+				}
+			}
+		}
+		while (morePending);
+
 		group->ungroupState = UngroupNone;
 	}
 
@@ -1104,7 +1116,7 @@ groupHandleChanges (CompScreen *s)
 		groupHandleTabChange (s, group);
 		groupHandleAnimation (s, group);
 
-		if (!groupHandleUngroup (group))
+		if (!groupHandleUngroup (s, group))
 			group = NULL;
 	}
 }
@@ -1265,8 +1277,6 @@ groupUpdateTabBars (CompScreen *s,
 			{
 				XRectangle rect;
 				Region     reg = XCreateRegion();
-				if (!reg)
-					return;
 
 				rect.x = WIN_X (w) - w->input.left;
 				rect.y = WIN_Y (w) - w->input.top;
@@ -2784,10 +2794,10 @@ groupApplyForces (CompScreen      *s,
  *
  */
 void
-groupApplySpeeds (GroupSelection *group,
+groupApplySpeeds (CompScreen     *s,
+				  GroupSelection *group,
 				  int            msSinceLastRepaint)
 {
-	CompScreen      *s = group->screen;
 	GroupTabBar     *bar = group->tabBar;
 	GroupTabBarSlot *slot;
 	int             move;

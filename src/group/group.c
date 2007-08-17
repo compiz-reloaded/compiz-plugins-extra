@@ -394,7 +394,7 @@ groupDeleteGroupWindow (CompWindow *w,
 				groupDeleteTabBarSlot (group->tabBar, gw->slot);
 		}
 
-		if ((w != group->ungroupedWindow) && group->nWins > 1)
+		if (!gw->ungroup && group->nWins > 1)
 		{
 			if (HAS_TOP_WIN (group))
 			{
@@ -428,7 +428,7 @@ groupDeleteGroupWindow (CompWindow *w,
 			groupStartTabbingAnimation (group, FALSE);
 
 			group->ungroupState = UngroupSingle;
-			group->ungroupedWindow = w;
+			gw->ungroup = TRUE;
 
 			return;
 		}
@@ -607,10 +607,10 @@ groupAddWindowToGroup (CompWindow     *w,
 
 	if (gw->group)
 	{
-		/* prevent setting up animations on the previous group */
-		gw->group->ungroupedWindow = w;
+		gw->ungroup = TRUE;	/* This will prevent setting up
+							   animations on the previous group. */
 		groupDeleteGroupWindow (w, FALSE);
-		gw->group->ungroupedWindow = NULL;
+		gw->ungroup = FALSE;
 	}
 
 	if (group)
@@ -686,7 +686,6 @@ groupAddWindowToGroup (CompWindow     *w,
 		g->tabbingState = PaintOff;
 		g->changeTab = FALSE;
 		g->ungroupState = UngroupNone;
-		g->ungroupedWindow = NULL;
 		g->tabBar = NULL;
 
 		g->grabWindow = None;
@@ -1108,9 +1107,6 @@ groupHandleButtonReleaseEvent (CompDisplay *d,
 	GROUP_WINDOW (gs->draggedSlot->window);
 
 	newRegion = XCreateRegion();
-	if (!newRegion) 
-	    return;
-
 	XUnionRegion (newRegion, gs->draggedSlot->region, newRegion);
 
 	groupGetDrawOffsetForSlot (gs->draggedSlot, &vx, &vy);
@@ -1265,7 +1261,8 @@ groupHandleButtonReleaseEvent (CompDisplay *d,
 			break;
 	}
 
-	XDestroyRegion (newRegion);
+	if (newRegion)
+		XDestroyRegion (newRegion);
 
 	if (!inserted)
 	{
@@ -1468,9 +1465,12 @@ groupHandleEvent (CompDisplay *d,
 					{
 						/* close event */
 
-						gw->group->ungroupedWindow = w;
+						/* prevent animations on this group */
+						gw->ungroup = TRUE;
+
 						groupDeleteGroupWindow (w, FALSE);
-					damageScreen (w->screen);
+						gw->ungroup = FALSE;
+						damageScreen (w->screen);
 					}
 				}
 			}
@@ -1678,7 +1678,7 @@ groupHandleEvent (CompDisplay *d,
 						if (groupGetRaiseAll (w->screen))
 							groupRaiseWindows (w, gw->group);
 					}
-					if (w->managed)
+					if (w->managed && !w->attrib.override_redirect)
 						gd->lastRestackedGroup = gw->group;
 				}
 			}
