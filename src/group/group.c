@@ -394,7 +394,7 @@ groupDeleteGroupWindow (CompWindow *w,
 				groupDeleteTabBarSlot (group->tabBar, gw->slot);
 		}
 
-		if ((w != group->ungroupedWindow) && group->nWins > 1)
+		if (!gw->ungroup && group->nWins > 1)
 		{
 			if (HAS_TOP_WIN (group))
 			{
@@ -428,11 +428,13 @@ groupDeleteGroupWindow (CompWindow *w,
 			groupStartTabbingAnimation (group, FALSE);
 
 			group->ungroupState = UngroupSingle;
-			group->ungroupedWindow = w;
+			gw->ungroup = TRUE;
 
 			return;
 		}
 	}
+
+	groupSetWindowVisibility (w, TRUE);
 
 	if (group->nWins && group->windows)
 	{
@@ -607,10 +609,10 @@ groupAddWindowToGroup (CompWindow     *w,
 
 	if (gw->group)
 	{
-		/* prevent setting up animations on the previous group */
-		gw->group->ungroupedWindow = w;
+		gw->ungroup = TRUE;	/* This will prevent setting up
+							   animations on the previous group. */
 		groupDeleteGroupWindow (w, FALSE);
-		gw->group->ungroupedWindow = NULL;
+		gw->ungroup = FALSE;
 	}
 
 	if (group)
@@ -686,7 +688,6 @@ groupAddWindowToGroup (CompWindow     *w,
 		g->tabbingState = PaintOff;
 		g->changeTab = FALSE;
 		g->ungroupState = UngroupNone;
-		g->ungroupedWindow = NULL;
 		g->tabBar = NULL;
 
 		g->grabWindow = None;
@@ -1468,9 +1469,12 @@ groupHandleEvent (CompDisplay *d,
 					{
 						/* close event */
 
-						gw->group->ungroupedWindow = w;
+						/* prevent animations on this group */
+						gw->ungroup = TRUE;
+
 						groupDeleteGroupWindow (w, FALSE);
-					damageScreen (w->screen);
+						gw->ungroup = FALSE;
+						damageScreen (w->screen);
 					}
 				}
 			}

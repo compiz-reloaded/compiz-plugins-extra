@@ -435,6 +435,7 @@ static Bool groupInitWindow(CompPlugin * p, CompWindow * w)
 
 	/* for tab */
 	gw->animateState = 0;
+	gw->ungroup = FALSE;
 	gw->slot = NULL;
 	gw->tx = gw->ty = 0;
 	gw->xVelocity = gw->yVelocity = 0;
