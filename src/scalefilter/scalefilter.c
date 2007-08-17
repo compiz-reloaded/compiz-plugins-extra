@@ -190,7 +190,7 @@ scalefilterRenderFilterText (CompScreen *s)
 	{
 	    compLogMessage (d, "scalefilterinfo", CompLogLevelError,
 			    "Bind Pixmap to Texture failure");
-	    XFreePixmap (s->display->display, fs->filterInfo->textPixmap);
+	    XFreePixmap (d->display, fs->filterInfo->textPixmap);
 	    fs->filterInfo->textPixmap = None;
 	    return;
 	}
