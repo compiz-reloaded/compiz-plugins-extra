@@ -1054,7 +1054,7 @@ groupHandleUngroup (GroupSelection *group)
 
 	if ((group->ungroupState == UngroupSingle) && !group->doTabbing)
 	{
-		groupDeleteGroupWindow (group->ungroupedWindow, FALSE, TRUE);
+		groupDeleteGroupWindow (group->ungroupedWindow, TRUE);
 
 		group->ungroupedWindow = NULL;
 		group->ungroupState = UngroupNone;
