@@ -736,18 +736,20 @@ groupTabChangeActivateEvent (CompScreen *s,
  *
  */
 static void
-groupHandleTabChange (CompScreen     *s,
-					  GroupSelection *group)
+groupHandleTabChange (GroupSelection *group)
 {
+	CompScreen *s;
 	CompWindow *topTab;
-
-	GROUP_SCREEN (s);
 
 	if (!group || !HAS_TOP_WIN (group) || !group->changeTab)
 		return;
 
+	s = group->screen;
+
+	GROUP_SCREEN (s);
+
 	// exit when there is a rotate or plane animation
-	if (screenGrabExist(s, "rotate", "plane", "wall", 0))
+	if (screenGrabExist (s, "rotate", "plane", "wall", 0))
 		return;
 
 	topTab = TOP_TAB (group);
@@ -827,13 +829,14 @@ groupHandleTabChange (CompScreen     *s,
  *
  */
 static void
-groupHandleAnimation (CompScreen     *s,
-					  GroupSelection *group)
+groupHandleAnimation (GroupSelection *group)
 {
+	CompScreen *s = group->screen;
+
 	if (group->tabbingState != PaintOff || !HAS_TOP_WIN (group))
 		return;
 
-	if (screenGrabExist(s, "rotate", "plane", "wall", 0))
+	if (screenGrabExist (s, "rotate", "plane", "wall", 0))
 		return;
 
 	if (group->changeState == PaintFadeIn && group->changeAnimationTime <= 0)
@@ -874,7 +877,7 @@ groupHandleAnimation (CompScreen     *s,
 			groupChangeTab (group->nextTopTab, group->nextDirection);
 			group->nextTopTab = NULL;
 
-			groupHandleTabChange (s, group);
+			groupHandleTabChange (group);
 
 			if (group->changeState == PaintFadeIn)
 			{
@@ -913,8 +916,7 @@ groupHandleAnimation (CompScreen     *s,
  *
  */
 static void
-groupHandleTab (CompScreen     *s,
-				GroupSelection *group)
+groupHandleTab (GroupSelection *group)
 {
 	GroupTabBarSlot *slot;
 
@@ -956,15 +958,14 @@ groupHandleTab (CompScreen     *s,
  *
  */
 static void
-groupHandleTabbingAnimation (CompScreen     *s,
-							 GroupSelection *group)
+groupHandleTabbingAnimation (GroupSelection *group)
 {
 	int i;
 
 	if (group->tabbingState == PaintOff || group->doTabbing)
 		return;
 
-	GROUP_SCREEN (s);
+	GROUP_SCREEN (group->screen);
 
 	/* Not animated any more. */
 	group->tabbingState = PaintOff;
@@ -997,8 +998,7 @@ groupHandleTabbingAnimation (CompScreen     *s,
  *
  */
 static void
-groupHandleUntab (CompScreen     *s,
-				  GroupSelection *group)
+groupHandleUntab (GroupSelection *group)
 {
 	if (group->tabbingState == PaintOff || !group->doTabbing)
 		return;
@@ -1030,12 +1030,11 @@ groupHandleUntab (CompScreen     *s,
  *
  */
 static Bool
-groupHandleUngroup (CompScreen     *s,
-					GroupSelection *group)
+groupHandleUngroup (GroupSelection *group)
 {
 	int i;
 
-	GROUP_SCREEN (s);
+	GROUP_SCREEN (group->screen);
 
 	if ((group->ungroupState == UngroupSingle) &&
 		group->doTabbing && group->changeTab)
@@ -1127,13 +1126,13 @@ groupHandleChanges (CompScreen *s)
 
 	for (group = gs->groups; group; group = group ? group->next : NULL)
 	{
-		groupHandleUntab (s, group);
-		groupHandleTab (s, group);
-		groupHandleTabbingAnimation (s, group);
-		groupHandleTabChange (s, group);
-		groupHandleAnimation (s, group);
+		groupHandleUntab (group);
+		groupHandleTab (group);
+		groupHandleTabbingAnimation (group);
+		groupHandleTabChange (group);
+		groupHandleAnimation (group);
 
-		if (!groupHandleUngroup (s, group))
+		if (!groupHandleUngroup (group))
 			group = NULL;
 	}
 }

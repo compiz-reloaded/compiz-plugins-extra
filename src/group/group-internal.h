@@ -611,7 +611,7 @@ groupClearWindowInputShape (CompWindow          *w,
 							GroupWindowHideInfo *hideInfo);
 
 void
-groupHandleChanges (CompScreen* s);
+groupHandleChanges (CompScreen *s);
 
 void
 groupHandleHoverDetection (GroupSelection *group);
