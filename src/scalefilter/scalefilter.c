@@ -182,10 +182,16 @@ scalefilterRenderFilterText (CompScreen *s)
 				    &stride, &data))
     {
 	fs->filterInfo->textPixmap = (Pixmap)data;
-	bindPixmapToTexture (s, &fs->filterInfo->textTexture,
-			     fs->filterInfo->textPixmap,
-			     fs->filterInfo->textWidth,
-			     fs->filterInfo->textHeight, 32);
+	if (!bindPixmapToTexture (s, &fs->filterInfo->textTexture,
+				  fs->filterInfo->textPixmap,
+				  fs->filterInfo->textWidth,
+				  fs->filterInfo->textHeight, 32) 
+	{
+	    compLogMessage (s->display, "scalefilterinfo", 
+			    CompLogLevelWarn,
+			    "Bind Pixmap to Texture failure");
+	    return;
+	}
     }
     else
     {
