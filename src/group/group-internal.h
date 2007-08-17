@@ -334,6 +334,7 @@ struct _GroupSelection {
 	PaintState tabbingState;
 
 	GroupUngroupState ungroupState;
+	CompWindow        *ungroupedWindow;
 
 	Window       grabWindow;
 	unsigned int grabMask;
@@ -455,7 +456,6 @@ typedef struct _GroupWindow {
 	XRectangle *resizeGeometry;
 
 	/* For tab animation */
-	Bool   ungroup;
 	int    animateState;
 	XPoint mainTabOffset;
 	XPoint destination;
@@ -711,8 +711,7 @@ groupApplyForces (CompScreen      *s,
 				  GroupTabBarSlot *draggedSlot);
 
 void
-groupApplySpeeds (CompScreen     *s,
-				  GroupSelection *group,
+groupApplySpeeds (GroupSelection *group,
 				  int            msSinceLastRepaint);
 
 void

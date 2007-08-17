@@ -933,7 +933,8 @@ groupHandleTab (CompScreen     *s,
 		GROUP_WINDOW (w);
 
 		if (slot == group->topTab ||
-			!(gw->animateState & FINISHED_ANIMATION) || gw->ungroup)
+			!(gw->animateState & FINISHED_ANIMATION) ||
+			(w == group->ungroupedWindow))
 		{
 			continue;
 		}
@@ -1030,62 +1031,32 @@ groupHandleUntab (CompScreen     *s,
  *
  */
 static Bool
-groupHandleUngroup (CompScreen     *s,
-					GroupSelection *group)
+groupHandleUngroup (GroupSelection *group)
 {
-	int i;
-
-	GROUP_SCREEN (s);
-
 	if ((group->ungroupState == UngroupSingle) &&
 		group->doTabbing && group->changeTab)
 	{
-		for (i = 0; i < group->nWins; i++)
-		{
-			CompWindow *w = group->windows[i];
-			GROUP_WINDOW (w);
+		CompWindow *w = group->ungroupedWindow;
 
-			if (gw->ungroup)
-			{
-				gs->queued = TRUE;
-				groupSetWindowVisibility (w, TRUE);
-				moveWindow (w,
-							group->oldTopTabCenterX -
-							WIN_X (w) - WIN_WIDTH (w) / 2,
-							group->oldTopTabCenterY -
-							WIN_Y (w) - WIN_HEIGHT (w) / 2,
-							TRUE, TRUE);
-				syncWindowPosition (w);
-				gs->queued = FALSE;
-			}
-		}
+		GROUP_SCREEN (group->screen);
+
+		gs->queued = TRUE;
+		groupSetWindowVisibility (w, TRUE);
+		moveWindow (w,
+					group->oldTopTabCenterX - WIN_X (w) - WIN_WIDTH (w) / 2,
+					group->oldTopTabCenterY - WIN_Y (w) - WIN_HEIGHT (w) / 2,
+					TRUE, TRUE);
+		syncWindowPosition (w);
+		gs->queued = FALSE;
 
 		group->changeTab = FALSE;
 	}
 
 	if ((group->ungroupState == UngroupSingle) && !group->doTabbing)
 	{
-		Bool morePending;
+		groupDeleteGroupWindow (group->ungroupedWindow, TRUE);
 
-		do
-		{
-			morePending = FALSE;
-
-			for (i = 0;i < group->nWins; i++)
-			{
-				CompWindow *w = group->windows[i];
-				GROUP_WINDOW (w);
-
-				if (gw->ungroup)
-				{
-					groupDeleteGroupWindow (w, TRUE);
-					gw->ungroup = FALSE;
-					morePending = TRUE;
-				}
-			}
-		}
-		while (morePending);
-
+		group->ungroupedWindow = NULL;
 		group->ungroupState = UngroupNone;
 	}
 
@@ -1133,7 +1104,7 @@ groupHandleChanges (CompScreen *s)
 		groupHandleTabChange (s, group);
 		groupHandleAnimation (s, group);
 
-		if (!groupHandleUngroup (s, group))
+		if (!groupHandleUngroup (group))
 			group = NULL;
 	}
 }
@@ -2813,10 +2784,10 @@ groupApplyForces (CompScreen      *s,
  *
  */
 void
-groupApplySpeeds (CompScreen     *s,
-				  GroupSelection *group,
+groupApplySpeeds (GroupSelection *group,
 				  int            msSinceLastRepaint)
 {
+	CompScreen      *s = group->screen;
 	GroupTabBar     *bar = group->tabBar;
 	GroupTabBarSlot *slot;
 	int             move;

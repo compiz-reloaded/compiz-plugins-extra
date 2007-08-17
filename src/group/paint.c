@@ -949,7 +949,7 @@ groupPreparePaintScreen (CompScreen *s,
 			continue;
 
 		groupApplyForces (s, bar, (gs->dragged) ? gs->draggedSlot: NULL);
-		groupApplySpeeds (s, group, msSinceLastPaint);
+		groupApplySpeeds (group, msSinceLastPaint);
 
 		groupHandleHoverDetection (group);
 		groupHandleTabBarFade (group, msSinceLastPaint);
