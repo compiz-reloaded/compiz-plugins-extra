@@ -444,7 +444,6 @@ typedef struct _GroupWindow {
 
 	/* For the tab bar */
 	GroupTabBarSlot *slot;
-	int oldWindowState;
 
 	Bool needsPosSync;
 

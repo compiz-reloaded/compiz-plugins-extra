@@ -434,7 +434,6 @@ static Bool groupInitWindow(CompPlugin * p, CompWindow * w)
 	gw->needsPosSync = FALSE;
 
 	/* for tab */
-	gw->oldWindowState = getWindowState (w->screen->display, w->id);
 	gw->animateState = 0;
 	gw->ungroup = FALSE;
 	gw->slot = NULL;
