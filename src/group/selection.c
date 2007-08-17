@@ -39,9 +39,9 @@ groupWindowInRegion (CompWindow *w,
 	BOX    *box;
 	
 	buf = XCreateRegion ();
-	if (!buf) {
+	if (!buf)
 	        return FALSE;
-	}
+
 	XIntersectRegion (w->region, src, buf);
 
 	/* buf area */

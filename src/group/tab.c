@@ -72,21 +72,24 @@ Region
 groupGetClippingRegion (CompWindow *w)
 {
 	CompWindow *cw;
-	Region     clip = XCreateRegion();
-
-	if (!clip) {
-	        return NULL;
-	}
+	Region     clip;
+	
+	clip = XCreateRegion();
+	if (!clip)
+		return NULL;
 
 	for (cw = w->next; cw; cw = cw->next)
 	{
 		if (!cw->invisible && !(cw->state & CompWindowStateHiddenMask))
 		{
 			XRectangle rect;
-			Region     buf = XCreateRegion();
-			if (!buf) {
-			        XDestroyRegion(clip);
-			        return NULL;
+			Region     buf;
+			
+			buf = XCreateRegion();
+			if (!buf)
+			{
+				XDestroyRegion(clip);
+				return NULL;
 			}
 
 			rect.x = WIN_REAL_X (cw);
@@ -514,10 +517,12 @@ groupHandleHoverDetection (GroupSelection *group)
 				   covers a port of that slot, this part won't be used
 				   for in-slot-detection. */
 				Region reg = XCreateRegion();
-				if (!reg) {
-				        XDestroyRegion(clip);
-				        return;
+				if (!reg)
+				{
+					XDestroyRegion(clip);
+					return;
 				}
+
 				XSubtractRegion (slot->region, clip, reg);
 
 				if (XPointInRegion (reg, mouseX, mouseY))
@@ -1289,9 +1294,8 @@ groupUpdateTabBars (CompScreen *s,
 			{
 				XRectangle rect;
 				Region     reg = XCreateRegion();
-				if (!reg) {
-				        return;
-				}
+				if (!reg)
+					return;
 
 				rect.x = WIN_X (w) - w->input.left;
 				rect.y = WIN_Y (w) - w->input.top;
