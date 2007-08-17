@@ -1,6 +1,3 @@
-#ifndef _GROUP_H
-#define _GROUP_H
-
 /**
  *
  * Compiz group plugin
@@ -24,6 +21,9 @@
  * GNU General Public License for more details.
  *
  **/
+
+#ifndef _GROUP_H
+#define _GROUP_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -140,7 +140,7 @@ typedef enum {
 } ChangeTabAnimationDirection;
 
 typedef struct _GlowTextureProperties {
-	char * textureData;
+	char *textureData;
 	int textureSize;
 	int glowOffset;
 } GlowTextureProperties;
@@ -150,27 +150,27 @@ typedef struct _GlowTextureProperties {
  */
 typedef struct _GroupPendingMoves GroupPendingMoves;
 struct _GroupPendingMoves {
-	CompWindow *w;
-	int dx;
-	int dy;
-	Bool immediate;
-	Bool sync;
+	CompWindow        *w;
+	int               dx;
+	int               dy;
+	Bool              immediate;
+	Bool              sync;
 	GroupPendingMoves *next;
 };
 
 typedef struct _GroupPendingGrabs GroupPendingGrabs;
 struct _GroupPendingGrabs {
-	CompWindow *w;
-	int x;
-	int y;
-	unsigned int state;
-	unsigned int mask;
+	CompWindow        *w;
+	int               x;
+	int               y;
+	unsigned int      state;
+	unsigned int      mask;
 	GroupPendingGrabs *next;
 };
 
 typedef struct _GroupPendingUngrabs GroupPendingUngrabs;
 struct _GroupPendingUngrabs {
-	CompWindow *w;
+	CompWindow          *w;
 	GroupPendingUngrabs *next;
 };
 
@@ -183,16 +183,12 @@ extern int groupDisplayPrivateIndex;
  * PaintState
  */
 
-/* Mask for screen wide actions executed in preparePaintScreen */
-#define CHECK_WINDOW_PROPERTIES	(1 << 0)
-#define APPLY_AUTO_TABBING	(1 << 1)
-
 /* Mask values for groupTabSetVisibility */
 #define SHOW_BAR_INSTANTLY_MASK	(1 << 0)
-#define PERMANENT		(1 << 1)
+#define PERMANENT		        (1 << 1)
 
 /* Mask values for tabbing animation */
-#define IS_ANIMATED		(1 << 0)
+#define IS_ANIMATED		    (1 << 0)
 #define FINISHED_ANIMATION	(1 << 1)
 #define CONSTRAINED_X		(1 << 2)
 #define CONSTRAINED_Y		(1 << 3)
