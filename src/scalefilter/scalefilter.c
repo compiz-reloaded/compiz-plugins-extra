@@ -119,6 +119,7 @@ scalefilterFreeFilterText (CompScreen *s)
 static void
 scalefilterRenderFilterText (CompScreen *s)
 {
+    CompDisplay    *d = s->display;
     CompTextAttrib tA;
     int            stride;
     void*          data;
@@ -176,20 +177,21 @@ scalefilterRenderFilterText (CompScreen *s)
     tA.renderMode = TextRenderNormal;
     tA.data = (void*)buffer;
 
-    if ((*s->display->fileToImage) (s->display, TEXT_ID, (char *)&tA,
-				    &fs->filterInfo->textWidth,
-				    &fs->filterInfo->textHeight,
-				    &stride, &data))
+    if ((*d->fileToImage) (s->display, TEXT_ID, (char *)&tA,
+			   &fs->filterInfo->textWidth,
+			   &fs->filterInfo->textHeight,
+			   &stride, &data))
     {
 	fs->filterInfo->textPixmap = (Pixmap)data;
 	if (!bindPixmapToTexture (s, &fs->filterInfo->textTexture,
 				  fs->filterInfo->textPixmap,
 				  fs->filterInfo->textWidth,
-				  fs->filterInfo->textHeight, 32) 
+				  fs->filterInfo->textHeight, 32))
 	{
-	    compLogMessage (s->display, "scalefilterinfo", 
-			    CompLogLevelWarn,
+	    compLogMessage (d, "scalefilterinfo", CompLogLevelError,
 			    "Bind Pixmap to Texture failure");
+	    XFreePixmap (s->display->display, fs->filterInfo->textPixmap);
+	    fs->filterInfo->textPixmap = None;
 	    return;
 	}
     }
