@@ -394,7 +394,7 @@ groupDeleteGroupWindow (CompWindow *w,
 				groupDeleteTabBarSlot (group->tabBar, gw->slot);
 		}
 
-		if (!gw->ungroup && group->nWins > 1)
+		if ((w != group->ungroupedWindow) && group->nWins > 1)
 		{
 			if (HAS_TOP_WIN (group))
 			{
@@ -428,7 +428,7 @@ groupDeleteGroupWindow (CompWindow *w,
 			groupStartTabbingAnimation (group, FALSE);
 
 			group->ungroupState = UngroupSingle;
-			gw->ungroup = TRUE;
+			group->ungroupedWindow = w;
 
 			return;
 		}
@@ -607,10 +607,10 @@ groupAddWindowToGroup (CompWindow     *w,
 
 	if (gw->group)
 	{
-		gw->ungroup = TRUE;	/* This will prevent setting up
-							   animations on the previous group. */
+		/* prevent setting up animations on the previous group */
+		gw->group->ungroupedWindow = w;
 		groupDeleteGroupWindow (w, FALSE);
-		gw->ungroup = FALSE;
+		gw->group->ungroupedWindow = NULL;
 	}
 
 	if (group)
@@ -686,6 +686,7 @@ groupAddWindowToGroup (CompWindow     *w,
 		g->tabbingState = PaintOff;
 		g->changeTab = FALSE;
 		g->ungroupState = UngroupNone;
+		g->ungroupedWindow = NULL;
 		g->tabBar = NULL;
 
 		g->grabWindow = None;
@@ -1107,6 +1108,9 @@ groupHandleButtonReleaseEvent (CompDisplay *d,
 	GROUP_WINDOW (gs->draggedSlot->window);
 
 	newRegion = XCreateRegion();
+	if (!newRegion) 
+	    return;
+
 	XUnionRegion (newRegion, gs->draggedSlot->region, newRegion);
 
 	groupGetDrawOffsetForSlot (gs->draggedSlot, &vx, &vy);
@@ -1261,8 +1265,7 @@ groupHandleButtonReleaseEvent (CompDisplay *d,
 			break;
 	}
 
-	if (newRegion)
-		XDestroyRegion (newRegion);
+	XDestroyRegion (newRegion);
 
 	if (!inserted)
 	{
@@ -1465,12 +1468,9 @@ groupHandleEvent (CompDisplay *d,
 					{
 						/* close event */
 
-						/* prevent animations on this group */
-						gw->ungroup = TRUE;
-
+						gw->group->ungroupedWindow = w;
 						groupDeleteGroupWindow (w, FALSE);
-						gw->ungroup = FALSE;
-						damageScreen (w->screen);
+					damageScreen (w->screen);
 					}
 				}
 			}
