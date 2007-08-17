@@ -434,8 +434,6 @@ groupDeleteGroupWindow (CompWindow *w,
 		}
 	}
 
-	groupSetWindowVisibility (w, TRUE);
-
 	if (group->nWins && group->windows)
 	{
 		CompWindow **buf = group->windows;
@@ -1468,13 +1466,11 @@ groupHandleEvent (CompDisplay *d,
 					if (!w->pendingUnmaps)
 					{
 						/* close event */
-
-						/* prevent animations on this group */
-						gw->ungroup = TRUE;
-
-						groupDeleteGroupWindow (w, FALSE);
-						gw->ungroup = FALSE;
-						damageScreen (w->screen);
+						if (!gw->ungroup)
+						{
+							groupDeleteGroupWindow (w, FALSE);
+							damageScreen (w->screen);
+						}
 					}
 				}
 			}
