@@ -369,6 +369,7 @@ groupShadeWindows (CompWindow     *top,
  */
 void
 groupDeleteGroupWindow (CompWindow *w,
+						Bool       noAnimation,
 						Bool       allowRegroup)
 {
 	GroupSelection *group;
@@ -394,7 +395,7 @@ groupDeleteGroupWindow (CompWindow *w,
 				groupDeleteTabBarSlot (group->tabBar, gw->slot);
 		}
 
-		if ((w != group->ungroupedWindow) && group->nWins > 1)
+		if ((w != group->ungroupedWindow) && !noAnimation && group->nWins > 1)
 		{
 			if (HAS_TOP_WIN (group))
 			{
@@ -608,9 +609,7 @@ groupAddWindowToGroup (CompWindow     *w,
 	if (gw->group)
 	{
 		/* prevent setting up animations on the previous group */
-		gw->group->ungroupedWindow = w;
-		groupDeleteGroupWindow (w, FALSE);
-		gw->group->ungroupedWindow = NULL;
+		groupDeleteGroupWindow (w, TRUE, FALSE);
 	}
 
 	if (group)
@@ -860,7 +859,7 @@ groupRemoveWindow (CompDisplay     *d,
 	GROUP_WINDOW (cw);
 
 	if (gw->group)
-		groupDeleteGroupWindow (cw, TRUE);
+		groupDeleteGroupWindow (cw, FALSE, TRUE);
 
 	return FALSE;
 }
@@ -1280,7 +1279,7 @@ groupHandleButtonReleaseEvent (CompDisplay *d,
 
 		if (groupGetDndUngroupWindow (s) && !wasInTabBar)
 		{
-			groupDeleteGroupWindow (draggedSlotWindow, TRUE);
+			groupDeleteGroupWindow (draggedSlotWindow, FALSE, TRUE);
 		}
 		else if (gw->group && gw->group->topTab)
 		{
@@ -1469,8 +1468,8 @@ groupHandleEvent (CompDisplay *d,
 						/* close event */
 
 						gw->group->ungroupedWindow = w;
-						groupDeleteGroupWindow (w, FALSE);
-					damageScreen (w->screen);
+						groupDeleteGroupWindow (w, TRUE, FALSE);
+						damageScreen (w->screen);
 					}
 				}
 			}

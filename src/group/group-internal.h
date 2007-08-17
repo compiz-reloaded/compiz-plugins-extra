@@ -503,6 +503,7 @@ groupHandleEvent (CompDisplay *d,
 
 void
 groupDeleteGroupWindow (CompWindow *w,
+						Bool       noAnimation,
 						Bool       allowRegroup);
 
 void
