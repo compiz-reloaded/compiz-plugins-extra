@@ -1107,6 +1107,9 @@ groupHandleButtonReleaseEvent (CompDisplay *d,
 	GROUP_WINDOW (gs->draggedSlot->window);
 
 	newRegion = XCreateRegion();
+	if (!newRegion) 
+	    return;
+
 	XUnionRegion (newRegion, gs->draggedSlot->region, newRegion);
 
 	groupGetDrawOffsetForSlot (gs->draggedSlot, &vx, &vy);
@@ -1261,8 +1264,7 @@ groupHandleButtonReleaseEvent (CompDisplay *d,
 			break;
 	}
 
-	if (newRegion)
-		XDestroyRegion (newRegion);
+	XDestroyRegion (newRegion);
 
 	if (!inserted)
 	{
