@@ -434,6 +434,8 @@ groupDeleteGroupWindow (CompWindow *w,
 		}
 	}
 
+	groupSetWindowVisibility (w, TRUE);
+
 	if (group->nWins && group->windows)
 	{
 		CompWindow **buf = group->windows;
