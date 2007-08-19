@@ -255,28 +255,29 @@ cubecapsPaintCap (CompScreen	    *s,
 
     glVertexPointer (3, GL_FLOAT, 0, cs->vertices);
 
+    glEnable (GL_BLEND);
+    /* Draw cap once and reset color so that image will get correctly
+     * blended, and for non-4-horizontal-viewports setups */
+    if (opacity != OPAQUE)
+    {
+	screenTexEnvMode (s, GL_MODULATE);
+	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glDrawArrays (GL_TRIANGLE_FAN, offset, cs->nVertices >> 1);
+    }
+    else
+	glDrawArrays (GL_TRIANGLE_FAN, offset, cs->nVertices >> 1);
+    
+    glColor4usv (defaultColor);
+
     /* It is not really a good idea to draw the cap texture when there are 
      * only three viewports */
     if (cap && cap->texture.name && s->hsize >= 4)
     {
-	glEnable (GL_BLEND);
-	/* Draw cap once and reset color so that image will get correctly
-	 * blended, and for non-4-horizontal-viewports setups */
+	/* Apply blend strategy to blend correctly color and image */
 	if (opacity != OPAQUE)
-	{
-	    screenTexEnvMode (s, GL_MODULATE);
-	    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	    glDrawArrays (GL_TRIANGLE_FAN, offset, cs->nVertices >> 1);
 	    glBlendFunc (GL_DST_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	}
 	else
-	{
-	    /* Apply blend strategy to blend correctly color and image */
-	    glDrawArrays (GL_TRIANGLE_FAN, offset, cs->nVertices >> 1);
 	    glBlendFunc (GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-	}
-	
-	glColor4usv (defaultColor);
 
 	enableTexture (s, &cap->texture, COMP_TEXTURE_FILTER_GOOD);
 
@@ -348,19 +349,13 @@ cubecapsPaintCap (CompScreen	    *s,
 	}
 
 	disableTexture (s, &cap->texture);
-
-	if (opacity != OPAQUE)
-	    screenTexEnvMode (s, GL_REPLACE);
-
-	glDisable (GL_BLEND);
-	glBlendFunc (GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     }
-    else
-    {
-	glDisableClientState (GL_TEXTURE_COORD_ARRAY);
-	glDrawArrays (GL_TRIANGLE_FAN, offset, cs->nVertices >> 1);
-	glEnableClientState (GL_TEXTURE_COORD_ARRAY);
-    }
+
+    if (opacity != OPAQUE)
+	screenTexEnvMode (s, GL_REPLACE);
+
+    glDisable (GL_BLEND);
+    glBlendFunc (GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 /* Cube hooks --------------------------------------------------------------- */
