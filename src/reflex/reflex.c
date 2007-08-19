@@ -42,6 +42,13 @@ typedef struct _ReflexDisplay
 }
 ReflexDisplay;
 
+typedef struct _ReflexFunction
+{
+    int handle;
+    int target;
+    int param;
+    int unit;
+} ReflexFunction;
 
 typedef struct _ReflexScreen
 {
@@ -55,7 +62,7 @@ typedef struct _ReflexScreen
     unsigned int width;
     unsigned int height;
 
-    int function;
+    ReflexFunction function;
 }
 ReflexScreen;
 
@@ -115,8 +122,11 @@ getReflexFragmentFunction (CompScreen  *s,
     }
 
 
-    if (rs->function)
-	return rs->function;
+    if (rs->function.handle &&
+    	rs->function.param  == param  &&
+	rs->function.target == target &&
+	rs->function.unit   == unit)
+	return rs->function.handle;
 
     data = createFunctionData ();
 
@@ -155,7 +165,10 @@ getReflexFragmentFunction (CompScreen  *s,
 
 	handle = createFragmentFunction (s, "reflex", data);
 
-	rs->function = handle;
+	rs->function.handle = handle;
+	rs->function.target = target;
+	rs->function.param  = param;
+	rs->function.unit   = unit;
 
 	destroyFunctionData (data);
 
@@ -403,7 +416,7 @@ reflexInitScreen (CompPlugin *p,
 
     s->privates[rd->screenPrivateIndex].ptr = rs;
 
-    rs->function = 0;
+    rs->function.handle = 0;
 
     WRAP (rs, s, drawWindowTexture, reflexDrawWindowTexture);
 
@@ -421,8 +434,8 @@ reflexFiniScreen (CompPlugin *p,
 
     UNWRAP (rs, s, drawWindowTexture);
 
-    if (rs->function)
-	destroyFragmentFunction (s, rs->function);
+    if (rs->function.handle)
+	destroyFragmentFunction (s, rs->function.handle);
 
     free (rs);
 }
