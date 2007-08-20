@@ -603,8 +603,8 @@ scalefilterHandleEvent (CompDisplay *d,
 
 static void
 scalefilterHandleCompizEvent (CompDisplay *d,
-	 		      char        *pluginName,
-	 		      char        *eventName,
+	 		      const char  *pluginName,
+	 		      const char  *eventName,
 	 		      CompOption  *option,
 	 		      int         nOption)
 {
