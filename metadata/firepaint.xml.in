@@ -4,21 +4,25 @@
 	<_long>Paint fire or other particles on the screen</_long>
 	<category>Effects</category>
 	<display>
-	    <option type="action" name="initiate">
-		<_short>Initiate</_short>
+	    <option type="key" name="initiate_key">
+		<_short>Initiate (key)</_short>
 		<_long>Initiate fire drawing</_long>
-		<allowed key="true" button="true"/>
-		<default>
-		    <button>&lt;Super&gt;&lt;Shift&gt;Button1</button>
-		</default>
+		<default></default>
 	    </option>
-	    <option type="action" name="clear">
-		<_short>Clear</_short>
+	    <option type="button" name="initiate_button">
+		<_short>Initiate (button)</_short>
+		<_long>Initiate fire drawing</_long>
+		<default>&lt;Super&gt;&lt;Shift&gt;Button1</default>
+	    </option>
+	    <option type="key" name="clear_key">
+		<_short>Clear (key)</_short>
 		<_long>Clear</_long>
-		<allowed key="true" button="true"/>
-		<default>
-		    <key>&lt;Super&gt;&lt;Shift&gt;c</key>
-		</default>
+		<default>&lt;Super&gt;&lt;Shift&gt;c</default>
+	    </option>
+	    <option type="button" name="clear_button">
+		<_short>Clear (button)</_short>
+		<_long>Clear</_long>
+		<default></default>
 	    </option>
 	</display>
 	<screen>

@@ -800,9 +800,12 @@ fireInitDisplay (CompPlugin  *p,
 
     WRAP (fd, d, handleEvent, fireHandleEvent);
 
-    firepaintSetInitiateInitiate (d, fireInitiate);
-    firepaintSetInitiateTerminate (d, fireTerminate);
-    firepaintSetClearInitiate (d, fireClear);
+    firepaintSetInitiateKeyInitiate (d, fireInitiate);
+    firepaintSetInitiateKeyTerminate (d, fireTerminate);
+    firepaintSetInitiateButtonInitiate (d, fireInitiate);
+    firepaintSetInitiateButtonTerminate (d, fireTerminate);
+    firepaintSetClearKeyInitiate (d, fireClear);
+    firepaintSetClearButtonInitiate (d, fireClear);
 
     return TRUE;
 }
