@@ -173,10 +173,10 @@ static Bool
 extraWMInitDisplay (CompPlugin  *p,
 		    CompDisplay *d)
 {
-    extrawmSetToggleRedirectInitiate (d, toggleRedirect);
-    extrawmSetToggleAlwaysOnTopInitiate (d, toggleAlwaysOnTop);
-    extrawmSetToggleStickyInitiate (d, toggleSticky);
-    extrawmSetToggleFullscreenInitiate (d, toggleFullscreen);
+    extrawmSetToggleRedirectKeyInitiate (d, toggleRedirect);
+    extrawmSetToggleAlwaysOnTopKeyInitiate (d, toggleAlwaysOnTop);
+    extrawmSetToggleStickyKeyInitiate (d, toggleSticky);
+    extrawmSetToggleFullscreenKeyInitiate (d, toggleFullscreen);
     extrawmSetActivateInitiate (d, activateWin);
 
     return TRUE;
