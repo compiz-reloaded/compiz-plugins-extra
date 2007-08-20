@@ -10,13 +10,18 @@
 			</relation>
 		</deps>
 		<display>
-			<option name="toggle" type="action">
+			<option name="toggle_key" type="key">
 				<_short>Toggle Widget Display</_short>
 				<_long>Show or hide widget windows</_long>
-				<allowed key="true" button="true" edge="true"/>
-				<default>
-					<key>F9</key>
-				</default>
+				<default>F9</default>
+			</option>
+			<option name="toggle_button" type="button">
+				<_short>Toggle Widget Display</_short>
+				<_long>Show or hide widget windows</_long>
+			</option>
+			<option name="toggle_edge" type="edge">
+				<_short>Toggle Widget Display</_short>
+				<_long>Show or hide widget windows</_long>
 			</option>
 		</display>
 		<screen>

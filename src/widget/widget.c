@@ -694,7 +694,9 @@ widgetInitDisplay (CompPlugin  *p,
 
     d->privates[displayPrivateIndex].ptr = wd;
 
-    widgetSetToggleInitiate (d, widgetToggle);
+    widgetSetToggleKeyInitiate (d, widgetToggle);
+    widgetSetToggleButtonInitiate (d, widgetToggle);
+    widgetSetToggleEdgeInitiate (d, widgetToggle);
 
     WRAP (wd, d, handleEvent, widgetHandleEvent);
     WRAP (wd, d, matchPropertyChanged, widgetMatchPropertyChanged);
