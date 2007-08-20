@@ -276,7 +276,7 @@ static Bool addhelperInitDisplay(CompPlugin * p, CompDisplay * d)
 
 	d->privates[displayPrivateIndex].ptr = ad;
 
-	addhelperSetToggleInitiate(d, addhelperToggle);
+	addhelperSetToggleKeyInitiate(d, addhelperToggle);
 	addhelperSetBrightnessNotify(d, addhelperDisplayOptionChanged);
 	addhelperSetOpacityNotify(d, addhelperDisplayOptionChanged);
 	addhelperSetSaturationNotify(d, addhelperDisplayOptionChanged);

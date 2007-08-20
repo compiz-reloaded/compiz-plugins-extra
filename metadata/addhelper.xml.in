@@ -12,13 +12,10 @@
     <display>
       <group>
         <_short>Bindings</_short>
-        <option name="toggle" type="action">
+        <option name="toggle_key" type="key">
           <_short>Toggle AddHelper</_short>
           <_long>Use this to enable/disable AddHelper on the fly.</_long>
-          <allowed key="true"/>
-          <default>
-            <key>&lt;Super&gt;p</key>
-          </default>
+          <default>&lt;Super&gt;p</default>
         </option>
       </group>
       <group>
