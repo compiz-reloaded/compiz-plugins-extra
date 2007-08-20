@@ -7,13 +7,10 @@
     <display>
       <group>
         <_short>Main</_short>
-        <option name="initiate" type="action">
+        <option name="initiate_key" type="key">
           <_short>Initiate</_short>
           <_long>Start benchmark</_long>
-          <allowed key="true"/>
-          <default>
-            <key>&lt;Super&gt;F12</key>
-          </default>
+	  <default>&lt;Super&gt;F12</default>
         </option>
         <option name="disable_limiter" type="bool">
           <_short>Disable limiter</_short>

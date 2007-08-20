@@ -528,7 +528,7 @@ benchInitDisplay (CompPlugin  *p,
 	return FALSE;
     }
 
-    benchSetInitiateInitiate (d, benchInitiate);
+    benchSetInitiateKeyInitiate (d, benchInitiate);
 
     bd->active = FALSE;
     //Record the display
