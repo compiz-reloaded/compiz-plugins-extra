@@ -9,13 +9,10 @@
         <_short>Main</_short>
         <subgroup>
           <_short>Activate</_short>
-          <option name="initiate" type="action">
+          <option name="initiate_key" type="key">
             <_short>Toggle Motion Blur</_short>
             <_long>Toggle motion Blur effect.</_long>
-            <allowed key="true"/>
-            <default>
-              <key>&lt;Control&gt;F12</key>
-            </default>
+            <default>&lt;Control&gt;F12</default>
           </option>
         </subgroup>
       </group>

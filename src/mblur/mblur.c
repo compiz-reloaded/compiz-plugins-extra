@@ -348,7 +348,7 @@ mblurInitDisplay (CompPlugin  *p,
     /* Record the display */
     d->privates[displayPrivateIndex].ptr = md;
 
-    mblurSetInitiateInitiate (d, mblurToggle);
+    mblurSetInitiateKeyInitiate (d, mblurToggle);
 
     return TRUE;
 }
