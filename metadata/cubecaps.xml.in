@@ -17,37 +17,47 @@
 	    </requirement>
 	</deps>
 	<display>
-	    <option name="top_next" type="action">
+	    <option name="top_next_key" type="key">
 		<_short>Next top image</_short>
 		<_long>Advance to next image for top face of the cube</_long>
-		<allowed key="true" button="true" />
 		<passive_grab>false</passive_grab>
-		<default>
-		    <key>space</key>
-		</default>
+		<default>space</default>
 	    </option>
-	    <option name="top_prev" type="action">
+	    <option name="top_next_button" type="button">
+		<_short>Next top image</_short>
+		<_long>Advance to next image for top face of the cube</_long>
+		<passive_grab>false</passive_grab>
+	    </option>
+	    <option name="top_prev_key" type="key">
 		<_short>Prev top image</_short>
 		<_long>Go back to previous image for top face of the cube</_long>
-		<allowed key="true" button="true" />
 		<passive_grab>false</passive_grab>
-		<default>
-		    <key>Backspace</key>
-		</default>
+		<default>Backspace</default>
 	    </option>
-	    <option name="bottom_next" type="action">
+	    <option name="top_prev_button" type="button">
+		<_short>Prev top image</_short>
+		<_long>Go back to previous image for top face of the cube</_long>
+		<passive_grab>false</passive_grab>
+	    </option>
+	    <option name="bottom_next_key" type="key">
 		<_short>Next bottom image</_short>
 		<_long>Advance to next image for bottom face of the cube</_long>
-		<allowed key="true" button="true" />
 		<passive_grab>false</passive_grab>
-		<default />
 	    </option>
-	    <option name="bottom_prev" type="action">
+	    <option name="bottom_next_button" type="button">
+		<_short>Next bottom image</_short>
+		<_long>Advance to next image for bottom face of the cube</_long>
+		<passive_grab>false</passive_grab>
+	    </option>
+	    <option name="bottom_prev_key" type="key">
 		<_short>Prev bottom image</_short>
 		<_long>Go back to previous image for bottom face of the cube</_long>
-		<allowed key="true" button="true" />
 		<passive_grab>false</passive_grab>
-		<default />
+	    </option>
+	    <option name="bottom_prev_button" type="button">
+		<_short>Prev bottom image</_short>
+		<_long>Go back to previous image for bottom face of the cube</_long>
+		<passive_grab>false</passive_grab>
 	    </option>
 	</display>
 	<screen>

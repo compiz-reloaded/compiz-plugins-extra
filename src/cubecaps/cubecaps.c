@@ -689,10 +689,15 @@ cubecapsInitDisplay (CompPlugin  *p,
 	return FALSE;
     }
 
-    cubecapsSetTopNextInitiate (d, cubecapsTopNext);
-    cubecapsSetTopPrevInitiate (d, cubecapsTopPrev);
-    cubecapsSetBottomNextInitiate (d, cubecapsBottomNext);
-    cubecapsSetBottomPrevInitiate (d, cubecapsBottomPrev);
+    cubecapsSetTopNextKeyInitiate (d, cubecapsTopNext);
+    cubecapsSetTopPrevKeyInitiate (d, cubecapsTopPrev);
+    cubecapsSetBottomNextKeyInitiate (d, cubecapsBottomNext);
+    cubecapsSetBottomPrevKeyInitiate (d, cubecapsBottomPrev);
+
+    cubecapsSetTopNextButtonInitiate (d, cubecapsTopNext);
+    cubecapsSetTopPrevButtonInitiate (d, cubecapsTopPrev);
+    cubecapsSetBottomNextButtonInitiate (d, cubecapsBottomNext);
+    cubecapsSetBottomPrevButtonInitiate (d, cubecapsBottomPrev);
 
     d->privates[displayPrivateIndex].ptr = ccd;
 
