@@ -7,13 +7,10 @@
     <display>
       <group>
         <_short>Main</_short>
-        <option name="initiate" type="action">
+        <option name="initiate_key" type="key">
           <_short>Initiate Splash</_short>
           <_long>Start Splash.</_long>
-          <allowed key="true"/>
-          <default>
-            <key>&lt;Control&gt;F11</key>
-          </default>
+          <default>&lt;Control&gt;F11</default>
         </option>
         <option name="firststart" type="bool">
           <_short>Show on first start</_short>

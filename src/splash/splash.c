@@ -603,7 +603,7 @@ splashInitDisplay (CompPlugin  *p,
 
     sd->splashAtom = XInternAtom (d->display, "_COMPIZ_WM_SPLASH", 0);
 
-    splashSetInitiateInitiate (d, splashInitiate);
+    splashSetInitiateKeyInitiate (d, splashInitiate);
 
     d->privates[displayPrivateIndex].ptr = sd;
     return TRUE;
