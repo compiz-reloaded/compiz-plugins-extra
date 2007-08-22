@@ -964,9 +964,16 @@ groupPreparePaintScreen (CompScreen *s,
 				groupHandleTabBarAnimation (group, msSinceLastPaint);
 		}
 
-		groupHandleUntab (group);
-		groupHandleTabChange (group);
-		groupHandleAnimation (group);
+		/* FIXME: move this call to the originator of the untabbing itself */
+		if (group->tabbingState != NoTabbing)
+			if (!group->topTab && group->changeTab)
+				groupHandleUntab (group);
+
+		if (group->changeTab && HAS_TOP_WIN (group))
+			groupHandleTabChange (group);
+
+		if (group->tabbingState == NoTabbing && HAS_TOP_WIN (group))
+			groupHandleAnimation (group);
 
 		if (group->tabbingState != NoTabbing)
 			groupDrawTabAnimation (group, msSinceLastPaint);

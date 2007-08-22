@@ -718,13 +718,8 @@ groupTabChangeActivateEvent (CompScreen *s,
 void
 groupHandleTabChange (GroupSelection *group)
 {
-	CompScreen *s;
+	CompScreen *s = group->screen;
 	CompWindow *topTab;
-
-	if (!group || !HAS_TOP_WIN (group) || !group->changeTab)
-		return;
-
-	s = group->screen;
 
 	GROUP_SCREEN (s);
 
@@ -813,9 +808,6 @@ groupHandleAnimation (GroupSelection *group)
 {
 	CompScreen *s = group->screen;
 
-	if (group->tabbingState != NoTabbing || !HAS_TOP_WIN (group))
-		return;
-
 	if (screenGrabExist (s, "rotate", "plane", "wall", 0))
 		return;
 
@@ -900,12 +892,6 @@ groupHandleAnimation (GroupSelection *group)
 void
 groupHandleUntab (GroupSelection *group)
 {
-	if (group->tabbingState == NoTabbing)
-		return;
-
-	if (group->topTab || !group->changeTab)
-		return;
-
 	groupDeleteTabBar (group);
 
 	group->changeAnimationTime = 0;
