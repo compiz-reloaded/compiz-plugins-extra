@@ -1209,7 +1209,7 @@ groupDrawTabAnimation (CompScreen *s,
 
 					/* TODO: move the ungrouping code over to here
 					   so that we can completely clear gw->animateState */
-					gw->animateState = &= IS_UNGROUPING;
+					gw->animateState &= ~IS_UNGROUPING;
 					gw->tx = gw->ty = gw->xVelocity = gw->yVelocity = 0.0f;
 				}
 				break;
