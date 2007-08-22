@@ -469,9 +469,10 @@ void
 groupDeleteGroup (GroupSelection *group)
 {
 	GroupSelection *next, *prev;
+	CompScreen     *s = group->screen;
 
-	GROUP_SCREEN (group->screen);
-	GROUP_DISPLAY (group->screen->display);
+	GROUP_SCREEN (s);
+	GROUP_DISPLAY (s->display);
 
 	if (group->windows)
 	{
@@ -479,6 +480,8 @@ groupDeleteGroup (GroupSelection *group)
 
 		if (group->tabBar)
 		{
+			/* set up untabbing animation and delete the group
+			   at the end of the animation */
 			groupUntabGroup (group);
 			group->ungroupState = UngroupAll;
 			return;
@@ -494,8 +497,8 @@ groupDeleteGroup (GroupSelection *group)
 			updateWindowOutputExtents (cw);
 			groupUpdateWindowProperty (cw);
 
-			if (groupGetAutotabCreate (group->screen) &&
-				matchEval (groupGetWindowMatch (group->screen), cw))
+			if (groupGetAutotabCreate (s) &&
+				matchEval (groupGetWindowMatch (s), cw))
 			{
 				groupAddWindowToGroup (cw, NULL, 0);
 				groupTabGroup (cw);
@@ -936,78 +939,74 @@ groupHandleButtonPressEvent (CompScreen *s,
 
 	for (group = gs->groups; group; group = group->next)
 	{
-		if ((group->inputPrevention == event->xbutton.window) && group->tabBar)
-		{
-			switch (button) {
-			case Button1:
+		if (group->inputPrevention != event->xbutton.window)
+			continue;
+
+		if (!group->tabBar)
+			continue;
+
+		switch (button) {
+		case Button1:
+			{
+				GroupTabBarSlot *slot;
+
+				for (slot = group->tabBar->slots; slot; slot = slot->next)
 				{
-					GroupTabBarSlot *slot;
-
-					for (slot = group->tabBar->slots; slot; slot = slot->next)
+					if (XPointInRegion (slot->region, xRoot, yRoot))
 					{
-						if (XPointInRegion (slot->region, xRoot, yRoot))
-						{
-							gs->draggedSlot = slot;
-							/* The slot isn't dragged yet */
-							gs->dragged = FALSE;
-							gs->prevX = xRoot;
-							gs->prevY = yRoot;
+						gs->draggedSlot = slot;
+						/* The slot isn't dragged yet */
+						gs->dragged = FALSE;
+						gs->prevX = xRoot;
+						gs->prevY = yRoot;
 
-							if (gs->grabState == ScreenGrabNone)
-							{
-								if (!otherScreenGrabExist(s, "group",
-														  "group-drag"))
-								{
-									groupGrabScreen (s, ScreenGrabTabDrag);
-								}
-							}
-						}
+						if (!otherScreenGrabExist(s, "group", "group-drag"))
+							groupGrabScreen (s, ScreenGrabTabDrag);
 					}
-					break;
 				}
-
-			case Button4:
-			case Button5:
-				{
-					CompWindow  *topTab = NULL;
-					GroupWindow *gw;
-
-					if (group->nextTopTab)
-						topTab = NEXT_TOP_TAB (group);
-					else if (group->topTab)
-					{
-						 /* If there are no tabbing animations,
-							topTab is never NULL. */
-						topTab = TOP_TAB (group);
-					}
-
-					if (!topTab)
-						return;
-
-					gw = GET_GROUP_WINDOW (topTab, gs);
-
-					if (button == Button4)
-					{
-						if (gw->slot->prev)
-							groupChangeTab (gw->slot->prev, RotateLeft);
-						else
-							groupChangeTab (gw->group->tabBar->revSlots,
-											RotateLeft);
-					}
-					else
-					{
-						if (gw->slot->next)
-							groupChangeTab (gw->slot->next, RotateRight);
-						else
-							groupChangeTab (gw->group->tabBar->slots,
-											RotateRight);
-					}
-					break;
-				}
+				break;
 			}
 
-			break;
+		case Button4:
+		case Button5:
+			{
+				CompWindow  *topTab = NULL;
+				GroupWindow *gw;
+
+				if (group->nextTopTab)
+					topTab = NEXT_TOP_TAB (group);
+				else if (group->topTab)
+				{
+					/* If there are no tabbing animations,
+					   topTab is never NULL. */
+					topTab = TOP_TAB (group);
+				}
+
+				if (!topTab)
+					return;
+
+				gw = GET_GROUP_WINDOW (topTab, gs);
+
+				if (button == Button4)
+				{
+					if (gw->slot->prev)
+						groupChangeTab (gw->slot->prev, RotateLeft);
+					else
+						groupChangeTab (gw->group->tabBar->revSlots,
+										RotateLeft);
+				}
+				else
+				{
+					if (gw->slot->next)
+						groupChangeTab (gw->slot->next, RotateRight);
+					else
+						groupChangeTab (gw->group->tabBar->slots, RotateRight);
+				}
+				break;
+			}
 		}
+
+		break;
 	}
 }
 
