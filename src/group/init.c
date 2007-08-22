@@ -207,19 +207,19 @@ groupInitDisplay (CompPlugin  *p,
 
 	WRAP (gd, d, handleEvent, groupHandleEvent);
 
-	groupSetSelectInitiate (d, groupSelect);
-	groupSetSelectTerminate (d, groupSelectTerminate);
-	groupSetSelectSingleInitiate (d, groupSelectSingle);
-	groupSetGroupInitiate (d, groupGroupWindows);
-	groupSetUngroupInitiate (d, groupUnGroupWindows);
-	groupSetTabmodeInitiate (d, groupInitTab);
-	groupSetChangeTabLeftInitiate (d, groupChangeTabLeft);
-	groupSetChangeTabRightInitiate (d, groupChangeTabRight);
-	groupSetRemoveInitiate (d, groupRemoveWindow);
-	groupSetCloseInitiate (d, groupCloseWindows);
-	groupSetIgnoreInitiate (d, groupSetIgnore);
-	groupSetIgnoreTerminate (d, groupUnsetIgnore);
-	groupSetChangeColorInitiate (d, groupChangeColor);
+	groupSetSelectButtonInitiate (d, groupSelect);
+	groupSetSelectButtonTerminate (d, groupSelectTerminate);
+	groupSetSelectSingleKeyInitiate (d, groupSelectSingle);
+	groupSetGroupKeyInitiate (d, groupGroupWindows);
+	groupSetUngroupKeyInitiate (d, groupUnGroupWindows);
+	groupSetTabmodeKeyInitiate (d, groupInitTab);
+	groupSetChangeTabLeftKeyInitiate (d, groupChangeTabLeft);
+	groupSetChangeTabRightKeyInitiate (d, groupChangeTabRight);
+	groupSetRemoveKeyInitiate (d, groupRemoveWindow);
+	groupSetCloseKeyInitiate (d, groupCloseWindows);
+	groupSetIgnoreKeyInitiate (d, groupSetIgnore);
+	groupSetIgnoreKeyTerminate (d, groupUnsetIgnore);
+	groupSetChangeColorKeyInitiate (d, groupChangeColor);
 
 	d->privates[groupDisplayPrivateIndex].ptr = gd;
 

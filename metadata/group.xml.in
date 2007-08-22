@@ -15,19 +15,14 @@
         <_short>Selection</_short>
         <subgroup>
           <_short>Key bindings</_short>
-          <option name="select" type="action">
+          <option name="select_button" type="button">
             <_short>Select</_short>
             <_long>The key for starting selecting windows.</_long>
-            <allowed button="true"/>
-            <default/>
           </option>
-          <option name="select_single" type="action">
+          <option name="select_single_key" type="key">
             <_short>Select Single Window</_short>
             <_long>The key for selecting the current window.</_long>
-            <allowed key="true"/>
-            <default>
-              <key>&lt;Super&gt;s</key>
-            </default>
+            <default>&lt;Super&gt;s</default>
           </option>
         </subgroup>
       </group>
@@ -35,45 +30,30 @@
         <_short>Grouping</_short>
         <subgroup>
           <_short>Key bindings</_short>
-          <option name="group" type="action">
+          <option name="group_key" type="key">
             <_short>Group Windows</_short>
             <_long>The key for grouping windows.</_long>
-            <allowed key="true"/>
-            <default>
-              <key>&lt;Super&gt;g</key>
-            </default>
+            <default>&lt;Super&gt;g</default>
           </option>
-          <option name="ungroup" type="action">
+          <option name="ungroup_key" type="key">
             <_short>Ungroup Windows</_short>
             <_long>The key for ungrouping the current group.</_long>
-            <allowed key="true"/>
-            <default>
-              <key>&lt;Super&gt;u</key>
-            </default>
+            <default>&lt;Super&gt;u</default>
           </option>
-          <option name="remove" type="action">
+          <option name="remove_key" type="key">
             <_short>Remove Group Window</_short>
             <_long>The key for removing the selected window from its group.</_long>
-            <allowed key="true"/>
-            <default>
-              <key>&lt;Super&gt;r</key>
-            </default>
+            <default>&lt;Super&gt;r</default>
           </option>
-          <option name="close" type="action">
+          <option name="close_key" type="key">
             <_short>Close Group</_short>
             <_long>The key for closing all windows in the group.</_long>
-            <allowed key="true"/>
-            <default>
-              <key>&lt;Super&gt;c</key>
-            </default>
+            <default>&lt;Super&gt;c</default>
           </option>
-          <option name="ignore" type="action">
+          <option name="ignore_key" type="key">
             <_short>Ignore Group</_short>
             <_long>The key for ignoring the group. If this key is pressed, you can do actions for a single window in the group only.</_long>
-            <allowed key="true"/>
-            <default>
-              <key>&lt;Super&gt;x</key>
-            </default>
+            <default>&lt;Super&gt;x</default>
           </option>
         </subgroup>
       </group>
@@ -81,29 +61,20 @@
         <_short>Tabbing</_short>
         <subgroup>
           <_short>Key bindings</_short>
-          <option name="tabmode" type="action">
+          <option name="tabmode_key" type="key">
             <_short>Tab Group</_short>
             <_long>The key for toggling the tab mode for the current group.</_long>
-            <allowed key="true"/>
-            <default>
-              <key>&lt;Super&gt;t</key>
-            </default>
+            <default>&lt;Super&gt;t</default>
           </option>
-          <option name="change_tab_left" type="action">
+          <option name="change_tab_left_key" type="key">
             <_short>Change Tab Left</_short>
             <_long>The key for switching to the tab left of the current one.</_long>
-            <allowed key="true"/>
-            <default>
-              <key>&lt;Super&gt;Left</key>
-            </default>
+            <default>&lt;Super&gt;Left</default>
           </option>
-          <option name="change_tab_right" type="action">
+          <option name="change_tab_right_key" type="key">
             <_short>Change Tab Right</_short>
             <_long>The key for switching to the tab right of the current one.</_long>
-            <allowed key="true"/>
-            <default>
-              <key>&lt;Super&gt;Right</key>
-            </default>
+            <default>&lt;Super&gt;Right</default>
           </option>
         </subgroup>
       </group>
@@ -111,11 +82,9 @@
         <_short>Glow</_short>
         <subgroup>
           <_short>Key bindings</_short>
-          <option name="change_color" type="action">
+          <option name="change_color_key" type="key">
             <_short>Glow Color Change</_short>
             <_long>If you don't like the current glow color, you can change it with this key.</_long>
-            <allowed key="true"/>
-            <default/>
           </option>
         </subgroup>
       </group>
