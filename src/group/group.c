@@ -43,9 +43,10 @@ groupDragHoverTimeout (void* closure)
 
 	if (groupGetBarAnimations (w->screen))
 	{
-		gw->group->tabBar->bgAnimation = AnimationPulse;
-		gw->group->tabBar->bgAnimationTime =
-			groupGetPulseTime(w->screen) * 1000;
+		GroupTabBar *bar = gw->group->tabBar;
+
+		bar->bgAnimation = AnimationPulse;
+		bar->bgAnimationTime = groupGetPulseTime (w->screen) * 1000;
 	}
 
 	activateWindow (w);
@@ -641,10 +642,10 @@ groupAddWindowToGroup (CompWindow     *w,
 		g->oldTopTabCenterY = 0;
 
 		/* glow color */
-		g->color[0] = (int)(rand() / (((double)RAND_MAX + 1)/ 0xffff));
-		g->color[1] = (int)(rand() / (((double)RAND_MAX + 1)/ 0xffff));
-		g->color[2] = (int)(rand() / (((double)RAND_MAX + 1)/ 0xffff));
-		g->color[3] = 0xFFFF;
+		g->color[0] = (int)(rand () / (((double)RAND_MAX + 1) / 0xffff));
+		g->color[1] = (int)(rand () / (((double)RAND_MAX + 1) / 0xffff));
+		g->color[2] = (int)(rand () / (((double)RAND_MAX + 1) / 0xffff));
+		g->color[3] = 0xffff;
 
 		if (initialIdent)
 			g->identifier = initialIdent;
@@ -772,15 +773,16 @@ groupUnGroupWindows (CompDisplay     *d,
 					 CompOption      *option,
 					 int             nOption)
 {
-	CompWindow *cw;
-	cw = findWindowAtDisplay (d, d->activeWindow);
-	if (!cw)
-		return FALSE;
+	CompWindow *w;
 
-	GROUP_WINDOW (cw);
+	w = findTopLevelWindowAtDisplay (d, d->activeWindow);
+	if (w)
+	{
+		GROUP_WINDOW (w);
 
-	if (gw->group)
-		groupDeleteGroup (gw->group);
+		if (gw->group)
+			groupDeleteGroup (gw->group);
+	}
 
 	return FALSE;
 }
@@ -796,15 +798,16 @@ groupRemoveWindow (CompDisplay     *d,
 				   CompOption      *option,
 				   int             nOption)
 {
-	CompWindow *cw;
-	cw = findWindowAtDisplay (d, d->activeWindow);
-	if (!cw)
-		return FALSE;
+	CompWindow *w;
 
-	GROUP_WINDOW (cw);
+	w = findWindowAtDisplay (d, d->activeWindow);
+	if (w)
+	{
+		GROUP_WINDOW (w);
 
-	if (gw->group)
-		groupRemoveWindowFromGroup (cw);
+		if (gw->group)
+			groupRemoveWindowFromGroup (w);
+	}
 
 	return FALSE;
 }
@@ -821,20 +824,20 @@ groupCloseWindows (CompDisplay     *d,
 				   int             nOption)
 {
 	CompWindow *w;
+
 	w = findWindowAtDisplay (d, d->activeWindow);
-	if (!w)
-		return FALSE;
-
-	GROUP_WINDOW (w);
-
-	if (gw->group)
+	if (w)
 	{
-		int nWins = gw->group->nWins;
-		int i;
+		GROUP_WINDOW (w);
 
-		for (i = 0; i < nWins; i++)
-			closeWindow (gw->group->windows[i],
-						 getCurrentTimeFromDisplay (d));
+		if (gw->group)
+		{
+			int i;
+
+			for (i = 0; i < gw->group->nWins; i++)
+				closeWindow (gw->group->windows[i],
+							 getCurrentTimeFromDisplay (d));
+		}
 	}
 
 	return FALSE;
@@ -852,20 +855,23 @@ groupChangeColor (CompDisplay     *d,
 				  int             nOption)
 {
 	CompWindow *w;
+
 	w = findWindowAtDisplay (d, d->activeWindow);
-	if (!w)
-		return FALSE;
-
-	GROUP_WINDOW (w);
-
-	if (gw->group)
+	if (w)
 	{
-		gw->group->color[0] = (int)(rand () / (((double)RAND_MAX + 1)/ 0xffff));
-		gw->group->color[1] = (int)(rand () / (((double)RAND_MAX + 1)/ 0xffff));
-		gw->group->color[2] = (int)(rand () / (((double)RAND_MAX + 1)/ 0xffff));
+		GROUP_WINDOW (w);
 
-		groupRenderTopTabHighlight (gw->group);
-		damageScreen (w->screen);
+		if (gw->group)
+		{
+			GLushort *color = gw->group->color;
+
+			color[0] = (int)(rand () / (((double)RAND_MAX + 1) / 0xffff));
+			color[1] = (int)(rand () / (((double)RAND_MAX + 1) / 0xffff));
+			color[2] = (int)(rand () / (((double)RAND_MAX + 1) / 0xffff));
+
+			groupRenderTopTabHighlight (gw->group);
+			damageScreen (w->screen);
+		}
 	}
 
 	return FALSE;
@@ -917,16 +923,11 @@ groupUnsetIgnore (CompDisplay     *d,
  *
  */
 static void
-groupHandleButtonPressEvent (CompDisplay *d,
-							 XEvent      *event)
+groupHandleButtonPressEvent (CompScreen *s,
+							 XEvent     *event)
 {
 	GroupSelection *group;
 	int            xRoot, yRoot, button;
-	CompScreen     *s;
-
-	s = findScreenAtDisplay (d, event->xbutton.root);
-	if (!s)
-		return;
 
 	GROUP_SCREEN (s);
 
@@ -1016,24 +1017,19 @@ groupHandleButtonPressEvent (CompDisplay *d,
  *
  */
 static void
-groupHandleButtonReleaseEvent (CompDisplay *d,
-							   XEvent      *event)
+groupHandleButtonReleaseEvent (CompScreen *s,
+							   XEvent     *event)
 {
 	GroupSelection *group;
-	CompScreen     *s;
 	int            vx, vy;
 	Region         newRegion;
 	Bool           inserted = FALSE;
 	Bool           wasInTabBar = FALSE;
 
+	GROUP_SCREEN (s);
+
 	if (event->xbutton.button != 1)
 		return;
-
-	s = findScreenAtDisplay(d, event->xbutton.root);
-	if (!s)
-		return;
-
-	GROUP_SCREEN (s);
 
 	if (!gs->draggedSlot)
 		return;
@@ -1346,12 +1342,24 @@ groupHandleEvent (CompDisplay *d,
 		}
 
 	case ButtonPress:
-		groupHandleButtonPressEvent (d, event);
-		break;
+		{
+			CompScreen *s;
+			s = findScreenAtDisplay (d, event->xbutton.root);
+			if (s)
+				groupHandleButtonPressEvent (s, event);
+
+			break;
+		}
 
 	case ButtonRelease:
-		groupHandleButtonReleaseEvent (d, event);
-		break;
+		{
+			CompScreen *s;
+			s = findScreenAtDisplay (d, event->xbutton.root);
+			if (s)
+				groupHandleButtonReleaseEvent (s, event);
+
+			break;
+		}
 
 	case MapNotify:
 		{
