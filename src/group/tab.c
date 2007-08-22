@@ -724,8 +724,6 @@ groupTabChangeActivateEvent (CompScreen *s,
  * rotate animation and PaintFadeOut is the end of these
  * animation.
  *
- * FIXME: merge this with groupHandleTabChange and call only when 
- *        necessary (which means changeAnimationTime <= 0)
  */
 void
 groupHandleAnimation (GroupSelection *group)
