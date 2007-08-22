@@ -715,69 +715,6 @@ groupTabChangeActivateEvent (CompScreen *s,
 }
 
 /*
- * groupHandleTabChange
- *
- * Description:
- * This function is also called from groupHandleChanges to handle
- * the tab change. It moved the new topTab on the screen as well as doing
- * the initial set for the tab change animation.
- *
- */
-void
-groupHandleTabChange (GroupSelection *group)
-{
-	CompScreen *s = group->screen;
-	CompWindow *topTab;
-
-	// exit when there is a rotate or plane animation
-	if (screenGrabExist (s, "rotate", "plane", "wall", 0))
-		return;
-
-	topTab = TOP_TAB (group);
-
-	if (group->tabbingState != NoTabbing)
-	{
-		/* if the previous top-tab window is being removed
-		   from the group, move the new top-tab window onscreen. */
-		if (group->ungroupState == UngroupSingle && !group->prevTopTab)
-		{
-			groupSetWindowVisibility (topTab, TRUE);
-
-			/* recalc here is needed (for y value)! */
-			groupRecalcTabBarPos (group,
-								  (group->tabBar->region->extents.x1 +
-								   group->tabBar->region->extents.x2) / 2,
-								  WIN_REAL_X (topTab),
-								  WIN_REAL_X (topTab) +
-								  WIN_REAL_WIDTH (topTab));
-
-			group->prevTopTab = group->topTab;
-		}
-
-		return;
-	}
-
-	groupSetWindowVisibility (topTab, TRUE);
-
-	if (group->prevTopTab)
-	{
-		/* we use only the half time here -
-		   the second half will be PaintFadeOut */
-		group->changeAnimationTime = groupGetChangeAnimationTime (s) * 500;
-		groupTabChangeActivateEvent (s, TRUE);
-		group->changeState = TabChangeOldOut;
-	}
-	else
-	{
-		/* No window to do animation with. */
-		group->prevTopTab = group->topTab;
-		activateWindow (TOP_TAB (group));
-	}
-
-	return;
-}
-
-/*
  * groupHandleAnimation
  *
  * Description:
@@ -1798,6 +1735,44 @@ groupChangeTab (GroupTabBarSlot             *topTab,
 		addWindowDamage (w);
 	}
 
+	if (group->tabbingState != NoTabbing)
+	{
+		/* if the previous top-tab window is being removed
+		   from the group, move the new top-tab window onscreen. */
+		if (group->ungroupState == UngroupSingle && !group->prevTopTab)
+		{
+			groupSetWindowVisibility (w, TRUE);
+
+			/* recalc here is needed (for y value)! */
+			groupRecalcTabBarPos (group,
+								  (group->tabBar->region->extents.x1 +
+								   group->tabBar->region->extents.x2) / 2,
+								  WIN_REAL_X (w),
+								  WIN_REAL_X (w) + WIN_REAL_WIDTH (w));
+
+			group->prevTopTab = group->topTab;
+		}
+	}
+	else
+	{
+		groupSetWindowVisibility (w, TRUE);
+
+		if (group->prevTopTab)
+		{
+			/* we use only the half time here -
+			   the second half will be PaintFadeOut */
+			group->changeAnimationTime = 
+				groupGetChangeAnimationTime (w->screen) * 500;
+			groupTabChangeActivateEvent (w->screen, TRUE);
+			group->changeState = TabChangeOldOut;
+		}
+		else
+		{
+			/* No window to do animation with. */
+			group->prevTopTab = group->topTab;
+			activateWindow (TOP_TAB (group));
+		}
+	}
 	return TRUE;
 }
 

@@ -964,10 +964,6 @@ groupPreparePaintScreen (CompScreen *s,
 				groupHandleTabBarAnimation (group, msSinceLastPaint);
 		}
 
-		if (group->changeState == TabChangeOldOut &&
-		    HAS_TOP_WIN (group))
-			groupHandleTabChange (group);
-
 		if (group->tabbingState == NoTabbing && HAS_TOP_WIN (group))
 			groupHandleAnimation (group);
 

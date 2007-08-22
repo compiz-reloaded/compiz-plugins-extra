@@ -619,9 +619,6 @@ groupClearWindowInputShape (CompWindow          *w,
 							GroupWindowHideInfo *hideInfo);
 
 void
-groupHandleTabChange (GroupSelection *group);
-
-void
 groupHandleAnimation (GroupSelection *group);
 
 GroupSelection*
