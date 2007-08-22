@@ -133,10 +133,7 @@ groupPaintTabBar (GroupSelection          *group,
 	CompWindow      *topTab;
 	CompScreen      *s = group->screen;
 	GroupTabBar     *bar = group->tabBar;
-	GroupTabBarSlot *slot;
-	int             i, alpha;
-	float           wScale, hScale;
-	GroupCairoLayer *layer;
+	int             count;
 	REGION          box;
 
 	GROUP_SCREEN (s);
@@ -155,19 +152,18 @@ groupPaintTabBar (GroupSelection          *group,
 	box.rects = &box.extents;
 	box.numRects = 1;
 
-	for (i = 0; i < PAINT_MAX; i++)
+	for (count = 0; count < PAINT_MAX; count++)
 	{
-		alpha = OPAQUE;
+		int             alpha = OPAQUE;
+		float           wScale = 1.0f, hScale = 1.0f;
+		GroupCairoLayer *layer = NULL;
 
 		if (bar->state == PaintFadeIn)
 			alpha -= alpha * bar->animationTime / (groupGetFadeTime (s) * 1000);
 		else if (bar->state == PaintFadeOut)
 			alpha = alpha * bar->animationTime / (groupGetFadeTime (s) * 1000);
 
-		wScale = hScale = 1.0f;
-		layer = NULL;
-
-		switch (i) {
+		switch (count) {
 		case PAINT_BG:
 			{
 				int newWidth;
@@ -190,8 +186,8 @@ groupPaintTabBar (GroupSelection          *group,
 
 				bar->oldWidth = newWidth;
 				box.extents = bar->region->extents;
-				break;
 			}
+			break;
 
 		case PAINT_SEL:
 			if (group->topTab != gs->draggedSlot)
@@ -203,7 +199,9 @@ groupPaintTabBar (GroupSelection          *group,
 
 		case PAINT_THUMBS:
 			{
-				GLenum oldTextureFilter;
+				GLenum          oldTextureFilter;
+				GroupTabBarSlot *slot;
+				
 				oldTextureFilter = s->display->textureFilter;
 
 				if (groupGetMipmaps (s))
@@ -217,8 +215,8 @@ groupPaintTabBar (GroupSelection          *group,
 				}
 
 				s->display->textureFilter = oldTextureFilter;
-				break;
 			}
+			break;
 
 		case PAINT_TEXT:
 			if (bar->textLayer && (bar->textLayer->state != PaintOff))
@@ -468,7 +466,7 @@ groupPaintOutput (CompScreen              *s,
 		if ((gs->grabState == ScreenGrabTabDrag) && gs->draggedSlot)
 		{
 			CompTransform wTransform = *transform;
-			PaintState state;
+			PaintState    state;
 
 			GROUP_WINDOW (gs->draggedSlot->window);
 

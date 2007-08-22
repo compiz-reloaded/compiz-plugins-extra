@@ -838,6 +838,65 @@ adjustTabVelocity (CompWindow *w)
 	return 1;
 }
 
+static void
+groupFinishTabbing (GroupSelection *group)
+{
+	CompScreen *s = group->screen;
+	int        i;
+
+	GROUP_SCREEN (s);
+
+	group->tabbingState = NoTabbing;
+	groupTabChangeActivateEvent (s, FALSE);
+
+	if (HAS_TOP_WIN (group))
+	{
+		/* tabbing case - hide all non-toptab windows */
+		GroupTabBarSlot *slot;
+
+		for (slot = group->tabBar->slots; slot; slot = slot->next)
+		{
+			CompWindow *w = slot->window;
+			if (!w)
+				continue;
+
+			GROUP_WINDOW (w);
+
+			if (slot == group->topTab || (gw->animateState & IS_UNGROUPING))
+				continue;
+
+			groupSetWindowVisibility (w, FALSE);
+		}
+		group->prevTopTab = group->topTab;
+	}
+
+	for (i = 0; i < group->nWins; i++)
+	{
+		CompWindow *w = group->windows[i];
+		GROUP_WINDOW (w);
+
+		/* move window to target position */
+		gs->queued = TRUE;
+		moveWindow (w, gw->destination.x - WIN_X (w),
+					gw->destination.y - WIN_Y (w), TRUE, TRUE);
+		gs->queued = FALSE;
+		syncWindowPosition (w);
+
+		if (group->ungroupState == UngroupSingle &&
+			(gw->animateState & IS_UNGROUPING))
+		{
+			groupRemoveWindowFromGroup (w);
+		}
+
+		gw->animateState = 0;
+		gw->tx = gw->ty = gw->xVelocity = gw->yVelocity = 0.0f;
+	}
+
+	if (group->ungroupState == UngroupAll)
+		groupDeleteGroup (group);
+	group->ungroupState = UngroupNone;
+}
+
 /*
  * groupDrawTabAnimation
  *
@@ -893,64 +952,8 @@ groupDrawTabAnimation (GroupSelection *group,
 
 		if (!doTabbing)
 		{
-			GROUP_SCREEN (s);
-
 			/* tabbing animation finished */
-			group->tabbingState = NoTabbing;
-			groupTabChangeActivateEvent (s, FALSE);
-
-			if (HAS_TOP_WIN (group))
-			{
-				/* tabbing case - hide all non-toptab windows */
-				GroupTabBarSlot *slot;
-
-				for (slot = group->tabBar->slots; slot; slot = slot->next)
-				{
-					CompWindow *w = slot->window;
-					if (!w)
-						continue;
-
-					GROUP_WINDOW (w);
-
-					if (slot == group->topTab ||
-						(gw->animateState & IS_UNGROUPING))
-					{
-						continue;
-					}
-
-					groupSetWindowVisibility (w, FALSE);
-				}
-				group->prevTopTab = group->topTab;
-			}
-
-			for (i = 0; i < group->nWins; i++)
-			{
-				CompWindow *w = group->windows[i];
-				GROUP_WINDOW (w);
-
-				/* move window to target position */
-				gs->queued = TRUE;
-				moveWindow (w, gw->destination.x - WIN_X (w),
-							gw->destination.y - WIN_Y (w),
-							TRUE, TRUE);
-				gs->queued = FALSE;
-				syncWindowPosition (w);
-
-				if (group->ungroupState == UngroupSingle &&
-					(gw->animateState & IS_UNGROUPING))
-				{
-					groupRemoveWindowFromGroup (w);
-				}
-
-				gw->animateState = 0;
-				gw->tx = gw->ty = gw->xVelocity = gw->yVelocity = 0.0f;
-			}
-
-			if (group->ungroupState == UngroupSingle)
-				group->ungroupState = UngroupNone;
-			else if (group->ungroupState == UngroupAll)
-				groupDeleteGroup (group);
-
+			groupFinishTabbing (group);
 			break;
 		}
 	}
