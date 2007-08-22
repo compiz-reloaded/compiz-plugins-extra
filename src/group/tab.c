@@ -962,7 +962,7 @@ groupHandleUngroup (GroupSelection *group)
 			CompWindow *w = group->windows[i];
 			GROUP_WINDOW (w);
 
-			if (gw->ungroup)
+			if (gw->animateState & IS_UNGROUPING)
 			{
 				gs->queued = TRUE;
 				groupSetWindowVisibility (w, TRUE);
@@ -979,7 +979,6 @@ groupHandleUngroup (GroupSelection *group)
 
 		group->changeTab = FALSE;
 	}
-
 	if ((group->ungroupState == UngroupSingle) &&
 		(group->tabbingState == PaintOff))
 	{
@@ -994,10 +993,10 @@ groupHandleUngroup (GroupSelection *group)
 				CompWindow *w = group->windows[i];
 				GROUP_WINDOW (w);
 
-				if (gw->ungroup)
+				if (gw->animateState & IS_UNGROUPING)
 				{
 					groupDeleteGroupWindow (w, TRUE);
-					gw->ungroup = FALSE;
+					gw->animateState &= ~IS_UNGROUPING;
 					morePending = TRUE;
 				}
 			}
@@ -1180,7 +1179,7 @@ groupDrawTabAnimation (CompScreen *s,
 
 						if (slot == group->topTab ||
 							!(gw->animateState & FINISHED_ANIMATION) || 
-							gw->ungroup)
+							(gw->animateState & IS_UNGROUPING))
 						{
 							continue;
 						}
@@ -1208,7 +1207,9 @@ groupDrawTabAnimation (CompScreen *s,
 					gs->queued = FALSE;
 					syncWindowPosition (w);
 
-					gw->animateState = 0;
+					/* TODO: move the ungrouping code over to here
+					   so that we can completely clear gw->animateState */
+					gw->animateState = &= IS_UNGROUPING;
 					gw->tx = gw->ty = gw->xVelocity = gw->yVelocity = 0.0f;
 				}
 				break;

@@ -193,6 +193,7 @@ extern int groupDisplayPrivateIndex;
 #define CONSTRAINED_X		(1 << 2)
 #define CONSTRAINED_Y		(1 << 3)
 #define DONT_CONSTRAIN		(1 << 4)
+#define IS_UNGROUPING       (1 << 5)
 
 typedef enum {
 	PaintOff = 0,
@@ -450,7 +451,6 @@ typedef struct _GroupWindow {
 	XRectangle *resizeGeometry;
 
 	/* For tab animation */
-	Bool   ungroup;
 	int    animateState;
 	XPoint mainTabOffset;
 	XPoint destination;

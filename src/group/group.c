@@ -394,7 +394,7 @@ groupDeleteGroupWindow (CompWindow *w,
 				groupDeleteTabBarSlot (group->tabBar, gw->slot);
 		}
 
-		if (!gw->ungroup && group->nWins > 1)
+		if (!(gw->animateState & IS_UNGROUPING) && group->nWins > 1)
 		{
 			if (HAS_TOP_WIN (group))
 			{
@@ -428,7 +428,7 @@ groupDeleteGroupWindow (CompWindow *w,
 			groupStartTabbingAnimation (group, FALSE);
 
 			group->ungroupState = UngroupSingle;
-			gw->ungroup = TRUE;
+			gw->animateState |= IS_UNGROUPING;
 
 			return;
 		}
@@ -607,10 +607,10 @@ groupAddWindowToGroup (CompWindow     *w,
 
 	if (gw->group)
 	{
-		gw->ungroup = TRUE;	/* This will prevent setting up
-							   animations on the previous group. */
+		/* prevent animations on the previous group */
+		gw->animateState |= IS_UNGROUPING;
 		groupDeleteGroupWindow (w, FALSE);
-		gw->ungroup = FALSE;
+		gw->animateState &= ~IS_UNGROUPING;
 	}
 
 	if (group)
@@ -1465,7 +1465,7 @@ groupHandleEvent (CompDisplay *d,
 					if (!w->pendingUnmaps)
 					{
 						/* close event */
-						if (!gw->ungroup)
+						if (!(gw->animateState & IS_UNGROUPING))
 						{
 							groupDeleteGroupWindow (w, FALSE);
 							damageScreen (w->screen);
