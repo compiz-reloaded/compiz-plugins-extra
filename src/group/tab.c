@@ -237,7 +237,7 @@ groupSetWindowVisibility (CompWindow *w,
 
 			gs->queued = TRUE;
 			moveWindow (w,
-						gw->group->oldTopTabCenterX - 
+						gw->group->oldTopTabCenterX -
 						WIN_X (w) - WIN_WIDTH (w) / 2,
 						gw->group->oldTopTabCenterY -
 						WIN_Y (w) - WIN_HEIGHT (w) / 2,
@@ -348,7 +348,7 @@ groupCheckForVisibleTabBars (CompScreen *s)
  * visibule is set to TRUE and the mask to PERMANENT state it will set
  * PaintPermanentOn state for the tab bar. When visibile is FALSE, mask 0
  * and the current state of the tab bar is PaintPermanentOn it won't do
- * anything because its not strong enough to disable a 
+ * anything because its not strong enough to disable a
  * Permanent-State, for those you need the mask.
  *
  */
@@ -936,13 +936,13 @@ groupDrawTabAnimation (GroupSelection *group,
 
 				/* move window to target position */
 				gs->queued = TRUE;
-				moveWindow (w, gw->destination.x - WIN_X (w), 
+				moveWindow (w, gw->destination.x - WIN_X (w),
 							gw->destination.y - WIN_Y (w),
 							TRUE, TRUE);
 				gs->queued = FALSE;
 				syncWindowPosition (w);
 
-				if (group->ungroupState == UngroupSingle && 
+				if (group->ungroupState == UngroupSingle &&
 					(gw->animateState & IS_UNGROUPING))
 				{
 					groupRemoveWindowFromGroup (w);
@@ -1670,7 +1670,7 @@ groupChangeTab (GroupTabBarSlot             *topTab,
 			group->changeAnimationTime =
 				groupGetChangeAnimationTime (w->screen) * 500 -
 				group->changeAnimationTime;
-			group->changeState = (group->changeState == TabChangeOldOut) ? 
+			group->changeState = (group->changeState == TabChangeOldOut) ?
 				                 TabChangeNewIn : TabChangeOldOut;
 
 			group->nextTopTab = NULL;
@@ -1713,7 +1713,7 @@ groupChangeTab (GroupTabBarSlot             *topTab,
 		{
 			/* we use only the half time here -
 			   the second half will be PaintFadeOut */
-			group->changeAnimationTime = 
+			group->changeAnimationTime =
 				groupGetChangeAnimationTime (w->screen) * 500;
 			groupTabChangeActivateEvent (w->screen, TRUE);
 			group->changeState = TabChangeOldOut;
@@ -1920,7 +1920,7 @@ groupRecalcTabBarPos (GroupSelection *group,
 			tabsHeight = slot->region->extents.y2 - slot->region->extents.y1;
 	}
 
-	/* just a little work-a-round for first call 
+	/* just a little work-a-round for first call
 	   FIXME: remove this! */
 	thumbSize = groupGetThumbSize (group->screen);
 	if (bar->nSlots && tabsWidth <= 0)
@@ -2000,8 +2000,8 @@ groupDamageTabBarRegion (GroupSelection *group)
 	reg.numRects = 1;
 
 	/* we use 15 pixels as damage buffer here, as there is a 10 pixel wide
-	border around the selected slot which also needs to be damaged 
-	properly - however the best way would be if slot->region was 
+	border around the selected slot which also needs to be damaged
+	properly - however the best way would be if slot->region was
 	sized including the border */
 
 #define DAMAGE_BUFFER 20

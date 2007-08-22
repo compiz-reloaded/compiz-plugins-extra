@@ -1596,7 +1596,7 @@ groupPaintWindow (CompWindow              *w,
 			matrixTranslate (&wTransform, xOrigin, yOrigin, 0.0f);
 			matrixScale (&wTransform, xScale, yScale, 1.0f);
 			matrixTranslate (&wTransform,
-							 (gw->resizeGeometry->x - w->attrib.x) / 
+							 (gw->resizeGeometry->x - w->attrib.x) /
 							 xScale - xOrigin,
 							 (gw->resizeGeometry->y - w->attrib.y) /
 							 yScale - yOrigin,
@@ -1663,7 +1663,7 @@ groupPaintWindow (CompWindow              *w,
 			}
 
 			if (doTabbing)
-				matrixTranslate (&wTransform, 
+				matrixTranslate (&wTransform,
 								 gw->orgPos.x + gw->tx - WIN_X (w),
 								 gw->orgPos.y + gw->ty - WIN_Y (w), 0.0f);
 

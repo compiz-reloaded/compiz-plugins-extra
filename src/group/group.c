@@ -460,7 +460,7 @@ groupRemoveWindowFromGroup (CompWindow *w)
 		GroupSelection *group = gw->group;
 
 		/* if the group is tabbed, setup untabbing animation. The
-		   window will be deleted from the group at the 
+		   window will be deleted from the group at the
 		   end of the untabbing. */
 		if (HAS_TOP_WIN (group))
 		{
@@ -1105,7 +1105,7 @@ groupHandleButtonReleaseEvent (CompDisplay *d,
 	GROUP_WINDOW (gs->draggedSlot->window);
 
 	newRegion = XCreateRegion();
-	if (!newRegion) 
+	if (!newRegion)
 	    return;
 
 	XUnionRegion (newRegion, gs->draggedSlot->region, newRegion);

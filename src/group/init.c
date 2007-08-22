@@ -194,7 +194,7 @@ groupInitDisplay (CompPlugin  *p,
 		return FALSE;
 	}
 
-	gd->glowTextureProperties = 
+	gd->glowTextureProperties =
 	    (GlowTextureProperties*) glowTextureProperties;
 	gd->ignoreMode = FALSE;
 	gd->lastRestackedGroup = NULL;
