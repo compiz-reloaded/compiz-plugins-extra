@@ -116,13 +116,16 @@ groupClearWindowInputShape (CompWindow          *w,
 							GroupWindowHideInfo *hideInfo)
 {
 	XRectangle *rects;
-	int        count = 0, ordering;
+	int        count, ordering;
 
 	rects = XShapeGetRectangles (w->screen->display->display,
 								 w->id, ShapeInput, &count, &ordering);
 
 	if (count == 0)
+	{
+		XFree (rects);
 		return;
+	}
 
 	/* check if the returned shape exactly matches the window shape -
 	   if that is true, the window currently has no set input shape */
@@ -904,88 +907,6 @@ groupHandleAnimation (GroupSelection *group)
 }
 
 /*
- * groupHandleTab
- *
- * Description:
- * This functions handes the offscreen moves of the tabs
- * after the animation has finished. It's called from
- * groupHandleChanges.
- *
- */
-static void
-groupHandleTab (GroupSelection *group)
-{
-	GroupTabBarSlot *slot;
-
-	if (group->tabbingState == PaintOff || group->doTabbing ||
-	    !HAS_TOP_WIN (group) || !group->changeTab)
-	{
-		return;
-	}
-
-	for (slot = group->tabBar->slots; slot; slot = slot->next)
-	{
-		CompWindow *w = slot->window;
-		if (!w)
-			continue;
-
-		GROUP_WINDOW (w);
-
-		if (slot == group->topTab ||
-			!(gw->animateState & FINISHED_ANIMATION) || gw->ungroup)
-		{
-			continue;
-		}
-
-		groupSetWindowVisibility (w, FALSE);
-	}
-
-	group->changeTab = FALSE;
-	group->prevTopTab = group->topTab;
-}
-
-/*
- * groupHandleTabbingAnimation
- *
- * Description:
- * This function handles the end of the tab
- * animation. Actually its just sets some
- * states and sync the window positions with X.
- * It's called from groupHandleChanges.
- *
- */
-static void
-groupHandleTabbingAnimation (GroupSelection *group)
-{
-	int i;
-
-	if (group->tabbingState == PaintOff || group->doTabbing)
-		return;
-
-	GROUP_SCREEN (group->screen);
-
-	/* Not animated any more. */
-	group->tabbingState = PaintOff;
-
-	for (i = 0; i < group->nWins; i++)
-	{
-		CompWindow *w = group->windows[i];
-		GROUP_WINDOW (w);
-
-		/* move window to target position */
-		gs->queued = TRUE;
-		moveWindow (w, gw->destination.x - WIN_X (w), 
-					gw->destination.y - WIN_Y (w),
-					TRUE, TRUE);
-		gs->queued = FALSE;
-		syncWindowPosition (w);
-
-		gw->animateState = 0;
-		gw->tx = gw->ty = gw->xVelocity = gw->yVelocity = 0.0f;
-	}
-}
-
-/*
  * groupHandleUntab
  *
  * Description:
@@ -1124,8 +1045,6 @@ groupHandleChanges (CompScreen *s)
 	for (group = gs->groups; group; group = group ? group->next : NULL)
 	{
 		groupHandleUntab (group);
-		groupHandleTab (group);
-		groupHandleTabbingAnimation (group);
 		groupHandleTabChange (group);
 		groupHandleAnimation (group);
 
@@ -1241,8 +1160,56 @@ groupDrawTabAnimation (CompScreen *s,
 
 				group->doTabbing |= (gw->animateState & IS_ANIMATED);
 			}
+
 			if (!group->doTabbing)
+			{
+				if (HAS_TOP_WIN (group) && group->changeTab)
+				{
+					GroupTabBarSlot *slot;
+
+					for (slot = group->tabBar->slots; slot; slot = slot->next)
+					{
+						CompWindow *w = slot->window;
+						if (!w)
+							continue;
+
+						GROUP_WINDOW (w);
+
+						if (slot == group->topTab ||
+							!(gw->animateState & FINISHED_ANIMATION) || 
+							gw->ungroup)
+						{
+							continue;
+						}
+
+						groupSetWindowVisibility (w, FALSE);
+					}
+
+					group->changeTab = FALSE;
+					group->prevTopTab = group->topTab;
+				}
+
+				/* tabbing animation finished */
+				group->tabbingState = PaintOff;
+
+				for (i = 0; i < group->nWins; i++)
+				{
+					CompWindow *w = group->windows[i];
+					GROUP_WINDOW (w);
+
+					/* move window to target position */
+					gs->queued = TRUE;
+					moveWindow (w, gw->destination.x - WIN_X (w), 
+								gw->destination.y - WIN_Y (w),
+								TRUE, TRUE);
+					gs->queued = FALSE;
+					syncWindowPosition (w);
+
+					gw->animateState = 0;
+					gw->tx = gw->ty = gw->xVelocity = gw->yVelocity = 0.0f;
+				}
 				break;
+			}
 		}
 	}
 }
