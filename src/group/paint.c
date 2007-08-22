@@ -943,9 +943,6 @@ groupPreparePaintScreen (CompScreen *s,
 	{
 		GroupTabBar *bar = group->tabBar;
 
-		if (group->changeState != NoTabChange)
-			group->changeAnimationTime -= msSinceLastPaint;
-
 		if (bar)
 		{
 			groupApplyForces (s, bar, (gs->dragged) ? gs->draggedSlot: NULL);
@@ -964,8 +961,12 @@ groupPreparePaintScreen (CompScreen *s,
 				groupHandleTabBarAnimation (group, msSinceLastPaint);
 		}
 
-		if (group->tabbingState == NoTabbing && HAS_TOP_WIN (group))
-			groupHandleAnimation (group);
+		if (group->changeState != NoTabChange)
+		{
+			group->changeAnimationTime -= msSinceLastPaint;
+			if (group->changeAnimationTime <= 0)
+				groupHandleAnimation (group);
+		}
 
 		if (group->tabbingState != NoTabbing)
 			groupDrawTabAnimation (group, msSinceLastPaint);

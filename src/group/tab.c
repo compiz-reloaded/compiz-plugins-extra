@@ -732,11 +732,7 @@ groupHandleAnimation (GroupSelection *group)
 {
 	CompScreen *s = group->screen;
 
-	if (screenGrabExist (s, "rotate", "plane", "wall", 0))
-		return;
-
-	if (group->changeState == TabChangeOldOut && 
-		group->changeAnimationTime <= 0)
+	if (group->changeState == TabChangeOldOut)
 	{
 		/* recalc here is needed (for y value)! */
 		groupRecalcTabBarPos (group,
