@@ -1070,7 +1070,10 @@ groupHandleButtonReleaseEvent (CompScreen *s,
 
 		buf = XCreateRegion();
 		if (!buf)
+		{
+			XDestroyRegion (clip);
 			continue;
+		}
 
 		XIntersectRegion (newRegion, group->tabBar->region, buf);
 		XSubtractRegion (buf, clip, buf);
