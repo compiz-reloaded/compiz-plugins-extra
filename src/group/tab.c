@@ -979,32 +979,6 @@ groupHandleUngroup (GroupSelection *group)
 
 		group->changeTab = FALSE;
 	}
-	if ((group->ungroupState == UngroupSingle) &&
-		(group->tabbingState == PaintOff))
-	{
-		Bool morePending;
-
-		do
-		{
-			morePending = FALSE;
-
-			for (i = 0;i < group->nWins; i++)
-			{
-				CompWindow *w = group->windows[i];
-				GROUP_WINDOW (w);
-
-				if (gw->animateState & IS_UNGROUPING)
-				{
-					groupDeleteGroupWindow (w, TRUE);
-					gw->animateState &= ~IS_UNGROUPING;
-					morePending = TRUE;
-				}
-			}
-		}
-		while (morePending);
-
-		group->ungroupState = UngroupNone;
-	}
 
 	if (group->prev)
 	{
@@ -1165,8 +1139,12 @@ groupDrawTabAnimation (CompScreen *s,
 
 			if (!doTabbing)
 			{
+				/* tabbing animation finished */
+				group->tabbingState = PaintOff;
+
 				if (HAS_TOP_WIN (group) && group->changeTab)
 				{
+					/* tabbing case - hide all non-toptab windows */
 					GroupTabBarSlot *slot;
 
 					for (slot = group->tabBar->slots; slot; slot = slot->next)
@@ -1178,7 +1156,6 @@ groupDrawTabAnimation (CompScreen *s,
 						GROUP_WINDOW (w);
 
 						if (slot == group->topTab ||
-							!(gw->animateState & FINISHED_ANIMATION) || 
 							(gw->animateState & IS_UNGROUPING))
 						{
 							continue;
@@ -1190,9 +1167,6 @@ groupDrawTabAnimation (CompScreen *s,
 					group->changeTab = FALSE;
 					group->prevTopTab = group->topTab;
 				}
-
-				/* tabbing animation finished */
-				group->tabbingState = PaintOff;
 
 				for (i = 0; i < group->nWins; i++)
 				{
@@ -1207,11 +1181,18 @@ groupDrawTabAnimation (CompScreen *s,
 					gs->queued = FALSE;
 					syncWindowPosition (w);
 
-					/* TODO: move the ungrouping code over to here
-					   so that we can completely clear gw->animateState */
-					gw->animateState &= ~IS_UNGROUPING;
+					if (group->ungroupState == UngroupSingle && 
+						(gw->animateState & IS_UNGROUPING))
+					{
+						groupDeleteGroupWindow (w, TRUE);
+					}
+
+					gw->animateState = 0;
 					gw->tx = gw->ty = gw->xVelocity = gw->yVelocity = 0.0f;
 				}
+				if (group->ungroupState == UngroupSingle)
+					group->ungroupState = UngroupNone;
+
 				break;
 			}
 		}

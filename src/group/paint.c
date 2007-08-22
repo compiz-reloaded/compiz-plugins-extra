@@ -1509,7 +1509,8 @@ groupPaintWindow (CompWindow              *w,
 	if (gw->windowHideInfo)
 		mask |= PAINT_WINDOW_NO_CORE_INSTANCE_MASK;
 
-	if (gw->inSelection || gw->resizeGeometry || doRotate || doTabbing || showTabbar)
+	if (gw->inSelection || gw->resizeGeometry || doRotate ||
+		doTabbing || showTabbar)
 	{
 		WindowPaintAttrib wAttrib = *attrib;
 		CompTransform     wTransform = *transform;

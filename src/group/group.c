@@ -398,13 +398,17 @@ groupDeleteGroupWindow (CompWindow *w,
 		{
 			if (HAS_TOP_WIN (group))
 			{
+				CompWindow *tw = TOP_TAB (group);
 				/* TODO: maybe add the IS_ANIMATED to the topTab
 				   for better constraining... */
 				int         oldX = gw->orgPos.x;
 				int         oldY = gw->orgPos.y;
 
-				gw->orgPos.x = group->oldTopTabCenterX - WIN_WIDTH (w) / 2;
-				gw->orgPos.y = group->oldTopTabCenterY - WIN_HEIGHT (w) / 2;
+				group->oldTopTabCenterX = WIN_X (tw) + (WIN_WIDTH (tw) / 2);
+				group->oldTopTabCenterY = WIN_Y (tw) + (WIN_HEIGHT (tw) / 2);
+
+				gw->orgPos.x = group->oldTopTabCenterX - (WIN_WIDTH (w) / 2);
+				gw->orgPos.y = group->oldTopTabCenterY - (WIN_HEIGHT (w) / 2);
 
 				gw->destination.x = gw->orgPos.x + gw->mainTabOffset.x;
 				gw->destination.y = gw->orgPos.y + gw->mainTabOffset.y;
