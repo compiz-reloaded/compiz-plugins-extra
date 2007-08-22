@@ -326,7 +326,6 @@ struct _GroupSelection {
 	PaintState changeState;
 	Bool	   changeTab;
 
-	Bool       doTabbing;
 	PaintState tabbingState;
 
 	GroupUngroupState ungroupState;

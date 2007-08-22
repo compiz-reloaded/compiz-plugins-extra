@@ -679,7 +679,6 @@ groupAddWindowToGroup (CompWindow     *w,
 		g->prevTopTab = NULL;
 		g->nextTopTab = NULL;
 		g->activateTab = NULL;
-		g->doTabbing = FALSE;
 		g->changeAnimationTime = 0;
 		g->changeAnimationDirection = 0;
 		g->changeState = PaintOff;
@@ -1826,10 +1825,10 @@ groupWindowMoveNotify (CompWindow *w,
 		return;
 	}
 
-	if (gw->group->doTabbing || gd->ignoreMode ||
+	if (!groupGetMoveAll (w->screen) || gd->ignoreMode ||
+		(gw->group->tabbingState != PaintOff) ||
 		(gw->group->grabWindow != w->id) ||
-		!(gw->group->grabMask & CompWindowGrabMoveMask) ||
-		!groupGetMoveAll (w->screen))
+		!(gw->group->grabMask & CompWindowGrabMoveMask))
 		return;
 
 	for (i = 0; i < gw->group->nWins; i++)

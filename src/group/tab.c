@@ -918,7 +918,7 @@ groupHandleAnimation (GroupSelection *group)
 static void
 groupHandleUntab (GroupSelection *group)
 {
-	if (group->tabbingState == PaintOff || !group->doTabbing)
+	if (group->tabbingState == PaintOff)
 		return;
 
 	if (group->topTab || !group->changeTab)
@@ -955,7 +955,7 @@ groupHandleUngroup (GroupSelection *group)
 	GROUP_SCREEN (group->screen);
 
 	if ((group->ungroupState == UngroupSingle) &&
-		group->doTabbing && group->changeTab)
+		(group->tabbingState != PaintOff) && group->changeTab)
 	{
 		for (i = 0; i < group->nWins; i++)
 		{
@@ -980,7 +980,8 @@ groupHandleUngroup (GroupSelection *group)
 		group->changeTab = FALSE;
 	}
 
-	if ((group->ungroupState == UngroupSingle) && !group->doTabbing)
+	if ((group->ungroupState == UngroupSingle) &&
+		(group->tabbingState == PaintOff))
 	{
 		Bool morePending;
 
@@ -1009,14 +1010,15 @@ groupHandleUngroup (GroupSelection *group)
 	if (group->prev)
 	{
 		if ((group->prev->ungroupState == UngroupAll) &&
-			!group->prev->doTabbing)
+			(group->prev->tabbingState == PaintOff))
 		{
 			groupDeleteGroup (group->prev);
 		}
 	}
 	if (!group->next)
 	{
-		if ((group->ungroupState == UngroupAll) && !group->doTabbing)
+		if ((group->ungroupState == UngroupAll) && 
+			(group->tabbingState == PaintOff))
 		{
 			groupDeleteGroup (group);
 			return FALSE;
@@ -1124,6 +1126,7 @@ groupDrawTabAnimation (CompScreen *s,
 	{
 		int   steps;
 		float amount, chunk;
+		Bool  doTabbing;
 
 		if (group->tabbingState == PaintOff)
 			continue;
@@ -1136,7 +1139,7 @@ groupDrawTabAnimation (CompScreen *s,
 
 		while (steps--)
 		{
-			group->doTabbing = FALSE;
+			doTabbing = FALSE;
 
 			for (i = 0; i < group->nWins; i++)
 			{
@@ -1158,10 +1161,10 @@ groupDrawTabAnimation (CompScreen *s,
 				gw->tx += gw->xVelocity * chunk;
 				gw->ty += gw->yVelocity * chunk;
 
-				group->doTabbing |= (gw->animateState & IS_ANIMATED);
+				doTabbing |= (gw->animateState & IS_ANIMATED);
 			}
 
-			if (!group->doTabbing)
+			if (!doTabbing)
 			{
 				if (HAS_TOP_WIN (group) && group->changeTab)
 				{
@@ -1530,7 +1533,6 @@ groupStartTabbingAnimation (GroupSelection *group,
 		return;
 
 	s = group->screen;
-	group->doTabbing = TRUE;
 	group->changeTab = TRUE;
 
 	group->tabbingState = (tab) ? PaintFadeIn : PaintFadeOut;

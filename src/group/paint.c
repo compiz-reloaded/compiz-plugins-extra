@@ -1101,13 +1101,11 @@ groupDonePaintScreen (CompScreen *s)
 
 	for (group = gs->groups; group; group = group->next)
 	{
-		if (group->doTabbing)
+		if (group->tabbingState != PaintOff)
 			damageScreen (s);
-
-		if (group->changeState != PaintOff)
+		else if (group->changeState != PaintOff)
 			damageScreen (s);
-
-		if (group->tabBar)
+		else if (group->tabBar)
 		{
 			Bool needDamage = FALSE;
 
