@@ -805,9 +805,6 @@ adjustTabVelocity (CompWindow *w)
 
 	GROUP_WINDOW (w);
 
-	if (!(gw->animateState & IS_ANIMATED))
-		return 0;
-
 	x1 = gw->destination.x;
 	y1 = gw->destination.y;
 
@@ -887,7 +884,7 @@ groupDrawTabAnimation (GroupSelection *group,
 			if (!adjustTabVelocity (cw))
 			{
 				gw->animateState |= FINISHED_ANIMATION;
-				gw->animateState &= ~(IS_ANIMATED);
+				gw->animateState &= ~IS_ANIMATED;
 			}
 
 			gw->tx += gw->xVelocity * chunk;
