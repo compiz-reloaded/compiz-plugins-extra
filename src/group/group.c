@@ -1148,27 +1148,44 @@ groupHandleButtonReleaseEvent (CompScreen *s,
 
 			if (group != gw->group)
 			{
+				CompWindow     *w = gs->draggedSlot->window;
 				GroupSelection *tmpGroup = gw->group;
+				int            oldPosX = WIN_X (w) + WIN_WIDTH (w) / 2;
+				int            oldPosY = WIN_Y (w) + WIN_HEIGHT (w) / 2;
 
 				/* if the dragged window is not the top tab,
 				   move it onscreen */
-				if (!IS_TOP_TAB (gs->draggedSlot->window, tmpGroup) &&
-					tmpGroup->topTab)
+				if (tmpGroup->topTab && !IS_TOP_TAB (w, tmpGroup))
 				{
-					CompWindow *tw = tmpGroup->topTab->window;
+					CompWindow *tw = TOP_TAB (tmpGroup);
 
 					tmpGroup->oldTopTabCenterX = WIN_X (tw) +
 						                         WIN_WIDTH (tw) / 2;
 					tmpGroup->oldTopTabCenterY = WIN_Y (tw) +
-						                         WIN_HEIGHT (tw) / 2;
+						                        WIN_HEIGHT (tw) / 2;
 
-					groupSetWindowVisibility (gs->draggedSlot->window, TRUE);
+					oldPosX = tmpGroup->oldTopTabCenterX + gw->mainTabOffset.x;
+					oldPosY = tmpGroup->oldTopTabCenterY + gw->mainTabOffset.y;
+
+					groupSetWindowVisibility (w, TRUE);
 				}
 
 				/* Change the group. */
 				groupDeleteGroupWindow (gs->draggedSlot->window);
 				groupAddWindowToGroup (gs->draggedSlot->window, group, 0);
-			} else
+
+				/* we saved the original center position in oldPosX/Y before -
+				   now we should apply that to the new main tab offset */
+				if (HAS_TOP_WIN (group))
+				{
+					CompWindow *tw = TOP_TAB (group);
+					gw->mainTabOffset.x = oldPosX -
+						                  (WIN_X (tw) + WIN_WIDTH (tw) / 2);
+					gw->mainTabOffset.y = oldPosY -
+						                  (WIN_Y (tw) + WIN_HEIGHT (tw) / 2);
+				}
+			}
+			else
 				groupUnhookTabBarSlot (group->tabBar, gs->draggedSlot, TRUE);
 
 			gs->draggedSlot = NULL;
