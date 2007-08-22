@@ -1773,16 +1773,11 @@ groupWindowMoveNotify (CompWindow *w,
 		bar->rightSpringX += dx;
 		bar->leftSpringX += dx;
 
-		groupMoveTabBarRegion (gw->group,
-							   (groupGetSpringModelOnMove (w->screen)) ? 0 : dx,
-							   dy, TRUE);
+		groupMoveTabBarRegion (gw->group, dx, dy, TRUE);
 
 		for (slot = bar->slots; slot; slot = slot->next)
 		{
-			if (groupGetSpringModelOnMove (w->screen))
-				XOffsetRegion (slot->region, 0, dy);
-			else
-				XOffsetRegion (slot->region, dx, dy);
+			XOffsetRegion (slot->region, dx, dy);
 			slot->springX += dx;
 		}
 

@@ -405,11 +405,6 @@
         </subgroup>
         <subgroup>
           <_short>Slot Dragging</_short>
-          <option name="spring_model_on_move" type="bool">
-            <_short>Spring model on move</_short>
-            <_long>Use spring model for the tab bar when moving the window</_long>
-            <default>false</default>
-          </option>
           <option name="dnd_ungroup_window" type="bool">
             <_short>Remove window from group after dropping it outside a tab bar</_short>
             <_long>Remove window from group after dropping it outside a tab bar</_long>
