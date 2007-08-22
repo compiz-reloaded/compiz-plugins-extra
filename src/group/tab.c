@@ -486,7 +486,7 @@ groupHandleHoverDetection (GroupSelection *group)
 	if (!HAS_TOP_WIN (group))
 		return;
 
-	topTab = TOP_TAB(group);
+	topTab = TOP_TAB (group);
 
 	if (bar->state != PaintOff)
 	{
@@ -550,7 +550,7 @@ groupHandleHoverDetection (GroupSelection *group)
 					bar->textLayer->state = PaintFadeOut;
 				}
 
-				// or trigger a FadeIn of the text
+				/* or trigger a FadeIn of the text */
 				else if (bar->textLayer->state == PaintFadeOut &&
 						 bar->hoveredSlot == bar->textSlot && bar->hoveredSlot)
 				{
@@ -674,7 +674,7 @@ groupHandleTextFade(GroupSelection *group, int msSinceLastPaint)
 }
 
 /*
- * groupHanldeTabBarAnimation
+ * groupHandleTabBarAnimation
  *
  * Description: Handles the different animations for the tab bar defined in
  * GroupAnimationType. Basically that means this function updates
