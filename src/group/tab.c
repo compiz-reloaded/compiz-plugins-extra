@@ -899,6 +899,7 @@ groupDrawTabAnimation (GroupSelection *group,
 
 			/* tabbing animation finished */
 			group->tabbingState = NoTabbing;
+			groupTabChangeActivateEvent (s, FALSE);
 
 			if (HAS_TOP_WIN (group))
 			{
@@ -1272,6 +1273,7 @@ groupStartTabbingAnimation (GroupSelection *group,
 
 	s = group->screen;
 	group->tabbingState = (tab) ? Tabbing : Untabbing;
+	groupTabChangeActivateEvent (s, TRUE);
 
 	if (!tab)
 	{
