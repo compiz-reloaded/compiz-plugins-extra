@@ -209,6 +209,18 @@ typedef enum {
 	AnimationReflex
 } GroupAnimationType;
 
+typedef enum {
+	NoTabChange = 0,
+	TabChangeOldOut,
+	TabChangeNewIn
+} TabChangeState;
+
+typedef enum {
+	NoTabbing = 0,
+	Tabbing,
+	Untabbing
+} TabbingState;
+
 typedef struct _GroupCairoLayer {
 	unsigned char	*buffer;
 	CompTexture		texture;
@@ -322,12 +334,12 @@ struct _GroupSelection {
 
 	GroupTabBar *tabBar;
 
-	int        changeAnimationTime;
-	int        changeAnimationDirection;
-	PaintState changeState;
-	Bool	   changeTab;
+	int            changeAnimationTime;
+	int            changeAnimationDirection;
+	TabChangeState changeState;
+	Bool	       changeTab;
 
-	PaintState tabbingState;
+	TabbingState tabbingState;
 
 	GroupUngroupState ungroupState;
 

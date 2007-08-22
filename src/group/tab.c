@@ -754,7 +754,7 @@ groupHandleTabChange (GroupSelection *group)
 
 	topTab = TOP_TAB (group);
 
-	if (group->tabbingState != PaintOff)
+	if (group->tabbingState != NoTabbing)
 	{
 		/* if the previous top-tab window is being removed
 		   from the group, move the new top-tab window onscreen. */
@@ -802,7 +802,7 @@ groupHandleTabChange (GroupSelection *group)
 		   the second half will be PaintFadeOut */
 		group->changeAnimationTime = groupGetChangeAnimationTime (s) * 500;
 		groupTabChangeActivateEvent (s, TRUE);
-		group->changeState = PaintFadeIn;
+		group->changeState = TabChangeOldOut;
 
 		group->changeTab = FALSE;
 	}
@@ -833,13 +833,14 @@ groupHandleAnimation (GroupSelection *group)
 {
 	CompScreen *s = group->screen;
 
-	if (group->tabbingState != PaintOff || !HAS_TOP_WIN (group))
+	if (group->tabbingState != NoTabbing || !HAS_TOP_WIN (group))
 		return;
 
 	if (screenGrabExist (s, "rotate", "plane", "wall", 0))
 		return;
 
-	if (group->changeState == PaintFadeIn && group->changeAnimationTime <= 0)
+	if (group->changeState == TabChangeOldOut && 
+		group->changeAnimationTime <= 0)
 	{
 		/* recalc here is needed (for y value)! */
 		groupRecalcTabBarPos (group,
@@ -854,13 +855,14 @@ groupHandleAnimation (GroupSelection *group)
 		if (group->changeAnimationTime <= 0)
 			group->changeAnimationTime = 0;
 
-		group->changeState = PaintFadeOut;
+		group->changeState = TabChangeNewIn;
 
 		if (HAS_TOP_WIN (group))
 			activateWindow (TOP_TAB (group));
 	}
 
-	if (group->changeState == PaintFadeOut && group->changeAnimationTime <= 0)
+	if (group->changeState == TabChangeNewIn &&
+		group->changeAnimationTime <= 0)
 	{
 		int oldChangeAnimationTime = group->changeAnimationTime;
 
@@ -870,7 +872,7 @@ groupHandleAnimation (GroupSelection *group)
 			groupSetWindowVisibility (PREV_TOP_TAB (group), FALSE);
 
 		group->prevTopTab = group->topTab;
-		group->changeState = PaintOff;
+		group->changeState = NoTabChange;
 
 		if (group->nextTopTab)
 		{
@@ -879,7 +881,7 @@ groupHandleAnimation (GroupSelection *group)
 
 			groupHandleTabChange (group);
 
-			if (group->changeState == PaintFadeIn)
+			if (group->changeState == TabChangeOldOut)
 			{
 				/* If a new animation was started. */
 				group->changeAnimationTime += oldChangeAnimationTime;
@@ -891,7 +893,7 @@ groupHandleAnimation (GroupSelection *group)
 			group->changeAnimationTime = 0;
 		}
 		else if (groupGetVisibilityTime (s) != 0.0f &&
-				 group->changeState == PaintOff)
+				 group->changeState == NoTabChange)
 		{
 			groupTabSetVisibility (group, TRUE,
 								   PERMANENT | SHOW_BAR_INSTANTLY_MASK);
@@ -918,7 +920,7 @@ groupHandleAnimation (GroupSelection *group)
 static void
 groupHandleUntab (GroupSelection *group)
 {
-	if (group->tabbingState == PaintOff)
+	if (group->tabbingState == NoTabbing)
 		return;
 
 	if (group->topTab || !group->changeTab)
@@ -927,7 +929,7 @@ groupHandleUntab (GroupSelection *group)
 	groupDeleteTabBar (group);
 
 	group->changeAnimationTime = 0;
-	group->changeState = PaintOff;
+	group->changeState = NoTabChange;
 	group->nextTopTab = NULL;
 
 	group->changeTab = FALSE;
@@ -955,7 +957,7 @@ groupHandleUngroup (GroupSelection *group)
 	GROUP_SCREEN (group->screen);
 
 	if ((group->ungroupState == UngroupSingle) &&
-		(group->tabbingState != PaintOff) && group->changeTab)
+		(group->tabbingState != NoTabbing) && group->changeTab)
 	{
 		for (i = 0; i < group->nWins; i++)
 		{
@@ -983,7 +985,7 @@ groupHandleUngroup (GroupSelection *group)
 	if (group->prev)
 	{
 		if ((group->prev->ungroupState == UngroupAll) &&
-			(group->prev->tabbingState == PaintOff))
+			(group->prev->tabbingState == NoTabbing))
 		{
 			groupDeleteGroup (group->prev);
 		}
@@ -991,7 +993,7 @@ groupHandleUngroup (GroupSelection *group)
 	if (!group->next)
 	{
 		if ((group->ungroupState == UngroupAll) && 
-			(group->tabbingState == PaintOff))
+			(group->tabbingState == NoTabbing))
 		{
 			groupDeleteGroup (group);
 			return FALSE;
@@ -1101,7 +1103,7 @@ groupDrawTabAnimation (CompScreen *s,
 		float amount, chunk;
 		Bool  doTabbing;
 
-		if (group->tabbingState == PaintOff)
+		if (group->tabbingState == NoTabbing)
 			continue;
 
 		amount = msSinceLastPaint * 0.05f * groupGetTabbingSpeed (s);
@@ -1140,7 +1142,7 @@ groupDrawTabAnimation (CompScreen *s,
 			if (!doTabbing)
 			{
 				/* tabbing animation finished */
-				group->tabbingState = PaintOff;
+				group->tabbingState = NoTabbing;
 
 				if (HAS_TOP_WIN (group) && group->changeTab)
 				{
@@ -1509,13 +1511,13 @@ groupStartTabbingAnimation (GroupSelection *group,
 	int        dx, dy;
 	int        constrainStatus;
 
-	if (!group || (group->tabbingState != PaintOff))
+	if (!group || (group->tabbingState != NoTabbing))
 		return;
 
 	s = group->screen;
 	group->changeTab = TRUE;
 
-	group->tabbingState = (tab) ? PaintFadeIn : PaintFadeOut;
+	group->tabbingState = (tab) ? Tabbing : Untabbing;
 
 	if (!tab)
 	{
@@ -1646,7 +1648,7 @@ groupTabGroup (CompWindow *main)
 	groupInitTabBar (group, main);
 	groupCreateInputPreventionWindow (group);
 
-	group->tabbingState = PaintOff;
+	group->tabbingState = NoTabbing;
 	/* Slot is initialized after groupInitTabBar(group); */
 	groupChangeTab (gw->slot, RotateUncertain);
 	groupRecalcTabBarPos (gw->group,
@@ -1823,7 +1825,7 @@ groupUntabGroup(GroupSelection *group)
 		gw->xVelocity = gw->yVelocity = 0.0f;
 	}
 
-	group->tabbingState = PaintOff;
+	group->tabbingState = NoTabbing;
 	groupStartTabbingAnimation (group, FALSE);
 
 	damageScreen (group->screen);
@@ -1848,16 +1850,16 @@ groupChangeTab (GroupTabBarSlot             *topTab,
 	w = topTab->window;
 	group = gw->group;
 
-	if (!group || group->tabbingState != PaintOff)
+	if (!group || group->tabbingState != NoTabbing)
 		return TRUE;
 
-	if (group->changeState == PaintOff && group->topTab == topTab)
+	if (group->changeState == NoTabChange && group->topTab == topTab)
 		return TRUE;
 
-	if (group->changeState != PaintOff && group->nextTopTab == topTab)
+	if (group->changeState != NoTabChange && group->nextTopTab == topTab)
 		return TRUE;
 
-	if (group->prevTopTab && group->changeState == PaintOff)
+	if (group->prevTopTab && group->changeState == NoTabChange)
 	{
 		group->oldTopTabCenterX = WIN_X (PREV_TOP_TAB (group)) +
 			                      WIN_WIDTH (PREV_TOP_TAB (group)) / 2;
@@ -1865,7 +1867,7 @@ groupChangeTab (GroupTabBarSlot             *topTab,
 			                      WIN_HEIGHT (PREV_TOP_TAB (group)) / 2;
 	}
 
-	if (group->changeState != PaintOff)
+	if (group->changeState != NoTabChange)
 		group->nextDirection = direction;
 	else if (direction == RotateLeft)
 		group->changeAnimationDirection = 1;
@@ -1893,7 +1895,7 @@ groupChangeTab (GroupTabBarSlot             *topTab,
 			group->changeAnimationDirection *= -1;
 	}
 
-	if (group->changeState != PaintOff)
+	if (group->changeState != NoTabChange)
 	{
 		if (group->prevTopTab == topTab)
 		{
@@ -1906,8 +1908,8 @@ groupChangeTab (GroupTabBarSlot             *topTab,
 			group->changeAnimationTime =
 				groupGetChangeAnimationTime (w->screen) * 500 -
 				group->changeAnimationTime;
-			group->changeState =
-				(group->changeState == PaintFadeIn) ? PaintFadeOut: PaintFadeIn;
+			group->changeState = (group->changeState == TabChangeOldOut) ? 
+				                 TabChangeNewIn : TabChangeOldOut;
 
 			group->nextTopTab = NULL;
 		}

@@ -942,7 +942,7 @@ groupPreparePaintScreen (CompScreen *s,
 	{
 		GroupTabBar *bar = group->tabBar;
 
-		if (group->changeState != PaintOff)
+		if (group->changeState != NoTabChange)
 			group->changeAnimationTime -= msSinceLastPaint;
 
 		if (!bar)
@@ -985,8 +985,8 @@ groupPaintOutput (CompScreen              *s,
 
 	for (group = gs->groups; group; group = group->next)
 	{
-		if (group->changeState != PaintOff ||
-			group->tabbingState != PaintOff)
+		if (group->changeState != NoTabChange ||
+			group->tabbingState != NoTabbing)
 		{
 			mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_MASK;
 		}
@@ -1101,9 +1101,9 @@ groupDonePaintScreen (CompScreen *s)
 
 	for (group = gs->groups; group; group = group->next)
 	{
-		if (group->tabbingState != PaintOff)
+		if (group->tabbingState != NoTabbing)
 			damageScreen (s);
-		else if (group->changeState != PaintOff)
+		else if (group->changeState != NoTabChange)
 			damageScreen (s);
 		else if (group->tabBar)
 		{
@@ -1491,20 +1491,20 @@ groupPaintWindow (CompWindow              *w,
 	GROUP_SCREEN (s);
 	GROUP_WINDOW (w);
 
-	doRotate = gw->group && (gw->group->changeState != PaintOff) &&
+	doRotate = gw->group && (gw->group->changeState != NoTabChange) &&
 		       (IS_TOP_TAB (w, gw->group) || IS_PREV_TOP_TAB (w, gw->group));
 
-	doTabbing = gw->group && (gw->group->tabbingState != PaintOff) &&
+	doTabbing = gw->group && (gw->group->tabbingState != NoTabbing) &&
 		        (gw->animateState & (IS_ANIMATED | FINISHED_ANIMATION)) &&
 				!(IS_TOP_TAB (w, gw->group) &&
-				  (gw->group->tabbingState == PaintFadeIn));
+				  (gw->group->tabbingState == Tabbing));
 
 	showTabbar = gw->group && gw->group->tabBar &&
 		         (((HAS_TOP_WIN (gw->group) && IS_TOP_TAB (w, gw->group)) &&
-				   ((gw->group->changeState == PaintOff) ||
-					(gw->group->changeState == PaintFadeOut))) ||
+				   ((gw->group->changeState == NoTabChange) ||
+					(gw->group->changeState == TabChangeNewIn))) ||
 				  (IS_PREV_TOP_TAB (w, gw->group) &&
-				   (gw->group->changeState == PaintFadeIn)));
+				   (gw->group->changeState == TabChangeOldOut)));
 
 	if (gw->windowHideInfo)
 		mask |= PAINT_WINDOW_NO_CORE_INSTANCE_MASK;
@@ -1546,7 +1546,7 @@ groupPaintWindow (CompWindow              *w,
 			animProgress = progress;
 
 			progress = MAX (progress, 0.0f);
-			if (gw->group->tabbingState == PaintFadeIn)
+			if (gw->group->tabbingState == Tabbing)
 				progress = 1.0f - progress;
 
 			wAttrib.opacity = (float)wAttrib.opacity * progress;
@@ -1557,7 +1557,7 @@ groupPaintWindow (CompWindow              *w,
 			float timeLeft = gw->group->changeAnimationTime;
 			int   animTime = groupGetChangeAnimationTime (s) * 500;
 
-			if (gw->group->changeState == PaintFadeIn)
+			if (gw->group->changeState == TabChangeOldOut)
 				timeLeft += animTime;
 
 			/* 0 at the beginning, 1 at the end */
@@ -1594,7 +1594,7 @@ groupPaintWindow (CompWindow              *w,
 
 			if (doTabbing)
 			{
-				if (gw->group->tabbingState == PaintFadeIn)
+				if (gw->group->tabbingState == Tabbing)
 				{
 					morphBase   = w;
 					morphTarget = TOP_TAB (gw->group);
