@@ -256,8 +256,9 @@ groupSetWindowVisibility (CompWindow *w,
  * We use this to realize a delay with the bar hiding after tab change.
  * groupHandleAnimation sets up a timer after the animation has finished.
  * This function itself basically just sets the tab bar to a PaintOff status
- * through calling groupSetTabBarVisibility. The PERMANENT mask allows you to fore
- * a hiding of even PaintPermanentOn tab bars.
+ * through calling groupSetTabBarVisibility.
+ * The PERMANENT mask allows you to force hiding even of
+ * PaintPermanentOn tab bars.
  *
  */
 static Bool
@@ -1042,14 +1043,14 @@ groupUpdateTabBars (CompScreen *s,
 		}
 	}
 
-	/* if we found a hovered a tab bar different than the last one
+	/* if we found a hovered tab bar different than the last one
 	   (or left a tab bar), hide the old one */
 	if (gs->lastHoveredGroup && (hoveredGroup != gs->lastHoveredGroup))
 		groupTabSetVisibility (gs->lastHoveredGroup, FALSE, 0);
 
 	/* if we entered a tab bar (or title bar), show the tab bar */
-	if (hoveredGroup && HAS_TOP_WIN(hoveredGroup) &&
-		!TOP_TAB(hoveredGroup)->grabbed)
+	if (hoveredGroup && HAS_TOP_WIN (hoveredGroup) &&
+		!TOP_TAB (hoveredGroup)->grabbed)
 	{
 		GroupTabBar *bar = hoveredGroup->tabBar;
 
@@ -1199,15 +1200,15 @@ groupConstrainMovement (CompWindow *w,
 }
 
 /*
- * groupApplyConstrainingToWindows
+ * groupApplyConstraining
  *
  */
 static void
-groupApplyConstrainingToWindows (GroupSelection *group,
-								 Region         constrainRegion,
-								 Window         constrainedWindow,
-								 int            dx,
-								 int            dy)
+groupApplyConstraining (GroupSelection *group,
+						Region         constrainRegion,
+						Window         constrainedWindow,
+						int            dx,
+						int            dy)
 {
 	int        i;
 	CompWindow *w;
@@ -1346,15 +1347,11 @@ groupStartTabbingAnimation (GroupSelection *group,
 						/* if we found a valid target position, apply
 						   the change also to other windows to retain
 						   the distance between the windows */
-						groupApplyConstrainingToWindows (group,
-														 constrainRegion,
-														 w->id,
-														 dx -
-														 gw->destination.x +
-														 gw->orgPos.x,
-														 dy -
-														 gw->destination.y +
-														 gw->orgPos.y);
+						groupApplyConstraining (group, constrainRegion, w->id,
+												dx - gw->destination.x +
+												gw->orgPos.x,
+												dy - gw->destination.y +
+												gw->orgPos.y);
 
 						/* if we hit constraints, adjust the mask and the
 						   target position accordingly */
@@ -1435,8 +1432,7 @@ groupTabGroup (CompWindow *main)
 		GroupCairoLayer *layer;
 		
 		layer = group->tabBar->textLayer;
-		layer->animationTime = groupGetFadeTextTime (main->screen) *
-				       1000;
+		layer->animationTime = groupGetFadeTextTime (main->screen) * 1000;
 		layer->state = PaintFadeIn;
 	}
 
