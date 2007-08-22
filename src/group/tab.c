@@ -116,16 +116,13 @@ groupClearWindowInputShape (CompWindow          *w,
 							GroupWindowHideInfo *hideInfo)
 {
 	XRectangle *rects;
-	int        count, ordering;
+	int        count = 0, ordering;
 
 	rects = XShapeGetRectangles (w->screen->display->display,
 								 w->id, ShapeInput, &count, &ordering);
 
 	if (count == 0)
-	{
-		XFree (rects);
 		return;
-	}
 
 	/* check if the returned shape exactly matches the window shape -
 	   if that is true, the window currently has no set input shape */
