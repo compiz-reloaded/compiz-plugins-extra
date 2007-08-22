@@ -146,7 +146,14 @@ groupApplyInitialActions (void *closure)
 		   before - if it was, regroup */
 		if (groupCheckWindowProperty (w, &id, &tabbed, color))
 		{
-			GroupSelection *group = groupFindGroupByID (w->screen, id);
+			GroupSelection *group;
+
+			GROUP_SCREEN (s);
+
+			for (group = gs->groups; group; group = group->next)
+				if (group->identifier == id)
+					break;
+
 			groupAddWindowToGroup (w, group, id);
 			if (tabbed)
 				groupTabGroup (w);

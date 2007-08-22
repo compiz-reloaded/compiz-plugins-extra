@@ -55,26 +55,6 @@ groupDragHoverTimeout (void* closure)
 }
 
 /*
- * groupFindGroupByID
- *
- */
-GroupSelection*
-groupFindGroupByID (CompScreen *s,
-					long int   id)
-{
-	GroupSelection *group;
-	GROUP_SCREEN (s);
-
-	for (group = gs->groups; group; group = group->next)
-	{
-		if (group->identifier == id)
-			break;
-	}
-
-	return group;
-}
-
-/*
  * groupCheckWindowProperty
  *
  */

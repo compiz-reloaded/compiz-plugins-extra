@@ -485,10 +485,6 @@ typedef struct _GroupWindow {
 void
 groupUpdateWindowProperty (CompWindow *w);
 
-GroupSelection*
-groupFindGroupByID (CompScreen *s,
-					long int   id);
-
 Bool
 groupCheckWindowProperty (CompWindow *w,
 						  long int   *id,
