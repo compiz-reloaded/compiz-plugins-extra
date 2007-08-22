@@ -424,16 +424,7 @@ groupDeleteGroupWindow (CompWindow *w)
 							   back onscreen, so we do that here */
 							CompWindow *lw = group->windows[0];
 
-							gs->queued = TRUE;
 							groupSetWindowVisibility (lw, TRUE);
-							moveWindow (lw,
-										group->oldTopTabCenterX -
-										WIN_X (lw) - WIN_WIDTH (lw) / 2,
-										group->oldTopTabCenterY -
-										WIN_Y (lw) - WIN_HEIGHT (lw) / 2,
-										TRUE, TRUE);
-							syncWindowPosition (lw);
-							gs->queued = FALSE;
 						}
 						groupDeleteGroup (group);
 					}
@@ -1231,16 +1222,7 @@ groupHandleButtonReleaseEvent (CompDisplay *d,
 					tmpGroup->oldTopTabCenterY = WIN_Y (tw) +
 						                         WIN_HEIGHT (tw) / 2;
 
-					gs->queued = TRUE;
 					groupSetWindowVisibility (w, TRUE);
-					moveWindow (w,
-								gw->group->oldTopTabCenterX - WIN_X (w) -
-								WIN_WIDTH (w) / 2,
-								gw->group->oldTopTabCenterY - WIN_Y (w) -
-								WIN_HEIGHT (w) / 2,
-								TRUE, TRUE);
-					syncWindowPosition (w);
-					gs->queued = FALSE;
 				}
 
 				/* Change the group. */

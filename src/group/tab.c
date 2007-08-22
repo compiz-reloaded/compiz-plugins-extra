@@ -229,6 +229,22 @@ groupSetWindowVisibility (CompWindow *w,
 
 		free (info);
 		gw->windowHideInfo = NULL;
+
+		/* move window to top tab center */
+		if (gw->group)
+		{
+			GROUP_SCREEN (w->screen);
+
+			gs->queued = TRUE;
+			moveWindow (w,
+						gw->group->oldTopTabCenterX - 
+						WIN_X (w) - WIN_WIDTH (w) / 2,
+						gw->group->oldTopTabCenterY -
+						WIN_Y (w) - WIN_HEIGHT (w) / 2,
+						FALSE, TRUE);
+			syncWindowPosition (w);
+			gs->queued = FALSE;
+		}
 	}
 }
 
@@ -713,8 +729,6 @@ groupHandleTabChange (GroupSelection *group)
 	CompScreen *s = group->screen;
 	CompWindow *topTab;
 
-	GROUP_SCREEN (s);
-
 	// exit when there is a rotate or plane animation
 	if (screenGrabExist (s, "rotate", "plane", "wall", 0))
 		return;
@@ -727,16 +741,7 @@ groupHandleTabChange (GroupSelection *group)
 		   from the group, move the new top-tab window onscreen. */
 		if (group->ungroupState == UngroupSingle && !group->prevTopTab)
 		{
-			gs->queued = TRUE;
 			groupSetWindowVisibility (topTab, TRUE);
-			moveWindow (topTab,
-						group->oldTopTabCenterX -
-						WIN_X (topTab) - WIN_WIDTH (topTab) / 2,
-						group->oldTopTabCenterY -
-						WIN_Y (topTab) - WIN_HEIGHT (topTab) / 2,
-						TRUE, TRUE);
-			syncWindowPosition (topTab);
-			gs->queued = FALSE;
 
 			/* recalc here is needed (for y value)! */
 			groupRecalcTabBarPos (group,
@@ -752,16 +757,7 @@ groupHandleTabChange (GroupSelection *group)
 		return;
 	}
 
-	gs->queued = TRUE;
 	groupSetWindowVisibility (topTab, TRUE);
-	moveWindow (topTab,
-				group->oldTopTabCenterX -
-				WIN_X (topTab) - WIN_WIDTH (topTab) / 2,
-				group->oldTopTabCenterY -
-				WIN_Y (topTab) - WIN_HEIGHT (topTab) / 2,
-				TRUE, TRUE);
-	syncWindowPosition (topTab);
-	gs->queued = FALSE;
 
 	if (group->prevTopTab)
 	{
@@ -891,8 +887,6 @@ groupHandleUngroup (GroupSelection *group)
 	int            i;
 	GroupSelection *retval = group->next;
 
-	GROUP_SCREEN (group->screen);
-
 	/* FIXME: move this to the initiator of the tabbing animation */
 	if ((group->ungroupState == UngroupSingle) &&
 		(group->tabbingState != NoTabbing))
@@ -903,18 +897,7 @@ groupHandleUngroup (GroupSelection *group)
 			GROUP_WINDOW (w);
 
 			if (gw->animateState & IS_UNGROUPING)
-			{
-				gs->queued = TRUE;
 				groupSetWindowVisibility (w, TRUE);
-				moveWindow (w,
-							group->oldTopTabCenterX -
-							WIN_X (w) - WIN_WIDTH (w) / 2,
-							group->oldTopTabCenterY -
-							WIN_Y (w) - WIN_HEIGHT (w) / 2,
-							TRUE, TRUE);
-				syncWindowPosition (w);
-				gs->queued = FALSE;
-			}
 		}
 	}
 
@@ -1674,19 +1657,16 @@ groupUntabGroup (GroupSelection *group)
 
 		GROUP_WINDOW (cw);
 
-		gs->queued = TRUE;
-		groupSetWindowVisibility (cw, TRUE);
 		if (gw->animateState & (IS_ANIMATED | FINISHED_ANIMATION))
+		{
+			gs->queued = TRUE;
 			moveWindow (cw,
 						gw->destination.x - WIN_X (cw),
 						gw->destination.y - WIN_Y (cw),
 						FALSE, TRUE);
-		moveWindow (cw,
-					group->oldTopTabCenterX - WIN_X (cw) - WIN_WIDTH (cw) / 2,
-					group->oldTopTabCenterY - WIN_Y (cw) - WIN_HEIGHT (cw) / 2,
-					FALSE, TRUE);
-		syncWindowPosition (cw);
-		gs->queued = FALSE;
+			gs->queued = FALSE;
+		}
+		groupSetWindowVisibility (cw, TRUE);
 
 		/* save the old original position - we might need it
 		   if constraining fails */
