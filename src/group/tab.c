@@ -74,7 +74,7 @@ groupGetClippingRegion (CompWindow *w)
 	CompWindow *cw;
 	Region     clip;
 	
-	clip = XCreateRegion();
+	clip = XCreateRegion ();
 	if (!clip)
 		return NULL;
 
@@ -85,10 +85,10 @@ groupGetClippingRegion (CompWindow *w)
 			XRectangle rect;
 			Region     buf;
 			
-			buf = XCreateRegion();
+			buf = XCreateRegion ();
 			if (!buf)
 			{
-				XDestroyRegion(clip);
+				XDestroyRegion (clip);
 				return NULL;
 			}
 
@@ -331,9 +331,9 @@ groupCheckForVisibleTabBars (CompScreen *s)
  * This mask affects how the visible parameter is handled, for example if
  * visibule is set to TRUE and the mask to PERMANENT state it will set
  * PaintPermanentOn state for the tab bar. When visibile is FALSE, mask 0
- * and the current state of the tab bar is PaintPermanentOn it won't do anything
- * because its not strong enough to disable a Permanent-State, for those you need
- * the mask.
+ * and the current state of the tab bar is PaintPermanentOn it won't do
+ * anything because its not strong enough to disable a 
+ * Permanent-State, for those you need the mask.
  *
  */
 void
@@ -358,23 +358,16 @@ groupTabSetVisibility (GroupSelection *group,
 		bar->state = PaintOff;
 		groupSwitchTopTabInput (group, TRUE);
 	}
-
-	else if (visible && bar->state != PaintPermanentOn &&
-			 (mask & PERMANENT))
+	else if (visible && bar->state != PaintPermanentOn && (mask & PERMANENT))
 	{
 		bar->state = PaintPermanentOn;
 		groupSwitchTopTabInput (group, FALSE);
-
 	}
-
-	else if (visible && bar->state == PaintPermanentOn &&
-			 !(mask & PERMANENT))
+	else if (visible && bar->state == PaintPermanentOn && !(mask & PERMANENT))
 	{
 		bar->state = PaintOn;
 	}
-
-	else if (visible &&
-			 (bar->state == PaintOff || bar->state == PaintFadeOut))
+	else if (visible && (bar->state == PaintOff || bar->state == PaintFadeOut))
 	{
 		if (groupGetBarAnimations (group->screen))
 		{
@@ -384,7 +377,6 @@ groupTabSetVisibility (GroupSelection *group,
 		bar->state = PaintFadeIn;
 		groupSwitchTopTabInput (group, FALSE);
  	}
-
  	else if (!visible &&
 			 (bar->state != PaintPermanentOn || (mask & PERMANENT)) &&
 			 (bar->state == PaintOn || bar->state == PaintPermanentOn ||
@@ -451,13 +443,11 @@ groupGetDrawOffsetForSlot (GroupTabBarSlot *slot,
 		return;
 	}
 
-	x = WIN_X (topTab) + WIN_WIDTH (topTab) / 2 -
-		WIN_WIDTH (w) / 2;
-	y = WIN_Y (topTab) + WIN_HEIGHT (topTab) / 2 -
-		WIN_HEIGHT (w) / 2;
+	x = WIN_X (topTab) + WIN_WIDTH (topTab) / 2 - WIN_WIDTH (w) / 2;
+	y = WIN_Y (topTab) + WIN_HEIGHT (topTab) / 2 - WIN_HEIGHT (w) / 2;
 
-	viewportForGeometry (w->screen, 
-						 x, y, w->serverWidth, w->serverHeight,
+	viewportForGeometry (w->screen, x, y,
+						 w->serverWidth, w->serverHeight,
 						 w->serverBorderWidth,
 						 &vx, &vy);
 
@@ -476,6 +466,7 @@ groupGetDrawOffsetForSlot (GroupTabBarSlot *slot,
  * the hover detection. This is needed for the text showing up,
  * when you hover a thumb on the thumb bar.
  *
+ * FIXME: we should better have a timer for that ...
  */
 void
 groupHandleHoverDetection (GroupSelection *group)
@@ -612,7 +603,8 @@ groupHandleTabBarFade (GroupSelection *group,
  *
  */
 void
-groupHandleTextFade(GroupSelection *group, int msSinceLastPaint)
+groupHandleTextFade (GroupSelection *group,
+					 int            msSinceLastPaint)
 {
 	GroupTabBar     *bar = group->tabBar;
 	GroupCairoLayer *textLayer = bar->textLayer;
@@ -799,6 +791,8 @@ groupHandleTabChange (GroupSelection *group)
  * rotate animation and PaintFadeOut is the end of these
  * animation.
  *
+ * FIXME: merge this with groupHandleTabChange and call only when 
+ *        necessary (which means changeAnimationTime <= 0)
  */
 void
 groupHandleAnimation (GroupSelection *group)
@@ -889,6 +883,7 @@ groupHandleAnimation (GroupSelection *group)
  * This is needed to avoid problems with the linked list.
  * It's called from groupHandleChanges.
  *
+ * FIXME: remove this completely 
  */
 GroupSelection*
 groupHandleUngroup (GroupSelection *group)
@@ -898,6 +893,7 @@ groupHandleUngroup (GroupSelection *group)
 
 	GROUP_SCREEN (group->screen);
 
+	/* FIXME: move this to the initiator of the tabbing animation */
 	if ((group->ungroupState == UngroupSingle) &&
 		(group->tabbingState != NoTabbing))
 	{
@@ -922,6 +918,8 @@ groupHandleUngroup (GroupSelection *group)
 		}
 	}
 
+	/* FIXME: move this to the place where tabbingState is set
+	   to NoTabbing */
 	if ((group->ungroupState == UngroupAll) &&
 		(group->tabbingState == NoTabbing))
 	{
@@ -1570,7 +1568,7 @@ groupTabGroup (CompWindow *main)
 		layer->state = PaintFadeIn;
 	}
 
-	// we need a buffer for DnD here
+	/* we need a buffer for DnD here */
 	space = groupGetThumbSpace (main->screen);
 	thumbSize = groupGetThumbSize (main->screen);
 	group->tabBar->bgLayer = groupCreateCairoLayer (main->screen,
@@ -1977,7 +1975,10 @@ groupRecalcSlotPos (GroupTabBarSlot *slot,
  *
  */
 void
-groupRecalcTabBarPos(GroupSelection *group, int middleX, int minX1, int maxX2)
+groupRecalcTabBarPos (GroupSelection *group,
+					  int            middleX,
+					  int            minX1,
+					  int            maxX2)
 {
 	GroupTabBarSlot *slot;
 	GroupTabBar     *bar;
@@ -2012,7 +2013,8 @@ groupRecalcTabBarPos(GroupSelection *group, int middleX, int minX1, int maxX2)
 			tabsHeight = slot->region->extents.y2 - slot->region->extents.y1;
 	}
 
-	/* just a little work-a-round for first call */
+	/* just a little work-a-round for first call 
+	   FIXME: remove this! */
 	thumbSize = groupGetThumbSize (group->screen);
 	if (bar->nSlots && tabsWidth <= 0)
 	{
@@ -2411,7 +2413,8 @@ groupDeleteTabBarSlot (GroupTabBar     *bar,
  * groupCreateSlot
  *
  */
-void groupCreateSlot(GroupSelection *group, CompWindow *w)
+void groupCreateSlot (GroupSelection *group,
+					  CompWindow     *w)
 {
 	GroupTabBarSlot *slot;
 
@@ -2869,8 +2872,11 @@ groupInitTab (CompDisplay     *d,
  *
  */
 Bool
-groupChangeTabLeft(CompDisplay * d, CompAction * action, CompActionState state,
-	       CompOption * option, int nOption)
+groupChangeTabLeft (CompDisplay     *d,
+					CompAction      *action,
+					CompActionState state,
+					CompOption      *option,
+					int             nOption)
 {
 	CompWindow *w, *topTab;
 	

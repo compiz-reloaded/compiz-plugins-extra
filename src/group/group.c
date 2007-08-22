@@ -200,10 +200,10 @@ groupUpdateResizeRectangle (CompWindow *w,
 	if (!gw->resizeGeometry || !gd->resizeInfo)
 		return 0;
 
-	newGeometry.x      = WIN_X (w) + (masterGeometry->x -
-									  gd->resizeInfo->origGeometry.x);
-	newGeometry.y      = WIN_Y (w) + (masterGeometry->y -
-									  gd->resizeInfo->origGeometry.y);
+	newGeometry.x = WIN_X (w) + (masterGeometry->x -
+		   						 gd->resizeInfo->origGeometry.x);
+	newGeometry.y = WIN_Y (w) + (masterGeometry->y -
+   								 gd->resizeInfo->origGeometry.y);
 
 	widthDiff = masterGeometry->width - gd->resizeInfo->origGeometry.width;
 	newGeometry.width = MAX (1, WIN_WIDTH (w) + widthDiff);
@@ -367,6 +367,10 @@ groupShadeWindows (CompWindow     *top,
  *       calls this function.
  *
  */
+/* FIXME: parts of this function should be splitted out to a function
+          groupRemoveWindowFromGroup - this function should only to the
+		  actual removal of the window from the group
+		  When doing that, the allowRegroup should also be removed */
 void
 groupDeleteGroupWindow (CompWindow *w,
 						Bool       allowRegroup)
@@ -476,12 +480,12 @@ groupDeleteGroupWindow (CompWindow *w,
 
 							gs->queued = TRUE;
 							groupSetWindowVisibility (lw, TRUE);
-							moveWindow(lw,
-									   group->oldTopTabCenterX -
-									   WIN_X (lw) - WIN_WIDTH (lw) / 2,
-									   group->oldTopTabCenterY -
-									   WIN_Y (lw) - WIN_HEIGHT (lw) / 2,
-									   TRUE, TRUE);
+							moveWindow (lw,
+										group->oldTopTabCenterX -
+										WIN_X (lw) - WIN_WIDTH (lw) / 2,
+										group->oldTopTabCenterY -
+										WIN_Y (lw) - WIN_HEIGHT (lw) / 2,
+										TRUE, TRUE);
 							syncWindowPosition (lw);
 							gs->queued = FALSE;
 						}
@@ -524,7 +528,7 @@ groupDeleteGroup (GroupSelection *group)
 	GROUP_SCREEN (group->screen);
 	GROUP_DISPLAY (group->screen->display);
 
-	if (group->windows != NULL)
+	if (group->windows)
 	{
 		int i;
 
@@ -673,6 +677,7 @@ groupAddWindowToGroup (CompWindow     *w,
 	}
 	else
 	{
+		/* create new group */
 		GroupSelection *g = malloc (sizeof (GroupSelection));
 
 		g->windows = calloc(1, sizeof (CompWindow *));
@@ -699,7 +704,7 @@ groupAddWindowToGroup (CompWindow     *w,
 		g->oldTopTabCenterX = 0;
 		g->oldTopTabCenterY = 0;
 
-		// glow color
+		/* glow color */
 		g->color[0] = (int)(rand() / (((double)RAND_MAX + 1)/ 0xffff));
 		g->color[1] = (int)(rand() / (((double)RAND_MAX + 1)/ 0xffff));
 		g->color[2] = (int)(rand() / (((double)RAND_MAX + 1)/ 0xffff));
@@ -709,6 +714,8 @@ groupAddWindowToGroup (CompWindow     *w,
 			g->identifier = initialIdent;
 		else
 		{
+			/* we got no valid group Id passed, so find out a new valid
+			   unique one */
 			GroupSelection *tg;
 			Bool           invalidID = FALSE;
 
@@ -1126,9 +1133,14 @@ groupHandleButtonReleaseEvent (CompDisplay *d,
 		if (!group->tabBar || !HAS_TOP_WIN (group))
 			continue;
 
-		// create clipping region
+		/* create clipping region */
 		clip = groupGetClippingRegion (TOP_TAB(group));
+		if (!clip)
+			continue;
+
 		buf = XCreateRegion();
+		if (!buf)
+			continue;
 
 		XIntersectRegion (newRegion, group->tabBar->region, buf);
 		XSubtractRegion (buf, clip, buf);
@@ -1154,6 +1166,8 @@ groupHandleButtonReleaseEvent (CompDisplay *d,
 				continue;
 
 			slotRegion = XCreateRegion();
+			if (!slotRegion)
+				continue;
 
 			if (slot->prev && slot->prev != gs->draggedSlot)
 			{
@@ -1186,6 +1200,9 @@ groupHandleButtonReleaseEvent (CompDisplay *d,
 			XUnionRectWithRegion (&rect, slotRegion, slotRegion);
 
 			buf = XCreateRegion();
+			if (!buf)
+				continue;
+
 			XIntersectRegion (newRegion, slotRegion, buf);
 			inSlot = !XEmptyRegion (buf);
 
@@ -1207,6 +1224,7 @@ groupHandleButtonReleaseEvent (CompDisplay *d,
 					tmpGroup->topTab)
 				{
 					CompWindow *tw = tmpGroup->topTab->window;
+					CompWindow *w = gs->draggedSlot->window;
 
 					tmpGroup->oldTopTabCenterX = WIN_X (tw) +
 						                         WIN_WIDTH (tw) / 2;
@@ -1214,25 +1232,25 @@ groupHandleButtonReleaseEvent (CompDisplay *d,
 						                         WIN_HEIGHT (tw) / 2;
 
 					gs->queued = TRUE;
-					groupSetWindowVisibility (gs->draggedSlot->window, TRUE);
-					moveWindow (gs->draggedSlot->window,
-								gw->group->oldTopTabCenterX -
-								WIN_X (gs->draggedSlot->window) -
-								WIN_WIDTH (gs->draggedSlot->window) / 2,
-								gw->group->oldTopTabCenterY -
-								WIN_Y (gs->draggedSlot->window) -
-								WIN_HEIGHT (gs->draggedSlot->window) / 2,
+					groupSetWindowVisibility (w, TRUE);
+					moveWindow (w,
+								gw->group->oldTopTabCenterX - WIN_X (w) -
+								WIN_WIDTH (w) / 2,
+								gw->group->oldTopTabCenterY - WIN_Y (w) -
+								WIN_HEIGHT (w) / 2,
 								TRUE, TRUE);
-					syncWindowPosition (gs->draggedSlot->window);
+					syncWindowPosition (w);
 					gs->queued = FALSE;
 				}
 
 				/* Change the group. */
+				/* FIXME: maybe we should remove it from the old group
+				          from here instead of putting that into
+						  groupAddWindowToGroup? */
 				groupAddWindowToGroup (gs->draggedSlot->window, group, 0);
 			} else
 				groupUnhookTabBarSlot (group->tabBar, gs->draggedSlot, TRUE);
 
-			/* for re-calculating the tab-bar including the dragged window */
 			gs->draggedSlot = NULL;
 			gs->dragged = FALSE;
 			inserted = TRUE;
@@ -1536,8 +1554,8 @@ groupHandleEvent (CompDisplay *d,
 							int newState;
 							newState = tw->state & ~CompWindowStateShadedMask;
 							changeWindowState (tw, newState);
-							updateWindowAttributes(tw,
-												   CompStackingUpdateModeNone);
+							updateWindowAttributes (tw,
+													CompStackingUpdateModeNone);
 						}
 						else if (tw->minimized)
 							unminimizeWindow (tw);
@@ -1607,7 +1625,7 @@ groupHandleEvent (CompDisplay *d,
 				    gw->group->tabBar->textSlot    &&
 				    gw->group->tabBar->textSlot->window == w)
 				{
-					// make sure we are using the updated name
+					/* make sure we are using the updated name */
 					groupRenderWindowTitle (gw->group);
 					groupDamageTabBarRegion (gw->group);
 				}
@@ -1756,9 +1774,8 @@ groupWindowResizeNotify (CompWindow *w,
 	if (gw->glowQuads)
 		groupComputeGlowQuads (w, &gs->glowTexture.matrix);
 
-	if (gw->group && gw->group->tabBar &&
-		(gw->group->tabBar->state != PaintOff) &&
-		IS_TOP_TAB (w, gw->group))
+	if (gw->group && gw->group->tabBar && IS_TOP_TAB (w, gw->group) &&
+		(gw->group->tabBar->state != PaintOff))
 	{
 		groupRecalcTabBarPos(gw->group, pointerX,
 							 WIN_X (w), WIN_X (w) + WIN_WIDTH (w));
