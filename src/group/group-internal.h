@@ -481,10 +481,6 @@ typedef struct _GroupWindow {
 /*
  * group.c
  */
-/* Compiz only function */
-Bool
-screenGrabExist (CompScreen *s,
-				 ...);
 
 void
 groupUpdateWindowProperty (CompWindow *w);

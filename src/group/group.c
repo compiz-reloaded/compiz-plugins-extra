@@ -24,39 +24,6 @@
  *
  **/
 
-#include <stdarg.h>
-Bool
-screenGrabExist (CompScreen *s, ...)
-{
-    va_list ap;
-    char    *name;
-    int	    i;
-
-    for (i = 0; i < s->maxGrab; i++)
-    {
-		if (s->grabs[i].active)
-		{
-			va_start (ap, s);
-
-			name = va_arg (ap, char *);
-			while (name)
-			{
-				if (strcmp (name, s->grabs[i].name) == 0)
-					break;
-
-				name = va_arg (ap, char *);
-			}
-
-			va_end (ap);
-
-			if (name)
-				return TRUE;
-		}
-    }
-
-    return FALSE;
-}
-
 /*
  * groupDragHoverTimeout
  *
