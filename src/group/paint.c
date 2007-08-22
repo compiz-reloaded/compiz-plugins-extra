@@ -938,27 +938,44 @@ groupPreparePaintScreen (CompScreen *s,
 	(*s->preparePaintScreen) (s, msSinceLastPaint);
 	WRAP (gs, s, preparePaintScreen, groupPreparePaintScreen);
 
-	for (group = gs->groups; group; group = group->next)
+	group = gs->groups;
+	while (group)
 	{
 		GroupTabBar *bar = group->tabBar;
 
 		if (group->changeState != NoTabChange)
 			group->changeAnimationTime -= msSinceLastPaint;
 
-		if (!bar)
-			continue;
+		if (bar)
+		{
+			groupApplyForces (s, bar, (gs->dragged) ? gs->draggedSlot: NULL);
+			groupApplySpeeds (s, group, msSinceLastPaint);
 
-		groupApplyForces (s, bar, (gs->dragged) ? gs->draggedSlot: NULL);
-		groupApplySpeeds (s, group, msSinceLastPaint);
+			if ((bar->state != PaintOff) && HAS_TOP_WIN (group))
+				groupHandleHoverDetection (group);
 
-		groupHandleHoverDetection (group);
-		groupHandleTabBarFade (group, msSinceLastPaint);
-		groupHandleTextFade (group, msSinceLastPaint);
-		groupHandleTabBarAnimation (group, msSinceLastPaint);
+			if (bar->state == PaintFadeIn || bar->state == PaintFadeOut)
+				groupHandleTabBarFade (group, msSinceLastPaint);
+
+			if (bar->textLayer)
+				groupHandleTextFade (group, msSinceLastPaint);
+
+			if (bar->bgAnimation)
+				groupHandleTabBarAnimation (group, msSinceLastPaint);
+		}
+
+		groupHandleUntab (group);
+		groupHandleTabChange (group);
+		groupHandleAnimation (group);
+
+		if (group->tabbingState != NoTabbing)
+			groupDrawTabAnimation (group, msSinceLastPaint);
+
+		if (group->ungroupState != UngroupNone)
+			group = groupHandleUngroup (group);
+		else
+			group = group->next;
 	}
-
-	groupHandleChanges (s);
-	groupDrawTabAnimation (s, msSinceLastPaint);
 }
 
 /*

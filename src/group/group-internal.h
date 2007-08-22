@@ -618,7 +618,16 @@ groupClearWindowInputShape (CompWindow          *w,
 							GroupWindowHideInfo *hideInfo);
 
 void
-groupHandleChanges (CompScreen *s);
+groupHandleUntab (GroupSelection *group);
+
+void
+groupHandleTabChange (GroupSelection *group);
+
+void
+groupHandleAnimation (GroupSelection *group);
+
+GroupSelection*
+groupHandleUngroup (GroupSelection *group);
 
 void
 groupHandleHoverDetection (GroupSelection *group);
@@ -636,8 +645,8 @@ groupHandleTextFade (GroupSelection *group,
 					 int            msSinceLastPaint);
 
 void
-groupDrawTabAnimation (CompScreen *s,
-					   int        msSinceLastPaint);
+groupDrawTabAnimation (GroupSelection *group,
+					   int            msSinceLastPaint);
 
 void
 groupUpdateTabBars (CompScreen *s,
