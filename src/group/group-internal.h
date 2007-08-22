@@ -508,8 +508,10 @@ groupHandleEvent (CompDisplay *d,
 				  XEvent      *event);
 
 void
-groupDeleteGroupWindow (CompWindow *w,
-						Bool       allowRegroup);
+groupDeleteGroupWindow (CompWindow *w);
+
+void
+groupRemoveWindowFromGroup (CompWindow *w);
 
 void
 groupDeleteGroup (GroupSelection *group);

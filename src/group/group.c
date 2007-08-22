@@ -363,17 +363,9 @@ groupShadeWindows (CompWindow     *top,
 /*
  * groupDeleteGroupWindow
  *
- * Note: allowRegroup is need for a special case when groupAddWindowToGroup
- *       calls this function.
- *
  */
-/* FIXME: parts of this function should be splitted out to a function
-          groupRemoveWindowFromGroup - this function should only to the
-		  actual removal of the window from the group
-		  When doing that, the allowRegroup should also be removed */
 void
-groupDeleteGroupWindow (CompWindow *w,
-						Bool       allowRegroup)
+groupDeleteGroupWindow (CompWindow *w)
 {
 	GroupSelection *group;
 
@@ -385,61 +377,15 @@ groupDeleteGroupWindow (CompWindow *w,
 
 	group = gw->group;
 
-	if (group->tabBar)
+	if (group->tabBar && gw->slot)
 	{
-		if (gw->slot)
+		if (gs->draggedSlot && gs->dragged &&
+			gs->draggedSlot->window->id == w->id)
 		{
-			if (gs->draggedSlot && gs->dragged &&
-				gs->draggedSlot->window->id == w->id)
-			{
-				groupUnhookTabBarSlot (group->tabBar, gw->slot, FALSE);
-			}
-			else
-				groupDeleteTabBarSlot (group->tabBar, gw->slot);
+			groupUnhookTabBarSlot (group->tabBar, gw->slot, FALSE);
 		}
-
-		if (!(gw->animateState & IS_UNGROUPING) && group->nWins > 1)
-		{
-			if (HAS_TOP_WIN (group))
-			{
-				CompWindow *tw = TOP_TAB (group);
-				/* TODO: maybe add the IS_ANIMATED to the topTab
-				   for better constraining... */
-				int         oldX = gw->orgPos.x;
-				int         oldY = gw->orgPos.y;
-
-				group->oldTopTabCenterX = WIN_X (tw) + (WIN_WIDTH (tw) / 2);
-				group->oldTopTabCenterY = WIN_Y (tw) + (WIN_HEIGHT (tw) / 2);
-
-				gw->orgPos.x = group->oldTopTabCenterX - (WIN_WIDTH (w) / 2);
-				gw->orgPos.y = group->oldTopTabCenterY - (WIN_HEIGHT (w) / 2);
-
-				gw->destination.x = gw->orgPos.x + gw->mainTabOffset.x;
-				gw->destination.y = gw->orgPos.y + gw->mainTabOffset.y;
-
-				gw->mainTabOffset.x = oldX;
-				gw->mainTabOffset.y = oldY;
-
-				if (gw->tx || gw->ty)
-				{
-					gw->tx -= (gw->orgPos.x - oldX);
-					gw->ty -= (gw->orgPos.y - oldY);
-				}
-
-				gw->animateState = IS_ANIMATED;
-				gw->xVelocity = gw->yVelocity = 0.0f;
-			}
-
-			/* Although when there is no top-tab, it will never really
-			   animate anything, if we don't start the animation,
-			   the window will never get remvoed. */
-			groupStartTabbingAnimation (group, FALSE);
-
-			group->ungroupState = UngroupSingle;
-			gw->animateState |= IS_UNGROUPING;
-
-			return;
-		}
+		else
+			groupDeleteTabBarSlot (group->tabBar, gw->slot);
 	}
 
 	if (group->nWins && group->windows)
@@ -469,7 +415,7 @@ groupDeleteGroupWindow (CompWindow *w,
 
 				if (groupGetAutoUngroup (w->screen))
 				{
-					if (!allowRegroup || !groupGetAutotabCreate (w->screen))
+					if (!groupGetAutotabCreate (w->screen))
 					{
 						if (group->changeState != NoTabChange)
 						{
@@ -506,8 +452,67 @@ groupDeleteGroupWindow (CompWindow *w,
 		gw->group = NULL;
 		updateWindowOutputExtents (w);
 		groupUpdateWindowProperty (w);
+	}
+}
 
-		if (allowRegroup && groupGetAutotabCreate (w->screen) &&
+void
+groupRemoveWindowFromGroup (CompWindow *w)
+{
+	GROUP_WINDOW (w);
+
+	if (!gw->group)
+		return;
+
+	if (gw->group->tabBar && !(gw->animateState & IS_UNGROUPING) &&
+		(gw->group->nWins > 1))
+	{
+		GroupSelection *group = gw->group;
+
+		/* if the group is tabbed, setup untabbing animation. The
+		   window will be deleted from the group at the 
+		   end of the untabbing. */
+		if (HAS_TOP_WIN (group))
+		{
+			CompWindow *tw = TOP_TAB (group);
+			int        oldX = gw->orgPos.x;
+			int        oldY = gw->orgPos.y;
+
+			group->oldTopTabCenterX = WIN_X (tw) + (WIN_WIDTH (tw) / 2);
+			group->oldTopTabCenterY = WIN_Y (tw) + (WIN_HEIGHT (tw) / 2);
+
+			gw->orgPos.x = group->oldTopTabCenterX - (WIN_WIDTH (w) / 2);
+			gw->orgPos.y = group->oldTopTabCenterY - (WIN_HEIGHT (w) / 2);
+
+			gw->destination.x = gw->orgPos.x + gw->mainTabOffset.x;
+			gw->destination.y = gw->orgPos.y + gw->mainTabOffset.y;
+
+			gw->mainTabOffset.x = oldX;
+			gw->mainTabOffset.y = oldY;
+
+			if (gw->tx || gw->ty)
+			{
+				gw->tx -= (gw->orgPos.x - oldX);
+				gw->ty -= (gw->orgPos.y - oldY);
+			}
+
+			gw->animateState = IS_ANIMATED;
+			gw->xVelocity = gw->yVelocity = 0.0f;
+		}
+
+		/* Although when there is no top-tab, it will never really
+		   animate anything, if we don't start the animation,
+		   the window will never get remvoed. */
+		groupStartTabbingAnimation (group, FALSE);
+
+		group->ungroupState = UngroupSingle;
+		gw->animateState |= IS_UNGROUPING;
+	}
+	else
+	{
+		/* no tab bar - delete immediately */
+		groupDeleteGroupWindow (w);
+
+		if (groupGetAutotabCreate (w->screen) &&
 			matchEval (groupGetWindowMatch (w->screen), w))
 		{
 			groupAddWindowToGroup (w, NULL, 0);
@@ -614,12 +619,7 @@ groupAddWindowToGroup (CompWindow     *w,
 		return;
 
 	if (gw->group)
-	{
-		/* prevent animations on the previous group */
-		gw->animateState |= IS_UNGROUPING;
-		groupDeleteGroupWindow (w, FALSE);
-		gw->animateState &= ~IS_UNGROUPING;
-	}
+		groupDeleteGroupWindow (w);
 
 	if (group)
 	{
@@ -868,7 +868,7 @@ groupRemoveWindow (CompDisplay     *d,
 	GROUP_WINDOW (cw);
 
 	if (gw->group)
-		groupDeleteGroupWindow (cw, TRUE);
+		groupRemoveWindowFromGroup (cw);
 
 	return FALSE;
 }
@@ -1299,7 +1299,7 @@ groupHandleButtonReleaseEvent (CompDisplay *d,
 
 		if (groupGetDndUngroupWindow (s) && !wasInTabBar)
 		{
-			groupDeleteGroupWindow (draggedSlotWindow, TRUE);
+			groupRemoveWindowFromGroup (draggedSlotWindow);
 		}
 		else if (gw->group && gw->group->topTab)
 		{
@@ -1488,7 +1488,7 @@ groupHandleEvent (CompDisplay *d,
 						/* close event */
 						if (!(gw->animateState & IS_UNGROUPING))
 						{
-							groupDeleteGroupWindow (w, FALSE);
+							groupRemoveWindowFromGroup (w);
 							damageScreen (w->screen);
 						}
 					}

@@ -1076,7 +1076,7 @@ groupDrawTabAnimation (GroupSelection *group,
 				if (group->ungroupState == UngroupSingle && 
 					(gw->animateState & IS_UNGROUPING))
 				{
-					groupDeleteGroupWindow (w, TRUE);
+					groupRemoveWindowFromGroup (w);
 				}
 
 				gw->animateState = 0;
