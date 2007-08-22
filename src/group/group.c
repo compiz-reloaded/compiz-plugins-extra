@@ -607,11 +607,8 @@ groupAddWindowToGroup (CompWindow     *w,
 	GROUP_SCREEN (w->screen);
 	GROUP_WINDOW (w);
 
-	if (group && gw->group == group)
-		return;
-
 	if (gw->group)
-		groupDeleteGroupWindow (w);
+		return;
 
 	if (group)
 	{
@@ -1210,26 +1207,23 @@ groupHandleButtonReleaseEvent (CompDisplay *d,
 			{
 				GroupSelection *tmpGroup = gw->group;
 
-				/* if the dragged window is not the top tab, move it onscreen
-                   FIXME : Move to addWindowToGroup. */
-				if (!IS_TOP_TAB (gs->draggedSlot->window, tmpGroup) && 
+				/* if the dragged window is not the top tab,
+				   move it onscreen */
+				if (!IS_TOP_TAB (gs->draggedSlot->window, tmpGroup) &&
 					tmpGroup->topTab)
 				{
 					CompWindow *tw = tmpGroup->topTab->window;
-					CompWindow *w = gs->draggedSlot->window;
 
 					tmpGroup->oldTopTabCenterX = WIN_X (tw) +
 						                         WIN_WIDTH (tw) / 2;
 					tmpGroup->oldTopTabCenterY = WIN_Y (tw) +
 						                         WIN_HEIGHT (tw) / 2;
 
-					groupSetWindowVisibility (w, TRUE);
+					groupSetWindowVisibility (gs->draggedSlot->window, TRUE);
 				}
 
 				/* Change the group. */
-				/* FIXME: maybe we should remove it from the old group
-				          from here instead of putting that into
-						  groupAddWindowToGroup? */
+				groupDeleteGroupWindow (gs->draggedSlot->window);
 				groupAddWindowToGroup (gs->draggedSlot->window, group, 0);
 			} else
 				groupUnhookTabBarSlot (group->tabBar, gs->draggedSlot, TRUE);
