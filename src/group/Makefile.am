@@ -5,6 +5,7 @@ libgroup_la_LDFLAGS = $(PFLAGS)
 libgroup_la_LIBADD = @COMPIZ_LIBS@ @GROUP_LIBS@
 libgroup_la_SOURCES = group_options.c \
 		      group_options.h \
+		      cairo.c         \
 		      group.c         \
 		      init.c          \
 		      paint.c         \
