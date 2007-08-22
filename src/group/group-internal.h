@@ -599,6 +599,38 @@ groupDamageWindowRect (CompWindow *w,
 
 
 /*
+ * cairo.c
+ */
+
+void
+groupClearCairoLayer (GroupCairoLayer *layer);
+
+void
+groupDestroyCairoLayer (CompScreen      *s,
+						GroupCairoLayer *layer);
+
+GroupCairoLayer*
+groupRebuildCairoLayer (CompScreen      *s,
+						GroupCairoLayer *layer,
+						int             width,
+						int             height);
+
+GroupCairoLayer*
+groupCreateCairoLayer (CompScreen *s,
+					   int        width,
+					   int        height);
+
+void
+groupRenderTopTabHighlight (GroupSelection *group);
+
+void
+groupRenderTabBarBackground (GroupSelection *group);
+
+void
+groupRenderWindowTitle (GroupSelection *group);
+
+
+/*
  * tab.c
  */
 
@@ -653,24 +685,6 @@ Bool
 groupGetCurrentMousePosition (CompScreen *s,
 							  int        *x,
 							  int        *y);
-
-void
-groupClearCairoLayer (GroupCairoLayer *layer);
-
-void
-groupDestroyCairoLayer (CompScreen      *s,
-						GroupCairoLayer *layer);
-
-GroupCairoLayer*
-groupRebuildCairoLayer (CompScreen      *s,
-						GroupCairoLayer *layer,
-						int             width,
-						int             height);
-
-GroupCairoLayer*
-groupCreateCairoLayer (CompScreen *s,
-					   int        width,
-					   int        height);
 
 void
 groupRecalcTabBarPos (GroupSelection *group,
@@ -795,15 +809,6 @@ groupRecomputeGlow (CompScreen *s);
 void
 groupComputeGlowQuads (CompWindow *w,
 					   CompMatrix *matrix);
-
-void
-groupRenderTopTabHighlight (GroupSelection *group);
-
-void
-groupRenderTabBarBackground (GroupSelection *group);
-
-void
-groupRenderWindowTitle (GroupSelection *group);
 
 void
 groupPreparePaintScreen (CompScreen *s,
