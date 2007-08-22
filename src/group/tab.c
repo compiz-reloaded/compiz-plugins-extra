@@ -772,10 +772,10 @@ groupHandleAnimation (GroupSelection *group)
 
 		if (group->nextTopTab)
 		{
-			groupChangeTab (group->nextTopTab, group->nextDirection);
+			GroupTabBarSlot *next = group->nextTopTab;
 			group->nextTopTab = NULL;
 
-			groupHandleTabChange (group);
+			groupChangeTab (next, group->nextDirection);
 
 			if (group->changeState == TabChangeOldOut)
 			{
@@ -1753,7 +1753,7 @@ groupChangeTab (GroupTabBarSlot             *topTab,
 			group->prevTopTab = group->topTab;
 		}
 	}
-	else
+	else if (topTab != group->nextTopTab)
 	{
 		groupSetWindowVisibility (w, TRUE);
 
