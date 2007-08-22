@@ -130,7 +130,7 @@ groupPaintTabBar (GroupSelection          *group,
 	 			  unsigned int            mask,
 				  Region                  clipRegion)
 {
-	CompWindow      *topTab = TOP_TAB (group);
+	CompWindow      *topTab;
 	CompScreen      *s = group->screen;
 	GroupTabBar     *bar = group->tabBar;
 	GroupTabBarSlot *slot;
@@ -139,13 +139,12 @@ groupPaintTabBar (GroupSelection          *group,
 	GroupCairoLayer *layer;
 	REGION          box;
 
-	if (!group || !HAS_TOP_WIN (group) || !group->tabBar ||
-		(group->tabBar->state == PaintOff))
-	{
-		return;
-	}
-
 	GROUP_SCREEN (s);
+
+	if (HAS_TOP_WIN (group))
+		topTab = TOP_TAB (group);
+	else
+		topTab = PREV_TOP_TAB (group);
 
 #define PAINT_BG     0
 #define PAINT_SEL    1
@@ -161,11 +160,9 @@ groupPaintTabBar (GroupSelection          *group,
 		alpha = OPAQUE;
 
 		if (bar->state == PaintFadeIn)
-			alpha -= alpha * bar->animationTime /
-				     (groupGetFadeTime (s) * 1000);
+			alpha -= alpha * bar->animationTime / (groupGetFadeTime (s) * 1000);
 		else if (bar->state == PaintFadeOut)
-			alpha = alpha * bar->animationTime /
-				    (groupGetFadeTime (s) * 1000);
+			alpha = alpha * bar->animationTime / (groupGetFadeTime (s) * 1000);
 
 		wScale = hScale = 1.0f;
 		layer = NULL;
@@ -784,11 +781,11 @@ groupComputeGlowQuads (CompWindow *w,
  *
  */
 Bool
-groupDrawWindow(CompWindow           *w,
-				const CompTransform  *transform,
-				const FragmentAttrib *attrib,
-				Region               region,
-				unsigned int         mask)
+groupDrawWindow (CompWindow           *w,
+				 const CompTransform  *transform,
+				 const FragmentAttrib *attrib,
+				 Region               region,
+				 unsigned int         mask)
 {
 	Bool       status;
 	CompScreen *s = w->screen;
@@ -967,6 +964,7 @@ groupPaintWindow (CompWindow              *w,
 				  (gw->group->tabbingState == Tabbing));
 
 	showTabbar = gw->group && gw->group->tabBar &&
+		         (gw->group->tabBar->state != PaintOff) &&
 		         (((HAS_TOP_WIN (gw->group) && IS_TOP_TAB (w, gw->group)) &&
 				   ((gw->group->changeState == NoTabChange) ||
 					(gw->group->changeState == TabChangeNewIn))) ||
