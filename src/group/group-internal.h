@@ -75,6 +75,9 @@
 #define WIN_HEIGHT(w) (w->attrib.height)
 #define WIN_BORDER(w) (w->attrib.border_width)
 
+#define WIN_CENTER_X(w) (WIN_X(w) + (WIN_WIDTH(w) / 2))
+#define WIN_CENTER_Y(w) (WIN_Y(w) + (WIN_HEIGHT(w) / 2))
+
 /* definitions used for glow painting */
 #define WIN_REAL_X(w) (w->attrib.x - w->input.left)
 #define WIN_REAL_Y(w) (w->attrib.y - w->input.top)

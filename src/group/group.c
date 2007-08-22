@@ -416,8 +416,8 @@ groupRemoveWindowFromGroup (CompWindow *w)
 			int        oldX = gw->orgPos.x;
 			int        oldY = gw->orgPos.y;
 
-			group->oldTopTabCenterX = WIN_X (tw) + (WIN_WIDTH (tw) / 2);
-			group->oldTopTabCenterY = WIN_Y (tw) + (WIN_HEIGHT (tw) / 2);
+			group->oldTopTabCenterX = WIN_CENTER_X (tw);
+			group->oldTopTabCenterY = WIN_CENTER_Y (tw);
 
 			gw->orgPos.x = group->oldTopTabCenterX - (WIN_WIDTH (w) / 2);
 			gw->orgPos.y = group->oldTopTabCenterY - (WIN_HEIGHT (w) / 2);
@@ -593,10 +593,9 @@ groupAddWindowToGroup (CompWindow     *w,
 				if (!gw->slot)
 					groupCreateSlot (group, w);
 
-				gw->destination.x = WIN_X (topTab) + (WIN_WIDTH (topTab) / 2) -
-					                (WIN_WIDTH (w) / 2);
-				gw->destination.y = WIN_Y (topTab) + (WIN_HEIGHT (topTab) / 2) -
-				                    (WIN_HEIGHT (w) / 2);
+				gw->destination.x = WIN_CENTER_X (topTab) - (WIN_WIDTH (w) / 2);
+				gw->destination.y = WIN_CENTER_Y (topTab) -
+					                (WIN_HEIGHT (w) / 2);
 				gw->mainTabOffset.x = WIN_X (w) - gw->destination.x;
 				gw->mainTabOffset.y = WIN_Y (w) - gw->destination.y;
 				gw->orgPos.x = WIN_X (w);
@@ -1150,8 +1149,8 @@ groupHandleButtonReleaseEvent (CompScreen *s,
 			{
 				CompWindow     *w = gs->draggedSlot->window;
 				GroupSelection *tmpGroup = gw->group;
-				int            oldPosX = WIN_X (w) + WIN_WIDTH (w) / 2;
-				int            oldPosY = WIN_Y (w) + WIN_HEIGHT (w) / 2;
+				int            oldPosX = WIN_CENTER_X (w);
+				int            oldPosY = WIN_CENTER_Y (w);
 
 				/* if the dragged window is not the top tab,
 				   move it onscreen */
@@ -1159,10 +1158,8 @@ groupHandleButtonReleaseEvent (CompScreen *s,
 				{
 					CompWindow *tw = TOP_TAB (tmpGroup);
 
-					tmpGroup->oldTopTabCenterX = WIN_X (tw) +
-						                         WIN_WIDTH (tw) / 2;
-					tmpGroup->oldTopTabCenterY = WIN_Y (tw) +
-						                        WIN_HEIGHT (tw) / 2;
+					tmpGroup->oldTopTabCenterX = WIN_CENTER_X (tw);
+					tmpGroup->oldTopTabCenterY = WIN_CENTER_Y (tw);
 
 					oldPosX = tmpGroup->oldTopTabCenterX + gw->mainTabOffset.x;
 					oldPosY = tmpGroup->oldTopTabCenterY + gw->mainTabOffset.y;
@@ -1179,10 +1176,8 @@ groupHandleButtonReleaseEvent (CompScreen *s,
 				if (HAS_TOP_WIN (group))
 				{
 					CompWindow *tw = TOP_TAB (group);
-					gw->mainTabOffset.x = oldPosX -
-						                  (WIN_X (tw) + WIN_WIDTH (tw) / 2);
-					gw->mainTabOffset.y = oldPosY -
-						                  (WIN_Y (tw) + WIN_HEIGHT (tw) / 2);
+					gw->mainTabOffset.x = oldPosX - WIN_CENTER_X (tw);
+					gw->mainTabOffset.y = oldPosY - WIN_CENTER_Y (tw);
 				}
 			}
 			else

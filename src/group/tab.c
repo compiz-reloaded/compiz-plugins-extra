@@ -234,10 +234,8 @@ groupSetWindowVisibility (CompWindow *w,
 
 			gs->queued = TRUE;
 			moveWindow (w,
-						gw->group->oldTopTabCenterX -
-						WIN_X (w) - WIN_WIDTH (w) / 2,
-						gw->group->oldTopTabCenterY -
-						WIN_Y (w) - WIN_HEIGHT (w) / 2,
+						gw->group->oldTopTabCenterX - WIN_CENTER_X (w),
+						gw->group->oldTopTabCenterY - WIN_CENTER_Y (w),
 						FALSE, TRUE);
 			syncWindowPosition (w);
 			gs->queued = FALSE;
@@ -457,8 +455,8 @@ groupGetDrawOffsetForSlot (GroupTabBarSlot *slot,
 		return;
 	}
 
-	x = WIN_X (topTab) + WIN_WIDTH (topTab) / 2 - WIN_WIDTH (w) / 2;
-	y = WIN_Y (topTab) + WIN_HEIGHT (topTab) / 2 - WIN_HEIGHT (w) / 2;
+	x = WIN_CENTER_X (topTab) - WIN_WIDTH (w) / 2;
+	y = WIN_CENTER_Y (topTab) - WIN_HEIGHT (w) / 2;
 
 	viewportForGeometry (w->screen, x, y,
 						 w->serverWidth, w->serverHeight,
@@ -1403,8 +1401,7 @@ groupTabGroup (CompWindow *main)
 	group->tabbingState = NoTabbing;
 	/* Slot is initialized after groupInitTabBar(group); */
 	groupChangeTab (gw->slot, RotateUncertain);
-	groupRecalcTabBarPos (gw->group,
-						  WIN_X (main) + WIN_WIDTH (main) / 2,
+	groupRecalcTabBarPos (gw->group, WIN_CENTER_X (main),
 						  WIN_X (main), WIN_X (main) + WIN_WIDTH (main));
 
 	width = group->tabBar->region->extents.x2 -
@@ -1475,10 +1472,8 @@ groupTabGroup (CompWindow *main)
 						FALSE, TRUE);
 
 		/* center the window to the main window */
-		gw->destination.x = WIN_X (main) +
-			                (WIN_WIDTH (main) / 2) - (WIN_WIDTH (cw) / 2);
-		gw->destination.y = WIN_Y (main) +
-			                (WIN_HEIGHT (main) / 2) - (WIN_HEIGHT (cw) / 2);
+		gw->destination.x = WIN_CENTER_X (main) - (WIN_WIDTH (cw) / 2);
+		gw->destination.y = WIN_CENTER_Y (main) - (WIN_HEIGHT (cw) / 2);
 
 		/* Distance from destination. */
 		gw->mainTabOffset.x = WIN_X (cw) - gw->destination.x;
@@ -1526,8 +1521,8 @@ groupUntabGroup (GroupSelection *group)
 		prevTopTab = TOP_TAB (group);
 	}
 
-	group->oldTopTabCenterX = WIN_X (prevTopTab) + WIN_WIDTH (prevTopTab) / 2;
-	group->oldTopTabCenterY = WIN_Y (prevTopTab) + WIN_HEIGHT (prevTopTab) / 2;
+	group->oldTopTabCenterX = WIN_CENTER_X (prevTopTab);
+	group->oldTopTabCenterY = WIN_CENTER_Y (prevTopTab);
 
 	group->lastTopTab = TOP_TAB (group);
 	group->topTab = NULL;
@@ -1615,10 +1610,8 @@ groupChangeTab (GroupTabBarSlot             *topTab,
 
 	if (group->prevTopTab && group->changeState == NoTabChange)
 	{
-		group->oldTopTabCenterX = WIN_X (PREV_TOP_TAB (group)) +
-			                      WIN_WIDTH (PREV_TOP_TAB (group)) / 2;
-		group->oldTopTabCenterY = WIN_Y (PREV_TOP_TAB (group)) +
-			                      WIN_HEIGHT (PREV_TOP_TAB (group)) / 2;
+		group->oldTopTabCenterX = WIN_CENTER_X (PREV_TOP_TAB (group));
+		group->oldTopTabCenterY = WIN_CENTER_Y (PREV_TOP_TAB (group));
 	}
 
 	if (group->changeState != NoTabChange)
@@ -2574,10 +2567,8 @@ groupInitTabBar (GroupSelection *group,
 	for (i = 0; i < group->nWins; i++)
 		groupCreateSlot (group, group->windows[i]);
 
-	groupRecalcTabBarPos (group,
-						  WIN_X (topTab) + WIN_WIDTH (topTab) / 2,
-						  WIN_X (topTab),
-						  WIN_X (topTab) + WIN_WIDTH (topTab));
+	groupRecalcTabBarPos (group, WIN_CENTER_X (topTab),
+						  WIN_X (topTab), WIN_X (topTab) + WIN_WIDTH (topTab));
 }
 
 /*
