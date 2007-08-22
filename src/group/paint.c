@@ -930,7 +930,7 @@ void
 groupPreparePaintScreen (CompScreen *s,
 						 int        msSinceLastPaint)
 {
-	GroupSelection *group;
+	GroupSelection *group, *next;
 
 	GROUP_SCREEN (s);
 
@@ -968,13 +968,14 @@ groupPreparePaintScreen (CompScreen *s,
 				groupHandleAnimation (group);
 		}
 
+		/* groupDrawTabAnimation may delete the group, so better
+		   save the pointer to the next chain element */
+		next = group->next;
+
 		if (group->tabbingState != NoTabbing)
 			groupDrawTabAnimation (group, msSinceLastPaint);
 
-		if (group->ungroupState != UngroupNone)
-			group = groupHandleUngroup (group);
-		else
-			group = group->next;
+		group = next;
 	}
 }
 

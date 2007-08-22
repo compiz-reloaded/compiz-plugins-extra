@@ -621,9 +621,6 @@ groupClearWindowInputShape (CompWindow          *w,
 void
 groupHandleAnimation (GroupSelection *group);
 
-GroupSelection*
-groupHandleUngroup (GroupSelection *group);
-
 void
 groupHandleHoverDetection (GroupSelection *group);
 

@@ -798,51 +798,6 @@ groupHandleAnimation (GroupSelection *group)
 	}
 }
 
-/*
- * groupHandleUngroup
- *
- * Description:
- * This function handles the ungroup animation for tabbed groups.
- * It moved the windows on screen and also it calles groupDeleteGroupWindow
- * when its a "single ungroup", which means only one window gets removed
- * from the group. Another task of this function is to check if the group
- * which is before the given group in the linked list needs to be deleted.
- * This is needed to avoid problems with the linked list.
- * It's called from groupHandleChanges.
- *
- * FIXME: remove this completely 
- */
-GroupSelection*
-groupHandleUngroup (GroupSelection *group)
-{
-	int            i;
-	GroupSelection *retval = group->next;
-
-	/* FIXME: move this to the initiator of the tabbing animation */
-	if ((group->ungroupState == UngroupSingle) &&
-		(group->tabbingState != NoTabbing))
-	{
-		for (i = 0; i < group->nWins; i++)
-		{
-			CompWindow *w = group->windows[i];
-			GROUP_WINDOW (w);
-
-			if (gw->animateState & IS_UNGROUPING)
-				groupSetWindowVisibility (w, TRUE);
-		}
-	}
-
-	/* FIXME: move this to the place where tabbingState is set
-	   to NoTabbing */
-	if ((group->ungroupState == UngroupAll) &&
-		(group->tabbingState == NoTabbing))
-	{
-		groupDeleteGroup (group);
-	}
-
-	return retval;
-}
-
 /* adjust velocity for each animation step (adapted from the scale plugin) */
 static int
 adjustTabVelocity (CompWindow *w)
@@ -996,8 +951,11 @@ groupDrawTabAnimation (GroupSelection *group,
 				gw->animateState = 0;
 				gw->tx = gw->ty = gw->xVelocity = gw->yVelocity = 0.0f;
 			}
+
 			if (group->ungroupState == UngroupSingle)
 				group->ungroupState = UngroupNone;
+			else if (group->ungroupState == UngroupAll)
+				groupDeleteGroup (group);
 
 			break;
 		}

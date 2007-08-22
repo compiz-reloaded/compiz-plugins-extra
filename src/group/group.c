@@ -495,6 +495,7 @@ groupRemoveWindowFromGroup (CompWindow *w)
 		   the window will never get remvoed. */
 		groupStartTabbingAnimation (group, FALSE);
 
+		groupSetWindowVisibility (w, TRUE);
 		group->ungroupState = UngroupSingle;
 		gw->animateState |= IS_UNGROUPING;
 	}
