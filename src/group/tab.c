@@ -1499,7 +1499,6 @@ groupApplyConstrainingToWindows (GroupSelection *group,
 				gw->animateState |= CONSTRAINED_X;
 
 			gw->destination.x += dx;
-			gw->orgPos.x += dx;
 		}
 
 		if (!(gw->animateState & CONSTRAINED_Y))
@@ -1511,7 +1510,6 @@ groupApplyConstrainingToWindows (GroupSelection *group,
 				gw->animateState |= CONSTRAINED_Y;
 
 			gw->destination.y += dy;
-			gw->orgPos.y += dy;
 		}
 	}
 }
