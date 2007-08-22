@@ -73,7 +73,6 @@
 #define WIN_Y(w) (w->attrib.y)
 #define WIN_WIDTH(w) (w->attrib.width)
 #define WIN_HEIGHT(w) (w->attrib.height)
-#define WIN_BORDER(w) (w->attrib.border_width)
 
 #define WIN_CENTER_X(w) (WIN_X(w) + (WIN_WIDTH(w) / 2))
 #define WIN_CENTER_Y(w) (WIN_Y(w) + (WIN_HEIGHT(w) / 2))
@@ -81,25 +80,23 @@
 /* definitions used for glow painting */
 #define WIN_REAL_X(w) (w->attrib.x - w->input.left)
 #define WIN_REAL_Y(w) (w->attrib.y - w->input.top)
-#define WIN_REAL_WIDTH(w) (w->width + 2 * w->attrib.border_width + w->input.left + w->input.right)
-#define WIN_REAL_HEIGHT(w) (w->height + 2 * w->attrib.border_width + w->input.top + w->input.bottom)
-
-#define NUM_OPTIONS(s) (sizeof ( (s)->opt) / sizeof (CompOption))
-#define N_WIN_TYPE (sizeof (groupDefaultTypes) / sizeof (groupDefaultTypes[0]))
-#define N_SEL_MODE (sizeof (groupSelectionModes) / sizeof (groupSelectionModes[0]))
-
-#define REAL_POSITION(x, s) ( (x >= 0)? x: x + (s)->hsize * (s)->width )
-#define VIEWPORT(x, s) ( ( REAL_POSITION(x, s) / (s)->width ) % (s)->hsize )
+#define WIN_REAL_WIDTH(w) (w->width + 2 * w->attrib.border_width + \
+						   w->input.left + w->input.right)
+#define WIN_REAL_HEIGHT(w) (w->height + 2 * w->attrib.border_width + \
+							w->input.top + w->input.bottom)
 
 #define TOP_TAB(g) ((g)->topTab->window)
 #define PREV_TOP_TAB(g) ((g)->prevTopTab->window)
 #define NEXT_TOP_TAB(g) ((g)->nextTopTab->window)
 
 #define HAS_TOP_WIN(group) (((group)->topTab) && ((group)->topTab->window))
-#define HAS_PREV_TOP_WIN(group) (((group)->prevTopTab) && ((group)->prevTopTab->window))
+#define HAS_PREV_TOP_WIN(group) (((group)->prevTopTab) && \
+								 ((group)->prevTopTab->window))
 
-#define IS_TOP_TAB(w, group) (HAS_TOP_WIN(group) && ((TOP_TAB(group)->id) == (w)->id))
-#define IS_PREV_TOP_TAB(w, group) (HAS_PREV_TOP_WIN(group) && ((PREV_TOP_TAB(group)->id) == (w)->id))
+#define IS_TOP_TAB(w, group) (HAS_TOP_WIN(group) && \
+							  ((TOP_TAB(group)->id) == (w)->id))
+#define IS_PREV_TOP_TAB(w, group) (HAS_PREV_TOP_WIN(group) && \
+								   ((PREV_TOP_TAB(group)->id) == (w)->id))
 
 /*
  * Structs
