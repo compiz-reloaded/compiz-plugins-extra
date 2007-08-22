@@ -181,15 +181,11 @@ groupAddWindowToSelection (CompWindow *w)
 static void
 groupSelectWindow (CompWindow *w)
 {
-	Bool isGroupable;
-
 	GROUP_SCREEN (w->screen);
 	GROUP_WINDOW (w);
 
-	isGroupable = matchEval (groupGetWindowMatch (w->screen), w) &&
-		          !w->invisible;
-
-	if (!isGroupable)
+	/* filter out windows we don't want to be groupable */
+	if (w->invisible || !matchEval (groupGetWindowMatch (w->screen), w))
 		return;
 
 	if (gw->inSelection)
