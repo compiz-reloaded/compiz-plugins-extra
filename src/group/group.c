@@ -467,7 +467,7 @@ groupDeleteGroupWindow (CompWindow *w,
 				{
 					if (!allowRegroup || !groupGetAutotabCreate (w->screen))
 					{
-						if (group->changeTab)
+						if (group->changeState != NoTabChange)
 						{
 							/* a change animation is pending: this most
 							   likely means that a window must be moved
@@ -687,7 +687,6 @@ groupAddWindowToGroup (CompWindow     *w,
 		g->changeAnimationDirection = 0;
 		g->changeState = NoTabChange;
 		g->tabbingState = NoTabbing;
-		g->changeTab = FALSE;
 		g->ungroupState = UngroupNone;
 		g->tabBar = NULL;
 
@@ -1545,7 +1544,7 @@ groupHandleEvent (CompDisplay *d,
 
 						if (!(tw->state & CompWindowStateHiddenMask))
 						{
-							if (!gw->group->changeTab)
+							if (gw->group->changeState == NoTabChange)
 								gw->group->activateTab = gw->slot;
 							sendWindowActivationRequest (tw->screen, tw->id);
 						}

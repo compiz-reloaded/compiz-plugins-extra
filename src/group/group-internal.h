@@ -337,7 +337,6 @@ struct _GroupSelection {
 	int            changeAnimationTime;
 	int            changeAnimationDirection;
 	TabChangeState changeState;
-	Bool	       changeTab;
 
 	TabbingState tabbingState;
 
@@ -616,9 +615,6 @@ groupSetWindowVisibility (CompWindow *w,
 void
 groupClearWindowInputShape (CompWindow          *w,
 							GroupWindowHideInfo *hideInfo);
-
-void
-groupHandleUntab (GroupSelection *group);
 
 void
 groupHandleTabChange (GroupSelection *group);

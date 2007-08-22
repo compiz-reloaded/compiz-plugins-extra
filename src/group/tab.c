@@ -778,14 +778,11 @@ groupHandleTabChange (GroupSelection *group)
 		group->changeAnimationTime = groupGetChangeAnimationTime (s) * 500;
 		groupTabChangeActivateEvent (s, TRUE);
 		group->changeState = TabChangeOldOut;
-
-		group->changeTab = FALSE;
 	}
 	else
 	{
 		/* No window to do animation with. */
 		group->prevTopTab = group->topTab;
-		group->changeTab = FALSE;
 		activateWindow (TOP_TAB (group));
 	}
 
@@ -881,28 +878,6 @@ groupHandleAnimation (GroupSelection *group)
 }
 
 /*
- * groupHandleUntab
- *
- * Description:
- * This function handles the beginning of the untab
- * animation. It deletes the tab bar and set's
- * group->prevTopTab. It's called from groupHandleChanges.
- *
- */
-void
-groupHandleUntab (GroupSelection *group)
-{
-	groupDeleteTabBar (group);
-
-	group->changeAnimationTime = 0;
-	group->changeState = NoTabChange;
-	group->nextTopTab = NULL;
-
-	group->changeTab = FALSE;
-	group->prevTopTab = group->topTab;
-}
-
-/*
  * groupHandleUngroup
  *
  * Description:
@@ -924,7 +899,7 @@ groupHandleUngroup (GroupSelection *group)
 	GROUP_SCREEN (group->screen);
 
 	if ((group->ungroupState == UngroupSingle) &&
-		(group->tabbingState != NoTabbing) && group->changeTab)
+		(group->tabbingState != NoTabbing))
 	{
 		for (i = 0; i < group->nWins; i++)
 		{
@@ -945,8 +920,6 @@ groupHandleUngroup (GroupSelection *group)
 				gs->queued = FALSE;
 			}
 		}
-
-		group->changeTab = FALSE;
 	}
 
 	if ((group->ungroupState == UngroupAll) &&
@@ -1065,7 +1038,7 @@ groupDrawTabAnimation (GroupSelection *group,
 			/* tabbing animation finished */
 			group->tabbingState = NoTabbing;
 
-			if (HAS_TOP_WIN (group) && group->changeTab)
+			if (HAS_TOP_WIN (group))
 			{
 				/* tabbing case - hide all non-toptab windows */
 				GroupTabBarSlot *slot;
@@ -1086,8 +1059,6 @@ groupDrawTabAnimation (GroupSelection *group,
 
 					groupSetWindowVisibility (w, FALSE);
 				}
-
-				group->changeTab = FALSE;
 				group->prevTopTab = group->topTab;
 			}
 
@@ -1435,8 +1406,6 @@ groupStartTabbingAnimation (GroupSelection *group,
 		return;
 
 	s = group->screen;
-	group->changeTab = TRUE;
-
 	group->tabbingState = (tab) ? Tabbing : Untabbing;
 
 	if (!tab)
@@ -1674,7 +1643,7 @@ groupTabGroup (CompWindow *main)
  *
  */
 void
-groupUntabGroup(GroupSelection *group)
+groupUntabGroup (GroupSelection *group)
 {
 	int             oldX, oldY;
 	CompWindow      *prevTopTab;
@@ -1747,6 +1716,12 @@ groupUntabGroup(GroupSelection *group)
 
 	group->tabbingState = NoTabbing;
 	groupStartTabbingAnimation (group, FALSE);
+
+	groupDeleteTabBar (group);
+	group->changeAnimationTime = 0;
+	group->changeState = NoTabChange;
+	group->nextTopTab = NULL;
+	group->prevTopTab = NULL;
 
 	damageScreen (group->screen);
 }
@@ -1839,7 +1814,6 @@ groupChangeTab (GroupTabBarSlot             *topTab,
 	else
 	{
 		group->topTab = topTab;
-		group->changeTab = (group->prevTopTab != topTab);
 
 		groupRenderWindowTitle (group);
 		groupRenderTopTabHighlight (group);
