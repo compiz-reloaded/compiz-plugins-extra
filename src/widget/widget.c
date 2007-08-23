@@ -333,19 +333,13 @@ widgetToggle (CompDisplay     *d,
 
 	switch (ws->state) {
 	case StateOff:
+	case StateFadeOut:
 	    widgetSetWidgetLayerMapState (s, TRUE);
 	    ws->fadeTime = 1000.0f * widgetGetFadeTime (s);
 	    ws->state = StateFadeIn;
 	    break;
-	case StateFadeIn:
-	    ws->fadeTime = (1000.0f * widgetGetFadeTime (s)) - ws->fadeTime;
-	    ws->state = StateFadeOut;
-	    break;
-	case StateFadeOut:
-	    ws->fadeTime = (1000.0f * widgetGetFadeTime (s)) - ws->fadeTime;
-	    ws->state = StateFadeIn;
-	    break;
 	case StateOn:
+	case StateFadeIn:
 	    widgetSetWidgetLayerMapState (s, FALSE);
 	    ws->fadeTime = 1000.0f * widgetGetFadeTime (s);
 	    ws->state = StateFadeOut;
