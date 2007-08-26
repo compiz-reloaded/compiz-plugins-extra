@@ -735,6 +735,8 @@ groupGroupWindows (CompDisplay     *d,
 			cw = gs->tmpSel.windows[0];
 			GROUP_WINDOW (cw);
 
+			if (gw->group && (group != gw->group))
+				groupDeleteGroupWindow (cw);
 			groupAddWindowToGroup (cw, group, 0);
 			addWindowDamage (cw);
 
@@ -746,6 +748,8 @@ groupGroupWindows (CompDisplay     *d,
 				cw = gs->tmpSel.windows[i];
 				GROUP_WINDOW (cw);
 
+				if (gw->group && (group != gw->group))
+					groupDeleteGroupWindow (cw);
 				groupAddWindowToGroup (cw, group, 0);
 				addWindowDamage (cw);
 
