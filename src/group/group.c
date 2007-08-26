@@ -1432,7 +1432,7 @@ groupHandleEvent (CompDisplay *d,
 						/* close event */
 						if (!(gw->animateState & IS_UNGROUPING))
 						{
-							groupRemoveWindowFromGroup (w);
+							groupDeleteGroupWindow (w);
 							damageScreen (w->screen);
 						}
 					}
