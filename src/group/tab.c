@@ -1653,29 +1653,11 @@ groupChangeTab (GroupTabBarSlot             *topTab,
 		addWindowDamage (w);
 	}
 
-	if (group->tabbingState != NoTabbing)
-	{
-		/* if the previous top-tab window is being removed
-		   from the group, move the new top-tab window onscreen. */
-		if (group->ungroupState == UngroupSingle && !group->prevTopTab)
-		{
-			groupSetWindowVisibility (w, TRUE);
-
-			/* recalc here is needed (for y value)! */
-			groupRecalcTabBarPos (group,
-								  (group->tabBar->region->extents.x1 +
-								   group->tabBar->region->extents.x2) / 2,
-								  WIN_REAL_X (w),
-								  WIN_REAL_X (w) + WIN_REAL_WIDTH (w));
-
-			group->prevTopTab = group->topTab;
-		}
-	}
-	else if (topTab != group->nextTopTab)
+	if (topTab != group->nextTopTab)
 	{
 		groupSetWindowVisibility (w, TRUE);
 
-		if (group->prevTopTab)
+		if (HAS_PREV_TOP_WIN (group))
 		{
 			/* we use only the half time here -
 			   the second half will be PaintFadeOut */
@@ -1687,10 +1669,14 @@ groupChangeTab (GroupTabBarSlot             *topTab,
 		else
 		{
 			/* No window to do animation with. */
-			group->prevTopTab = group->topTab;
+			if (HAS_TOP_WIN (group))
+				group->prevTopTab = group->topTab;
+			else
+				group->prevTopTab = NULL;
 			activateWindow (w);
 		}
 	}
+
 	return TRUE;
 }
 
