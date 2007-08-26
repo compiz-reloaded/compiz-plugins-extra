@@ -1841,18 +1841,24 @@ groupDamageTabBarRegion (GroupSelection *group)
 
 #define DAMAGE_BUFFER 20
 
-	reg.extents.x1 = MIN (group->tabBar->region->extents.x1,
-						  group->tabBar->slots->region->extents.x1) -
-		             DAMAGE_BUFFER;
-	reg.extents.y1 = MIN (group->tabBar->region->extents.y1,
-						  group->tabBar->slots->region->extents.y1) -
-		             DAMAGE_BUFFER;
-	reg.extents.x2 = MAX (group->tabBar->region->extents.x2,
-						  group->tabBar->revSlots->region->extents.x2) +
-		             DAMAGE_BUFFER;
-	reg.extents.y2 = MAX (group->tabBar->region->extents.y2,
-						  group->tabBar->revSlots->region->extents.y2) +
-		             DAMAGE_BUFFER;
+	reg.extents = group->tabBar->region->extents;
+
+	if (group->tabBar->slots)
+	{
+		reg.extents.x1 = MIN (reg.extents.x1,
+							  group->tabBar->slots->region->extents.x1);
+		reg.extents.y1 = MIN (reg.extents.y1,
+							  group->tabBar->slots->region->extents.y1);
+		reg.extents.x2 = MAX (reg.extents.x2,
+							  group->tabBar->revSlots->region->extents.x2);
+		reg.extents.y2 = MAX (reg.extents.y2,
+							  group->tabBar->revSlots->region->extents.y2);
+	}
+
+	reg.extents.x1 -= DAMAGE_BUFFER;
+	reg.extents.y1 -= DAMAGE_BUFFER;
+	reg.extents.x2 += DAMAGE_BUFFER;
+	reg.extents.y2 += DAMAGE_BUFFER;
 
 	damageScreenRegion (group->screen, &reg);
 }
@@ -2086,21 +2092,23 @@ groupUnhookTabBarSlot (GroupTabBar     *bar,
 	slot->next = NULL;
 	bar->nSlots--;
 
-	if (IS_TOP_TAB (w, group) && !temporary)
+	if (!temporary)
 	{
-		if (next)
-			groupChangeTab (next, RotateRight);
-		else if (prev)
-			groupChangeTab (prev, RotateLeft);
-		else if (group->nWins == 1)
-			group->topTab = NULL;
+		if (IS_TOP_TAB (w, group))
+		{
+			if (next)
+				groupChangeTab (next, RotateRight);
+			else if (prev)
+				groupChangeTab (prev, RotateLeft);
+			else if (group->nWins == 1)
+				group->topTab = NULL;
 
-		if (groupGetUntabOnClose (s))
-			groupUntabGroup (group);
+			if (groupGetUntabOnClose (s))
+				groupUntabGroup (group);
+		}
+		if (IS_PREV_TOP_TAB (w, group))
+			group->prevTopTab = NULL;
 	}
-
-	if (IS_PREV_TOP_TAB (w, group) && !temporary)
-		group->prevTopTab = NULL;
 
 	if (slot == bar->hoveredSlot)
 		bar->hoveredSlot = NULL;
@@ -2129,7 +2137,8 @@ groupUnhookTabBarSlot (GroupTabBar     *bar,
 	groupRecalcTabBarPos (group,
 						  (bar->region->extents.x1 +
 						   bar->region->extents.x2) / 2,
-						  bar->region->extents.x1, bar->region->extents.x2);
+						  bar->region->extents.x1,
+						  bar->region->extents.x2);
 }
 
 /*
