@@ -961,8 +961,7 @@ groupPaintWindow (CompWindow              *w,
 			       HAS_TOP_WIN (group) && HAS_PREV_TOP_WIN (group) &&
 			       (IS_TOP_TAB (w, group) || IS_PREV_TOP_TAB (w, group));
 
-		doTabbing = (group->tabbingState != NoTabbing) &&
-		            (gw->animateState & (IS_ANIMATED | FINISHED_ANIMATION)) &&
+		doTabbing = (gw->animateState & (IS_ANIMATED | FINISHED_ANIMATION)) &&
 					!(IS_TOP_TAB (w, group) &&
 					  (group->tabbingState == Tabbing));
 
@@ -990,6 +989,7 @@ groupPaintWindow (CompWindow              *w,
 		WindowPaintAttrib wAttrib = *attrib;
 		CompTransform     wTransform = *transform;
 		float             animProgress = 0.0f;
+		int               drawnPosX = 0, drawnPosY = 0;
 
 		if (gw->inSelection)
 		{
@@ -1005,8 +1005,19 @@ groupPaintWindow (CompWindow              *w,
 			int   distanceX, distanceY;
 			float origDistance, distance;
 
-			distanceX = (WIN_X (w) + gw->tx - gw->destination.x);
-			distanceY = (WIN_Y (w) + gw->ty - gw->destination.y);
+			if (gw->animateState & FINISHED_ANIMATION)
+			{
+				drawnPosX = gw->destination.x;
+				drawnPosY = gw->destination.y;
+			}
+			else
+			{
+				drawnPosX = gw->orgPos.x + gw->tx;
+				drawnPosY = gw->orgPos.y + gw->ty;
+			}
+
+			distanceX = drawnPosX - gw->destination.x;
+			distanceY = drawnPosY - gw->destination.y;
 			distance = sqrt(pow (distanceX, 2) + pow (distanceY, 2));
 
 			distanceX = (gw->orgPos.x - gw->destination.x);
@@ -1121,8 +1132,8 @@ groupPaintWindow (CompWindow              *w,
 
 			if (doTabbing)
 				matrixTranslate (&wTransform,
-								 gw->orgPos.x + gw->tx - WIN_X (w),
-								 gw->orgPos.y + gw->ty - WIN_Y (w), 0.0f);
+								 drawnPosX - WIN_X (w),
+								 drawnPosY - WIN_Y (w), 0.0f);
 
 			matrixScale (&wTransform, animScaleX, animScaleY, 1.0f);
 

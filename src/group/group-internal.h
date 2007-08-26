@@ -345,9 +345,6 @@ struct _GroupSelection {
 	Window       grabWindow;
 	unsigned int grabMask;
 
-	int oldTopTabCenterX;
-	int oldTopTabCenterY;
-
 	Window inputPrevention;
 	Bool   ipwMapped;
 

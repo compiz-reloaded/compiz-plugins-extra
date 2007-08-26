@@ -414,11 +414,8 @@ groupRemoveWindowFromGroup (CompWindow *w)
 			int        oldX = gw->orgPos.x;
 			int        oldY = gw->orgPos.y;
 
-			group->oldTopTabCenterX = WIN_CENTER_X (tw);
-			group->oldTopTabCenterY = WIN_CENTER_Y (tw);
-
-			gw->orgPos.x = group->oldTopTabCenterX - (WIN_WIDTH (w) / 2);
-			gw->orgPos.y = group->oldTopTabCenterY - (WIN_HEIGHT (w) / 2);
+			gw->orgPos.x = WIN_CENTER_X (tw) - (WIN_WIDTH (w) / 2);
+			gw->orgPos.y = WIN_CENTER_Y (tw) - (WIN_HEIGHT (w) / 2);
 
 			gw->destination.x = gw->orgPos.x + gw->mainTabOffset.x;
 			gw->destination.y = gw->orgPos.y + gw->mainTabOffset.y;
@@ -637,9 +634,6 @@ groupAddWindowToGroup (CompWindow     *w,
 
 		g->inputPrevention = None;
 		g->ipwMapped = FALSE;
-
-		g->oldTopTabCenterX = 0;
-		g->oldTopTabCenterY = 0;
 
 		/* glow color */
 		g->color[0] = (int)(rand () / (((double)RAND_MAX + 1) / 0xffff));
@@ -1162,11 +1156,8 @@ groupHandleButtonReleaseEvent (CompScreen *s,
 				{
 					CompWindow *tw = TOP_TAB (tmpGroup);
 
-					tmpGroup->oldTopTabCenterX = WIN_CENTER_X (tw);
-					tmpGroup->oldTopTabCenterY = WIN_CENTER_Y (tw);
-
-					oldPosX = tmpGroup->oldTopTabCenterX + gw->mainTabOffset.x;
-					oldPosY = tmpGroup->oldTopTabCenterY + gw->mainTabOffset.y;
+					oldPosX = WIN_CENTER_X (tw) + gw->mainTabOffset.x;
+					oldPosY = WIN_CENTER_Y (tw) + gw->mainTabOffset.y;
 
 					groupSetWindowVisibility (w, TRUE);
 				}
@@ -1784,8 +1775,6 @@ groupWindowMoveNotify (CompWindow *w,
 			XOffsetRegion (slot->region, dx, dy);
 			slot->springX += dx;
 		}
-
-		return;
 	}
 
 	if (!groupGetMoveAll (w->screen) || gd->ignoreMode ||
@@ -1835,37 +1824,36 @@ groupWindowGrabNotify(CompWindow   *w,
 	if (gw->group && !gd->ignoreMode && !gs->queued)
 	{
 		Bool doResizeAll;
+		int  i;
+
 		doResizeAll = groupGetResizeAll (w->screen) &&
 			          (mask & CompWindowGrabResizeMask);
 
 		if (gw->group->tabBar)
 			groupTabSetVisibility (gw->group, FALSE, 0);
-		else
+	
+		for (i = 0; i < gw->group->nWins; i++)
 		{
-			int i;
-			for (i = 0; i < gw->group->nWins; i++)
+			CompWindow *cw = gw->group->windows[i];
+			if (!cw)
+				continue;
+
+			if (cw->id != w->id)
 			{
-				CompWindow *cw = gw->group->windows[i];
-				if (!cw)
-					continue;
+				GroupWindow *gcw = GET_GROUP_WINDOW (cw, gs);
 
-				if (cw->id != w->id)
+				groupEnqueueGrabNotify (cw, x, y, state, mask);
+
+				if (doResizeAll && !(cw->state & MAXIMIZE_STATE))
 				{
-					GroupWindow *gcw = GET_GROUP_WINDOW (cw, gs);
-
-					groupEnqueueGrabNotify (cw, x, y, state, mask);
-
-					if (doResizeAll && !(cw->state & MAXIMIZE_STATE))
+					if (!gcw->resizeGeometry)
+						gcw->resizeGeometry = malloc (sizeof (XRectangle));
+					if (gcw->resizeGeometry)
 					{
-						if (!gcw->resizeGeometry)
-							gcw->resizeGeometry = malloc (sizeof (XRectangle));
-						if (gcw->resizeGeometry)
-						{
-							gcw->resizeGeometry->x      = WIN_X (cw);
-							gcw->resizeGeometry->y      = WIN_Y (cw);
-							gcw->resizeGeometry->width  = WIN_WIDTH (cw);
-							gcw->resizeGeometry->height = WIN_HEIGHT (cw);
-						}
+						gcw->resizeGeometry->x      = WIN_X (cw);
+						gcw->resizeGeometry->y      = WIN_Y (cw);
+						gcw->resizeGeometry->width  = WIN_WIDTH (cw);
+						gcw->resizeGeometry->height = WIN_HEIGHT (cw);
 					}
 				}
 			}

@@ -226,20 +226,6 @@ groupSetWindowVisibility (CompWindow *w,
 
 		free (info);
 		gw->windowHideInfo = NULL;
-
-		/* move window to top tab center */
-		if (gw->group)
-		{
-			GROUP_SCREEN (w->screen);
-
-			gs->queued = TRUE;
-			moveWindow (w,
-						gw->group->oldTopTabCenterX - WIN_CENTER_X (w),
-						gw->group->oldTopTabCenterY - WIN_CENTER_Y (w),
-						FALSE, TRUE);
-			syncWindowPosition (w);
-			gs->queued = FALSE;
-		}
 	}
 }
 
@@ -1524,9 +1510,6 @@ groupUntabGroup (GroupSelection *group)
 		prevTopTab = TOP_TAB (group);
 	}
 
-	group->oldTopTabCenterX = WIN_CENTER_X (prevTopTab);
-	group->oldTopTabCenterY = WIN_CENTER_Y (prevTopTab);
-
 	group->lastTopTab = TOP_TAB (group);
 	group->topTab = NULL;
 
@@ -1552,8 +1535,8 @@ groupUntabGroup (GroupSelection *group)
 		oldX = gw->orgPos.x;
 		oldY = gw->orgPos.y;
 
-		gw->orgPos.x = group->oldTopTabCenterX - WIN_WIDTH (cw) / 2;
-		gw->orgPos.y = group->oldTopTabCenterY - WIN_HEIGHT (cw) / 2;
+		gw->orgPos.x = WIN_CENTER_X (prevTopTab) - WIN_WIDTH (cw) / 2;
+		gw->orgPos.y = WIN_CENTER_Y (prevTopTab) - WIN_HEIGHT (cw) / 2;
 
 		gw->destination.x = gw->orgPos.x + gw->mainTabOffset.x;
 		gw->destination.y = gw->orgPos.y + gw->mainTabOffset.y;
@@ -1611,12 +1594,6 @@ groupChangeTab (GroupTabBarSlot             *topTab,
 
 	if (group->changeState != NoTabChange && group->nextTopTab == topTab)
 		return TRUE;
-
-	if (group->prevTopTab && group->changeState == NoTabChange)
-	{
-		group->oldTopTabCenterX = WIN_CENTER_X (PREV_TOP_TAB (group));
-		group->oldTopTabCenterY = WIN_CENTER_Y (PREV_TOP_TAB (group));
-	}
 
 	if (group->changeState != NoTabChange)
 		group->nextDirection = direction;
