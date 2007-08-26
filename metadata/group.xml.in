@@ -180,7 +180,7 @@
               <red>0x0000</red>
               <green>0x0000</green>
               <blue>0x0000</blue>
-              <alpha>0x9999</alpha>
+              <alpha>0x5555</alpha>
             </default>
           </option>
           <option name="line_color" type="color">

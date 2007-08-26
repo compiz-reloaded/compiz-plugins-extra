@@ -347,8 +347,6 @@ groupPaintSelectionOutline (CompScreen              *s,
 		glColor4usv (groupGetFillColorOption (s)->value.c);
 		glRecti (x1, y2, x2, y1);
 
-		glLineWidth (3);
-		glEnable (GL_LINE_SMOOTH);
 		glColor4usv (groupGetLineColorOption (s)->value.c);
 		glBegin (GL_LINE_LOOP);
 		glVertex2i (x1, y1);
@@ -356,8 +354,6 @@ groupPaintSelectionOutline (CompScreen              *s,
 		glVertex2i (x2, y2);
 		glVertex2i (x1, y2);
 		glEnd ();
-		glDisable (GL_LINE_SMOOTH);
-		glLineWidth (1); /* back to default */
 
 		glColor4usv (defaultColor);
 		glDisable (GL_BLEND);
