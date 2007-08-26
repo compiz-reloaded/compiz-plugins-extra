@@ -953,21 +953,33 @@ groupPaintWindow (CompWindow              *w,
 	GROUP_SCREEN (s);
 	GROUP_WINDOW (w);
 
-	doRotate = gw->group && (gw->group->changeState != NoTabChange) &&
-		       (IS_TOP_TAB (w, gw->group) || IS_PREV_TOP_TAB (w, gw->group));
+	if (gw->group)
+	{
+		GroupSelection *group = gw->group;
 
-	doTabbing = gw->group && (gw->group->tabbingState != NoTabbing) &&
-		        (gw->animateState & (IS_ANIMATED | FINISHED_ANIMATION)) &&
-				!(IS_TOP_TAB (w, gw->group) &&
-				  (gw->group->tabbingState == Tabbing));
+		doRotate = (group->changeState != NoTabChange) &&
+			       HAS_TOP_WIN (group) && HAS_PREV_TOP_WIN (group) &&
+			       (IS_TOP_TAB (w, group) || IS_PREV_TOP_TAB (w, group));
 
-	showTabbar = gw->group && gw->group->tabBar &&
-		         (gw->group->tabBar->state != PaintOff) &&
-		         (((HAS_TOP_WIN (gw->group) && IS_TOP_TAB (w, gw->group)) &&
-				   ((gw->group->changeState == NoTabChange) ||
-					(gw->group->changeState == TabChangeNewIn))) ||
-				  (IS_PREV_TOP_TAB (w, gw->group) &&
-				   (gw->group->changeState == TabChangeOldOut)));
+		doTabbing = (group->tabbingState != NoTabbing) &&
+		            (gw->animateState & (IS_ANIMATED | FINISHED_ANIMATION)) &&
+					!(IS_TOP_TAB (w, group) &&
+					  (group->tabbingState == Tabbing));
+
+		showTabbar = group->tabBar &&
+		             (group->tabBar->state != PaintOff) &&
+					 (((IS_TOP_TAB (w, group)) &&
+					   ((group->changeState == NoTabChange) ||
+						(group->changeState == TabChangeNewIn))) ||
+					  (IS_PREV_TOP_TAB (w, group) &&
+					   (group->changeState == TabChangeOldOut)));
+	}
+	else
+	{
+		doRotate   = FALSE;
+		doTabbing  = FALSE;
+		showTabbar = FALSE;
+	}
 
 	if (gw->windowHideInfo)
 		mask |= PAINT_WINDOW_NO_CORE_INSTANCE_MASK;

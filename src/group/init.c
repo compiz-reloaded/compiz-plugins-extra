@@ -485,6 +485,9 @@ groupFiniWindow (CompPlugin *p,
 	if (gw->windowHideInfo)
 		groupSetWindowVisibility (w, TRUE);
 
+	if (gw->group)
+		groupDeleteGroupWindow (w);
+
 	if (gw->glowQuads)
 		free (gw->glowQuads);
 

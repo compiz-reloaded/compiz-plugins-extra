@@ -363,19 +363,17 @@ groupDeleteGroupWindow (CompWindow *w)
 
 				if (groupGetAutoUngroup (w->screen))
 				{
-					if (!groupGetAutotabCreate (w->screen))
+					if (group->changeState != NoTabChange)
 					{
-						if (group->changeState != NoTabChange)
-						{
-							/* a change animation is pending: this most
-							   likely means that a window must be moved
-							   back onscreen, so we do that here */
-							CompWindow *lw = group->windows[0];
+						/* a change animation is pending: this most
+						   likely means that a window must be moved
+						   back onscreen, so we do that here */
+						CompWindow *lw = group->windows[0];
 
-							groupSetWindowVisibility (lw, TRUE);
-						}
-						groupDeleteGroup (group);
+						groupSetWindowVisibility (lw, TRUE);
 					}
+					if (!groupGetAutotabCreate (w->screen))
+						groupDeleteGroup (group);
 				}
 			}
 		}
@@ -440,7 +438,7 @@ groupRemoveWindowFromGroup (CompWindow *w)
 
 		/* Although when there is no top-tab, it will never really
 		   animate anything, if we don't start the animation,
-		   the window will never get remvoed. */
+		   the window will never get removed. */
 		groupStartTabbingAnimation (group, FALSE);
 
 		groupSetWindowVisibility (w, TRUE);

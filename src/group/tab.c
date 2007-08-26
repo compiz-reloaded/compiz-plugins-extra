@@ -849,7 +849,7 @@ groupFinishTabbing (GroupSelection *group)
 	group->tabbingState = NoTabbing;
 	groupTabChangeActivateEvent (s, FALSE);
 
-	if (HAS_TOP_WIN (group))
+	if (group->tabBar)
 	{
 		/* tabbing case - hide all non-toptab windows */
 		GroupTabBarSlot *slot;
@@ -1512,7 +1512,7 @@ groupUntabGroup (GroupSelection *group)
 	if (!HAS_TOP_WIN (group))
 		return;
 
-	GROUP_SCREEN (TOP_TAB (group)->screen);
+	GROUP_SCREEN (group->screen);
 
 	if (group->prevTopTab)
 		prevTopTab = PREV_TOP_TAB (group);
@@ -1597,9 +1597,10 @@ groupChangeTab (GroupTabBarSlot             *topTab,
 	if (!topTab)
 		return TRUE;
 
-	GROUP_WINDOW (topTab->window);
-
 	w = topTab->window;
+
+	GROUP_WINDOW (w);
+
 	group = gw->group;
 
 	if (!group || group->tabbingState != NoTabbing)
@@ -1710,7 +1711,7 @@ groupChangeTab (GroupTabBarSlot             *topTab,
 		{
 			/* No window to do animation with. */
 			group->prevTopTab = group->topTab;
-			activateWindow (TOP_TAB (group));
+			activateWindow (w);
 		}
 	}
 	return TRUE;
@@ -2089,11 +2090,24 @@ groupUnhookTabBarSlot (GroupTabBar     *bar,
 					   GroupTabBarSlot *slot,
 					   Bool            temporary)
 {
+	GroupTabBarSlot *tempSlot;
 	GroupTabBarSlot *prev = slot->prev;
 	GroupTabBarSlot *next = slot->next;
 	CompWindow      *w = slot->window;
+	CompScreen      *s = w->screen;
+	GroupSelection  *group;
 
 	GROUP_WINDOW (w);
+
+	group = gw->group;
+
+	/* check if slot is not already unhooked */
+	for (tempSlot = bar->slots; tempSlot; tempSlot = tempSlot->next)
+		if (tempSlot == slot)
+			break;
+
+	if (!tempSlot)
+		return;
 
 	if (prev)
 		prev->next = next;
@@ -2109,21 +2123,21 @@ groupUnhookTabBarSlot (GroupTabBar     *bar,
 	slot->next = NULL;
 	bar->nSlots--;
 
-	if (IS_TOP_TAB (w, gw->group) && !temporary)
+	if (IS_TOP_TAB (w, group) && !temporary)
 	{
 		if (next)
 			groupChangeTab (next, RotateRight);
 		else if (prev)
 			groupChangeTab (prev, RotateLeft);
-		else if (gw->group->nWins == 1)
-			gw->group->topTab = NULL;
+		else if (group->nWins == 1)
+			group->topTab = NULL;
 
-		if (groupGetUntabOnClose (w->screen))
-			groupUntabGroup (gw->group);
+		if (groupGetUntabOnClose (s))
+			groupUntabGroup (group);
 	}
 
-	if (IS_PREV_TOP_TAB (w, gw->group) && !temporary)
-		gw->group->prevTopTab = NULL;
+	if (IS_PREV_TOP_TAB (w, group) && !temporary)
+		group->prevTopTab = NULL;
 
 	if (slot == bar->hoveredSlot)
 		bar->hoveredSlot = NULL;
@@ -2138,7 +2152,7 @@ groupUnhookTabBarSlot (GroupTabBar     *bar,
 				bar->textLayer->state == PaintOn)
 			{
 				bar->textLayer->animationTime =
-					(groupGetFadeTextTime (w->screen) * 1000) -
+					(groupGetFadeTextTime (s) * 1000) -
 					bar->textLayer->animationTime;
 				bar->textLayer->state = PaintFadeOut;
 			}
@@ -2149,7 +2163,7 @@ groupUnhookTabBarSlot (GroupTabBar     *bar,
 	   because the tab-bar got thiner now, so
 	   (bar->region->extents.x1 + bar->region->extents.x2) / 2
 	   Won't cause the new x1 / x2 to be outside the original region. */
-	groupRecalcTabBarPos (gw->group,
+	groupRecalcTabBarPos (group,
 						  (bar->region->extents.x1 +
 						   bar->region->extents.x2) / 2,
 						  bar->region->extents.x1, bar->region->extents.x2);
