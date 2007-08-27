@@ -1715,11 +1715,33 @@ groupWindowResizeNotify (CompWindow *w,
 	if (gw->glowQuads)
 		groupComputeGlowQuads (w, &gs->glowTexture.matrix);
 
-	if (gw->group && gw->group->tabBar && IS_TOP_TAB (w, gw->group) &&
-		(gw->group->tabBar->state != PaintOff))
+	if (gw->group && gw->group->tabBar)
 	{
-		groupRecalcTabBarPos(gw->group, pointerX,
-							 WIN_X (w), WIN_X (w) + WIN_WIDTH (w));
+		if (IS_TOP_TAB (w, gw->group))
+		{
+			int i;
+
+			if (gw->group->tabBar->state != PaintOff)
+			{
+				groupRecalcTabBarPos (gw->group, pointerX,
+									  WIN_X (w), WIN_X (w) + WIN_WIDTH (w));
+			}
+
+			/* move the non-top tabs to the new center of the window */
+			for (i = 0; i < gw->group->nWins; i++)
+			{
+				CompWindow *cw = gw->group->windows[i];
+				int        dx, dy;
+
+				if (cw->id == w->id)
+					continue;
+
+				dx = WIN_CENTER_X (w) - WIN_CENTER_X (cw);
+				dy = WIN_CENTER_Y (w) - WIN_CENTER_Y (cw);
+
+				groupEnqueueMoveNotify (cw, dx, dy, TRUE, TRUE); 
+			}
+		}
 	}
 }
 
