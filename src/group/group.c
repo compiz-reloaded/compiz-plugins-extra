@@ -1,5 +1,3 @@
-#include "group-internal.h"
-
 /**
  *
  * Compiz group plugin
@@ -23,6 +21,8 @@
  * GNU General Public License for more details.
  *
  **/
+
+#include "group-internal.h"
 
 /*
  * groupDragHoverTimeout
@@ -106,8 +106,10 @@ groupCheckWindowProperty (CompWindow *w,
 void
 groupUpdateWindowProperty (CompWindow *w)
 {
+	CompDisplay *d = w->screen->display;
+
 	GROUP_WINDOW (w);
-	GROUP_DISPLAY (w->screen->display);
+	GROUP_DISPLAY (d);
 
 	if (gw->group)
 	{
@@ -121,14 +123,13 @@ groupUpdateWindowProperty (CompWindow *w)
 		buffer[3] = gw->group->color[1];
 		buffer[4] = gw->group->color[2];
 
-		XChangeProperty (w->screen->display->display,
-						 w->id, gd->groupWinPropertyAtom, XA_CARDINAL,
-						 32, PropModeReplace, (unsigned char *) buffer, 5);
+		XChangeProperty (d->display, w->id, gd->groupWinPropertyAtom,
+						 XA_CARDINAL, 32, PropModeReplace,
+						 (unsigned char *) buffer, 5);
 	}
 	else
 	{
-		XDeleteProperty (w->screen->display->display,
-						 w->id, gd->groupWinPropertyAtom);
+		XDeleteProperty (d->display, w->id, gd->groupWinPropertyAtom);
 	}
 }
 
@@ -243,7 +244,10 @@ groupRaiseWindows (CompWindow     *top,
 	if (group->nWins == 1)
 		return;
 
-	stack = malloc ((group->nWins - 1) * sizeof (CompWindow*));
+	stack = malloc ((group->nWins - 1) * sizeof (CompWindow *));
+	if (!stack)
+		return;
+
 	for (w = group->screen->windows; w; w = w->next)
 	{
 		GROUP_WINDOW (w);
@@ -1041,7 +1045,7 @@ groupHandleButtonReleaseEvent (CompScreen *s,
 
 	GROUP_WINDOW (gs->draggedSlot->window);
 
-	newRegion = XCreateRegion();
+	newRegion = XCreateRegion ();
 	if (!newRegion)
 	    return;
 
@@ -1060,11 +1064,11 @@ groupHandleButtonReleaseEvent (CompScreen *s,
 			continue;
 
 		/* create clipping region */
-		clip = groupGetClippingRegion (TOP_TAB(group));
+		clip = groupGetClippingRegion (TOP_TAB (group));
 		if (!clip)
 			continue;
 
-		buf = XCreateRegion();
+		buf = XCreateRegion ();
 		if (!buf)
 		{
 			XDestroyRegion (clip);
@@ -1094,7 +1098,7 @@ groupHandleButtonReleaseEvent (CompScreen *s,
 			if (slot == gs->draggedSlot)
 				continue;
 
-			slotRegion = XCreateRegion();
+			slotRegion = XCreateRegion ();
 			if (!slotRegion)
 				continue;
 
@@ -1128,7 +1132,7 @@ groupHandleButtonReleaseEvent (CompScreen *s,
 
 			XUnionRectWithRegion (&rect, slotRegion, slotRegion);
 
-			buf = XCreateRegion();
+			buf = XCreateRegion ();
 			if (!buf)
 				continue;
 
@@ -1835,14 +1839,16 @@ groupWindowMoveNotify (CompWindow *w,
 }
 
 void
-groupWindowGrabNotify(CompWindow   *w,
-	   				  int          x,
-					  int          y,
-					  unsigned int state,
-					  unsigned int mask)
+groupWindowGrabNotify (CompWindow   *w,
+					   int          x,
+					   int          y,
+					   unsigned int state,
+					   unsigned int mask)
 {
-	GROUP_SCREEN (w->screen);
-	GROUP_DISPLAY (w->screen->display);
+	CompScreen *s = w->screen;
+
+	GROUP_SCREEN (s);
+	GROUP_DISPLAY (s->display);
 	GROUP_WINDOW (w);
 
 	if (gw->group && !gd->ignoreMode && !gs->queued)
@@ -1850,7 +1856,7 @@ groupWindowGrabNotify(CompWindow   *w,
 		Bool doResizeAll;
 		int  i;
 
-		doResizeAll = groupGetResizeAll (w->screen) &&
+		doResizeAll = groupGetResizeAll (s) &&
 			          (mask & CompWindowGrabResizeMask);
 
 		if (gw->group->tabBar)
@@ -1902,16 +1908,18 @@ groupWindowGrabNotify(CompWindow   *w,
 		gw->group->grabMask = mask;
 	}
 
-	UNWRAP (gs, w->screen, windowGrabNotify);
-	(*w->screen->windowGrabNotify) (w, x, y, state, mask);
-	WRAP (gs, w->screen, windowGrabNotify, groupWindowGrabNotify);
+	UNWRAP (gs, s, windowGrabNotify);
+	(*s->windowGrabNotify) (w, x, y, state, mask);
+	WRAP (gs, s, windowGrabNotify, groupWindowGrabNotify);
 }
 
 void
 groupWindowUngrabNotify (CompWindow *w)
 {
-	GROUP_SCREEN (w->screen);
-	GROUP_DISPLAY (w->screen->display);
+	CompScreen *s = w->screen;
+
+	GROUP_SCREEN (s);
+	GROUP_DISPLAY (s->display);
 	GROUP_WINDOW (w);
 
 	if (gw->group && !gd->ignoreMode && !gs->queued)
@@ -1921,7 +1929,7 @@ groupWindowUngrabNotify (CompWindow *w)
 			int        i;
 			XRectangle rect;
 
-			groupDequeueMoveNotifies (w->screen);
+			groupDequeueMoveNotifies (s);
 
 			if (gd->resizeInfo)
 			{
@@ -1987,9 +1995,9 @@ groupWindowUngrabNotify (CompWindow *w)
 		gw->group->grabMask = 0;
 	}
 
-	UNWRAP (gs, w->screen, windowUngrabNotify);
-	(*w->screen->windowUngrabNotify) (w);
-	WRAP( gs, w->screen, windowUngrabNotify, groupWindowUngrabNotify);
+	UNWRAP (gs, s, windowUngrabNotify);
+	(*s->windowUngrabNotify) (w);
+	WRAP( gs, s, windowUngrabNotify, groupWindowUngrabNotify);
 }
 
 Bool
@@ -1997,19 +2005,20 @@ groupDamageWindowRect (CompWindow *w,
 					   Bool       initial,
 					   BoxPtr     rect)
 {
-	Bool status;
+	Bool       status;
+	CompScreen *s = w->screen;
 
-	GROUP_SCREEN (w->screen);
+	GROUP_SCREEN (s);
 	GROUP_WINDOW (w);
 
-	UNWRAP (gs, w->screen, damageWindowRect);
-	status = (*w->screen->damageWindowRect) (w,initial,rect);
-	WRAP (gs, w->screen, damageWindowRect, groupDamageWindowRect);
+	UNWRAP (gs, s, damageWindowRect);
+	status = (*s->damageWindowRect) (w,initial,rect);
+	WRAP (gs, s, damageWindowRect, groupDamageWindowRect);
 
 	if (initial)
 	{
-		if (groupGetAutotabCreate (w->screen) &&
-			matchEval (groupGetWindowMatch (w->screen), w))
+		if (groupGetAutotabCreate (s) &&
+			matchEval (groupGetWindowMatch (s), w))
 		{
 			if (!gw->group && (gw->windowState == WindowNormal))
 			{
@@ -2022,12 +2031,12 @@ groupDamageWindowRect (CompWindow *w,
 		{
 			if (gw->windowState == WindowMinimized)
 			{
-				if (groupGetMinimizeAll (w->screen))
+				if (groupGetMinimizeAll (s))
 					groupMinimizeWindows (w, gw->group, FALSE);
 			}
 			else if (gw->windowState == WindowShaded)
 			{
-				if (groupGetShadeAll (w->screen))
+				if (groupGetShadeAll (s))
 					groupShadeWindows (w, gw->group, FALSE);
 			}
 		}
@@ -2040,7 +2049,7 @@ groupDamageWindowRect (CompWindow *w,
 		BoxRec box;
 
 		groupGetStretchRectangle (w, &box, NULL, NULL);
-		groupDamagePaintRectangle (w->screen, &box);
+		groupDamagePaintRectangle (s, &box);
 	}
 
 	if (gw->slot)
@@ -2058,7 +2067,7 @@ groupDamageWindowRect (CompWindow *w,
 		else
 			reg = gw->slot->region;
 
-		damageScreenRegion (w->screen, reg);
+		damageScreenRegion (s, reg);
 
 		if (vx || vy)
 			XDestroyRegion (reg);
@@ -2070,14 +2079,16 @@ groupDamageWindowRect (CompWindow *w,
 void
 groupWindowStateChangeNotify (CompWindow *w)
 {
-	GROUP_DISPLAY (w->screen->display);
-	GROUP_SCREEN (w->screen);
+	CompScreen *s = w->screen;
+
+	GROUP_DISPLAY (s->display);
+	GROUP_SCREEN (s);
 	GROUP_WINDOW (w);
 
 	if (gw->group && !gd->ignoreMode)
 	{
 		if (((gw->lastState & MAXIMIZE_STATE) != (w->state & MAXIMIZE_STATE)) &&
-			groupGetMaximizeUnmaximizeAll (w->screen))
+			groupGetMaximizeUnmaximizeAll (s))
 		{
 			int i;
 			for (i = 0; i < gw->group->nWins; i++)
@@ -2096,8 +2107,7 @@ groupWindowStateChangeNotify (CompWindow *w)
 
 	gw->lastState = w->state;
 
-	UNWRAP (gs, w->screen, windowStateChangeNotify);
-	(*w->screen->windowStateChangeNotify) (w);
-	WRAP (gs, w->screen, windowStateChangeNotify,
-		  groupWindowStateChangeNotify);
+	UNWRAP (gs, s, windowStateChangeNotify);
+	(*s->windowStateChangeNotify) (w);
+	WRAP (gs, s, windowStateChangeNotify, groupWindowStateChangeNotify);
 }
