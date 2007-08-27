@@ -1,29 +1,29 @@
 <?xml version="1.0"?>
 <compiz>
-  <plugin name="crashhandler" useBcop="true">
-    <_short>Crash handler</_short>
-    <_long>Compiz crash handler plugin</_long>
-	<category>Utility</category>
-    <display>
-      <group>
-        <_short>Main</_short>
-        <option name="enabled" type="bool">
-          <_short>Enable Crash Handler</_short>
-          <_long>Activate Crash Handler.</_long>
-          <default>true</default>
-        </option>
-        <option name="start_wm" type="bool">
-          <_short>Start Other Window Manager</_short>
-          <_long>Start other window manager on Crash.</_long>
-          <default>false</default>
-        </option>
-        <option name="wm_cmd" type="string">
-          <_short>Window Manager Command Line</_short>
-          <_long>Window manager command line. DO NOT ENTER COMPIZ HERE!!!</_long>
-          <hints>command;</hints>
-          <default/>
-        </option>
-      </group>
-    </display>
-  </plugin>
+	<plugin name="crashhandler" useBcop="true">
+		<_short>Crash handler</_short>
+		<_long>Compiz crash handler plugin</_long>
+		<category>Utility</category>
+		<display>
+			<group>
+				<_short>Main</_short>
+				<option name="enabled" type="bool">
+					<_short>Enable Crash Handler</_short>
+					<_long>Activate Crash Handler.</_long>
+					<default>true</default>
+				</option>
+				<option name="start_wm" type="bool">
+					<_short>Start Other Window Manager</_short>
+					<_long>Start other window manager on Crash.</_long>
+					<default>false</default>
+				</option>
+				<option name="wm_cmd" type="string">
+					<_short>Window Manager Command Line</_short>
+					<_long>Window manager command line. DO NOT ENTER COMPIZ HERE!!!</_long>
+					<hints>command;</hints>
+					<default/>
+				</option>
+			</group>
+		</display>
+	</plugin>
 </compiz>
