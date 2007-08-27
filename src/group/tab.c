@@ -2094,20 +2094,20 @@ groupUnhookTabBarSlot (GroupTabBar     *bar,
 
 	if (!temporary)
 	{
+		if (IS_PREV_TOP_TAB (w, group))
+			group->prevTopTab = NULL;
 		if (IS_TOP_TAB (w, group))
 		{
+			group->topTab = NULL;
+
 			if (next)
 				groupChangeTab (next, RotateRight);
 			else if (prev)
 				groupChangeTab (prev, RotateLeft);
-			else if (group->nWins == 1)
-				group->topTab = NULL;
 
 			if (groupGetUntabOnClose (s))
 				groupUntabGroup (group);
 		}
-		if (IS_PREV_TOP_TAB (w, group))
-			group->prevTopTab = NULL;
 	}
 
 	if (slot == bar->hoveredSlot)
