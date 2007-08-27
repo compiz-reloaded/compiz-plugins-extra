@@ -421,7 +421,8 @@ cubereflexPaintTransformedOutput (CompScreen              *s,
 	    else
 		drawBasicGround (s);
 	}
-
+	
+	memset (cs->capsPainted, 0, sizeof (Bool) * s->nOutputDev);
 	rs->reflection = FALSE;
     }
 
