@@ -75,11 +75,11 @@ groupScreenOptionChanged (CompScreen         *s,
 		{
 			CompWindow *w;
 
-			groupRecomputeGlow (s);
 			for (w = s->windows; w; w = w->next)
 			{
 				GROUP_WINDOW (w);
 
+				groupComputeGlowQuads (w, &gs->glowTexture.matrix);
 				if (gw->glowQuads)
 				{
 					damageWindowOutputExtents (w);
@@ -107,7 +107,11 @@ groupScreenOptionChanged (CompScreen         *s,
 
 			if (groupGetGlow (s) && gs->groups)
 			{
-				groupRecomputeGlow (s);
+				CompWindow *w;
+
+				for (w = s->windows; w; w = w->next)
+					groupComputeGlowQuads (w, &gs->glowTexture.matrix);
+
 				damageScreen (s);
 			}
 			break;
@@ -314,7 +318,6 @@ groupInitScreen (CompPlugin *p,
 	gs->grabIndex = 0;
 	gs->grabState = ScreenGrabNone;
 	gs->queued = FALSE;
-	gs->tabBarVisible = FALSE;
 	gs->lastHoveredGroup = NULL;
 
 	gs->pendingMoves = NULL;

@@ -286,36 +286,6 @@ groupShowDelayTimeout (void *data)
 }
 
 /*
- * groupCheckForVisibleTabBars
- *
- * Description:
- * This function is used to update the gs->tabBarVisible
- * attribute which is used in groupPaintOutput to do add
- * a PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_MAS mask to the
- * screen mask. It checks if there are any tab bar's with
- * a PaintState which is no PaintOff on the given screen.
- *
- */
-void
-groupCheckForVisibleTabBars (CompScreen *s)
-{
-	GroupSelection *group;
-
-	GROUP_SCREEN (s);
-
-	gs->tabBarVisible = FALSE;
-
-	for (group = gs->groups; group; group = group->next)
-	{
-		if (group->tabBar && (group->tabBar->state != PaintOff))
-		{
-			gs->tabBarVisible = TRUE;
-			break;
-		}
-	}
-}
-
-/*
  * groupTabSetVisibility
  *
  * Description:
@@ -389,8 +359,6 @@ groupTabSetVisibility (GroupSelection *group,
 
 	if (bar->state != oldState)
 		groupDamageTabBarRegion (group);
-
-	groupCheckForVisibleTabBars (s);
 }
 
 /*
@@ -572,13 +540,10 @@ groupHandleTabBarFade (GroupSelection *group,
 		if (bar->state == PaintFadeIn)
 		{
 			bar->state = PaintOn;
-			groupCheckForVisibleTabBars (group->screen);
 		}
 		else if (bar->state == PaintFadeOut)
 		{
 			bar->state = PaintOff;
-
-			groupCheckForVisibleTabBars (group->screen);
 
 			if (bar->textLayer)
 			{

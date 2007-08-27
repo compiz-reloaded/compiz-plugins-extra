@@ -35,6 +35,7 @@ groupPaintThumb (GroupSelection      *group,
 				 int                 targetOpacity)
 {
 	CompWindow            *w = slot->window;
+	CompScreen            *s = w->screen;
 	AddWindowGeometryProc oldAddWindowGeometry;
 	WindowPaintAttrib     wAttrib = w->paint;
 	int                   tw, th;
@@ -44,19 +45,19 @@ groupPaintThumb (GroupSelection      *group,
 
 	/* Wrap drawWindowGeometry to make sure the general
 	   drawWindowGeometry function is used */
-	oldAddWindowGeometry = w->screen->addWindowGeometry;
-	w->screen->addWindowGeometry = addWindowGeometry;
+	oldAddWindowGeometry = s->addWindowGeometry;
+	s->addWindowGeometry = addWindowGeometry;
 
 	/* animate fade */
 	if (group && group->tabBar->state == PaintFadeIn)
 	{
 		wAttrib.opacity -= wAttrib.opacity * group->tabBar->animationTime /
-			               (groupGetFadeTime (w->screen) * 1000);
+			               (groupGetFadeTime (s) * 1000);
 	}
 	else if (group && group->tabBar->state == PaintFadeOut)
 	{
 		wAttrib.opacity = wAttrib.opacity * group->tabBar->animationTime /
-				          (groupGetFadeTime (w->screen) * 1000);
+				          (groupGetFadeTime (s) * 1000);
 	}
 
 	wAttrib.opacity = wAttrib.opacity * targetOpacity / OPAQUE;
@@ -109,14 +110,14 @@ groupPaintThumb (GroupSelection      *group,
 		glPushMatrix ();
 		glLoadMatrixf (wTransform.m);
 
-		(*w->screen->drawWindow) (w, &wTransform, &fragment, &infiniteRegion,
-								  PAINT_WINDOW_TRANSFORMED_MASK |
-								  PAINT_WINDOW_TRANSLUCENT_MASK);
+		(*s->drawWindow) (w, &wTransform, &fragment, &infiniteRegion,
+						  PAINT_WINDOW_TRANSFORMED_MASK |
+						  PAINT_WINDOW_TRANSLUCENT_MASK);
 
 		glPopMatrix ();
 	}
 
-	w->screen->addWindowGeometry = oldAddWindowGeometry;
+	s->addWindowGeometry = oldAddWindowGeometry;
 }
 
 /*
@@ -441,17 +442,25 @@ groupPaintOutput (CompScreen              *s,
 	gs->vpX = s->x;
 	gs->vpY = s->y;
 
-	for (group = gs->groups; group; group = group->next)
+	if (gd->resizeInfo)
 	{
-		if (group->changeState != NoTabChange ||
-			group->tabbingState != NoTabbing)
+		mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_MASK;
+	}
+	else
+	{
+		for (group = gs->groups; group; group = group->next)
 		{
-			mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_MASK;
+			if (group->changeState != NoTabChange ||
+				group->tabbingState != NoTabbing)
+			{
+				mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_MASK;
+			}
+			else if (group->tabBar && (group->tabBar->state != PaintOff))
+			{
+				mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_MASK;
+			}
 		}
 	}
-
-	if (gs->tabBarVisible || gd->resizeInfo)
-		mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_MASK;
 
 	UNWRAP (gs, s, paintOutput);
 	status = (*s->paintOutput) (s, sAttrib, transform, region, output, mask);
@@ -529,17 +538,6 @@ groupPaintTransformedOutput (CompScreen              *s,
 			groupPaintSelectionOutline (s, sa, transform, output, TRUE);
 		}
 	}
-}
-
-void
-groupRecomputeGlow (CompScreen *s)
-{
-	CompWindow *w;
-	
-	GROUP_SCREEN (s);
-
-	for (w = s->windows; w; w = w->next)
-		groupComputeGlowQuads (w, &gs->glowTexture.matrix);
 }
 
 /*

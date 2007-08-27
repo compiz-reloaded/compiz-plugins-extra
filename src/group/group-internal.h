@@ -416,7 +416,6 @@ typedef struct _GroupScreen {
 	GroupSelection tmpSel;
 
 	Bool queued;
-	Bool tabBarVisible;
 
 	GroupScreenGrabState grabState;
 	int                  grabIndex;
@@ -666,9 +665,6 @@ groupUpdateTabBars (CompScreen *s,
 					Window     enteredWin);
 
 void
-groupCheckForVisibleTabBars (CompScreen *s);
-
-void
 groupGetDrawOffsetForSlot (GroupTabBarSlot *slot,
 						   int             *hoffset,
 						   int             *voffset);
@@ -799,9 +795,6 @@ groupDamageTabBarRegion (GroupSelection *group);
 /*
  * paint.c
  */
-
-void
-groupRecomputeGlow (CompScreen *s);
 
 void
 groupComputeGlowQuads (CompWindow *w,
