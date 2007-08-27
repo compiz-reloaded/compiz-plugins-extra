@@ -15,6 +15,7 @@
 				<option name="directory" type="string">
 					<_short>Crash Dump Directory</_short>
 					<_long>Directory to dump the crash logs to.</_long>
+					<hints>directory;</hints>
 					<default>/tmp</default>
 				</option>
 				<option name="start_wm" type="bool">
