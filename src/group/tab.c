@@ -115,11 +115,12 @@ void
 groupClearWindowInputShape (CompWindow          *w,
 							GroupWindowHideInfo *hideInfo)
 {
-	XRectangle *rects;
-	int        count = 0, ordering;
+	XRectangle  *rects;
+	int         count = 0, ordering;
+	CompDisplay *d = w->screen->display;
 
-	rects = XShapeGetRectangles (w->screen->display->display,
-								 w->id, ShapeInput, &count, &ordering);
+	rects = XShapeGetRectangles (d->display, w->id, ShapeInput,
+								 &count, &ordering);
 
 	if (count == 0)
 		return;
@@ -142,12 +143,12 @@ groupClearWindowInputShape (CompWindow          *w,
 	hideInfo->nInputRects = count;
 	hideInfo->inputRectOrdering = ordering;
 
-	XShapeSelectInput (w->screen->display->display, w->id, NoEventMask);
+	XShapeSelectInput (d->display, w->id, NoEventMask);
 
-	XShapeCombineRectangles (w->screen->display->display, w->id,
-							 ShapeInput, 0, 0, NULL, 0, ShapeSet, 0);
+	XShapeCombineRectangles (d->display, w->id, ShapeInput, 0, 0,
+							 NULL, 0, ShapeSet, 0);
 
-	XShapeSelectInput (w->screen->display->display, w->id, ShapeNotify);
+	XShapeSelectInput (d->display, w->id, ShapeNotify);
 }
 
 /*
@@ -158,6 +159,8 @@ void
 groupSetWindowVisibility (CompWindow *w,
 						  Bool       visible)
 {
+	CompDisplay *d = w->screen->display;
+
 	GROUP_WINDOW (w);
 
 	if (!visible && !gw->windowHideInfo)
@@ -170,14 +173,13 @@ groupSetWindowVisibility (CompWindow *w,
 
 		info->inputRects = NULL;
 		info->nInputRects = 0;
-		info->shapeMask = XShapeInputSelected (w->screen->display->display,
-											   w->id);
+		info->shapeMask = XShapeInputSelected (d->display, w->id);
 		groupClearWindowInputShape (w, info);
 
  		if (w->frame)
 		{
  			info->frameWindow = w->frame;
- 			XUnmapWindow (w->screen->display->display, w->frame);
+ 			XUnmapWindow (d->display, w->frame);
  		} else
 			info->frameWindow = None;
 
@@ -194,29 +196,25 @@ groupSetWindowVisibility (CompWindow *w,
 
  		if (info->nInputRects)
 		{
-			XShapeCombineRectangles (w->screen->display->display,
-									 w->id, ShapeInput, 0, 0,
-									 info->inputRects,
-									 info->nInputRects,
-									 ShapeSet,
-									 info->inputRectOrdering);
+			XShapeCombineRectangles (d->display, w->id, ShapeInput, 0, 0,
+									 info->inputRects, info->nInputRects,
+									 ShapeSet, info->inputRectOrdering);
  		}
 		else
 		{
-			XShapeCombineMask (w->screen->display->display, w->id,
-							   ShapeInput, 0, 0, None, ShapeSet);
+			XShapeCombineMask (d->display, w->id, ShapeInput,
+							   0, 0, None, ShapeSet);
 		}
 
 		if (info->inputRects)
 			XFree (info->inputRects);
 
-		XShapeSelectInput (w->screen->display->display, w->id,
-						   info->shapeMask);
+		XShapeSelectInput (d->display, w->id, info->shapeMask);
 
 		if (info->frameWindow)
 		{
 			if (w->attrib.map_state != IsUnmapped)
-				XMapWindow (w->screen->display->display, w->frame);
+				XMapWindow (d->display, w->frame);
 		}
 
 		changeWindowState (w,
@@ -274,7 +272,7 @@ groupShowDelayTimeout (void *data)
 		return FALSE;	/* This will free the timer. */
 	}
 
-	topTab = group->topTab->window;
+	topTab = TOP_TAB (group);
 
 	groupGetCurrentMousePosition (s, &mouseX, &mouseY);
 
@@ -342,10 +340,12 @@ groupTabSetVisibility (GroupSelection *group,
 	GroupTabBar *bar;
 	CompWindow  *topTab;
 	PaintState  oldState;
+	CompScreen  *s;
 
 	if (!group || !group->windows || !group->tabBar || !HAS_TOP_WIN (group))
 		return;
 
+	s = group->screen;
 	bar = group->tabBar;
 	topTab = TOP_TAB (group);
 	oldState = bar->state;
@@ -367,10 +367,10 @@ groupTabSetVisibility (GroupSelection *group,
 	}
 	else if (visible && (bar->state == PaintOff || bar->state == PaintFadeOut))
 	{
-		if (groupGetBarAnimations (group->screen))
+		if (groupGetBarAnimations (s))
 		{
 			bar->bgAnimation = AnimationReflex;
-			bar->bgAnimationTime = groupGetReflexTime (group->screen) * 1000.0;
+			bar->bgAnimationTime = groupGetReflexTime (s) * 1000.0;
 		}
 		bar->state = PaintFadeIn;
 		groupSwitchTopTabInput (group, FALSE);
@@ -385,13 +385,12 @@ groupTabSetVisibility (GroupSelection *group,
  	}
 
 	if (bar->state == PaintFadeIn || bar->state == PaintFadeOut)
-		bar->animationTime = (groupGetFadeTime (group->screen) * 1000) -
-			                 bar->animationTime;
+		bar->animationTime = (groupGetFadeTime (s) * 1000) - bar->animationTime;
 
 	if (bar->state != oldState)
 		groupDamageTabBarRegion (group);
 
-	groupCheckForVisibleTabBars (group->screen);
+	groupCheckForVisibleTabBars (s);
 }
 
 /*
@@ -408,15 +407,17 @@ groupGetDrawOffsetForSlot (GroupTabBarSlot *slot,
 						   int             *voffset)
 {
 	CompWindow *w, *topTab;
+	CompScreen *s;
 	int        vx, vy, x, y;
 
 	if (!slot || !slot->window)
 		return;
 
 	w = slot->window;
+	s = w->screen;
 
 	GROUP_WINDOW (w);
-	GROUP_SCREEN (w->screen);
+	GROUP_SCREEN (s);
 
 	if (slot != gs->draggedSlot)
 	{
@@ -444,16 +445,14 @@ groupGetDrawOffsetForSlot (GroupTabBarSlot *slot,
 	x = WIN_CENTER_X (topTab) - WIN_WIDTH (w) / 2;
 	y = WIN_CENTER_Y (topTab) - WIN_HEIGHT (w) / 2;
 
-	viewportForGeometry (w->screen, x, y,
-						 w->serverWidth, w->serverHeight,
-						 w->serverBorderWidth,
-						 &vx, &vy);
+	viewportForGeometry (s, x, y, w->serverWidth, w->serverHeight,
+						 w->serverBorderWidth, &vx, &vy);
 
 	if (hoffset)
-		*hoffset = ((w->screen->x - vx) % w->screen->hsize) * w->screen->width;
+		*hoffset = ((s->x - vx) % s->hsize) * s->width;
 
 	if (voffset)
-		*voffset = ((w->screen->y - vy) % w->screen->vsize) * w->screen->height;
+		*voffset = ((s->y - vy) % s->vsize) * s->height;
 }
 
 /*
@@ -472,17 +471,21 @@ groupHandleHoverDetection (GroupSelection *group)
 	GroupTabBar *bar = group->tabBar;
 	CompWindow  *topTab = TOP_TAB (group);
 	int         mouseX, mouseY;
-	Bool        mouseOnScreen;
+	Bool        mouseOnScreen, inLastSlot;
 
 	/* first get the current mouse position */
 	mouseOnScreen = groupGetCurrentMousePosition (group->screen,
 												  &mouseX, &mouseY);
 
+	if (!mouseOnScreen)
+		return;
+
 	/* then check if the mouse is in the last hovered slot --
 	   this saves a lot of CPU usage */
-	if (mouseOnScreen &&
-		!(bar->hoveredSlot &&
-		  XPointInRegion (bar->hoveredSlot->region, mouseX, mouseY)))
+	inLastSlot = bar->hoveredSlot &&
+		         XPointInRegion (bar->hoveredSlot->region, mouseX, mouseY);
+
+	if (!inLastSlot)
 	{
 		Region          clip;
 		GroupTabBarSlot *slot;
@@ -714,13 +717,14 @@ groupHandleAnimation (GroupSelection *group)
 
 	if (group->changeState == TabChangeOldOut)
 	{
+		CompWindow *top = TOP_TAB (group);
+
 		/* recalc here is needed (for y value)! */
 		groupRecalcTabBarPos (group,
 							  (group->tabBar->region->extents.x1 +
 							   group->tabBar->region->extents.x2) / 2,
-							  WIN_REAL_X (TOP_TAB (group)),
-							  WIN_REAL_X (TOP_TAB (group)) +
-							  WIN_REAL_WIDTH (TOP_TAB (group)));
+							  WIN_REAL_X (top),
+							  WIN_REAL_X (top) + WIN_REAL_WIDTH (top));
 
 		group->changeAnimationTime += groupGetChangeAnimationTime (s) * 500;
 
@@ -729,8 +733,7 @@ groupHandleAnimation (GroupSelection *group)
 
 		group->changeState = TabChangeNewIn;
 
-		if (HAS_TOP_WIN (group))
-			activateWindow (TOP_TAB (group));
+		activateWindow (top);
 	}
 
 	if (group->changeState == TabChangeNewIn &&
@@ -979,6 +982,7 @@ groupUpdateTabBars (CompScreen *s,
 		/* is the window the entered frame belongs to inside
 		   a tabbed group? if no, it's not interesting for us */
 		GROUP_WINDOW (w);
+
 		if (gw->group && gw->group->tabBar)
 		{
 			int mouseX, mouseY;
@@ -1368,6 +1372,7 @@ groupTabGroup (CompWindow *main)
 {
 	GroupSelection  *group;
 	GroupTabBarSlot *slot;
+	CompScreen      *s = main->screen;
 	int             width, height;
 	int             space, thumbSize;
 
@@ -1377,9 +1382,9 @@ groupTabGroup (CompWindow *main)
 	if (!group || group->tabBar)
 		return;
 
-	if (!main->screen->display->shapeExtension)
+	if (!s->display->shapeExtension)
 	{
-		compLogMessage (main->screen->display, "group", CompLogLevelError,
+		compLogMessage (s->display, "group", CompLogLevelError,
 						"No X shape extension! Tabbing disabled.");
 		return;
 	}
@@ -1398,8 +1403,7 @@ groupTabGroup (CompWindow *main)
 	height = group->tabBar->region->extents.y2 -
 		     group->tabBar->region->extents.y1;
 
-	group->tabBar->textLayer = groupCreateCairoLayer (main->screen,
-													  width, height);
+	group->tabBar->textLayer = groupCreateCairoLayer (s, width, height);
 	if (group->tabBar->textLayer)
 	{
 		GroupCairoLayer *layer;
@@ -1414,14 +1418,14 @@ groupTabGroup (CompWindow *main)
 		GroupCairoLayer *layer;
 		
 		layer = group->tabBar->textLayer;
-		layer->animationTime = groupGetFadeTextTime (main->screen) * 1000;
+		layer->animationTime = groupGetFadeTextTime (s) * 1000;
 		layer->state = PaintFadeIn;
 	}
 
 	/* we need a buffer for DnD here */
-	space = groupGetThumbSpace (main->screen);
-	thumbSize = groupGetThumbSize (main->screen);
-	group->tabBar->bgLayer = groupCreateCairoLayer (main->screen,
+	space = groupGetThumbSpace (s);
+	thumbSize = groupGetThumbSize (s);
+	group->tabBar->bgLayer = groupCreateCairoLayer (s, 
 													width + space + thumbSize,
 													height);
 	if (group->tabBar->bgLayer)
@@ -1436,8 +1440,7 @@ groupTabGroup (CompWindow *main)
 	height = group->topTab->region->extents.y2 -
 		     group->topTab->region->extents.y1;
 
-	group->tabBar->selectionLayer = groupCreateCairoLayer (main->screen,
-														   width, height);
+	group->tabBar->selectionLayer = groupCreateCairoLayer (s, width, height);
 	if (group->tabBar->selectionLayer)
 	{
 		group->tabBar->selectionLayer->state = PaintOn;
@@ -2536,6 +2539,9 @@ groupInitTabBar (GroupSelection *group,
 		return;
 
 	bar = malloc (sizeof (GroupTabBar));
+	if (!bar)
+		return;
+
 	bar->slots = NULL;
 	bar->nSlots = 0;
 	bar->bgAnimation = AnimationNone;
@@ -2551,7 +2557,7 @@ groupInitTabBar (GroupSelection *group,
 	bar->oldWidth = 0;
 	group->tabBar = bar;
 
-	bar->region = XCreateRegion();
+	bar->region = XCreateRegion ();
 
 	for (i = 0; i < group->nWins; i++)
 		groupCreateSlot (group, group->windows[i]);
