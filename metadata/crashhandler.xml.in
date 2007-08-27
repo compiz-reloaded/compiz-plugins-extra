@@ -12,6 +12,11 @@
 					<_long>Activate Crash Handler.</_long>
 					<default>true</default>
 				</option>
+				<option name="directory" type="string">
+					<_short>Crash Dump Directory</_short>
+					<_long>Directory to dump the crash logs to.</_long>
+					<default>/tmp</default>
+				</option>
 				<option name="start_wm" type="bool">
 					<_short>Start Other Window Manager</_short>
 					<_long>Start other window manager on Crash.</_long>

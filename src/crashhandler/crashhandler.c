@@ -45,14 +45,16 @@ crash_handler (int sig)
 	// backtrace
 	char cmd[1024];
 
-	sprintf (cmd, "echo -e \"set prompt\nthread apply all bt full\n"
-		      "echo \\\\\\n\necho \\\\\\n\nbt\nquit\" > /tmp/gdb.tmp;"
-		      "gdb -q %s %i < /tmp/gdb.tmp | "
-		      "grep -v \"No symbol table\" | "
-		      "tee /tmp/compiz_crash-%i.out; rm -f /tmp/gdb.tmp; "
-		      "echo \"\n[CRASH_HANDLER]: "
-		      "\\\"/tmp/compiz_crash-%i.out\\\" created!\n\"",
-		 programName, getpid (), getpid (), getpid () );
+	snprintf (cmd, 1024, 
+		  "echo -e \"set prompt\nthread apply all bt full\n"
+	      	  "echo \\\\\\n\necho \\\\\\n\nbt\nquit\" > /tmp/gdb.tmp;"
+		  "gdb -q %s %i < /tmp/gdb.tmp | "
+		  "grep -v \"No symbol table\" | "
+		  "tee %s/compiz_crash-%i.out; rm -f /tmp/gdb.tmp; "
+		  "echo \"\n[CRASH_HANDLER]: "
+		  "\\\"%s/compiz_crash-%i.out\\\" created!\n\"",
+		 programName, getpid (), crashhandlerGetDirectory (cDisplay),
+		 getpid (), crashhandlerGetDirectory (cDisplay), getpid () );
 
 	system (cmd);
 
