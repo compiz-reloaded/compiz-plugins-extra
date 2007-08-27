@@ -1697,7 +1697,9 @@ groupWindowResizeNotify (CompWindow *w,
 						 int        dwidth,
 						 int        dheight)
 {
-	GROUP_SCREEN (w->screen);
+	CompScreen *s = w->screen;
+
+	GROUP_SCREEN (s);
 	GROUP_WINDOW (w);
 
 	if (gw->resizeGeometry)
@@ -1706,9 +1708,9 @@ groupWindowResizeNotify (CompWindow *w,
 		gw->resizeGeometry = NULL;
 	}
 
-	UNWRAP (gs, w->screen, windowResizeNotify);
-	(*w->screen->windowResizeNotify) (w, dx, dy, dwidth, dheight);
-	WRAP (gs, w->screen, windowResizeNotify, groupWindowResizeNotify);
+	UNWRAP (gs, s, windowResizeNotify);
+	(*s->windowResizeNotify) (w, dx, dy, dwidth, dheight);
+	WRAP (gs, s, windowResizeNotify, groupWindowResizeNotify);
 
 	if (gw->glowQuads)
 		groupComputeGlowQuads (w, &gs->glowTexture.matrix);
@@ -1719,7 +1721,6 @@ groupWindowResizeNotify (CompWindow *w,
 		groupRecalcTabBarPos(gw->group, pointerX,
 							 WIN_X (w), WIN_X (w) + WIN_WIDTH (w));
 	}
-
 }
 
 /*
@@ -1732,16 +1733,17 @@ groupWindowMoveNotify (CompWindow *w,
 					   int        dy,
 					   Bool       immediate)
 {
-	Bool viewportChange;
-	int  i;
+	CompScreen *s = w->screen;
+	Bool       viewportChange;
+	int        i;
 
-	GROUP_SCREEN (w->screen);
-	GROUP_DISPLAY (w->screen->display);
+	GROUP_SCREEN (s);
+	GROUP_DISPLAY (s->display);
 	GROUP_WINDOW (w);
 
-	UNWRAP (gs, w->screen, windowMoveNotify);
-	(*w->screen->windowMoveNotify) (w, dx, dy, immediate);
-	WRAP (gs, w->screen, windowMoveNotify, groupWindowMoveNotify);
+	UNWRAP (gs, s, windowMoveNotify);
+	(*s->windowMoveNotify) (w, dx, dy, immediate);
+	WRAP (gs, s, windowMoveNotify, groupWindowMoveNotify);
 
 	if (gw->glowQuads)
 		groupComputeGlowQuads (w, &gs->glowTexture.matrix);
@@ -1777,7 +1779,7 @@ groupWindowMoveNotify (CompWindow *w,
 		}
 	}
 
-	if (!groupGetMoveAll (w->screen) || gd->ignoreMode ||
+	if (!groupGetMoveAll (s) || gd->ignoreMode ||
 		(gw->group->tabbingState != NoTabbing) ||
 		(gw->group->grabWindow != w->id) ||
 		!(gw->group->grabMask & CompWindowGrabMoveMask))
