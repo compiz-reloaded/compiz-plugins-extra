@@ -465,8 +465,6 @@ static Bool groupInitWindow(CompPlugin * p, CompWindow * w)
 	else
 		gw->windowState = WindowNormal;
 
-	gw->lastState = w->state;
-
 	w->privates[gs->windowPrivateIndex].ptr = gw;
 
 	gw->glowQuads = NULL;

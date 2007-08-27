@@ -465,8 +465,6 @@ typedef struct _GroupWindow {
 
 	float tx,ty;
 	float xVelocity, yVelocity;
-
-	int lastState;
 } GroupWindow;
 
 /*
@@ -582,7 +580,8 @@ groupWindowMoveNotify (CompWindow *w,
 					   Bool       immediate);
 
 void
-groupWindowStateChangeNotify (CompWindow *w);
+groupWindowStateChangeNotify (CompWindow   *w,
+							  unsigned int lastState);
 
 void
 groupGetOutputExtentsForWindow (CompWindow        *w,

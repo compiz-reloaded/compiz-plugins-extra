@@ -2077,7 +2077,8 @@ groupDamageWindowRect (CompWindow *w,
 }
 
 void
-groupWindowStateChangeNotify (CompWindow *w)
+groupWindowStateChangeNotify (CompWindow   *w,
+							  unsigned int lastState)
 {
 	CompScreen *s = w->screen;
 
@@ -2087,7 +2088,7 @@ groupWindowStateChangeNotify (CompWindow *w)
 
 	if (gw->group && !gd->ignoreMode)
 	{
-		if (((gw->lastState & MAXIMIZE_STATE) != (w->state & MAXIMIZE_STATE)) &&
+		if (((lastState & MAXIMIZE_STATE) != (w->state & MAXIMIZE_STATE)) &&
 			groupGetMaximizeUnmaximizeAll (s))
 		{
 			int i;
@@ -2105,9 +2106,7 @@ groupWindowStateChangeNotify (CompWindow *w)
 		}
 	}
 
-	gw->lastState = w->state;
-
 	UNWRAP (gs, s, windowStateChangeNotify);
-	(*s->windowStateChangeNotify) (w);
+	(*s->windowStateChangeNotify) (w, lastState);
 	WRAP (gs, s, windowStateChangeNotify, groupWindowStateChangeNotify);
 }
