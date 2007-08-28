@@ -83,7 +83,7 @@ typedef struct _WidgetWindow
     Bool                wasUnmapped;
     CompWindow          *parentWidget;
     CompTimeoutHandle   matchUpdateHandle;
-    CompTimeoutHandle   inferiorUpdateHandle;
+    CompTimeoutHandle   widgetStatusUpdateHandle;
     WidgetPropertyState propertyState;
 } WidgetWindow;
 
@@ -476,12 +476,16 @@ widgetUpdateMatch (void *closure)
 }
 
 static Bool
-widgetUpdateInferiors (void *closure)
+widgetUpdateStatus (void *closure)
 {
     CompWindow *w = (CompWindow *) closure;
     Window     clientLeader;
 
     WIDGET_WINDOW (w);
+    WIDGET_SCREEN (w->screen);
+
+    if (widgetUpdateWidgetPropertyState (w))
+	widgetUpdateWidgetMapState (w, (ws->state != StateOff));
 
     if (w->attrib.override_redirect)
 	clientLeader = getClientLeader (w);
@@ -500,8 +504,6 @@ widgetUpdateInferiors (void *closure)
 	if (lw)
 	{
 	    WidgetWindow *lww;
-
-	    WIDGET_SCREEN (w->screen);
 	    lww = GET_WIDGET_WINDOW (lw, ws);
 
 	    if (lww->isWidget)
@@ -511,7 +513,7 @@ widgetUpdateInferiors (void *closure)
 	}
     }
 
-    ww->inferiorUpdateHandle = 0;
+    ww->widgetStatusUpdateHandle = 0;
     return FALSE;
 }
 
@@ -791,15 +793,11 @@ widgetInitWindow (CompPlugin *p,
     ww->parentWidget = NULL;
     ww->wasUnmapped = FALSE;
     ww->matchUpdateHandle = 0;
-    ww->inferiorUpdateHandle = 0;
 
     w->privates[ws->windowPrivateIndex].ptr = ww;
 
-    if (widgetUpdateWidgetPropertyState (w))
-	widgetUpdateWidgetMapState (w, (ws->state != StateOff));
-
-    ww->inferiorUpdateHandle = compAddTimeout (0, widgetUpdateInferiors,
-					       (void *) w);
+    ww->widgetStatusUpdateHandle = compAddTimeout (0, widgetUpdateStatus,
+						   (void *) w);
 
     return TRUE;
 }
@@ -816,8 +814,8 @@ widgetFiniWindow (CompPlugin *p,
     if (ww->matchUpdateHandle)
 	compRemoveTimeout (ww->matchUpdateHandle);
 
-    if (ww->inferiorUpdateHandle)
-	compRemoveTimeout (ww->inferiorUpdateHandle);
+    if (ww->widgetStatusUpdateHandle)
+	compRemoveTimeout (ww->widgetStatusUpdateHandle);
 
     free (ww);
 }
