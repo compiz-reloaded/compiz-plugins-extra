@@ -1355,6 +1355,9 @@ groupTabGroup (CompWindow *main)
 	}
 
 	groupInitTabBar (group, main);
+	if (!group->tabBar)
+		return;
+
 	groupCreateInputPreventionWindow (group);
 
 	group->tabbingState = NoTabbing;
