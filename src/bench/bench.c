@@ -26,19 +26,19 @@
 #include <math.h>
 #include <X11/Xatom.h>
 #include <X11/extensions/Xrender.h>
-#include <compiz.h>
+#include <compiz-core.h>
 
 #include "bench_tex.h"
 #include "bench_options.h"
 
 #define GET_BENCH_DISPLAY(d)                                  \
-    ((BenchDisplay *) (d)->privates[displayPrivateIndex].ptr)
+    ((BenchDisplay *) (d)->object.privates[displayPrivateIndex].ptr)
 
 #define BENCH_DISPLAY(d)                      \
     BenchDisplay *bd = GET_BENCH_DISPLAY (d)
 
 #define GET_BENCH_SCREEN(s, bd)                                   \
-    ((BenchScreen *) (s)->privates[(bd)->screenPrivateIndex].ptr)
+    ((BenchScreen *) (s)->object.privates[(bd)->screenPrivateIndex].ptr)
 
 #define BENCH_SCREEN(s)                                                      \
     BenchScreen *bs = GET_BENCH_SCREEN (s, GET_BENCH_DISPLAY (s->display))
@@ -365,7 +365,7 @@ benchInitScreen (CompPlugin *p,
 
     BenchScreen *bs = (BenchScreen *) calloc (1, sizeof (BenchScreen) );
 
-    s->privates[bd->screenPrivateIndex].ptr = bs;
+    s->object.privates[bd->screenPrivateIndex].ptr = bs;
 
     WRAP (bs, s, paintOutput, benchPaintOutput);
     WRAP (bs, s, preparePaintScreen, benchPreparePaintScreen);
@@ -515,8 +515,16 @@ benchInitDisplay (CompPlugin  *p,
 		  CompDisplay *d)
 {
     //Generate a bench display
-    BenchDisplay *bd = (BenchDisplay *) malloc (sizeof (BenchDisplay) );
+    BenchDisplay *bd;
 
+    if (!checkPluginABI ("core", CORE_ABIVERSION))
+	return FALSE;
+
+    bd = (BenchDisplay *) malloc (sizeof (BenchDisplay));
+    
+    if (!bd)
+	return FALSE;
+    
     //Allocate a private index
     bd->screenPrivateIndex = allocateScreenPrivateIndex (d);
     //Check if its valid
@@ -532,7 +540,7 @@ benchInitDisplay (CompPlugin  *p,
 
     bd->active = FALSE;
     //Record the display
-    d->privates[displayPrivateIndex].ptr = bd;
+    d->object.privates[displayPrivateIndex].ptr = bd;
     return TRUE;
 }
 
@@ -567,31 +575,39 @@ benchFini (CompPlugin * p)
 	freeDisplayPrivateIndex (displayPrivateIndex);
 }
 
-static int
-benchGetVersion (CompPlugin *plugin,
-		 int        version)
+static CompBool
+benchInitObject (CompPlugin *p,
+		 CompObject *o)
 {
-    return ABIVERSION;
+    static InitPluginObjectProc dispTab[] = {
+	(InitPluginObjectProc) benchInitDisplay,
+	(InitPluginObjectProc) benchInitScreen
+    };
+
+    RETURN_DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), TRUE, (p, o));
 }
 
+static void
+benchFiniObject (CompPlugin *p,
+		 CompObject *o)
+{
+    static FiniPluginObjectProc dispTab[] = {
+	(FiniPluginObjectProc) benchFiniDisplay,
+	(FiniPluginObjectProc) benchFiniScreen
+    };
+
+    DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), (p, o));
+}
 
 CompPluginVTable benchVTable = {
-
     "bench",
-    benchGetVersion,
     0,
     benchInit,
     benchFini,
-    benchInitDisplay,
-    benchFiniDisplay,
-    benchInitScreen,
-    benchFiniScreen,
+    benchInitObject,
+    benchFiniObject,
     0,
-    0,
-    0,
-    0,
-    0,
-    0,
+    0
 };
 
 CompPluginVTable *
