@@ -27,7 +27,7 @@
  */
 
 #include <string.h>
-#include <compiz.h>
+#include <compiz-core.h>
 #include <X11/Xatom.h>
 #include <X11/cursorfont.h>
 #include "widget_options.h"
@@ -88,19 +88,19 @@ typedef struct _WidgetWindow
 } WidgetWindow;
 
 #define GET_WIDGET_DISPLAY(d)                                  \
-    ((WidgetDisplay *) (d)->privates[displayPrivateIndex].ptr)
+    ((WidgetDisplay *) (d)->object.privates[displayPrivateIndex].ptr)
 
 #define WIDGET_DISPLAY(d)                    \
     WidgetDisplay *wd = GET_WIDGET_DISPLAY (d)
 
 #define GET_WIDGET_SCREEN(s, wd)                                   \
-    ((WidgetScreen *) (s)->privates[(wd)->screenPrivateIndex].ptr)
+    ((WidgetScreen *) (s)->object.privates[(wd)->screenPrivateIndex].ptr)
 
 #define WIDGET_SCREEN(s)                                                  \
     WidgetScreen *ws = GET_WIDGET_SCREEN (s, GET_WIDGET_DISPLAY (s->display))
 
 #define GET_WIDGET_WINDOW(w, ws)                                   \
-    ((WidgetWindow *) (w)->privates[(ws)->windowPrivateIndex].ptr)
+    ((WidgetWindow *) (w)->object.privates[(ws)->windowPrivateIndex].ptr)
 
 #define WIDGET_WINDOW(w)                                       \
     WidgetWindow *ww = GET_WIDGET_WINDOW  (w,                    \
@@ -675,6 +675,9 @@ widgetInitDisplay (CompPlugin  *p,
 {
     WidgetDisplay *wd;
 
+    if (!checkPluginABI ("core", CORE_ABIVERSION))
+	return FALSE;
+
     wd = malloc (sizeof (WidgetDisplay));
     if (!wd)
       return FALSE;
@@ -688,7 +691,7 @@ widgetInitDisplay (CompPlugin  *p,
 
     wd->compizWidgetAtom = XInternAtom(d->display, "_COMPIZ_WIDGET", FALSE);
 
-    d->privates[displayPrivateIndex].ptr = wd;
+    d->object.privates[displayPrivateIndex].ptr = wd;
 
     widgetSetToggleKeyInitiate (d, widgetToggle);
     widgetSetToggleButtonInitiate (d, widgetToggle);
@@ -750,7 +753,7 @@ widgetInitScreen (CompPlugin *p,
 
     widgetSetMatchNotify (s, widgetScreenOptionChanged);
 
-    s->privates[wd->screenPrivateIndex].ptr = ws;
+    s->object.privates[wd->screenPrivateIndex].ptr = ws;
 
     WRAP (ws, s, paintWindow, widgetPaintWindow);
     WRAP (ws, s, preparePaintScreen, widgetPreparePaintScreen);
@@ -794,7 +797,7 @@ widgetInitWindow (CompPlugin *p,
     ww->wasUnmapped = FALSE;
     ww->matchUpdateHandle = 0;
 
-    w->privates[ws->windowPrivateIndex].ptr = ww;
+    w->object.privates[ws->windowPrivateIndex].ptr = ww;
 
     ww->widgetStatusUpdateHandle = compAddTimeout (0, widgetUpdateStatus,
 						   (void *) w);
@@ -820,6 +823,32 @@ widgetFiniWindow (CompPlugin *p,
     free (ww);
 }
 
+static CompBool
+widgetInitObject (CompPlugin *p,
+		  CompObject *o)
+{
+    static InitPluginObjectProc dispTab[] = {
+	(InitPluginObjectProc) widgetInitDisplay,
+	(InitPluginObjectProc) widgetInitScreen,
+	(InitPluginObjectProc) widgetInitWindow
+    };
+
+    RETURN_DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), TRUE, (p, o));
+}
+
+static void
+widgetFiniObject (CompPlugin *p,
+		  CompObject *o)
+{
+    static FiniPluginObjectProc dispTab[] = {
+	(FiniPluginObjectProc) widgetFiniDisplay,
+	(FiniPluginObjectProc) widgetFiniScreen,
+	(FiniPluginObjectProc) widgetFiniWindow
+    };
+
+    DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), (p, o));
+}
+
 static Bool
 widgetInit (CompPlugin *p)
 {
@@ -836,29 +865,15 @@ widgetFini (CompPlugin *p)
     freeDisplayPrivateIndex (displayPrivateIndex);
 }
 
-static int
-widgetGetVersion (CompPlugin *plugin,
-		  int        version)
-{
-    return ABIVERSION;
-}
-
 static CompPluginVTable widgetVTable = {
     "widget",
-    widgetGetVersion,
-    NULL,
+    0,
     widgetInit,
     widgetFini,
-    widgetInitDisplay,
-    widgetFiniDisplay,
-    widgetInitScreen,
-    widgetFiniScreen,
-    widgetInitWindow,
-    widgetFiniWindow,
-    NULL,
-    NULL,
-    NULL,
-    NULL
+    widgetInitObject,
+    widgetFiniObject,
+    0,
+    0
 };
 
 CompPluginVTable*
