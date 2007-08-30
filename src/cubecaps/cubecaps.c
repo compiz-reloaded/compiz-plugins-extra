@@ -23,8 +23,8 @@
 #include <signal.h>
 #include <unistd.h>
 
-#include <compiz.h>
-#include <cube.h>
+#include <compiz-core.h>
+#include <compiz-cube.h>
 #include "cubecaps_options.h"
 
 static int displayPrivateIndex;
@@ -59,12 +59,12 @@ typedef struct _CubeCapsScreen
 } CubeCapsScreen;
 
 #define GET_CUBECAPS_DISPLAY(d)						\
-    ((CubeCapsDisplay *) (d)->privates[displayPrivateIndex].ptr)
+    ((CubeCapsDisplay *) (d)->object.privates[displayPrivateIndex].ptr)
 #define CUBECAPS_DISPLAY(d)						\
     CubeCapsDisplay *ccd = GET_CUBECAPS_DISPLAY (d);
 
 #define GET_CUBECAPS_SCREEN(s, ccd)					\
-    ((CubeCapsScreen *) (s)->privates[(ccd)->screenPrivateIndex].ptr)
+    ((CubeCapsScreen *) (s)->object.privates[(ccd)->screenPrivateIndex].ptr)
 #define CUBECAPS_SCREEN(s)						\
     CubeCapsScreen *ccs = GET_CUBECAPS_SCREEN (s,			\
 			  GET_CUBECAPS_DISPLAY (s->display))
@@ -655,6 +655,9 @@ cubecapsInitDisplay (CompPlugin  *p,
 {
     CubeCapsDisplay *ccd;
 
+    if (!checkPluginABI ("core", CORE_ABIVERSION))
+	return FALSE;
+
     if (!checkPluginABI ("cube", CUBE_ABIVERSION))
 	return FALSE;
 
@@ -684,7 +687,7 @@ cubecapsInitDisplay (CompPlugin  *p,
     cubecapsSetBottomNextButtonInitiate (d, cubecapsBottomNext);
     cubecapsSetBottomPrevButtonInitiate (d, cubecapsBottomPrev);
 
-    d->privates[displayPrivateIndex].ptr = ccd;
+    d->object.privates[displayPrivateIndex].ptr = ccd;
 
     return TRUE;
 }
@@ -727,7 +730,7 @@ cubecapsInitScreen (CompPlugin *p,
     WRAP (ccs, cs, paintTop, cubecapsPaintTop);
     WRAP (ccs, cs, paintBottom, cubecapsPaintBottom);
 
-    s->privates[ccd->screenPrivateIndex].ptr = ccs;
+    s->object.privates[ccd->screenPrivateIndex].ptr = ccs;
 
     cubecapsChangeCap (s, &ccs->topCap, 0);
     cubecapsChangeCap (s, &ccs->bottomCap, 0);
@@ -748,6 +751,32 @@ cubecapsFiniScreen (CompPlugin *p,
     free (ccs);
 }
 
+static CompBool
+cubecapsInitObject (CompPlugin *p,
+		    CompObject *o)
+{
+	static InitPluginObjectProc dispTab[] = {
+		(InitPluginObjectProc) cubecapsInitDisplay,
+		(InitPluginObjectProc) cubecapsInitScreen,
+		(InitPluginObjectProc) cubecapsInitWindow
+    };
+
+    RETURN_DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), TRUE, (p, o));
+}
+
+static void
+cubecapsFiniObject (CompPlugin *p,
+		    CompObject *o)
+{
+    static FiniPluginObjectProc dispTab[] = {
+		(FiniPluginObjectProc) cubecapsFiniDisplay,
+		(FiniPluginObjectProc) cubecapsFiniScreen,
+		(FiniPluginObjectProc) cubecapsFiniWindow
+    };
+
+    DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), (p, o));
+}
+
 static Bool
 cubecapsInit (CompPlugin * p)
 {
@@ -766,28 +795,14 @@ cubecapsFini (CompPlugin * p)
 	freeDisplayPrivateIndex (displayPrivateIndex);
 }
 
-static int
-cubecapsGetVersion (CompPlugin *plugin,
-		    int        version)
-{
-    return ABIVERSION;
-}
-
 CompPluginVTable cubecapsVTable =
 {
     "cubecaps",
-    cubecapsGetVersion,
     0,
     cubecapsInit,
     cubecapsFini,
-    cubecapsInitDisplay,
-    cubecapsFiniDisplay,
-    cubecapsInitScreen,
-    cubecapsFiniScreen,
-    NULL,
-    NULL,
-    NULL,
-    NULL,
+    cubecapsInitObject,
+    cubecapsFiniObject,
     NULL,
     NULL
 };
