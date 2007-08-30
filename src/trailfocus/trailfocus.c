@@ -31,21 +31,26 @@
 #include <math.h>
 #include <X11/Xatom.h>
 #include <X11/extensions/Xrender.h>
-#include <compiz.h>
+#include <compiz-core.h>
 #include "trailfocus_options.h"
 
 #define GET_TRAILFOCUS_DISPLAY(d)                            \
-	((TrailfocusDisplay *) (d)->privates[displayPrivateIndex].ptr)
+	((TrailfocusDisplay *) (d)->object.privates[displayPrivateIndex].ptr)
 #define TRAILFOCUS_DISPLAY(d)                                \
     TrailfocusDisplay *td = GET_TRAILFOCUS_DISPLAY (d)
+
 #define GET_TRAILFOCUS_SCREEN(s, td)                         \
-	((TrailfocusScreen *) (s)->privates[(td)->screenPrivateIndex].ptr)
+	((TrailfocusScreen *) (s)->object.privates[(td)->screenPrivateIndex].ptr)
 #define TRAILFOCUS_SCREEN(s)                                 \
-	TrailfocusScreen *ts = GET_TRAILFOCUS_SCREEN (s, GET_TRAILFOCUS_DISPLAY (s->display))
+	TrailfocusScreen *ts = GET_TRAILFOCUS_SCREEN (s,     \
+						   GET_TRAILFOCUS_DISPLAY (s->display))
+
 #define GET_TRAILFOCUS_WINDOW(w, ts)                         \
-	((TrailfocusWindow *) (w)->privates[(ts)->windowPrivateIndex].ptr)
-#define TRAILFOCUS_WINDOW(w)                                 \
-	TrailfocusWindow *tw = GET_TRAILFOCUS_WINDOW (w, GET_TRAILFOCUS_SCREEN(w->screen, GET_TRAILFOCUS_DISPLAY (w->screen->display)))
+	((TrailfocusWindow *) (w)->object.privates[(ts)->windowPrivateIndex].ptr)
+#define TRAILFOCUS_WINDOW(w)                                    \
+	TrailfocusWindow *tw = GET_TRAILFOCUS_WINDOW (w,        \
+						   GET_TRAILFOCUS_SCREEN(w->screen, \
+					       GET_TRAILFOCUS_DISPLAY (w->screen->display)))
 
 static int displayPrivateIndex = 0;
 
@@ -409,7 +414,7 @@ static Bool trailfocusInitWindow(CompPlugin *p, CompWindow *w)
 	TRAILFOCUS_SCREEN(w->screen);
 
 	TrailfocusWindow *tw = (TrailfocusWindow *) calloc(1, sizeof(TrailfocusWindow));
-	w->privates[ts->windowPrivateIndex].ptr = tw;
+	w->object.privates[ts->windowPrivateIndex].ptr = tw;
 
 	tw->isTfWindow = FALSE;
 
@@ -465,7 +470,7 @@ static Bool trailfocusInitScreen(CompPlugin * p, CompScreen * s)
 	trailfocusSetMinBrightnessNotify(s, trailfocusScreenOptionChanged);
 	trailfocusSetMaxBrightnessNotify(s, trailfocusScreenOptionChanged);
 
-	s->privates[td->screenPrivateIndex].ptr = ts;
+	s->object.privates[td->screenPrivateIndex].ptr = ts;
 
 	WRAP(ts, s, paintWindow, trailfocusPaintWindow);
 
@@ -479,8 +484,14 @@ static Bool trailfocusInitScreen(CompPlugin * p, CompScreen * s)
 
 static Bool trailfocusInitDisplay(CompPlugin * p, CompDisplay * d)
 {
-	TrailfocusDisplay *td =
-			(TrailfocusDisplay *) malloc(sizeof(TrailfocusDisplay));
+	TrailfocusDisplay *td;
+
+	if (!checkPluginABI ("core", CORE_ABIVERSION))
+	    return FALSE;
+
+	td = malloc(sizeof(TrailfocusDisplay));
+	if (!td)
+		return FALSE;
 
 	td->screenPrivateIndex = allocateScreenPrivateIndex(d);
 	if (td->screenPrivateIndex < 0)
@@ -489,7 +500,7 @@ static Bool trailfocusInitDisplay(CompPlugin * p, CompDisplay * d)
 		return FALSE;
 	}
 
-	d->privates[displayPrivateIndex].ptr = td;
+	d->object.privates[displayPrivateIndex].ptr = td;
 	WRAP(td, d, handleEvent, trailfocusHandleEvent);
 	return TRUE;
 }
@@ -503,6 +514,34 @@ static void trailfocusFiniDisplay(CompPlugin * p, CompDisplay * d)
 	freeScreenPrivateIndex(d, td->screenPrivateIndex);
 	free(td);
 }
+
+static CompBool
+trailfocusInitObject (CompPlugin *p,
+					  CompObject *o)
+{
+	static InitPluginObjectProc dispTab[] = {
+		(InitPluginObjectProc) trailfocusInitDisplay,
+		(InitPluginObjectProc) trailfocusInitScreen,
+		(InitPluginObjectProc) trailfocusInitWindow
+    };
+
+    RETURN_DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), TRUE, (p, o));
+}
+
+static void
+trailfocusFiniObject (CompPlugin *p,
+					  CompObject *o)
+{
+    static FiniPluginObjectProc dispTab[] = {
+		(FiniPluginObjectProc) trailfocusFiniDisplay,
+		(FiniPluginObjectProc) trailfocusFiniScreen,
+		(FiniPluginObjectProc) trailfocusFiniWindow
+    };
+
+    DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), (p, o));
+}
+
+
 
 static Bool trailfocusInit(CompPlugin * p)
 {
@@ -518,26 +557,14 @@ static void trailfocusFini(CompPlugin * p)
 		freeDisplayPrivateIndex(displayPrivateIndex);
 }
 
-static int trailfocusGetVersion(CompPlugin *p, int version)
-{
-	return ABIVERSION;
-}
-
 CompPluginVTable trailfocusVTable = {
 	"trailfocus",
-	trailfocusGetVersion,
 	0,
 	trailfocusInit,
 	trailfocusFini,
-	trailfocusInitDisplay,
-	trailfocusFiniDisplay,
-	trailfocusInitScreen,
-	trailfocusFiniScreen,
-	trailfocusInitWindow,
-	trailfocusFiniWindow,
-	0,							// trailfocusGetDisplayOptions,
-	0,							// trailfocusSetDisplayOptions,
-	0, 
+	trailfocusInitObject,
+	trailfocusFiniObject,
+	0,
 	0
 };
 
