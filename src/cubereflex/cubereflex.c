@@ -26,8 +26,8 @@
 #include <unistd.h>
 #include <math.h>
 
-#include <compiz.h>
-#include <cube.h>
+#include <compiz-core.h>
+#include <compiz-cube.h>
 
 #include "cubereflex_options.h"
 
@@ -88,12 +88,12 @@ typedef struct _CubereflexScreen
 CubereflexScreen;
 
 #define GET_CUBEREFLEX_DISPLAY(d) \
-    ((CubereflexDisplay *) (d)->privates[displayPrivateIndex].ptr)
+    ((CubereflexDisplay *) (d)->object.privates[displayPrivateIndex].ptr)
 #define CUBEREFLEX_DISPLAY(d) \
     CubereflexDisplay *rd = GET_CUBEREFLEX_DISPLAY(d);
 
 #define GET_CUBEREFLEX_SCREEN(s, rd) \
-    ((CubereflexScreen *) (s)->privates[(rd)->screenPrivateIndex].ptr)
+    ((CubereflexScreen *) (s)->object.privates[(rd)->screenPrivateIndex].ptr)
 #define CUBEREFLEX_SCREEN(s) \
     CubereflexScreen *rs = GET_CUBEREFLEX_SCREEN(s, GET_CUBEREFLEX_DISPLAY(s->display))
 
@@ -479,13 +479,14 @@ cubereflexInitDisplay (CompPlugin  *p,
 {
     CubereflexDisplay *rd;
 
-    if (!checkPluginABI ("cube", CUBE_ABIVERSION))
+    if (!checkPluginABI ("core", CORE_ABIVERSION) ||
+	!checkPluginABI ("cube", CUBE_ABIVERSION))
 	return FALSE;
 
     if (!getPluginDisplayIndex (d, "cube", &cubeDisplayPrivateIndex))
 	return FALSE;
 
-    rd = malloc (sizeof (CubereflexDisplay));
+    rd = malloc (sizeof (CubereflexDisplay) );
 
     if (!rd)
 	return FALSE;
@@ -498,7 +499,7 @@ cubereflexInitDisplay (CompPlugin  *p,
 	return FALSE;
     }
 
-    d->privates[displayPrivateIndex].ptr = rd;
+    d->object.privates[displayPrivateIndex].ptr = rd;
 
     return TRUE;
 }
@@ -527,7 +528,7 @@ cubereflexInitScreen (CompPlugin *p,
     if (!rs)
 	return FALSE;
 
-    s->privates[rd->screenPrivateIndex].ptr = rs;
+    s->object.privates[rd->screenPrivateIndex].ptr = rs;
 
     rs->reflection = FALSE;
     rs->first      = TRUE;
@@ -581,28 +582,38 @@ cubereflexFini (CompPlugin *p)
 	freeDisplayPrivateIndex (displayPrivateIndex);
 }
 
-static int
-cubereflexGetVersion (CompPlugin *plugin,
-		      int        version)
+static CompBool
+cubereflexInitObject (CompPlugin *p,
+	       CompObject *o)
 {
-    return ABIVERSION;
+    static InitPluginObjectProc dispTab[] = {
+	(InitPluginObjectProc) cubereflexInitDisplay,
+	(InitPluginObjectProc) cubereflexInitScreen
+    };
+
+    RETURN_DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), TRUE, (p, o));
+}
+
+static void
+cubereflexFiniObject (CompPlugin *p,
+	       CompObject *o)
+{
+    static FiniPluginObjectProc dispTab[] = {
+	(FiniPluginObjectProc) cubereflexFiniDisplay,
+	(FiniPluginObjectProc) cubereflexFiniScreen
+    };
+
+    DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), (p, o));
 }
 
 CompPluginVTable cubereflexVTable = {
 
     "cubereflex",
-    cubereflexGetVersion,
     0,
     cubereflexInit,
     cubereflexFini,
-    cubereflexInitDisplay,
-    cubereflexFiniDisplay,
-    cubereflexInitScreen,
-    cubereflexFiniScreen,
-    0,
-    0,
-    0,
-    0,
+    cubereflexInitObject,
+    cubereflexFiniObject,
     0,
     0
 };
