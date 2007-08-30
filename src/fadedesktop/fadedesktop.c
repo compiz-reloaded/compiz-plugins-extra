@@ -21,7 +21,7 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include <compiz.h>
+#include <compiz-core.h>
 #include "fadedesktop_options.h"
 
 #include <math.h>
@@ -66,19 +66,19 @@ typedef struct _FadeDesktopWindow
 } FadeDesktopWindow;
 
 #define GET_FADEDESKTOP_DISPLAY(d)				     \
-    ((FadeDesktopDisplay *) (d)->privates[displayPrivateIndex].ptr)
+    ((FadeDesktopDisplay *) (d)->object.privates[displayPrivateIndex].ptr)
 
 #define FD_DISPLAY(d)			   \
     FadeDesktopDisplay *fd = GET_FADEDESKTOP_DISPLAY (d)
 
 #define GET_FADEDESKTOP_SCREEN(s, fd)					 \
-    ((FadeDesktopScreen *) (s)->privates[(fd)->screenPrivateIndex].ptr)
+    ((FadeDesktopScreen *) (s)->object.privates[(fd)->screenPrivateIndex].ptr)
 
 #define FD_SCREEN(s)							\
     FadeDesktopScreen *fs = GET_FADEDESKTOP_SCREEN (s, GET_FADEDESKTOP_DISPLAY (s->display))
 
 #define GET_FADEDESKTOP_WINDOW(w, fs)					 \
-    ((FadeDesktopWindow *) (w)->privates[(fs)->windowPrivateIndex].ptr)
+    ((FadeDesktopWindow *) (w)->object.privates[(fs)->windowPrivateIndex].ptr)
 
 #define FD_WINDOW(w)							\
     FadeDesktopWindow *fw = GET_FADEDESKTOP_WINDOW(w, \
@@ -335,7 +335,7 @@ static Bool fadeDesktopInitDisplay(CompPlugin *p, CompDisplay *d)
 		return FALSE;
 	}
 	
-	d->privates[displayPrivateIndex].ptr = fd;
+	d->object.privates[displayPrivateIndex].ptr = fd;
 	return TRUE;
 }
 
@@ -371,7 +371,7 @@ static Bool fadeDesktopInitScreen(CompPlugin *p, CompScreen *s)
 	WRAP(fs, s, enterShowDesktopMode, fadeDesktopEnterShowDesktopMode);
 	WRAP(fs, s, leaveShowDesktopMode, fadeDesktopLeaveShowDesktopMode);
 
-	s->privates[fd->screenPrivateIndex].ptr = fs;
+	s->object.privates[fd->screenPrivateIndex].ptr = fs;
 
 	return TRUE;
 	
@@ -404,7 +404,7 @@ static Bool fadeDesktopInitWindow(CompPlugin *p, CompWindow *w)
 	fw->isHidden = FALSE;
 	fw->fading = FALSE;
 	
-	w->privates[fs->windowPrivateIndex].ptr = fw;
+	w->object.privates[fs->windowPrivateIndex].ptr = fw;
 
 	return TRUE;
 	
@@ -417,25 +417,39 @@ static void fadeDesktopFiniWindow(CompPlugin *p, CompWindow *w)
 	free (fw);
 }
 
-static int fadeDesktopGetVersion(CompPlugin *p, int version)
+static CompBool
+fadeDesktopInitObject (CompPlugin *p,
+		       CompObject *o)
 {
-	return ABIVERSION;
+	static InitPluginObjectProc dispTab[] = {
+		(InitPluginObjectProc) fadeDesktopInitDisplay,
+		(InitPluginObjectProc) fadeDesktopInitScreen,
+		(InitPluginObjectProc) fadeDesktopInitWindow
+    };
+
+    RETURN_DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), TRUE, (p, o));
+}
+
+static void
+fadeDesktopFiniObject (CompPlugin *p,
+		       CompObject *o)
+{
+    static FiniPluginObjectProc dispTab[] = {
+		(FiniPluginObjectProc) fadeDesktopFiniDisplay,
+		(FiniPluginObjectProc) fadeDesktopFiniScreen,
+		(FiniPluginObjectProc) fadeDesktopFiniWindow
+    };
+
+    DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), (p, o));
 }
 
 static CompPluginVTable fadeDesktopVTable = {
 	"fadedesktop",
-	fadeDesktopGetVersion,
 	0,
 	fadeDesktopInit,
 	fadeDesktopFini,
-	fadeDesktopInitDisplay,
-	fadeDesktopFiniDisplay,
-	fadeDesktopInitScreen,
-	fadeDesktopFiniScreen,
-	fadeDesktopInitWindow,
-	fadeDesktopFiniWindow,
-	NULL,
-	NULL,
+	fadeDesktopInitObject,
+	fadeDesktopFiniObject,
 	NULL,
 	NULL
 };
