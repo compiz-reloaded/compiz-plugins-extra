@@ -757,8 +757,7 @@ cubecapsInitObject (CompPlugin *p,
 {
 	static InitPluginObjectProc dispTab[] = {
 		(InitPluginObjectProc) cubecapsInitDisplay,
-		(InitPluginObjectProc) cubecapsInitScreen,
-		(InitPluginObjectProc) cubecapsInitWindow
+		(InitPluginObjectProc) cubecapsInitScreen
     };
 
     RETURN_DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), TRUE, (p, o));
@@ -770,8 +769,7 @@ cubecapsFiniObject (CompPlugin *p,
 {
     static FiniPluginObjectProc dispTab[] = {
 		(FiniPluginObjectProc) cubecapsFiniDisplay,
-		(FiniPluginObjectProc) cubecapsFiniScreen,
-		(FiniPluginObjectProc) cubecapsFiniWindow
+		(FiniPluginObjectProc) cubecapsFiniScreen
     };
 
     DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), (p, o));
