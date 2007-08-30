@@ -31,8 +31,8 @@
 #include <unistd.h>
 #include <math.h>
 
-#include <compiz.h>
-#include <cube.h>
+#include <compiz-core.h>
+#include <compiz-cube.h>
 
 
 #define DEG2RAD (M_PI / 180.0f)
@@ -83,12 +83,12 @@ typedef struct _GearsScreen
 GearsScreen;
 
 #define GET_GEARS_DISPLAY(d) \
-    ((GearsDisplay *) (d)->privates[displayPrivateIndex].ptr)
+    ((GearsDisplay *) (d)->object.privates[displayPrivateIndex].ptr)
 #define GEARS_DISPLAY(d) \
     GearsDisplay *gd = GET_GEARS_DISPLAY(d);
 
 #define GET_GEARS_SCREEN(s, gd) \
-    ((GearsScreen *) (s)->privates[(gd)->screenPrivateIndex].ptr)
+    ((GearsScreen *) (s)->object.privates[(gd)->screenPrivateIndex].ptr)
 #define GEARS_SCREEN(s) \
     GearsScreen *gs = GET_GEARS_SCREEN(s, GET_GEARS_DISPLAY(s->display))
 
@@ -409,7 +409,8 @@ gearsInitDisplay (CompPlugin  *p,
 {
     GearsDisplay *gd;
 
-    if (!checkPluginABI ("cube", CUBE_ABIVERSION))
+    if (!checkPluginABI ("core", CORE_ABIVERSION) ||
+	!checkPluginABI ("cube", CUBE_ABIVERSION))
 	return FALSE;
 
     if (!getPluginDisplayIndex (d, "cube", &cubeDisplayPrivateIndex))
@@ -428,7 +429,7 @@ gearsInitDisplay (CompPlugin  *p,
 	return FALSE;
     }
 
-    d->privates[displayPrivateIndex].ptr = gd;
+    d->object.privates[displayPrivateIndex].ptr = gd;
 
     return TRUE;
 }
@@ -465,7 +466,7 @@ gearsInitScreen (CompPlugin *p,
     if (!gs)
 	return FALSE;
 
-    s->privates[gd->screenPrivateIndex].ptr = gs;
+    s->object.privates[gd->screenPrivateIndex].ptr = gs;
 
     glLightfv (GL_LIGHT1, GL_AMBIENT, ambientLight);
     glLightfv (GL_LIGHT1, GL_DIFFUSE, diffuseLight);
@@ -542,34 +543,44 @@ gearsFini (CompPlugin * p)
 	freeDisplayPrivateIndex (displayPrivateIndex);
 }
 
-static int
-gearsGetVersion (CompPlugin *plugin,
-		 int        version)
+static CompBool
+gearsInitObject (CompPlugin *p,
+		 CompObject *o)
 {
-    return ABIVERSION;
+    static InitPluginObjectProc dispTab[] = {
+	(InitPluginObjectProc) gearsInitDisplay,
+	(InitPluginObjectProc) gearsInitScreen
+    };
+
+    RETURN_DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), TRUE, (p, o));
+}
+
+static void
+gearsFiniObject (CompPlugin *p,
+		 CompObject *o)
+{
+    static FiniPluginObjectProc dispTab[] = {
+	(FiniPluginObjectProc) gearsFiniDisplay,
+	(FiniPluginObjectProc) gearsFiniScreen
+    };
+
+    DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), (p, o));
 }
 
 CompPluginVTable gearsVTable = {
 
     "gears",
-    gearsGetVersion,
     0,
     gearsInit,
     gearsFini,
-    gearsInitDisplay,
-    gearsFiniDisplay,
-    gearsInitScreen,
-    gearsFiniScreen,
-    0,
-    0,
-    0,
-    0,
+    gearsInitObject,
+    gearsFiniObject,
     0,
     0
 };
 
 CompPluginVTable *
-getCompPluginInfo (void)
+getCompPluginInfo20070830 (void)
 {
     return &gearsVTable;
 }
