@@ -486,7 +486,7 @@ cubereflexInitDisplay (CompPlugin  *p,
     if (!getPluginDisplayIndex (d, "cube", &cubeDisplayPrivateIndex))
 	return FALSE;
 
-    rd = malloc (sizeof (CubereflexDisplay) );
+    rd = malloc (sizeof (CubereflexDisplay));
 
     if (!rd)
 	return FALSE;
