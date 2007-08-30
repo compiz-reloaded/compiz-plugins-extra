@@ -22,14 +22,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <compiz.h>
+#include <compiz-core.h>
 #include "extrawm_options.h"
 
 static Bool
 activateWin (CompDisplay     *d,
-             CompAction      *action,
-             CompActionState state, 
-	     CompOption      *option, 
+	     CompAction      *action,
+	     CompActionState state,
+	     CompOption      *option,
 	     int             nOption)
 {
     CompWindow *w;
@@ -44,7 +44,7 @@ activateWin (CompDisplay     *d,
 }
 
 static void 
-fullscreenWindow (CompWindow *w, 
+fullscreenWindow (CompWindow *w,
 		  int        state)
 {
     unsigned int newState = w->state;
@@ -61,7 +61,7 @@ fullscreenWindow (CompWindow *w,
 
     if (state == (w->state & CompWindowStateFullscreenMask))
 	return;
-       
+
     newState &= ~CompWindowStateFullscreenMask;
     newState |= state;
 
@@ -74,8 +74,8 @@ fullscreenWindow (CompWindow *w,
 static Bool
 toggleFullscreen (CompDisplay     *d,
 		  CompAction      *action,
-                  CompActionState state, 
-		  CompOption      *option, 
+		  CompActionState state,
+		  CompOption      *option,
 		  int             nOption)
 {
     CompWindow *w;
@@ -93,8 +93,8 @@ toggleFullscreen (CompDisplay     *d,
 static Bool
 toggleRedirect (CompDisplay     *d,
 		CompAction      *action,
-                CompActionState state, 
-		CompOption      *option, 
+		CompActionState state,
+		CompOption      *option,
 		int             nOption)
 {
     CompWindow *w;
@@ -102,7 +102,7 @@ toggleRedirect (CompDisplay     *d,
 
     xid = getIntOptionNamed (option, nOption, "window", 0);
     w = findTopLevelWindowAtDisplay (d, xid);
-    if (w) 
+    if (w)
     {
 	if (w->redirected)
 	    unredirectWindow (w);
@@ -115,9 +115,9 @@ toggleRedirect (CompDisplay     *d,
 
 static Bool
 toggleAlwaysOnTop (CompDisplay     *d,
-	           CompAction      *action,
-	           CompActionState state, 
-		   CompOption      *option, 
+		   CompAction      *action,
+		   CompActionState state,
+		   CompOption      *option,
 		   int             nOption)
 {
     CompWindow *w;
@@ -138,9 +138,9 @@ toggleAlwaysOnTop (CompDisplay     *d,
 
 static Bool
 toggleSticky (CompDisplay     *d,
-              CompAction      *action,
-              CompActionState state, 
-	      CompOption      *option, 
+	      CompAction      *action,
+	      CompActionState state,
+	      CompOption      *option,
 	      int             nOption)
 {
     CompWindow *w;
@@ -158,13 +158,13 @@ toggleSticky (CompDisplay     *d,
     return TRUE;
 }
 
-static Bool 
+static Bool
 extraWMInit (CompPlugin *p)
 {
     return TRUE;
 }
 
-static void 
+static void
 extraWMFini (CompPlugin *p)
 {
 }
@@ -173,6 +173,9 @@ static Bool
 extraWMInitDisplay (CompPlugin  *p,
 		    CompDisplay *d)
 {
+    if (!checkPluginABI ("core", CORE_ABIVERSION))
+	return FALSE;
+
     extrawmSetToggleRedirectKeyInitiate (d, toggleRedirect);
     extrawmSetToggleAlwaysOnTopKeyInitiate (d, toggleAlwaysOnTop);
     extrawmSetToggleStickyKeyInitiate (d, toggleSticky);
@@ -182,26 +185,23 @@ extraWMInitDisplay (CompPlugin  *p,
     return TRUE;
 }
 
-static int
-extraWMGetVersion (CompPlugin *p, 
-     		   int        version)
+static CompBool
+extraWMInitObject (CompPlugin *p,
+		   CompObject *o)
 {
-    return ABIVERSION;
+    static InitPluginObjectProc dispTab[] = {
+	(InitPluginObjectProc) extraWMInitDisplay
+    };
+
+    RETURN_DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), TRUE, (p, o));
 }
 
 CompPluginVTable extraWMVTable = {
     "extrawm",
-    extraWMGetVersion,
     0,
     extraWMInit,
     extraWMFini,
-    extraWMInitDisplay,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
+    extraWMInitObject,
     0,
     0,
     0
