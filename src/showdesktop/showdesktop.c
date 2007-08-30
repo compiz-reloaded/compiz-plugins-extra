@@ -33,7 +33,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <compiz.h>
+#include <compiz-core.h>
 #include "showdesktop_options.h"
 
 #include <math.h>
@@ -110,22 +110,23 @@ typedef struct _ShowdesktopWindow
 } ShowdesktopWindow;
 
 /* shortcut macros, usually named X_DISPLAY, X_SCREEN and X_WINDOW
- * these might seem overly complicated but they are shortcuts so we don't have to access the privates arrays all the time
+ * these might seem overly complicated but they are shortcuts so 
+ * we don't have to access the privates arrays all the time
  * */
 #define GET_SHOWDESKTOP_DISPLAY(d)				     \
-    ((ShowdesktopDisplay *) (d)->privates[displayPrivateIndex].ptr)
+    ((ShowdesktopDisplay *) (d)->object.privates[displayPrivateIndex].ptr)
 
 #define SD_DISPLAY(d)			   \
     ShowdesktopDisplay *sd = GET_SHOWDESKTOP_DISPLAY (d)
 
 #define GET_SHOWDESKTOP_SCREEN(s, sd)					 \
-    ((ShowdesktopScreen *) (s)->privates[(sd)->screenPrivateIndex].ptr)
+    ((ShowdesktopScreen *) (s)->object.privates[(sd)->screenPrivateIndex].ptr)
 
 #define SD_SCREEN(s)							\
     ShowdesktopScreen *ss = GET_SHOWDESKTOP_SCREEN (s, GET_SHOWDESKTOP_DISPLAY (s->display))
 
 #define GET_SHOWDESKTOP_WINDOW(w, ss)					  \
-    ((ShowdesktopWindow *) (w)->privates[(ss)->windowPrivateIndex].ptr)
+    ((ShowdesktopWindow *) (w)->object.privates[(ss)->windowPrivateIndex].ptr)
 
 #define SD_WINDOW(w)					       \
     ShowdesktopWindow *sw = GET_SHOWDESKTOP_WINDOW  (w,		       \
@@ -746,6 +747,9 @@ showdesktopInitDisplay (CompPlugin  *p,
 {
     ShowdesktopDisplay *sd;
 
+    if (!checkPluginABI ("core", CORE_ABIVERSION))
+	return FALSE;
+
     sd = malloc (sizeof (ShowdesktopDisplay));
     if (!sd)
 	return FALSE;
@@ -759,7 +763,7 @@ showdesktopInitDisplay (CompPlugin  *p,
 
     WRAP (sd, d, handleEvent, showdesktopHandleEvent);
 
-    d->privates[displayPrivateIndex].ptr = sd;
+    d->object.privates[displayPrivateIndex].ptr = sd;
 
     return TRUE;
 }
@@ -809,7 +813,7 @@ showdesktopInitScreen (CompPlugin *p,
     WRAP (ss, s, getAllowedActionsForWindow,
 	  showdesktopGetAllowedActionsForWindow);
 
-    s->privates[sd->screenPrivateIndex].ptr = ss;
+    s->object.privates[sd->screenPrivateIndex].ptr = ss;
 
     return TRUE;
 }
@@ -859,7 +863,7 @@ showdesktopInitWindow (CompPlugin *p,
     sw->stateMask      = 0;
     sw->notAllowedMask = 0;
 
-    w->privates[ss->windowPrivateIndex].ptr = sw;
+    w->object.privates[ss->windowPrivateIndex].ptr = sw;
 
     return TRUE;
 }
@@ -874,30 +878,42 @@ showdesktopFiniWindow (CompPlugin *p,
     free (sw);
 }
 
-static int
-showdesktopGetVersion (CompPlugin *plugin,
-		       int        version)
+static CompBool
+showdesktopInitObject (CompPlugin *p,
+		       CompObject *o)
 {
-    return ABIVERSION;
+    static InitPluginObjectProc dispTab[] = {
+	(InitPluginObjectProc) showdesktopInitDisplay,
+	(InitPluginObjectProc) showdesktopInitScreen,
+	(InitPluginObjectProc) showdesktopInitWindow
+    };
+
+    RETURN_DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), TRUE, (p, o));
+}
+
+static void
+showdesktopFiniObject (CompPlugin *p,
+		       CompObject *o)
+{
+    static FiniPluginObjectProc dispTab[] = {
+	(FiniPluginObjectProc) showdesktopFiniDisplay,
+	(FiniPluginObjectProc) showdesktopFiniScreen,
+	(FiniPluginObjectProc) showdesktopFiniWindow
+    };
+
+    DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), (p, o));
 }
 
 /* plugin vtable */
 static CompPluginVTable showdesktopVTable = {
     "showdesktop",
-    showdesktopGetVersion,
     0,
     showdesktopInit,
     showdesktopFini,
-    showdesktopInitDisplay,
-    showdesktopFiniDisplay,
-    showdesktopInitScreen,
-    showdesktopFiniScreen,
-    showdesktopInitWindow,
-    showdesktopFiniWindow,
-    NULL,
-    NULL,
-    NULL,
-    NULL
+    showdesktopInitObject,
+    showdesktopFiniObject,
+    0,
+    0
 };
 
 /* send plugin info */
