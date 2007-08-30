@@ -26,7 +26,7 @@
 #include <X11/Xatom.h>
 #include <X11/extensions/Xrender.h>
 
-#include <compiz.h>
+#include <compiz-core.h>
 
 #include "splash_options.h"
 
@@ -34,13 +34,13 @@
 #define SPLASH_LOGO_DEFAULT ""
 
 #define GET_SPLASH_DISPLAY(d)                                  \
-    ((SplashDisplay *) (d)->privates[displayPrivateIndex].ptr)
+    ((SplashDisplay *) (d)->object.privates[displayPrivateIndex].ptr)
 
 #define SPLASH_DISPLAY(d)                      \
     SplashDisplay *sd = GET_SPLASH_DISPLAY (d)
 
 #define GET_SPLASH_SCREEN(s, sd)                                   \
-    ((SplashScreen *) (s)->privates[(sd)->screenPrivateIndex].ptr)
+    ((SplashScreen *) (s)->object.privates[(sd)->screenPrivateIndex].ptr)
 
 #define SPLASH_SCREEN(s)                                                      \
     SplashScreen *ss = GET_SPLASH_SCREEN (s, GET_SPLASH_DISPLAY (s->display))
@@ -497,7 +497,7 @@ splashInitScreen (CompPlugin *p,
 
     SplashScreen *ss = (SplashScreen *) calloc (1, sizeof (SplashScreen) );
 
-    s->privates[sd->screenPrivateIndex].ptr = ss;
+    s->object.privates[sd->screenPrivateIndex].ptr = ss;
 
     WRAP (ss, s, paintOutput, splashPaintOutput);
     WRAP (ss, s, preparePaintScreen, splashPreparePaintScreen);
@@ -587,8 +587,16 @@ static Bool
 splashInitDisplay (CompPlugin  *p,
 		   CompDisplay *d)
 {
+    SplashDisplay *sd;
+
+    if (!checkPluginABI ("core", CORE_ABIVERSION))
+	return FALSE;
+
     /* Generate a splash display */
-    SplashDisplay *sd = (SplashDisplay *) malloc (sizeof (SplashDisplay) );
+    sd = (SplashDisplay *) malloc (sizeof (SplashDisplay) );
+
+    if (!sd)
+	return FALSE;
 
     /* Allocate a private index */
     sd->screenPrivateIndex = allocateScreenPrivateIndex (d);
@@ -605,7 +613,7 @@ splashInitDisplay (CompPlugin  *p,
 
     splashSetInitiateKeyInitiate (d, splashInitiate);
 
-    d->privates[displayPrivateIndex].ptr = sd;
+    d->object.privates[displayPrivateIndex].ptr = sd;
     return TRUE;
 }
 
@@ -640,28 +648,38 @@ splashFini (CompPlugin *p)
 	freeDisplayPrivateIndex (displayPrivateIndex);
 }
 
-static int
-splashGetVersion (CompPlugin *plugin,
-		  int        version)
+static CompBool
+splashInitObject (CompPlugin *p,
+		  CompObject *o)
 {
-    return ABIVERSION;
+    static InitPluginObjectProc dispTab[] = {
+	(InitPluginObjectProc) splashInitDisplay,
+	(InitPluginObjectProc) splashInitScreen
+    };
+
+    RETURN_DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), TRUE, (p, o));
+}
+
+static void
+splashFiniObject (CompPlugin *p,
+		  CompObject *o)
+{
+    static FiniPluginObjectProc dispTab[] = {
+	(FiniPluginObjectProc) splashFiniDisplay,
+	(FiniPluginObjectProc) splashFiniScreen
+    };
+
+    DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), (p, o));
 }
 
 CompPluginVTable splashVTable = {
 
     "splash",
-    splashGetVersion,
     0,
     splashInit,
     splashFini,
-    splashInitDisplay,
-    splashFiniDisplay,
-    splashInitScreen,
-    splashFiniScreen,
-    0,
-    0,
-    0,
-    0,
+    splashInitObject,
+    splashFiniObject,
     0,
     0
 };
