@@ -194,6 +194,9 @@ groupInitDisplay (CompPlugin  *p,
 {
 	GroupDisplay *gd;
 
+	if (!checkPluginABI ("core", CORE_ABIVERSION))
+		return FALSE;
+
 	gd = malloc (sizeof (GroupDisplay));
 	if (!gd)
 		return FALSE;
@@ -232,7 +235,7 @@ groupInitDisplay (CompPlugin  *p,
 	groupSetIgnoreKeyTerminate (d, groupUnsetIgnore);
 	groupSetChangeColorKeyInitiate (d, groupChangeColor);
 
-	d->privates[groupDisplayPrivateIndex].ptr = gd;
+	d->object.privates[groupDisplayPrivateIndex].ptr = gd;
 
 	srand (time (NULL));
 
@@ -294,7 +297,7 @@ groupInitScreen (CompPlugin *p,
 	WRAP (gs, s, damageWindowRect, groupDamageWindowRect);
 	WRAP (gs, s, windowStateChangeNotify, groupWindowStateChangeNotify);
 
-	s->privates[gd->screenPrivateIndex].ptr = gs;
+	s->object.privates[gd->screenPrivateIndex].ptr = gs;
 
 	groupSetTabHighlightColorNotify (s, groupScreenOptionChanged);
 	groupSetTabBaseColorNotify (s, groupScreenOptionChanged);
@@ -465,7 +468,7 @@ static Bool groupInitWindow(CompPlugin * p, CompWindow * w)
 	else
 		gw->windowState = WindowNormal;
 
-	w->privates[gs->windowPrivateIndex].ptr = gw;
+	w->object.privates[gs->windowPrivateIndex].ptr = gw;
 
 	gw->glowQuads = NULL;
 	groupComputeGlowQuads (w, &gs->glowTexture.matrix);
@@ -519,11 +522,30 @@ groupFini (CompPlugin *p)
 	freeDisplayPrivateIndex (groupDisplayPrivateIndex);
 }
 
-static int
-groupGetVersion (CompPlugin *plugin,
-				 int        version)
+static CompBool
+groupInitObject (CompPlugin *p,
+		   		 CompObject *o)
 {
-    return ABIVERSION;
+    static InitPluginObjectProc dispTab[] = {
+		(InitPluginObjectProc) groupInitDisplay,
+		(InitPluginObjectProc) groupInitScreen,
+		(InitPluginObjectProc) groupInitWindow
+    };
+
+    RETURN_DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), TRUE, (p, o));
+}
+
+static void
+groupFiniObject (CompPlugin *p,
+   				 CompObject *o)
+{
+    static FiniPluginObjectProc dispTab[] = {
+		(FiniPluginObjectProc) groupFiniDisplay,
+		(FiniPluginObjectProc) groupFiniScreen,
+		(FiniPluginObjectProc) groupFiniWindow
+    };
+
+    DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), (p, o));
 }
 
 /*
@@ -532,18 +554,11 @@ groupGetVersion (CompPlugin *plugin,
  */
 CompPluginVTable groupVTable = {
 	"group",
-	groupGetVersion,
 	0,
 	groupInit,
 	groupFini,
-	groupInitDisplay,
-	groupFiniDisplay,
-	groupInitScreen,
-	groupFiniScreen,
-	groupInitWindow,
-	groupFiniWindow,
-	0,
-	0,
+	groupInitObject,
+	groupFiniObject,
 	0,
 	0
 };
