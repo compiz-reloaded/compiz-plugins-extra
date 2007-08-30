@@ -36,8 +36,8 @@
 #include <X11/Xlib.h>
 #include <X11/keysymdef.h>
 
-#include <compiz.h>
-#include <scale.h>
+#include <compiz-core.h>
+#include <compiz-scale.h>
 #include <text.h>
 
 #include "scalefilter_options.h"
@@ -88,16 +88,17 @@ typedef struct _ScaleFilterScreen {
 } ScaleFilterScreen;
 
 #define GET_FILTER_DISPLAY(d)				          \
-    ((ScaleFilterDisplay *) (d)->privates[displayPrivateIndex].ptr)
+    ((ScaleFilterDisplay *) (d)->object.privates[displayPrivateIndex].ptr)
 
 #define FILTER_DISPLAY(d)		          \
     ScaleFilterDisplay *fd = GET_FILTER_DISPLAY (d)
 
 #define GET_FILTER_SCREEN(s, fd)				              \
-    ((ScaleFilterScreen *) (s)->privates[(fd)->screenPrivateIndex].ptr)
+    ((ScaleFilterScreen *) (s)->object.privates[(fd)->screenPrivateIndex].ptr)
 
-#define FILTER_SCREEN(s)						               \
-    ScaleFilterScreen *fs = GET_FILTER_SCREEN (s, GET_FILTER_DISPLAY (s->display))
+#define FILTER_SCREEN(s)		                    \
+    ScaleFilterScreen *fs = GET_FILTER_SCREEN (s,           \
+			    GET_FILTER_DISPLAY (s->display))
 
 static void
 scalefilterFreeFilterText (CompScreen *s)
@@ -738,9 +739,12 @@ scalefilterScreenOptionChanged (CompScreen               *s,
 
 static Bool
 scalefilterInitDisplay (CompPlugin  *p,
-	    		CompDisplay *d)
+			CompDisplay *d)
 {
     ScaleFilterDisplay *fd;
+
+    if (!checkPluginABI ("core", CORE_ABIVERSION))
+	return FALSE;
 
     if (!checkPluginABI ("scale", SCALE_ABIVERSION))
 	return FALSE;
@@ -775,7 +779,7 @@ scalefilterInitDisplay (CompPlugin  *p,
     WRAP (fd, d, handleEvent, scalefilterHandleEvent);
     WRAP (fd, d, handleCompizEvent, scalefilterHandleCompizEvent);
 
-    d->privates[displayPrivateIndex].ptr = fd;
+    d->object.privates[displayPrivateIndex].ptr = fd;
 
     return TRUE;
 }
@@ -801,7 +805,7 @@ scalefilterFiniDisplay (CompPlugin  *p,
 
 static Bool
 scalefilterInitScreen (CompPlugin *p,
-	    	       CompScreen *s)
+		       CompScreen *s)
 {
     ScaleFilterScreen *fs;
 
@@ -825,14 +829,14 @@ scalefilterInitScreen (CompPlugin *p,
     scalefilterSetFontColorNotify (s, scalefilterScreenOptionChanged);
     scalefilterSetBackColorNotify (s, scalefilterScreenOptionChanged);
 
-    s->privates[fd->screenPrivateIndex].ptr = fs;
+    s->object.privates[fd->screenPrivateIndex].ptr = fs;
 
     return TRUE;
 }
 
 static void
 scalefilterFiniScreen (CompPlugin *p,
-	    	       CompScreen *s)
+		       CompScreen *s)
 {
     FILTER_SCREEN (s);
     SCALE_SCREEN (s);
@@ -847,6 +851,30 @@ scalefilterFiniScreen (CompPlugin *p,
     }
 
     free (fs);
+}
+
+static CompBool
+scalefilterInitObject (CompPlugin *p,
+		       CompObject *o)
+{
+    static InitPluginObjectProc dispTab[] = {
+	(InitPluginObjectProc) scalefilterInitDisplay,
+	(InitPluginObjectProc) scalefilterInitScreen
+    };
+
+    RETURN_DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), TRUE, (p, o));
+}
+
+static void
+scalefilterFiniObject (CompPlugin *p,
+		       CompObject *o)
+{
+    static FiniPluginObjectProc dispTab[] = {
+	(FiniPluginObjectProc) scalefilterFiniDisplay,
+	(FiniPluginObjectProc) scalefilterFiniScreen
+    };
+
+    DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), (p, o));
 }
 
 static Bool
@@ -865,27 +893,13 @@ scalefilterFini (CompPlugin *p)
     freeDisplayPrivateIndex (displayPrivateIndex);
 }
 
-static int
-scalefilterGetVersion (CompPlugin *plugin,
-	    	       int	 version)
-{
-    return ABIVERSION;
-}
-
 CompPluginVTable scalefilterVTable = {
     "scalefilter",
-    scalefilterGetVersion,
     0,
     scalefilterInit,
     scalefilterFini,
-    scalefilterInitDisplay,
-    scalefilterFiniDisplay,
-    scalefilterInitScreen,
-    scalefilterFiniScreen,
-    0,
-    0,
-    0,
-    0,
+    scalefilterInitObject,
+    scalefilterFiniObject,
     0,
     0
 };
