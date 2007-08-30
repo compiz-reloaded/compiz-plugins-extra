@@ -29,20 +29,20 @@
 #include <math.h>
 #include <X11/Xatom.h>
 #include <X11/extensions/Xrender.h>
-#include <compiz.h>
+#include <compiz-core.h>
 
 #include "addhelper_options.h"
 
 #define GET_ADD_DISPLAY(d)                            \
-	((AddHelperDisplay *) (d)->privates[displayPrivateIndex].ptr)
+	((AddHelperDisplay *) (d)->object.privates[displayPrivateIndex].ptr)
 #define ADD_DISPLAY(d)                                \
     AddHelperDisplay *ad = GET_ADD_DISPLAY (d)
 #define GET_ADD_SCREEN(s, ad)                         \
-	((AddHelperScreen *) (s)->privates[(ad)->screenPrivateIndex].ptr)
+	((AddHelperScreen *) (s)->object.privates[(ad)->screenPrivateIndex].ptr)
 #define ADD_SCREEN(s)                                 \
 	AddHelperScreen *as = GET_ADD_SCREEN (s, GET_ADD_DISPLAY (s->display))
 #define GET_ADD_WINDOW(w, as) \
-	((AddHelperWindow *) (w)->privates[ (as)->windowPrivateIndex].ptr)
+	((AddHelperWindow *) (w)->object.privates[ (as)->windowPrivateIndex].ptr)
 #define ADD_WINDOW(w) \
 	AddHelperWindow *aw = GET_ADD_WINDOW (w, GET_ADD_SCREEN  (w->screen, GET_ADD_DISPLAY (w->screen->display)))
 
@@ -220,7 +220,7 @@ static Bool addhelperInitWindow(CompPlugin * p, CompWindow * w)
 
 	AddHelperWindow *aw = (AddHelperWindow *) malloc(sizeof(AddHelperWindow));
 
-	w->privates[as->windowPrivateIndex].ptr = aw;
+	w->object.privates[as->windowPrivateIndex].ptr = aw;
 
 	aw->dim = FALSE;
 
@@ -249,7 +249,7 @@ static Bool addhelperInitScreen(CompPlugin * p, CompScreen * s)
 
 	WRAP(as, s, paintWindow, addhelperPaintWindow);
 
-	s->privates[ad->screenPrivateIndex].ptr = as;
+	s->object.privates[ad->screenPrivateIndex].ptr = as;
 
 	return TRUE;
 }
@@ -265,7 +265,12 @@ static void addhelperFiniScreen(CompPlugin * p, CompScreen * s)
 
 static Bool addhelperInitDisplay(CompPlugin * p, CompDisplay * d)
 {
-	AddHelperDisplay *ad = (AddHelperDisplay *) malloc(sizeof(AddHelperDisplay));
+	AddHelperDisplay *ad;
+
+	if (!checkPluginABI ("core", CORE_ABIVERSION))
+		return FALSE;
+
+	ad = (AddHelperDisplay *) malloc(sizeof(AddHelperDisplay));
 
 	ad->screenPrivateIndex = allocateScreenPrivateIndex(d);
 	if (ad->screenPrivateIndex < 0)
@@ -274,7 +279,7 @@ static Bool addhelperInitDisplay(CompPlugin * p, CompDisplay * d)
 		return FALSE;
 	}
 
-	d->privates[displayPrivateIndex].ptr = ad;
+	d->object.privates[displayPrivateIndex].ptr = ad;
 
 	addhelperSetToggleKeyInitiate(d, addhelperToggle);
 	addhelperSetBrightnessNotify(d, addhelperDisplayOptionChanged);
@@ -304,6 +309,32 @@ static void addhelperFiniDisplay(CompPlugin * p, CompDisplay * d)
 	free(ad);
 }
 
+static CompBool
+addhelperInitObject (CompPlugin *p,
+		       CompObject *o)
+{
+	static InitPluginObjectProc dispTab[] = {
+		(InitPluginObjectProc) addhelperInitDisplay,
+		(InitPluginObjectProc) addhelperInitScreen,
+		(InitPluginObjectProc) addhelperInitWindow
+    };
+
+    RETURN_DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), TRUE, (p, o));
+}
+
+static void
+addhelperFiniObject (CompPlugin *p,
+		       CompObject *o)
+{
+    static FiniPluginObjectProc dispTab[] = {
+		(FiniPluginObjectProc) addhelperFiniDisplay,
+		(FiniPluginObjectProc) addhelperFiniScreen,
+		(FiniPluginObjectProc) addhelperFiniWindow
+    };
+
+    DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), (p, o));
+}
+
 static Bool addhelperInit(CompPlugin * p)
 {
 	displayPrivateIndex = allocateDisplayPrivateIndex();
@@ -318,27 +349,15 @@ static void addhelperFini(CompPlugin * p)
 		freeDisplayPrivateIndex(displayPrivateIndex);
 }
 
-static int addhelperGetVersion(CompPlugin *p, int version)
-{
-	return ABIVERSION;
-}
-
 CompPluginVTable addhelperVTable = {
 	"addhelper",
-	addhelperGetVersion,
 	0,
 	addhelperInit,
 	addhelperFini,
-	addhelperInitDisplay,
-	addhelperFiniDisplay,
-	addhelperInitScreen,
-	addhelperFiniScreen,
-	addhelperInitWindow,
-	addhelperFiniWindow,
-	0, // addhelperGetDisplayOptions
-	0, // addhelperSetDisplayOptions
-	0, // addhelperGetScreenOptions,
-	0, // addhelperSetScreenOptions,
+	addhelperInitObject,
+	addhelperFiniObject,
+	0,
+	0
 };
 
 CompPluginVTable *getCompPluginInfo(void)
