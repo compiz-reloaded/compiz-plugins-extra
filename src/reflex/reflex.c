@@ -26,7 +26,7 @@
 #include <X11/Xatom.h>
 #include <X11/extensions/Xrender.h>
 
-#include <compiz.h>
+#include <compiz-core.h>
 
 #include "reflex_options.h"
 
@@ -71,19 +71,19 @@ typedef struct _ReflexWindow {
 } ReflexWindow;
 
 #define GET_REFLEX_DISPLAY(d)                                  \
-    ((ReflexDisplay *) (d)->privates[displayPrivateIndex].ptr)
+    ((ReflexDisplay *) (d)->object.privates[displayPrivateIndex].ptr)
 
 #define REFLEX_DISPLAY(d)                                      \
     ReflexDisplay *rd = GET_REFLEX_DISPLAY (d)
 
 #define GET_REFLEX_SCREEN(s, rd)                               \
-    ((ReflexScreen *) (s)->privates[(rd)->screenPrivateIndex].ptr)
+    ((ReflexScreen *) (s)->object.privates[(rd)->screenPrivateIndex].ptr)
 
 #define REFLEX_SCREEN(s)                                       \
     ReflexScreen *rs = GET_REFLEX_SCREEN (s, GET_REFLEX_DISPLAY (s->display))
 
 #define GET_REFLEX_WINDOW(w, rs)					 \
-    ((ReflexWindow *) (w)->privates[(rs)->windowPrivateIndex].ptr)
+    ((ReflexWindow *) (w)->object.privates[(rs)->windowPrivateIndex].ptr)
 
 #define REFLEX_WINDOW(w)					     \
     ReflexWindow *rw = GET_REFLEX_WINDOW  (w,		     \
@@ -351,6 +351,9 @@ reflexInitDisplay (CompPlugin  *p,
 {
     ReflexDisplay *rd;
 
+    if (!checkPluginABI ("core", CORE_ABIVERSION))
+	return FALSE;
+
     rd = malloc (sizeof (ReflexDisplay) );
 
     if (!rd)
@@ -364,7 +367,7 @@ reflexInitDisplay (CompPlugin  *p,
 	return FALSE;
     }
 
-    d->privates[displayPrivateIndex].ptr = rd;
+    d->object.privates[displayPrivateIndex].ptr = rd;
 
     WRAP (rd, d, matchExpHandlerChanged, reflexMatchExpHandlerChanged);
     WRAP (rd, d, matchPropertyChanged, reflexMatchPropertyChanged);
@@ -414,7 +417,7 @@ reflexInitScreen (CompPlugin *p,
     reflexSetFileNotify (s, reflexScreenOptionChanged);
     reflexSetMatchNotify (s, reflexScreenOptionChanged);
 
-    s->privates[rd->screenPrivateIndex].ptr = rs;
+    s->object.privates[rd->screenPrivateIndex].ptr = rs;
 
     rs->function.handle = 0;
 
@@ -454,7 +457,7 @@ reflexInitWindow (CompPlugin *p,
 
     rw->active = FALSE;
 
-    w->privates[rs->windowPrivateIndex].ptr = rw;
+    w->object.privates[rs->windowPrivateIndex].ptr = rw;
 
     reflexUpdateWindowMatch (w);
 
@@ -487,28 +490,40 @@ reflexFini (CompPlugin *p)
 	freeDisplayPrivateIndex (displayPrivateIndex);
 }
 
-static int
-reflexGetVersion (CompPlugin *plugin,
-		  int        version)
+static CompBool
+reflexInitObject (CompPlugin *p,
+		  CompObject *o)
 {
-    return ABIVERSION;
+    static InitPluginObjectProc dispTab[] = {
+	(InitPluginObjectProc) reflexInitDisplay,
+	(InitPluginObjectProc) reflexInitScreen,
+	(InitPluginObjectProc) reflexInitWindow
+    };
+
+    RETURN_DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), TRUE, (p, o));
+}
+
+static void
+reflexFiniObject (CompPlugin *p,
+		  CompObject *o)
+{
+    static FiniPluginObjectProc dispTab[] = {
+	(FiniPluginObjectProc) reflexFiniDisplay,
+	(FiniPluginObjectProc) reflexFiniScreen,
+	(FiniPluginObjectProc) reflexFiniWindow
+    };
+
+    DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), (p, o));
 }
 
 CompPluginVTable reflexVTable = {
 
     "reflex",
-    reflexGetVersion,
     0,
     reflexInit,
     reflexFini,
-    reflexInitDisplay,
-    reflexFiniDisplay,
-    reflexInitScreen,
-    reflexFiniScreen,
-    reflexInitWindow,
-    reflexFiniWindow,
-    0,
-    0,
+    reflexInitObject,
+    reflexFiniObject,
     0,
     0
 };
