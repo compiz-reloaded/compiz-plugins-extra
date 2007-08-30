@@ -741,24 +741,11 @@ scalefilterInitDisplay (CompPlugin  *p,
 	    		CompDisplay *d)
 {
     ScaleFilterDisplay *fd;
-    CompPlugin         *scale = findActivePlugin ("scale");
-    CompOption         *option;
-    int                nOption;
 
-    if (!scale || !scale->vTable->getDisplayOptions)
+    if (!checkPluginABI ("scale", SCALE_ABIVERSION))
 	return FALSE;
 
-    option = (*scale->vTable->getDisplayOptions) (scale, d, &nOption);
-
-    if (getIntOptionNamed (option, nOption, "abi", 0) != SCALE_ABIVERSION)
-    {
-	compLogMessage (d, "scalefilter", CompLogLevelError,
-			"scale ABI version mismatch");
-	return FALSE;
-    }
-
-    scaleDisplayPrivateIndex = getIntOptionNamed (option, nOption, "index", -1);
-    if (scaleDisplayPrivateIndex < 0)
+    if (!getPluginDisplayIndex (d, "scale", &scaleDisplayPrivateIndex))
 	return FALSE;
 
     fd = malloc (sizeof (ScaleFilterDisplay));
