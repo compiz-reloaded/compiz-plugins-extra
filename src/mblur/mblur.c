@@ -28,18 +28,18 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-#include <compiz.h>
+#include <compiz-core.h>
 
 #include "mblur_options.h"
 
 #define GET_MBLUR_DISPLAY(d)                                  \
-    ((MblurDisplay *) (d)->privates[displayPrivateIndex].ptr)
+    ((MblurDisplay *) (d)->object.privates[displayPrivateIndex].ptr)
 
 #define MBLUR_DISPLAY(d)                                      \
     MblurDisplay *md = GET_MBLUR_DISPLAY (d)
 
 #define GET_MBLUR_SCREEN(s, md)                               \
-    ((MblurScreen *) (s)->privates[(md)->screenPrivateIndex].ptr)
+    ((MblurScreen *) (s)->object.privates[(md)->screenPrivateIndex].ptr)
 
 #define MBLUR_SCREEN(s)                                       \
     MblurScreen *ms = GET_MBLUR_SCREEN (s, GET_MBLUR_DISPLAY (s->display))
@@ -331,8 +331,16 @@ static Bool
 mblurInitDisplay (CompPlugin  *p,
 		  CompDisplay *d)
 {
+    MblurDisplay *md;
+
+    if (!checkPluginABI ("core", CORE_ABIVERSION))
+	return FALSE;
+
     /* Generate a blur display */
-    MblurDisplay *md = (MblurDisplay *) calloc (1, sizeof (MblurDisplay));
+    md = (MblurDisplay *) calloc (1, sizeof (MblurDisplay));
+
+    if (!md)
+	return FALSE;
 
     /* Allocate a private index */
     md->screenPrivateIndex = allocateScreenPrivateIndex (d);
@@ -346,7 +354,7 @@ mblurInitDisplay (CompPlugin  *p,
     }
 
     /* Record the display */
-    d->privates[displayPrivateIndex].ptr = md;
+    d->object.privates[displayPrivateIndex].ptr = md;
 
     mblurSetInitiateKeyInitiate (d, mblurToggle);
 
@@ -375,7 +383,7 @@ mblurInitScreen (CompPlugin *p,
     /* Create a blur screen */
     MblurScreen *ms = (MblurScreen *) calloc (1, sizeof (MblurScreen) );
 
-    s->privates[md->screenPrivateIndex].ptr = ms;
+    s->object.privates[md->screenPrivateIndex].ptr = ms;
 
     ms->activated = FALSE;
     ms->update = TRUE;
@@ -409,29 +417,38 @@ mblurFiniScreen (CompPlugin *p,
     free (ms);
 }
 
-static int
-mblurGetVersion (CompPlugin *plugin,
-		 int        version)
+static CompBool
+mblurInitObject (CompPlugin *p,
+		 CompObject *o)
 {
-    return ABIVERSION;
+    static InitPluginObjectProc dispTab[] = {
+	(InitPluginObjectProc) mblurInitDisplay,
+	(InitPluginObjectProc) mblurInitScreen
+    };
+
+    RETURN_DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), TRUE, (p, o));
 }
 
+static void
+mblurFiniObject (CompPlugin *p,
+		 CompObject *o)
+{
+    static FiniPluginObjectProc dispTab[] = {
+	(FiniPluginObjectProc) mblurFiniDisplay,
+	(FiniPluginObjectProc) mblurFiniScreen
+    };
+
+    DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), (p, o));
+}
 
 CompPluginVTable mblurVTable = {
 
     "mblur",
-    mblurGetVersion,
     0,
     mblurInit,
     mblurFini,
-    mblurInitDisplay,
-    mblurFiniDisplay,
-    mblurInitScreen,
-    mblurFiniScreen,
-    0,
-    0,
-    0,
-    0,
+    mblurInitObject,
+    mblurFiniObject,
     0,
     0
 };
