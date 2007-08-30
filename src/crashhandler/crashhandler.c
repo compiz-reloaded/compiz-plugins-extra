@@ -26,7 +26,7 @@
 #include <signal.h>
 #include <unistd.h>
 
-#include <compiz.h>
+#include <compiz-core.h>
 
 #include "crashhandler_options.h"
 
@@ -113,6 +113,9 @@ crashhandlerInitDisplay (CompPlugin  *p,
 {
     cDisplay = d;
 
+    if (!checkPluginABI ("core", CORE_ABIVERSION))
+	return FALSE;
+
     if (crashhandlerGetEnabled (d) )
     {
 	// segmentation fault
@@ -140,28 +143,37 @@ crashhandlerFiniDisplay (CompPlugin  *p,
     signal (SIGABRT, SIG_DFL);
 }
 
-static int
-crashhandlerGetVersion (CompPlugin *plugin,
-			int         version)
+static CompBool
+crashhandlerInitObject (CompPlugin *p,
+		 CompObject *o)
 {
-    return ABIVERSION;
+    static InitPluginObjectProc dispTab[] = {
+	(InitPluginObjectProc) crashhandlerInitDisplay
+    };
+
+    RETURN_DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), TRUE, (p, o));
 }
+
+static void
+crashhandlerFiniObject (CompPlugin *p,
+		 CompObject *o)
+{
+    static FiniPluginObjectProc dispTab[] = {
+	(FiniPluginObjectProc) crashhandlerFiniDisplay
+    };
+
+    DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), (p, o));
+}
+
 
 CompPluginVTable crashhandlerVTable = {
 
     "crashhandler",
-    crashhandlerGetVersion,
     0,
     0,
     0,
-    crashhandlerInitDisplay,
-    crashhandlerFiniDisplay,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
+    crashhandlerInitObject,
+    crashhandlerFiniObject,
     0,
     0
 };
