@@ -26,7 +26,7 @@
 #include <X11/Xatom.h>
 #include <X11/extensions/Xrender.h>
 
-#include <compiz.h>
+#include <compiz-core.h>
 
 #include "firepaint_options.h"
 #include "firepaint_tex.h"
@@ -398,13 +398,13 @@ typedef struct _FireScreen
 FireScreen;
 
 #define GET_FIRE_DISPLAY(d)                                  \
-    ((FireDisplay *) (d)->privates[displayPrivateIndex].ptr)
+    ((FireDisplay *) (d)->object.privates[displayPrivateIndex].ptr)
 
 #define FIRE_DISPLAY(d)                                      \
     FireDisplay *fd = GET_FIRE_DISPLAY (d)
 
 #define GET_FIRE_SCREEN(s, fd)                               \
-    ((FireScreen *) (s)->privates[(fd)->screenPrivateIndex].ptr)
+    ((FireScreen *) (s)->object.privates[(fd)->screenPrivateIndex].ptr)
 
 #define FIRE_SCREEN(s)                                       \
     FireScreen *fs = GET_FIRE_SCREEN (s, GET_FIRE_DISPLAY (s->display))
@@ -783,6 +783,9 @@ fireInitDisplay (CompPlugin  *p,
 {
     FireDisplay *fd;
 
+    if (!checkPluginABI ("core", CORE_ABIVERSION))
+	return FALSE;
+
     fd = calloc (1, sizeof (FireDisplay) );
 
     if (!fd)
@@ -796,7 +799,7 @@ fireInitDisplay (CompPlugin  *p,
 	return FALSE;
     }
 
-    d->privates[displayPrivateIndex].ptr = fd;
+    d->object.privates[displayPrivateIndex].ptr = fd;
 
     WRAP (fd, d, handleEvent, fireHandleEvent);
 
@@ -836,7 +839,7 @@ fireInitScreen (CompPlugin *p,
     if (!fs)
 	return FALSE;
 
-    s->privates[fd->screenPrivateIndex].ptr = fs;
+    s->object.privates[fd->screenPrivateIndex].ptr = fs;
 
     fs->points     = NULL;
     fs->pointsSize = 0;
@@ -893,28 +896,38 @@ fireFini (CompPlugin * p)
 	freeDisplayPrivateIndex (displayPrivateIndex);
 }
 
-static int
-fireGetVersion (CompPlugin *plugin,
-		int        version)
+static CompBool
+fireInitObject (CompPlugin *p,
+		 CompObject *o)
 {
-    return ABIVERSION;
+    static InitPluginObjectProc dispTab[] = {
+	(InitPluginObjectProc) fireInitDisplay,
+	(InitPluginObjectProc) fireInitScreen
+    };
+
+    RETURN_DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), TRUE, (p, o));
+}
+
+static void
+fireFiniObject (CompPlugin *p,
+		 CompObject *o)
+{
+    static FiniPluginObjectProc dispTab[] = {
+	(FiniPluginObjectProc) fireFiniDisplay,
+	(FiniPluginObjectProc) fireFiniScreen
+    };
+
+    DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), (p, o));
 }
 
 CompPluginVTable fireVTable = {
 
     "firepaint",
-    fireGetVersion,
     0,
     fireInit,
     fireFini,
-    fireInitDisplay,
-    fireFiniDisplay,
-    fireInitScreen,
-    fireFiniScreen,
-    0,
-    0,
-    0,
-    0,
+    fireInitObject,
+    fireFiniObject,
     0,
     0
 };
