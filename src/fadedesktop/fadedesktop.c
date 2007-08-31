@@ -325,6 +325,8 @@ static void fadeDesktopFini(CompPlugin *p)
 static Bool fadeDesktopInitDisplay(CompPlugin *p, CompDisplay *d)
 {
 	FadeDesktopDisplay *fd;
+	if (!checkPluginABI ("core", CORE_ABIVERSION))
+	    return FALSE;
 	fd = malloc(sizeof(FadeDesktopDisplay));
 	if (!fd)
 		return FALSE;
