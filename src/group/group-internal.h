@@ -33,7 +33,7 @@
 #include <X11/Xlib.h>
 #include <cairo/cairo-xlib-xrender.h>
 #include <compiz-core.h>
-#include <text.h>
+#include <compiz-text.h>
 #include <X11/Xatom.h>
 #include <X11/extensions/shape.h>
 
