@@ -73,6 +73,8 @@ typedef struct _ScaleFilterDisplay {
     XIM xim;
     XIC xic;
 
+    Bool textAvailable;
+
     HandleEventProc       handleEvent;
     HandleCompizEventProc handleCompizEvent;
 } ScaleFilterDisplay;
@@ -130,6 +132,7 @@ scalefilterRenderFilterText (CompScreen *s)
     char           buffer[2 * MAX_FILTER_STRING_LEN];
 
     FILTER_SCREEN (s);
+    FILTER_DISPLAY (s->display);
 
     if (!fs->filterInfo)
 	return;
@@ -161,8 +164,11 @@ scalefilterRenderFilterText (CompScreen *s)
     if (fs->filterInfo->filterStringLength == 0)
 	return;
 
-    tA.maxwidth = x2 - x1 - (2 * scalefilterGetBorderSize (s));
-    tA.maxheight = y2 - y1 - (2 * scalefilterGetBorderSize (s));
+    if (!fd->textAvailable)
+	return;
+
+    tA.maxWidth = x2 - x1 - (2 * scalefilterGetBorderSize (s));
+    tA.maxHeight = y2 - y1 - (2 * scalefilterGetBorderSize (s));
     tA.screen = s;
     tA.size = scalefilterGetFontSize (s);
     tA.color[0] = scalefilterGetFontColorRed (s);
@@ -775,6 +781,11 @@ scalefilterInitDisplay (CompPlugin  *p,
 
     if (fd->xic)
 	setlocale (LC_CTYPE, "");
+
+    fd->textAvailable = checkPluginABI ("text", TEXT_ABIVERSION);
+    if (!fd->textAvailable)
+	compLogMessage (d, "scalefilter", CompLogLevelWarn,
+			"No compatible text plugin found.");
 
     WRAP (fd, d, handleEvent, scalefilterHandleEvent);
     WRAP (fd, d, handleCompizEvent, scalefilterHandleCompizEvent);
