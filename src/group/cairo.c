@@ -645,8 +645,8 @@ groupRenderWindowTitle (GroupSelection *group)
 	textAttrib.color[3] = groupGetTabbarFontColorAlpha (group->screen);
 	textAttrib.ellipsize = TRUE;
 
-	textAttrib.maxwidth = width;
-	textAttrib.maxheight = height;
+	textAttrib.maxWidth = width;
+	textAttrib.maxHeight = height;
 	textAttrib.screen = group->screen;
 	textAttrib.renderMode = TextRenderWindowTitle;
 
