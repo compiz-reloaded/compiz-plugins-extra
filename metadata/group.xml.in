@@ -8,6 +8,7 @@
 		<relation type="after">
 			<plugin>fade</plugin>
 			<plugin>place</plugin>
+			<plugin>text</plugin>
 		</relation>
 	</deps>
     <display>

@@ -208,6 +208,11 @@ groupInitDisplay (CompPlugin  *p,
 		return FALSE;
 	}
 
+	gd->textAvailable = checkPluginABI ("text", TEXT_ABIVERSION);
+	if (!gd->textAvailable)
+		compLogMessage (d, "group", CompLogLevelWarn,
+				"No compatible text plugin loaded.");
+
 	gd->glowTextureProperties =
 	    (GlowTextureProperties*) glowTextureProperties;
 	gd->ignoreMode = FALSE;

@@ -385,6 +385,8 @@ typedef struct _GroupDisplay {
 
 	Atom groupWinPropertyAtom;
 	Atom resizeNotifyAtom;
+
+	Bool textAvailable;
 } GroupDisplay;
 
 /*

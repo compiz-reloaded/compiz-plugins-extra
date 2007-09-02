@@ -619,8 +619,11 @@ groupRenderWindowTitle (GroupSelection *group)
 	void            *data = NULL;
 	int             width, height;
 	int             stride;
+	Bool            hasText = FALSE;
 	CompTextAttrib  textAttrib;
-	CompDisplay     *d;
+	CompDisplay     *d = group->screen->display;
+
+	GROUP_DISPLAY (d);
 
 	if (!group->tabBar || !HAS_TOP_WIN(group) || !group->tabBar->textLayer)
 	    return;
@@ -655,9 +658,11 @@ groupRenderWindowTitle (GroupSelection *group)
 	else
 		textAttrib.data = 0;
 
-	d = group->screen->display;
-	if (!((*d->fileToImage) (d, TEXT_ID, (const char*) &textAttrib,
-							 &width, &height, &stride, &data)))
+	if (gd->textAvailable)
+		hasText = (*d->fileToImage) (d, TEXT_ID, (const char*) &textAttrib,
+									 &width, &height, &stride, &data);
+
+	if (!hasText)
 	{
 		/* getting the pixmap failed, so create an empty one */
 		Pixmap emptyPixmap;
@@ -672,8 +677,8 @@ groupRenderWindowTitle (GroupSelection *group)
 			gcv.foreground = 0x00000000;
 			gcv.plane_mask = 0xffffffff;
 
-			gc = XCreateGC(d->display, emptyPixmap,
-						   GCForeground, &gcv);
+			gc = XCreateGC (d->display, emptyPixmap,
+						    GCForeground, &gcv);
 
 			XFillRectangle (d->display, emptyPixmap, gc,
 							0, 0, width, height);
