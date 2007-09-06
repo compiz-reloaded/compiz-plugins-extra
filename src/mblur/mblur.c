@@ -33,13 +33,13 @@
 #include "mblur_options.h"
 
 #define GET_MBLUR_DISPLAY(d)                                  \
-    ((MblurDisplay *) (d)->object.privates[displayPrivateIndex].ptr)
+    ((MblurDisplay *) (d)->base.privates[displayPrivateIndex].ptr)
 
 #define MBLUR_DISPLAY(d)                                      \
     MblurDisplay *md = GET_MBLUR_DISPLAY (d)
 
 #define GET_MBLUR_SCREEN(s, md)                               \
-    ((MblurScreen *) (s)->object.privates[(md)->screenPrivateIndex].ptr)
+    ((MblurScreen *) (s)->base.privates[(md)->screenPrivateIndex].ptr)
 
 #define MBLUR_SCREEN(s)                                       \
     MblurScreen *ms = GET_MBLUR_SCREEN (s, GET_MBLUR_DISPLAY (s->display))
@@ -354,7 +354,7 @@ mblurInitDisplay (CompPlugin  *p,
     }
 
     /* Record the display */
-    d->object.privates[displayPrivateIndex].ptr = md;
+    d->base.privates[displayPrivateIndex].ptr = md;
 
     mblurSetInitiateKeyInitiate (d, mblurToggle);
 
@@ -383,7 +383,7 @@ mblurInitScreen (CompPlugin *p,
     /* Create a blur screen */
     MblurScreen *ms = (MblurScreen *) calloc (1, sizeof (MblurScreen) );
 
-    s->object.privates[md->screenPrivateIndex].ptr = ms;
+    s->base.privates[md->screenPrivateIndex].ptr = ms;
 
     ms->activated = FALSE;
     ms->update = TRUE;
@@ -422,6 +422,7 @@ mblurInitObject (CompPlugin *p,
 		 CompObject *o)
 {
     static InitPluginObjectProc dispTab[] = {
+	(InitPluginObjectProc) 0,
 	(InitPluginObjectProc) mblurInitDisplay,
 	(InitPluginObjectProc) mblurInitScreen
     };
@@ -434,6 +435,7 @@ mblurFiniObject (CompPlugin *p,
 		 CompObject *o)
 {
     static FiniPluginObjectProc dispTab[] = {
+    	(FiniPluginObjectProc) 0,
 	(FiniPluginObjectProc) mblurFiniDisplay,
 	(FiniPluginObjectProc) mblurFiniScreen
     };
