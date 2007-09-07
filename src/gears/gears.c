@@ -83,12 +83,12 @@ typedef struct _GearsScreen
 GearsScreen;
 
 #define GET_GEARS_DISPLAY(d) \
-    ((GearsDisplay *) (d)->object.privates[displayPrivateIndex].ptr)
+    ((GearsDisplay *) (d)->base.privates[displayPrivateIndex].ptr)
 #define GEARS_DISPLAY(d) \
     GearsDisplay *gd = GET_GEARS_DISPLAY(d);
 
 #define GET_GEARS_SCREEN(s, gd) \
-    ((GearsScreen *) (s)->object.privates[(gd)->screenPrivateIndex].ptr)
+    ((GearsScreen *) (s)->base.privates[(gd)->screenPrivateIndex].ptr)
 #define GEARS_SCREEN(s) \
     GearsScreen *gs = GET_GEARS_SCREEN(s, GET_GEARS_DISPLAY(s->display))
 
@@ -429,7 +429,7 @@ gearsInitDisplay (CompPlugin  *p,
 	return FALSE;
     }
 
-    d->object.privates[displayPrivateIndex].ptr = gd;
+    d->base.privates[displayPrivateIndex].ptr = gd;
 
     return TRUE;
 }
@@ -466,7 +466,7 @@ gearsInitScreen (CompPlugin *p,
     if (!gs)
 	return FALSE;
 
-    s->object.privates[gd->screenPrivateIndex].ptr = gs;
+    s->base.privates[gd->screenPrivateIndex].ptr = gs;
 
     glLightfv (GL_LIGHT1, GL_AMBIENT, ambientLight);
     glLightfv (GL_LIGHT1, GL_DIFFUSE, diffuseLight);
@@ -548,6 +548,7 @@ gearsInitObject (CompPlugin *p,
 		 CompObject *o)
 {
     static InitPluginObjectProc dispTab[] = {
+	(InitPluginObjectProc) 0, /* InitCore */
 	(InitPluginObjectProc) gearsInitDisplay,
 	(InitPluginObjectProc) gearsInitScreen
     };
@@ -560,6 +561,7 @@ gearsFiniObject (CompPlugin *p,
 		 CompObject *o)
 {
     static FiniPluginObjectProc dispTab[] = {
+	(FiniPluginObjectProc) 0, /* FiniCore */
 	(FiniPluginObjectProc) gearsFiniDisplay,
 	(FiniPluginObjectProc) gearsFiniScreen
     };
@@ -568,7 +570,6 @@ gearsFiniObject (CompPlugin *p,
 }
 
 CompPluginVTable gearsVTable = {
-
     "gears",
     0,
     gearsInit,
