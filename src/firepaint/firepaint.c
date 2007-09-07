@@ -398,13 +398,13 @@ typedef struct _FireScreen
 FireScreen;
 
 #define GET_FIRE_DISPLAY(d)                                  \
-    ((FireDisplay *) (d)->object.privates[displayPrivateIndex].ptr)
+    ((FireDisplay *) (d)->base.privates[displayPrivateIndex].ptr)
 
 #define FIRE_DISPLAY(d)                                      \
     FireDisplay *fd = GET_FIRE_DISPLAY (d)
 
 #define GET_FIRE_SCREEN(s, fd)                               \
-    ((FireScreen *) (s)->object.privates[(fd)->screenPrivateIndex].ptr)
+    ((FireScreen *) (s)->base.privates[(fd)->screenPrivateIndex].ptr)
 
 #define FIRE_SCREEN(s)                                       \
     FireScreen *fs = GET_FIRE_SCREEN (s, GET_FIRE_DISPLAY (s->display))
@@ -799,7 +799,7 @@ fireInitDisplay (CompPlugin  *p,
 	return FALSE;
     }
 
-    d->object.privates[displayPrivateIndex].ptr = fd;
+    d->base.privates[displayPrivateIndex].ptr = fd;
 
     WRAP (fd, d, handleEvent, fireHandleEvent);
 
@@ -839,7 +839,7 @@ fireInitScreen (CompPlugin *p,
     if (!fs)
 	return FALSE;
 
-    s->object.privates[fd->screenPrivateIndex].ptr = fs;
+    s->base.privates[fd->screenPrivateIndex].ptr = fs;
 
     fs->points     = NULL;
     fs->pointsSize = 0;
@@ -901,6 +901,7 @@ fireInitObject (CompPlugin *p,
 		 CompObject *o)
 {
     static InitPluginObjectProc dispTab[] = {
+	(InitPluginObjectProc) 0, /* InitCore */
 	(InitPluginObjectProc) fireInitDisplay,
 	(InitPluginObjectProc) fireInitScreen
     };
@@ -913,6 +914,7 @@ fireFiniObject (CompPlugin *p,
 		 CompObject *o)
 {
     static FiniPluginObjectProc dispTab[] = {
+	(FiniPluginObjectProc) 0, /* FiniCore */
 	(FiniPluginObjectProc) fireFiniDisplay,
 	(FiniPluginObjectProc) fireFiniScreen
     };
@@ -921,7 +923,6 @@ fireFiniObject (CompPlugin *p,
 }
 
 CompPluginVTable fireVTable = {
-
     "firepaint",
     0,
     fireInit,
