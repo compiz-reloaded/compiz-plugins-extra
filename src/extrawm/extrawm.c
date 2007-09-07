@@ -190,6 +190,7 @@ extraWMInitObject (CompPlugin *p,
 		   CompObject *o)
 {
     static InitPluginObjectProc dispTab[] = {
+	(InitPluginObjectProc) 0, /* InitCore */
 	(InitPluginObjectProc) extraWMInitDisplay
     };
 
