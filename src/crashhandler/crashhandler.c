@@ -145,9 +145,10 @@ crashhandlerFiniDisplay (CompPlugin  *p,
 
 static CompBool
 crashhandlerInitObject (CompPlugin *p,
-		 CompObject *o)
+			CompObject *o)
 {
     static InitPluginObjectProc dispTab[] = {
+	(InitPluginObjectProc) 0, /* InitCore */
 	(InitPluginObjectProc) crashhandlerInitDisplay
     };
 
@@ -156,9 +157,10 @@ crashhandlerInitObject (CompPlugin *p,
 
 static void
 crashhandlerFiniObject (CompPlugin *p,
-		 CompObject *o)
+			CompObject *o)
 {
     static FiniPluginObjectProc dispTab[] = {
+	(FiniPluginObjectProc) 0, /* FiniCore */
 	(FiniPluginObjectProc) crashhandlerFiniDisplay
     };
 
@@ -167,7 +169,6 @@ crashhandlerFiniObject (CompPlugin *p,
 
 
 CompPluginVTable crashhandlerVTable = {
-
     "crashhandler",
     0,
     0,
