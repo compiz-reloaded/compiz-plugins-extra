@@ -34,13 +34,13 @@
 #define SPLASH_LOGO_DEFAULT ""
 
 #define GET_SPLASH_DISPLAY(d)                                  \
-    ((SplashDisplay *) (d)->object.privates[displayPrivateIndex].ptr)
+    ((SplashDisplay *) (d)->base.privates[displayPrivateIndex].ptr)
 
 #define SPLASH_DISPLAY(d)                      \
     SplashDisplay *sd = GET_SPLASH_DISPLAY (d)
 
 #define GET_SPLASH_SCREEN(s, sd)                                   \
-    ((SplashScreen *) (s)->object.privates[(sd)->screenPrivateIndex].ptr)
+    ((SplashScreen *) (s)->base.privates[(sd)->screenPrivateIndex].ptr)
 
 #define SPLASH_SCREEN(s)                                                      \
     SplashScreen *ss = GET_SPLASH_SCREEN (s, GET_SPLASH_DISPLAY (s->display))
@@ -497,7 +497,7 @@ splashInitScreen (CompPlugin *p,
 
     SplashScreen *ss = (SplashScreen *) calloc (1, sizeof (SplashScreen) );
 
-    s->object.privates[sd->screenPrivateIndex].ptr = ss;
+    s->base.privates[sd->screenPrivateIndex].ptr = ss;
 
     WRAP (ss, s, paintOutput, splashPaintOutput);
     WRAP (ss, s, preparePaintScreen, splashPreparePaintScreen);
@@ -613,7 +613,7 @@ splashInitDisplay (CompPlugin  *p,
 
     splashSetInitiateKeyInitiate (d, splashInitiate);
 
-    d->object.privates[displayPrivateIndex].ptr = sd;
+    d->base.privates[displayPrivateIndex].ptr = sd;
     return TRUE;
 }
 
@@ -653,6 +653,7 @@ splashInitObject (CompPlugin *p,
 		  CompObject *o)
 {
     static InitPluginObjectProc dispTab[] = {
+	(InitPluginObjectProc) 0, /* InitCore */
 	(InitPluginObjectProc) splashInitDisplay,
 	(InitPluginObjectProc) splashInitScreen
     };
@@ -665,6 +666,7 @@ splashFiniObject (CompPlugin *p,
 		  CompObject *o)
 {
     static FiniPluginObjectProc dispTab[] = {
+	(FiniPluginObjectProc) 0, /* FiniCore */
 	(FiniPluginObjectProc) splashFiniDisplay,
 	(FiniPluginObjectProc) splashFiniScreen
     };
@@ -673,7 +675,6 @@ splashFiniObject (CompPlugin *p,
 }
 
 CompPluginVTable splashVTable = {
-
     "splash",
     0,
     splashInit,
