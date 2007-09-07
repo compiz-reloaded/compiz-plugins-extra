@@ -88,12 +88,12 @@ typedef struct _CubereflexScreen
 CubereflexScreen;
 
 #define GET_CUBEREFLEX_DISPLAY(d) \
-    ((CubereflexDisplay *) (d)->object.privates[displayPrivateIndex].ptr)
+    ((CubereflexDisplay *) (d)->base.privates[displayPrivateIndex].ptr)
 #define CUBEREFLEX_DISPLAY(d) \
     CubereflexDisplay *rd = GET_CUBEREFLEX_DISPLAY(d);
 
 #define GET_CUBEREFLEX_SCREEN(s, rd) \
-    ((CubereflexScreen *) (s)->object.privates[(rd)->screenPrivateIndex].ptr)
+    ((CubereflexScreen *) (s)->base.privates[(rd)->screenPrivateIndex].ptr)
 #define CUBEREFLEX_SCREEN(s) \
     CubereflexScreen *rs = GET_CUBEREFLEX_SCREEN(s, GET_CUBEREFLEX_DISPLAY(s->display))
 
@@ -499,7 +499,7 @@ cubereflexInitDisplay (CompPlugin  *p,
 	return FALSE;
     }
 
-    d->object.privates[displayPrivateIndex].ptr = rd;
+    d->base.privates[displayPrivateIndex].ptr = rd;
 
     return TRUE;
 }
@@ -528,7 +528,7 @@ cubereflexInitScreen (CompPlugin *p,
     if (!rs)
 	return FALSE;
 
-    s->object.privates[rd->screenPrivateIndex].ptr = rs;
+    s->base.privates[rd->screenPrivateIndex].ptr = rs;
 
     rs->reflection = FALSE;
     rs->first      = TRUE;
@@ -587,6 +587,7 @@ cubereflexInitObject (CompPlugin *p,
 	       CompObject *o)
 {
     static InitPluginObjectProc dispTab[] = {
+	(InitPluginObjectProc) 0, /* InitCore */
 	(InitPluginObjectProc) cubereflexInitDisplay,
 	(InitPluginObjectProc) cubereflexInitScreen
     };
@@ -599,6 +600,7 @@ cubereflexFiniObject (CompPlugin *p,
 	       CompObject *o)
 {
     static FiniPluginObjectProc dispTab[] = {
+	(FiniPluginObjectProc) 0, /* FiniCore */
 	(FiniPluginObjectProc) cubereflexFiniDisplay,
 	(FiniPluginObjectProc) cubereflexFiniScreen
     };
@@ -607,7 +609,6 @@ cubereflexFiniObject (CompPlugin *p,
 }
 
 CompPluginVTable cubereflexVTable = {
-
     "cubereflex",
     0,
     cubereflexInit,
