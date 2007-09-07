@@ -71,19 +71,19 @@ typedef struct _ReflexWindow {
 } ReflexWindow;
 
 #define GET_REFLEX_DISPLAY(d)                                  \
-    ((ReflexDisplay *) (d)->object.privates[displayPrivateIndex].ptr)
+    ((ReflexDisplay *) (d)->base.privates[displayPrivateIndex].ptr)
 
 #define REFLEX_DISPLAY(d)                                      \
     ReflexDisplay *rd = GET_REFLEX_DISPLAY (d)
 
 #define GET_REFLEX_SCREEN(s, rd)                               \
-    ((ReflexScreen *) (s)->object.privates[(rd)->screenPrivateIndex].ptr)
+    ((ReflexScreen *) (s)->base.privates[(rd)->screenPrivateIndex].ptr)
 
 #define REFLEX_SCREEN(s)                                       \
     ReflexScreen *rs = GET_REFLEX_SCREEN (s, GET_REFLEX_DISPLAY (s->display))
 
 #define GET_REFLEX_WINDOW(w, rs)					 \
-    ((ReflexWindow *) (w)->object.privates[(rs)->windowPrivateIndex].ptr)
+    ((ReflexWindow *) (w)->base.privates[(rs)->windowPrivateIndex].ptr)
 
 #define REFLEX_WINDOW(w)					     \
     ReflexWindow *rw = GET_REFLEX_WINDOW  (w,		     \
@@ -367,7 +367,7 @@ reflexInitDisplay (CompPlugin  *p,
 	return FALSE;
     }
 
-    d->object.privates[displayPrivateIndex].ptr = rd;
+    d->base.privates[displayPrivateIndex].ptr = rd;
 
     WRAP (rd, d, matchExpHandlerChanged, reflexMatchExpHandlerChanged);
     WRAP (rd, d, matchPropertyChanged, reflexMatchPropertyChanged);
@@ -417,7 +417,7 @@ reflexInitScreen (CompPlugin *p,
     reflexSetFileNotify (s, reflexScreenOptionChanged);
     reflexSetMatchNotify (s, reflexScreenOptionChanged);
 
-    s->object.privates[rd->screenPrivateIndex].ptr = rs;
+    s->base.privates[rd->screenPrivateIndex].ptr = rs;
 
     rs->function.handle = 0;
 
@@ -457,7 +457,7 @@ reflexInitWindow (CompPlugin *p,
 
     rw->active = FALSE;
 
-    w->object.privates[rs->windowPrivateIndex].ptr = rw;
+    w->base.privates[rs->windowPrivateIndex].ptr = rw;
 
     reflexUpdateWindowMatch (w);
 
@@ -495,6 +495,7 @@ reflexInitObject (CompPlugin *p,
 		  CompObject *o)
 {
     static InitPluginObjectProc dispTab[] = {
+	(InitPluginObjectProc) 0, /* InitCore */
 	(InitPluginObjectProc) reflexInitDisplay,
 	(InitPluginObjectProc) reflexInitScreen,
 	(InitPluginObjectProc) reflexInitWindow
@@ -508,6 +509,7 @@ reflexFiniObject (CompPlugin *p,
 		  CompObject *o)
 {
     static FiniPluginObjectProc dispTab[] = {
+	(FiniPluginObjectProc) 0, /* FiniCore */
 	(FiniPluginObjectProc) reflexFiniDisplay,
 	(FiniPluginObjectProc) reflexFiniScreen,
 	(FiniPluginObjectProc) reflexFiniWindow
@@ -517,7 +519,6 @@ reflexFiniObject (CompPlugin *p,
 }
 
 CompPluginVTable reflexVTable = {
-
     "reflex",
     0,
     reflexInit,
