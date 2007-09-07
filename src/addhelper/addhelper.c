@@ -34,15 +34,15 @@
 #include "addhelper_options.h"
 
 #define GET_ADD_DISPLAY(d)                            \
-	((AddHelperDisplay *) (d)->object.privates[displayPrivateIndex].ptr)
+	((AddHelperDisplay *) (d)->base.privates[displayPrivateIndex].ptr)
 #define ADD_DISPLAY(d)                                \
     AddHelperDisplay *ad = GET_ADD_DISPLAY (d)
 #define GET_ADD_SCREEN(s, ad)                         \
-	((AddHelperScreen *) (s)->object.privates[(ad)->screenPrivateIndex].ptr)
+	((AddHelperScreen *) (s)->base.privates[(ad)->screenPrivateIndex].ptr)
 #define ADD_SCREEN(s)                                 \
 	AddHelperScreen *as = GET_ADD_SCREEN (s, GET_ADD_DISPLAY (s->display))
 #define GET_ADD_WINDOW(w, as) \
-	((AddHelperWindow *) (w)->object.privates[ (as)->windowPrivateIndex].ptr)
+	((AddHelperWindow *) (w)->base.privates[ (as)->windowPrivateIndex].ptr)
 #define ADD_WINDOW(w) \
 	AddHelperWindow *aw = GET_ADD_WINDOW (w, GET_ADD_SCREEN  (w->screen, GET_ADD_DISPLAY (w->screen->display)))
 
@@ -220,7 +220,7 @@ static Bool addhelperInitWindow(CompPlugin * p, CompWindow * w)
 
 	AddHelperWindow *aw = (AddHelperWindow *) malloc(sizeof(AddHelperWindow));
 
-	w->object.privates[as->windowPrivateIndex].ptr = aw;
+	w->base.privates[as->windowPrivateIndex].ptr = aw;
 
 	aw->dim = FALSE;
 
@@ -249,7 +249,7 @@ static Bool addhelperInitScreen(CompPlugin * p, CompScreen * s)
 
 	WRAP(as, s, paintWindow, addhelperPaintWindow);
 
-	s->object.privates[ad->screenPrivateIndex].ptr = as;
+	s->base.privates[ad->screenPrivateIndex].ptr = as;
 
 	return TRUE;
 }
@@ -279,7 +279,7 @@ static Bool addhelperInitDisplay(CompPlugin * p, CompDisplay * d)
 		return FALSE;
 	}
 
-	d->object.privates[displayPrivateIndex].ptr = ad;
+	d->base.privates[displayPrivateIndex].ptr = ad;
 
 	addhelperSetToggleKeyInitiate(d, addhelperToggle);
 	addhelperSetBrightnessNotify(d, addhelperDisplayOptionChanged);
@@ -314,6 +314,7 @@ addhelperInitObject (CompPlugin *p,
 		       CompObject *o)
 {
 	static InitPluginObjectProc dispTab[] = {
+		(InitPluginObjectProc) 0, /* InitCore */
 		(InitPluginObjectProc) addhelperInitDisplay,
 		(InitPluginObjectProc) addhelperInitScreen,
 		(InitPluginObjectProc) addhelperInitWindow
@@ -327,6 +328,7 @@ addhelperFiniObject (CompPlugin *p,
 		       CompObject *o)
 {
     static FiniPluginObjectProc dispTab[] = {
+		(FiniPluginObjectProc) 0, /* FiniCore */
 		(FiniPluginObjectProc) addhelperFiniDisplay,
 		(FiniPluginObjectProc) addhelperFiniScreen,
 		(FiniPluginObjectProc) addhelperFiniWindow
