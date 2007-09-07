@@ -699,7 +699,10 @@ widgetInitDisplay (CompPlugin  *p,
 
     WRAP (wd, d, handleEvent, widgetHandleEvent);
     WRAP (wd, d, matchPropertyChanged, widgetMatchPropertyChanged);
-    WRAP (wd, d, matchExpHandlerChanged, widgetMatchExpHandlerChanged);
+    /* FIXME: don't wrap into matchExpHandlerChanged for now
+       regex will call that from init display, and our options aren't
+       initialized at this point */
+//    WRAP (wd, d, matchExpHandlerChanged, widgetMatchExpHandlerChanged);
     WRAP (wd, d, matchInitExp, widgetMatchInitExp);
 
     /* one shot timeout to which will register the expression handler
@@ -719,7 +722,7 @@ widgetFiniDisplay (CompPlugin  *p,
 
     UNWRAP (wd, d, handleEvent);
     UNWRAP (wd, d, matchPropertyChanged);
-    UNWRAP (wd, d, matchExpHandlerChanged);
+//    UNWRAP (wd, d, matchExpHandlerChanged);
     UNWRAP (wd, d, matchInitExp);
 
     (*d->matchExpHandlerChanged) (d);
