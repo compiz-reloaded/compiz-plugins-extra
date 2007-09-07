@@ -66,19 +66,19 @@ typedef struct _FadeDesktopWindow
 } FadeDesktopWindow;
 
 #define GET_FADEDESKTOP_DISPLAY(d)				     \
-    ((FadeDesktopDisplay *) (d)->object.privates[displayPrivateIndex].ptr)
+    ((FadeDesktopDisplay *) (d)->base.privates[displayPrivateIndex].ptr)
 
 #define FD_DISPLAY(d)			   \
     FadeDesktopDisplay *fd = GET_FADEDESKTOP_DISPLAY (d)
 
 #define GET_FADEDESKTOP_SCREEN(s, fd)					 \
-    ((FadeDesktopScreen *) (s)->object.privates[(fd)->screenPrivateIndex].ptr)
+    ((FadeDesktopScreen *) (s)->base.privates[(fd)->screenPrivateIndex].ptr)
 
 #define FD_SCREEN(s)							\
     FadeDesktopScreen *fs = GET_FADEDESKTOP_SCREEN (s, GET_FADEDESKTOP_DISPLAY (s->display))
 
 #define GET_FADEDESKTOP_WINDOW(w, fs)					 \
-    ((FadeDesktopWindow *) (w)->object.privates[(fs)->windowPrivateIndex].ptr)
+    ((FadeDesktopWindow *) (w)->base.privates[(fs)->windowPrivateIndex].ptr)
 
 #define FD_WINDOW(w)							\
     FadeDesktopWindow *fw = GET_FADEDESKTOP_WINDOW(w, \
@@ -337,7 +337,7 @@ static Bool fadeDesktopInitDisplay(CompPlugin *p, CompDisplay *d)
 		return FALSE;
 	}
 	
-	d->object.privates[displayPrivateIndex].ptr = fd;
+	d->base.privates[displayPrivateIndex].ptr = fd;
 	return TRUE;
 }
 
@@ -373,7 +373,7 @@ static Bool fadeDesktopInitScreen(CompPlugin *p, CompScreen *s)
 	WRAP(fs, s, enterShowDesktopMode, fadeDesktopEnterShowDesktopMode);
 	WRAP(fs, s, leaveShowDesktopMode, fadeDesktopLeaveShowDesktopMode);
 
-	s->object.privates[fd->screenPrivateIndex].ptr = fs;
+	s->base.privates[fd->screenPrivateIndex].ptr = fs;
 
 	return TRUE;
 	
@@ -406,7 +406,7 @@ static Bool fadeDesktopInitWindow(CompPlugin *p, CompWindow *w)
 	fw->isHidden = FALSE;
 	fw->fading = FALSE;
 	
-	w->object.privates[fs->windowPrivateIndex].ptr = fw;
+	w->base.privates[fs->windowPrivateIndex].ptr = fw;
 
 	return TRUE;
 	
@@ -424,6 +424,7 @@ fadeDesktopInitObject (CompPlugin *p,
 		       CompObject *o)
 {
 	static InitPluginObjectProc dispTab[] = {
+		(InitPluginObjectProc) 0, /* InitCore */
 		(InitPluginObjectProc) fadeDesktopInitDisplay,
 		(InitPluginObjectProc) fadeDesktopInitScreen,
 		(InitPluginObjectProc) fadeDesktopInitWindow
@@ -437,6 +438,7 @@ fadeDesktopFiniObject (CompPlugin *p,
 		       CompObject *o)
 {
     static FiniPluginObjectProc dispTab[] = {
+		(FiniPluginObjectProc) 0, /* FiniCore */
 		(FiniPluginObjectProc) fadeDesktopFiniDisplay,
 		(FiniPluginObjectProc) fadeDesktopFiniScreen,
 		(FiniPluginObjectProc) fadeDesktopFiniWindow
