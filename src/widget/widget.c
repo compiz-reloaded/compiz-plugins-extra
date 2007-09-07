@@ -88,19 +88,19 @@ typedef struct _WidgetWindow
 } WidgetWindow;
 
 #define GET_WIDGET_DISPLAY(d)                                  \
-    ((WidgetDisplay *) (d)->object.privates[displayPrivateIndex].ptr)
+    ((WidgetDisplay *) (d)->base.privates[displayPrivateIndex].ptr)
 
 #define WIDGET_DISPLAY(d)                    \
     WidgetDisplay *wd = GET_WIDGET_DISPLAY (d)
 
 #define GET_WIDGET_SCREEN(s, wd)                                   \
-    ((WidgetScreen *) (s)->object.privates[(wd)->screenPrivateIndex].ptr)
+    ((WidgetScreen *) (s)->base.privates[(wd)->screenPrivateIndex].ptr)
 
 #define WIDGET_SCREEN(s)                                                  \
     WidgetScreen *ws = GET_WIDGET_SCREEN (s, GET_WIDGET_DISPLAY (s->display))
 
 #define GET_WIDGET_WINDOW(w, ws)                                   \
-    ((WidgetWindow *) (w)->object.privates[(ws)->windowPrivateIndex].ptr)
+    ((WidgetWindow *) (w)->base.privates[(ws)->windowPrivateIndex].ptr)
 
 #define WIDGET_WINDOW(w)                                       \
     WidgetWindow *ww = GET_WIDGET_WINDOW  (w,                    \
@@ -691,7 +691,7 @@ widgetInitDisplay (CompPlugin  *p,
 
     wd->compizWidgetAtom = XInternAtom(d->display, "_COMPIZ_WIDGET", FALSE);
 
-    d->object.privates[displayPrivateIndex].ptr = wd;
+    d->base.privates[displayPrivateIndex].ptr = wd;
 
     widgetSetToggleKeyInitiate (d, widgetToggle);
     widgetSetToggleButtonInitiate (d, widgetToggle);
@@ -753,7 +753,7 @@ widgetInitScreen (CompPlugin *p,
 
     widgetSetMatchNotify (s, widgetScreenOptionChanged);
 
-    s->object.privates[wd->screenPrivateIndex].ptr = ws;
+    s->base.privates[wd->screenPrivateIndex].ptr = ws;
 
     WRAP (ws, s, paintWindow, widgetPaintWindow);
     WRAP (ws, s, preparePaintScreen, widgetPreparePaintScreen);
@@ -797,7 +797,7 @@ widgetInitWindow (CompPlugin *p,
     ww->wasUnmapped = FALSE;
     ww->matchUpdateHandle = 0;
 
-    w->object.privates[ws->windowPrivateIndex].ptr = ww;
+    w->base.privates[ws->windowPrivateIndex].ptr = ww;
 
     ww->widgetStatusUpdateHandle = compAddTimeout (0, widgetUpdateStatus,
 						   (void *) w);
@@ -828,6 +828,7 @@ widgetInitObject (CompPlugin *p,
 		  CompObject *o)
 {
     static InitPluginObjectProc dispTab[] = {
+	(InitPluginObjectProc) 0, /* InitCore */
 	(InitPluginObjectProc) widgetInitDisplay,
 	(InitPluginObjectProc) widgetInitScreen,
 	(InitPluginObjectProc) widgetInitWindow
@@ -841,6 +842,7 @@ widgetFiniObject (CompPlugin *p,
 		  CompObject *o)
 {
     static FiniPluginObjectProc dispTab[] = {
+	(FiniPluginObjectProc) 0, /* FiniCore */
 	(FiniPluginObjectProc) widgetFiniDisplay,
 	(FiniPluginObjectProc) widgetFiniScreen,
 	(FiniPluginObjectProc) widgetFiniWindow
