@@ -240,7 +240,7 @@ groupInitDisplay (CompPlugin  *p,
 	groupSetIgnoreKeyTerminate (d, groupUnsetIgnore);
 	groupSetChangeColorKeyInitiate (d, groupChangeColor);
 
-	d->object.privates[groupDisplayPrivateIndex].ptr = gd;
+	d->base.privates[groupDisplayPrivateIndex].ptr = gd;
 
 	srand (time (NULL));
 
@@ -302,7 +302,7 @@ groupInitScreen (CompPlugin *p,
 	WRAP (gs, s, damageWindowRect, groupDamageWindowRect);
 	WRAP (gs, s, windowStateChangeNotify, groupWindowStateChangeNotify);
 
-	s->object.privates[gd->screenPrivateIndex].ptr = gs;
+	s->base.privates[gd->screenPrivateIndex].ptr = gs;
 
 	groupSetTabHighlightColorNotify (s, groupScreenOptionChanged);
 	groupSetTabBaseColorNotify (s, groupScreenOptionChanged);
@@ -473,7 +473,7 @@ static Bool groupInitWindow(CompPlugin * p, CompWindow * w)
 	else
 		gw->windowState = WindowNormal;
 
-	w->object.privates[gs->windowPrivateIndex].ptr = gw;
+	w->base.privates[gs->windowPrivateIndex].ptr = gw;
 
 	gw->glowQuads = NULL;
 	groupComputeGlowQuads (w, &gs->glowTexture.matrix);
@@ -532,6 +532,7 @@ groupInitObject (CompPlugin *p,
 		   		 CompObject *o)
 {
     static InitPluginObjectProc dispTab[] = {
+		(InitPluginObjectProc) 0, /* InitCore */
 		(InitPluginObjectProc) groupInitDisplay,
 		(InitPluginObjectProc) groupInitScreen,
 		(InitPluginObjectProc) groupInitWindow
@@ -545,6 +546,7 @@ groupFiniObject (CompPlugin *p,
    				 CompObject *o)
 {
     static FiniPluginObjectProc dispTab[] = {
+		(FiniPluginObjectProc) 0, /* FiniCore */
 		(FiniPluginObjectProc) groupFiniDisplay,
 		(FiniPluginObjectProc) groupFiniScreen,
 		(FiniPluginObjectProc) groupFiniWindow

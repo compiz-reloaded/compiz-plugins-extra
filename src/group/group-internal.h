@@ -53,17 +53,17 @@
  *
  */
 #define GET_GROUP_DISPLAY(d) \
-    ((GroupDisplay *) (d)->object.privates[groupDisplayPrivateIndex].ptr)
+    ((GroupDisplay *) (d)->base.privates[groupDisplayPrivateIndex].ptr)
 #define GROUP_DISPLAY(d) \
     GroupDisplay *gd = GET_GROUP_DISPLAY (d)
 
 #define GET_GROUP_SCREEN(s, gd) \
-    ((GroupScreen *) (s)->object.privates[(gd)->screenPrivateIndex].ptr)
+    ((GroupScreen *) (s)->base.privates[(gd)->screenPrivateIndex].ptr)
 #define GROUP_SCREEN(s) \
     GroupScreen *gs = GET_GROUP_SCREEN (s, GET_GROUP_DISPLAY (s->display))
 
 #define GET_GROUP_WINDOW(w, gs) \
-    ((GroupWindow *) (w)->object.privates[(gs)->windowPrivateIndex].ptr)
+    ((GroupWindow *) (w)->base.privates[(gs)->windowPrivateIndex].ptr)
 #define GROUP_WINDOW(w) \
     GroupWindow *gw = GET_GROUP_WINDOW (w, \
 					  GET_GROUP_SCREEN  (w->screen, \
