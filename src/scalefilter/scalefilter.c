@@ -90,13 +90,13 @@ typedef struct _ScaleFilterScreen {
 } ScaleFilterScreen;
 
 #define GET_FILTER_DISPLAY(d)				          \
-    ((ScaleFilterDisplay *) (d)->object.privates[displayPrivateIndex].ptr)
+    ((ScaleFilterDisplay *) (d)->base.privates[displayPrivateIndex].ptr)
 
 #define FILTER_DISPLAY(d)		          \
     ScaleFilterDisplay *fd = GET_FILTER_DISPLAY (d)
 
 #define GET_FILTER_SCREEN(s, fd)				              \
-    ((ScaleFilterScreen *) (s)->object.privates[(fd)->screenPrivateIndex].ptr)
+    ((ScaleFilterScreen *) (s)->base.privates[(fd)->screenPrivateIndex].ptr)
 
 #define FILTER_SCREEN(s)		                    \
     ScaleFilterScreen *fs = GET_FILTER_SCREEN (s,           \
@@ -790,7 +790,7 @@ scalefilterInitDisplay (CompPlugin  *p,
     WRAP (fd, d, handleEvent, scalefilterHandleEvent);
     WRAP (fd, d, handleCompizEvent, scalefilterHandleCompizEvent);
 
-    d->object.privates[displayPrivateIndex].ptr = fd;
+    d->base.privates[displayPrivateIndex].ptr = fd;
 
     return TRUE;
 }
@@ -840,7 +840,7 @@ scalefilterInitScreen (CompPlugin *p,
     scalefilterSetFontColorNotify (s, scalefilterScreenOptionChanged);
     scalefilterSetBackColorNotify (s, scalefilterScreenOptionChanged);
 
-    s->object.privates[fd->screenPrivateIndex].ptr = fs;
+    s->base.privates[fd->screenPrivateIndex].ptr = fs;
 
     return TRUE;
 }
@@ -869,6 +869,7 @@ scalefilterInitObject (CompPlugin *p,
 		       CompObject *o)
 {
     static InitPluginObjectProc dispTab[] = {
+	(InitPluginObjectProc) 0, /* InitCore */
 	(InitPluginObjectProc) scalefilterInitDisplay,
 	(InitPluginObjectProc) scalefilterInitScreen
     };
@@ -881,6 +882,7 @@ scalefilterFiniObject (CompPlugin *p,
 		       CompObject *o)
 {
     static FiniPluginObjectProc dispTab[] = {
+	(FiniPluginObjectProc) 0, /* FiniCore */
 	(FiniPluginObjectProc) scalefilterFiniDisplay,
 	(FiniPluginObjectProc) scalefilterFiniScreen
     };
