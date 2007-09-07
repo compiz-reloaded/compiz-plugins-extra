@@ -32,13 +32,13 @@
 #include "bench_options.h"
 
 #define GET_BENCH_DISPLAY(d)                                  \
-    ((BenchDisplay *) (d)->object.privates[displayPrivateIndex].ptr)
+    ((BenchDisplay *) (d)->base.privates[displayPrivateIndex].ptr)
 
 #define BENCH_DISPLAY(d)                      \
     BenchDisplay *bd = GET_BENCH_DISPLAY (d)
 
 #define GET_BENCH_SCREEN(s, bd)                                   \
-    ((BenchScreen *) (s)->object.privates[(bd)->screenPrivateIndex].ptr)
+    ((BenchScreen *) (s)->base.privates[(bd)->screenPrivateIndex].ptr)
 
 #define BENCH_SCREEN(s)                                                      \
     BenchScreen *bs = GET_BENCH_SCREEN (s, GET_BENCH_DISPLAY (s->display))
@@ -365,7 +365,7 @@ benchInitScreen (CompPlugin *p,
 
     BenchScreen *bs = (BenchScreen *) calloc (1, sizeof (BenchScreen) );
 
-    s->object.privates[bd->screenPrivateIndex].ptr = bs;
+    s->base.privates[bd->screenPrivateIndex].ptr = bs;
 
     WRAP (bs, s, paintOutput, benchPaintOutput);
     WRAP (bs, s, preparePaintScreen, benchPreparePaintScreen);
@@ -540,7 +540,7 @@ benchInitDisplay (CompPlugin  *p,
 
     bd->active = FALSE;
     //Record the display
-    d->object.privates[displayPrivateIndex].ptr = bd;
+    d->base.privates[displayPrivateIndex].ptr = bd;
     return TRUE;
 }
 
@@ -580,6 +580,7 @@ benchInitObject (CompPlugin *p,
 		 CompObject *o)
 {
     static InitPluginObjectProc dispTab[] = {
+	(InitPluginObjectProc) 0, /* InitCore */
 	(InitPluginObjectProc) benchInitDisplay,
 	(InitPluginObjectProc) benchInitScreen
     };
@@ -592,6 +593,7 @@ benchFiniObject (CompPlugin *p,
 		 CompObject *o)
 {
     static FiniPluginObjectProc dispTab[] = {
+	(FiniPluginObjectProc) 0, /* FiniCore */
 	(FiniPluginObjectProc) benchFiniDisplay,
 	(FiniPluginObjectProc) benchFiniScreen
     };
