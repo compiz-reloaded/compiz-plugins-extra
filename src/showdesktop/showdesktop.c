@@ -114,19 +114,19 @@ typedef struct _ShowdesktopWindow
  * we don't have to access the privates arrays all the time
  * */
 #define GET_SHOWDESKTOP_DISPLAY(d)				     \
-    ((ShowdesktopDisplay *) (d)->object.privates[displayPrivateIndex].ptr)
+    ((ShowdesktopDisplay *) (d)->base.privates[displayPrivateIndex].ptr)
 
 #define SD_DISPLAY(d)			   \
     ShowdesktopDisplay *sd = GET_SHOWDESKTOP_DISPLAY (d)
 
 #define GET_SHOWDESKTOP_SCREEN(s, sd)					 \
-    ((ShowdesktopScreen *) (s)->object.privates[(sd)->screenPrivateIndex].ptr)
+    ((ShowdesktopScreen *) (s)->base.privates[(sd)->screenPrivateIndex].ptr)
 
 #define SD_SCREEN(s)							\
     ShowdesktopScreen *ss = GET_SHOWDESKTOP_SCREEN (s, GET_SHOWDESKTOP_DISPLAY (s->display))
 
 #define GET_SHOWDESKTOP_WINDOW(w, ss)					  \
-    ((ShowdesktopWindow *) (w)->object.privates[(ss)->windowPrivateIndex].ptr)
+    ((ShowdesktopWindow *) (w)->base.privates[(ss)->windowPrivateIndex].ptr)
 
 #define SD_WINDOW(w)					       \
     ShowdesktopWindow *sw = GET_SHOWDESKTOP_WINDOW  (w,		       \
@@ -763,7 +763,7 @@ showdesktopInitDisplay (CompPlugin  *p,
 
     WRAP (sd, d, handleEvent, showdesktopHandleEvent);
 
-    d->object.privates[displayPrivateIndex].ptr = sd;
+    d->base.privates[displayPrivateIndex].ptr = sd;
 
     return TRUE;
 }
@@ -813,7 +813,7 @@ showdesktopInitScreen (CompPlugin *p,
     WRAP (ss, s, getAllowedActionsForWindow,
 	  showdesktopGetAllowedActionsForWindow);
 
-    s->object.privates[sd->screenPrivateIndex].ptr = ss;
+    s->base.privates[sd->screenPrivateIndex].ptr = ss;
 
     return TRUE;
 }
@@ -863,7 +863,7 @@ showdesktopInitWindow (CompPlugin *p,
     sw->stateMask      = 0;
     sw->notAllowedMask = 0;
 
-    w->object.privates[ss->windowPrivateIndex].ptr = sw;
+    w->base.privates[ss->windowPrivateIndex].ptr = sw;
 
     return TRUE;
 }
@@ -883,6 +883,7 @@ showdesktopInitObject (CompPlugin *p,
 		       CompObject *o)
 {
     static InitPluginObjectProc dispTab[] = {
+	(InitPluginObjectProc) 0, /* InitCore */
 	(InitPluginObjectProc) showdesktopInitDisplay,
 	(InitPluginObjectProc) showdesktopInitScreen,
 	(InitPluginObjectProc) showdesktopInitWindow
@@ -896,6 +897,7 @@ showdesktopFiniObject (CompPlugin *p,
 		       CompObject *o)
 {
     static FiniPluginObjectProc dispTab[] = {
+	(FiniPluginObjectProc) 0, /* FiniCore */
 	(FiniPluginObjectProc) showdesktopFiniDisplay,
 	(FiniPluginObjectProc) showdesktopFiniScreen,
 	(FiniPluginObjectProc) showdesktopFiniWindow
