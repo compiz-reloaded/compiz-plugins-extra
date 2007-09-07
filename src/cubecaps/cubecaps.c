@@ -59,12 +59,12 @@ typedef struct _CubeCapsScreen
 } CubeCapsScreen;
 
 #define GET_CUBECAPS_DISPLAY(d)						\
-    ((CubeCapsDisplay *) (d)->object.privates[displayPrivateIndex].ptr)
+    ((CubeCapsDisplay *) (d)->base.privates[displayPrivateIndex].ptr)
 #define CUBECAPS_DISPLAY(d)						\
     CubeCapsDisplay *ccd = GET_CUBECAPS_DISPLAY (d);
 
 #define GET_CUBECAPS_SCREEN(s, ccd)					\
-    ((CubeCapsScreen *) (s)->object.privates[(ccd)->screenPrivateIndex].ptr)
+    ((CubeCapsScreen *) (s)->base.privates[(ccd)->screenPrivateIndex].ptr)
 #define CUBECAPS_SCREEN(s)						\
     CubeCapsScreen *ccs = GET_CUBECAPS_SCREEN (s,			\
 			  GET_CUBECAPS_DISPLAY (s->display))
@@ -687,7 +687,7 @@ cubecapsInitDisplay (CompPlugin  *p,
     cubecapsSetBottomNextButtonInitiate (d, cubecapsBottomNext);
     cubecapsSetBottomPrevButtonInitiate (d, cubecapsBottomPrev);
 
-    d->object.privates[displayPrivateIndex].ptr = ccd;
+    d->base.privates[displayPrivateIndex].ptr = ccd;
 
     return TRUE;
 }
@@ -730,7 +730,7 @@ cubecapsInitScreen (CompPlugin *p,
     WRAP (ccs, cs, paintTop, cubecapsPaintTop);
     WRAP (ccs, cs, paintBottom, cubecapsPaintBottom);
 
-    s->object.privates[ccd->screenPrivateIndex].ptr = ccs;
+    s->base.privates[ccd->screenPrivateIndex].ptr = ccs;
 
     cubecapsChangeCap (s, &ccs->topCap, 0);
     cubecapsChangeCap (s, &ccs->bottomCap, 0);
@@ -755,9 +755,10 @@ static CompBool
 cubecapsInitObject (CompPlugin *p,
 		    CompObject *o)
 {
-	static InitPluginObjectProc dispTab[] = {
-		(InitPluginObjectProc) cubecapsInitDisplay,
-		(InitPluginObjectProc) cubecapsInitScreen
+    static InitPluginObjectProc dispTab[] = {
+	(InitPluginObjectProc) 0, /* InitCore */
+	(InitPluginObjectProc) cubecapsInitDisplay,
+	(InitPluginObjectProc) cubecapsInitScreen
     };
 
     RETURN_DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), TRUE, (p, o));
@@ -768,8 +769,9 @@ cubecapsFiniObject (CompPlugin *p,
 		    CompObject *o)
 {
     static FiniPluginObjectProc dispTab[] = {
-		(FiniPluginObjectProc) cubecapsFiniDisplay,
-		(FiniPluginObjectProc) cubecapsFiniScreen
+	(FiniPluginObjectProc) 0, /* FiniCore */
+	(FiniPluginObjectProc) cubecapsFiniDisplay,
+	(FiniPluginObjectProc) cubecapsFiniScreen
     };
 
     DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), (p, o));
