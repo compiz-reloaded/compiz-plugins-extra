@@ -34,24 +34,6 @@
 #include <compiz-core.h>
 #include "trailfocus_options.h"
 
-#define GET_TRAILFOCUS_DISPLAY(d)                            \
-    ((TrailfocusDisplay *) (d)->base.privates[displayPrivateIndex].ptr)
-#define TRAILFOCUS_DISPLAY(d)                                \
-    TrailfocusDisplay *td = GET_TRAILFOCUS_DISPLAY (d)
-
-#define GET_TRAILFOCUS_SCREEN(s, td)                         \
-    ((TrailfocusScreen *) (s)->base.privates[(td)->screenPrivateIndex].ptr)
-#define TRAILFOCUS_SCREEN(s)                                 \
-    TrailfocusScreen *ts = GET_TRAILFOCUS_SCREEN (s,     \
-			   GET_TRAILFOCUS_DISPLAY (s->display))
-
-#define GET_TRAILFOCUS_WINDOW(w, ts)                         \
-	((TrailfocusWindow *) (w)->base.privates[(ts)->windowPrivateIndex].ptr)
-#define TRAILFOCUS_WINDOW(w)                                    \
-	TrailfocusWindow *tw = GET_TRAILFOCUS_WINDOW (w,        \
-			       GET_TRAILFOCUS_SCREEN(w->screen, \
-			       GET_TRAILFOCUS_DISPLAY (w->screen->display)))
-
 static int displayPrivateIndex = 0;
 
 typedef struct _TrailfocusDisplay
@@ -74,7 +56,8 @@ typedef struct _TrailfocusScreen
 
     Window   *win;
     TfAttrib *inc;
-    Bool     initialized;
+
+    CompTimeoutHandle setupTimerHandle;
 
     PaintWindowProc paintWindow;
 } TrailfocusScreen;
@@ -84,6 +67,24 @@ typedef struct _TrailfocusWindow
     Bool     isTfWindow;
     TfAttrib attribs;
 }  TrailfocusWindow;
+
+#define GET_TRAILFOCUS_DISPLAY(d)                            \
+    ((TrailfocusDisplay *) (d)->base.privates[displayPrivateIndex].ptr)
+#define TRAILFOCUS_DISPLAY(d)                                \
+    TrailfocusDisplay *td = GET_TRAILFOCUS_DISPLAY (d)
+
+#define GET_TRAILFOCUS_SCREEN(s, td)                         \
+    ((TrailfocusScreen *) (s)->base.privates[(td)->screenPrivateIndex].ptr)
+#define TRAILFOCUS_SCREEN(s)                                 \
+    TrailfocusScreen *ts = GET_TRAILFOCUS_SCREEN (s,     \
+			   GET_TRAILFOCUS_DISPLAY (s->display))
+
+#define GET_TRAILFOCUS_WINDOW(w, ts)                         \
+	((TrailfocusWindow *) (w)->base.privates[(ts)->windowPrivateIndex].ptr)
+#define TRAILFOCUS_WINDOW(w)                                    \
+	TrailfocusWindow *tw = GET_TRAILFOCUS_WINDOW (w,        \
+			       GET_TRAILFOCUS_SCREEN(w->screen, \
+			       GET_TRAILFOCUS_DISPLAY (w->screen->display)))
 
 /* Core trailfocus functions. These do the real work. ---------------*/
 
@@ -133,6 +134,19 @@ setWindows (CompScreen *s)
 	    tw->attribs = ts->inc[i];
 	}
     }
+}
+
+static Bool
+setupTimeout (void *closure)
+{
+    CompScreen *s = (CompScreen *) closure;
+
+    TRAILFOCUS_SCREEN (s);
+
+    setWindows (s);
+    ts->setupTimerHandle = 0;
+
+    return FALSE;
 }
 
 /* Push a new window-id on the trailfocus window-stack (not to be
@@ -230,24 +244,6 @@ popWindow (CompDisplay *d,
     return s;
 }
 
-/* Find a window on a screen.... Unlike the findWindowAtScreen which
- * core provides, we don't intend to search for the same window several
- * times in a row so we optimize for* the normal situation of searching for 
- * a window only once in a row.
- */
-static CompWindow*
-findWindow (CompScreen *s,
-	    Window     id)
-{
-    CompWindow *w;
-
-    for (w = s->windows; w; w = w->next)
-	if (w->id == id)
-	    return w;
-
-    return NULL;
-}
-
 /* Walks through the existing stack and removes windows that should
  * (no longer) be there. Used for option-change.
  */
@@ -264,7 +260,7 @@ cleanList (CompScreen *s)
 
     for (i = 0; i < winMax; i++)
     {
-	w = findWindow (s, ts->win[i]);
+	w = findWindowAtScreen (s, ts->win[i]);
 	if (!w || !matchEval (trailfocusGetWindowMatch (s), w))
 	    ts->win[i] = 0;
     }
@@ -336,11 +332,11 @@ recalculateAttributes (CompScreen *s)
     }
 
     min.opacity = trailfocusGetMinOpacity (s) * OPAQUE / 100;
-    min.brightness = trailfocusGetMinBrightness (s) * OPAQUE / 100;
-    min.saturation = trailfocusGetMinSaturation (s) * OPAQUE / 100;
+    min.brightness = trailfocusGetMinBrightness (s) * BRIGHT / 100;
+    min.saturation = trailfocusGetMinSaturation (s) * COLOR / 100;
     max.opacity = trailfocusGetMaxOpacity (s) * OPAQUE / 100;
-    max.brightness = trailfocusGetMaxBrightness (s) * OPAQUE / 100;
-    max.saturation = trailfocusGetMaxSaturation (s) * OPAQUE / 100;
+    max.brightness = trailfocusGetMaxBrightness (s) * BRIGHT / 100;
+    max.saturation = trailfocusGetMaxSaturation (s) * COLOR / 100;
 
     ts->win = realloc (ts->win, sizeof (Window) * (winMax + 1));
     ts->inc = realloc (ts->inc, sizeof (TfAttrib) * (winMax + 1));
@@ -373,12 +369,6 @@ trailfocusPaintWindow (CompWindow              *w,
     TRAILFOCUS_WINDOW (w);
     TRAILFOCUS_SCREEN (w->screen);
 
-    if (!ts->initialized)
-    {
-	setWindows (w->screen);
-	ts->initialized = TRUE;
-    }
-
     if (tw->isTfWindow)
     {
 	WindowPaintAttrib wAttrib = *attrib;
@@ -402,7 +392,7 @@ trailfocusPaintWindow (CompWindow              *w,
     return status;
 }
 
-/* Configuration, initliazation, boring stuff. ----------------------- */
+/* Configuration, initialization, boring stuff. ----------------------- */
 
 static void
 trailfocusScreenOptionChanged (CompScreen              *s,
@@ -438,6 +428,8 @@ trailfocusInitWindow (CompPlugin *p,
     TRAILFOCUS_SCREEN (w->screen);
 
     tw = calloc (1, sizeof (TrailfocusWindow));
+    if (!tw)
+	return FALSE;
 
     w->base.privates[ts->windowPrivateIndex].ptr = tw;
 
@@ -455,23 +447,6 @@ trailfocusFiniWindow (CompPlugin *p,
     free (tw);
 }
 
-/* Remember to reset windows to some sane value when we unload */
-static void
-trailfocusFiniScreen (CompPlugin *p,
-		      CompScreen *s)
-{
-    TRAILFOCUS_SCREEN (s);
-
-    if (ts->win)
-	free (ts->win);
-    if (ts->inc)
-	free (ts->inc);
-
-    UNWRAP (ts, s, paintWindow);
-
-    free (ts);
-}
-
 /* Remember to populate the TrailFocus screen properly, and push the
  * active window on the stack, then set windows.
  */
@@ -484,6 +459,8 @@ trailfocusInitScreen (CompPlugin *p,
     TRAILFOCUS_DISPLAY(s->display);
 
     ts = calloc (1, sizeof (TrailfocusScreen));
+    if (!ts)
+	return FALSE;
 
     ts->windowPrivateIndex = allocateWindowPrivateIndex (s);
     if (ts->windowPrivateIndex < 0)
@@ -508,10 +485,29 @@ trailfocusInitScreen (CompPlugin *p,
 
     recalculateAttributes (s);
     pushWindow (s->display, s->display->activeWindow);
-
-    ts->initialized = FALSE;
+    ts->setupTimerHandle = compAddTimeout (0, setupTimeout, s);
 
     return TRUE;
+}
+
+/* Remember to reset windows to some sane value when we unload */
+static void
+trailfocusFiniScreen (CompPlugin *p,
+		      CompScreen *s)
+{
+    TRAILFOCUS_SCREEN (s);
+
+    if (ts->setupTimerHandle)
+	compRemoveTimeout (ts->setupTimerHandle);
+
+    if (ts->win)
+	free (ts->win);
+    if (ts->inc)
+	free (ts->inc);
+
+    UNWRAP (ts, s, paintWindow);
+
+    free (ts);
 }
 
 static Bool
