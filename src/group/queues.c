@@ -34,197 +34,198 @@ static Bool groupDequeueTimer (void *closure);
 
 void
 groupEnqueueMoveNotify (CompWindow *w,
-						int        dx,
-						int        dy,
-						Bool       immediate,
-						Bool       sync)
+			int        dx,
+			int        dy,
+			Bool       immediate,
+			Bool       sync)
 {
-	GroupPendingMoves *move;
+    GroupPendingMoves *move;
 
-	GROUP_SCREEN (w->screen);
+    GROUP_SCREEN (w->screen);
 
-	move = malloc (sizeof (GroupPendingMoves));
-	if (!move)
-		return;
+    move = malloc (sizeof (GroupPendingMoves));
+    if (!move)
+	return;
 
-	move->w = w;
-	move->dx = dx;
-	move->dy = dy;
-	move->immediate = immediate;
-	move->sync = sync;
-	move->next = NULL;
+    move->w  = w;
+    move->dx = dx;
+    move->dy = dy;
 
-	if (gs->pendingMoves)
-	{
-		GroupPendingMoves *temp;
-		for (temp = gs->pendingMoves; temp->next; temp = temp->next);
+    move->immediate = immediate;
+    move->sync      = sync;
+    move->next      = NULL;
 
-		temp->next = move;
-	}
+    if (gs->pendingMoves)
+    {
+	GroupPendingMoves *temp;
+	for (temp = gs->pendingMoves; temp->next; temp = temp->next);
 
-	else
-		gs->pendingMoves = move;
+	temp->next = move;
+    }
+    else
+	gs->pendingMoves = move;
 
-	if (!gs->dequeueTimerSet)
-	{
-		compAddTimeout (0, groupDequeueTimer, (void *) w->screen);
-		gs->dequeueTimerSet = TRUE;
-	}
+    if (!gs->dequeueTimerSet)
+    {
+	compAddTimeout (0, groupDequeueTimer, (void *) w->screen);
+	gs->dequeueTimerSet = TRUE;
+    }
 }
 
 void
 groupDequeueMoveNotifies (CompScreen *s)
 {
-	GroupPendingMoves *move;
+    GroupPendingMoves *move;
 
-	GROUP_SCREEN (s);
+    GROUP_SCREEN (s);
 
-	gs->queued = TRUE;
+    gs->queued = TRUE;
 
-	while (gs->pendingMoves)
-	{
-		move = gs->pendingMoves;
-		gs->pendingMoves = move->next;
+    while (gs->pendingMoves)
+    {
+	move = gs->pendingMoves;
+	gs->pendingMoves = move->next;
 
-		moveWindow (move->w, move->dx, move->dy, TRUE, move->immediate);
-		if (move->sync)
-		    syncWindowPosition (move->w);
+	moveWindow (move->w, move->dx, move->dy, TRUE, move->immediate);
+	if (move->sync)
+	    syncWindowPosition (move->w);
 
-		free (move);
-	}
+	free (move);
+    }
 
-	gs->queued = FALSE;
+    gs->queued = FALSE;
 }
 
 void
 groupEnqueueGrabNotify (CompWindow   *w,
-						int          x,
-						int          y,
-						unsigned int state,
-						unsigned int mask)
+			int          x,
+			int          y,
+			unsigned int state,
+			unsigned int mask)
 {
-	GroupPendingGrabs *grab;
+    GroupPendingGrabs *grab;
 
-	GROUP_SCREEN (w->screen);
+    GROUP_SCREEN (w->screen);
 
-	grab = malloc (sizeof (GroupPendingGrabs));
-	if (!grab)
-		return;
+    grab = malloc (sizeof (GroupPendingGrabs));
+    if (!grab)
+	return;
 
-	grab->w = w;
-	grab->x = x;
-	grab->y = y;
-	grab->state = state;
-	grab->mask = mask;
-	grab->next = NULL;
+    grab->w = w;
+    grab->x = x;
+    grab->y = y;
 
-	if (gs->pendingGrabs)
-	{
-		GroupPendingGrabs *temp;
-		for (temp = gs->pendingGrabs; temp->next; temp = temp->next);
+    grab->state = state;
+    grab->mask  = mask;
+    grab->next  = NULL;
 
-		temp->next = grab;
-	}
-	else
-		gs->pendingGrabs = grab;
+    if (gs->pendingGrabs)
+    {
+	GroupPendingGrabs *temp;
+	for (temp = gs->pendingGrabs; temp->next; temp = temp->next);
 
-	if (!gs->dequeueTimerSet)
-	{
-		compAddTimeout (0, groupDequeueTimer, (void *) w->screen);
-		gs->dequeueTimerSet = TRUE;
-	}
+	temp->next = grab;
+    }
+    else
+	gs->pendingGrabs = grab;
+
+    if (!gs->dequeueTimerSet)
+    {
+	compAddTimeout (0, groupDequeueTimer, (void *) w->screen);
+	gs->dequeueTimerSet = TRUE;
+    }
 }
 
 static void
 groupDequeueGrabNotifies (CompScreen *s)
 {
-	GroupPendingGrabs *grab;
+    GroupPendingGrabs *grab;
 
-	GROUP_SCREEN (s);
+    GROUP_SCREEN (s);
 
-	gs->queued = TRUE;
+    gs->queued = TRUE;
 
-	while (gs->pendingGrabs)
-	{
-		grab = gs->pendingGrabs;
-		gs->pendingGrabs = gs->pendingGrabs->next;
+    while (gs->pendingGrabs)
+    {
+	grab = gs->pendingGrabs;
+	gs->pendingGrabs = gs->pendingGrabs->next;
 
-		(*(grab->w)->screen->windowGrabNotify) (grab->w,
-												grab->x, grab->y,
-												grab->state, grab->mask);
+	(*(grab->w)->screen->windowGrabNotify) (grab->w,
+						grab->x, grab->y,
+						grab->state, grab->mask);
 
-		free (grab);
-	}
+	free (grab);
+    }
 
-	gs->queued = FALSE;
+    gs->queued = FALSE;
 }
 
 void
 groupEnqueueUngrabNotify (CompWindow *w)
 {
-	GroupPendingUngrabs *ungrab;
+    GroupPendingUngrabs *ungrab;
 
-	GROUP_SCREEN (w->screen);
+    GROUP_SCREEN (w->screen);
 
-	ungrab = malloc (sizeof (GroupPendingUngrabs));
+    ungrab = malloc (sizeof (GroupPendingUngrabs));
 
-	if (!ungrab)
-		return;
+    if (!ungrab)
+	return;
 
-	ungrab->w = w;
-	ungrab->next = NULL;
+    ungrab->w    = w;
+    ungrab->next = NULL;
 
-	if (gs->pendingUngrabs)
-	{
-		GroupPendingUngrabs *temp;
-		for (temp = gs->pendingUngrabs; temp->next; temp = temp->next);
+    if (gs->pendingUngrabs)
+    {
+	GroupPendingUngrabs *temp;
+	for (temp = gs->pendingUngrabs; temp->next; temp = temp->next);
 
-		temp->next = ungrab;
-	}
-	else
-		gs->pendingUngrabs = ungrab;
+	temp->next = ungrab;
+    }
+    else
+	gs->pendingUngrabs = ungrab;
 
-	if (!gs->dequeueTimerSet)
-	{
-		compAddTimeout (0, groupDequeueTimer, (void *) w->screen);
-		gs->dequeueTimerSet = TRUE;
-	}
+    if (!gs->dequeueTimerSet)
+    {
+	compAddTimeout (0, groupDequeueTimer, (void *) w->screen);
+	gs->dequeueTimerSet = TRUE;
+    }
 }
 
 static void
 groupDequeueUngrabNotifies (CompScreen *s)
 {
-	GroupPendingUngrabs *ungrab;
+    GroupPendingUngrabs *ungrab;
 
-	GROUP_SCREEN (s);
+    GROUP_SCREEN (s);
 
-	gs->queued = TRUE;
+    gs->queued = TRUE;
 
-	while (gs->pendingUngrabs)
-	{
-		ungrab = gs->pendingUngrabs;
-		gs->pendingUngrabs = gs->pendingUngrabs->next;
+    while (gs->pendingUngrabs)
+    {
+	ungrab = gs->pendingUngrabs;
+	gs->pendingUngrabs = gs->pendingUngrabs->next;
 
-		(*(ungrab->w)->screen->windowUngrabNotify) (ungrab->w);
+	(*(ungrab->w)->screen->windowUngrabNotify) (ungrab->w);
 
-		free (ungrab);
-	}
+	free (ungrab);
+    }
 
-	gs->queued = FALSE;
+    gs->queued = FALSE;
 }
 
 static Bool
 groupDequeueTimer (void *closure)
 {
-	CompScreen *s = (CompScreen *) closure;
+    CompScreen *s = (CompScreen *) closure;
 
-	GROUP_SCREEN (s);
+    GROUP_SCREEN (s);
 
-	groupDequeueMoveNotifies (s);
-	groupDequeueGrabNotifies (s);
-	groupDequeueUngrabNotifies (s);
+    groupDequeueMoveNotifies (s);
+    groupDequeueGrabNotifies (s);
+    groupDequeueUngrabNotifies (s);
 
-	gs->dequeueTimerSet = FALSE;
+    gs->dequeueTimerSet = FALSE;
 
-	return FALSE;
+    return FALSE;
 }

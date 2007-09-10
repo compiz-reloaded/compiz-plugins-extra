@@ -30,22 +30,22 @@
  */
 GroupCairoLayer*
 groupRebuildCairoLayer (CompScreen      *s,
-						GroupCairoLayer *layer,
-						int             width,
-						int             height)
+			GroupCairoLayer *layer,
+			int             width,
+			int             height)
 {
-	int        timeBuf = layer->animationTime;
-	PaintState stateBuf = layer->state;
+    int        timeBuf = layer->animationTime;
+    PaintState stateBuf = layer->state;
 
-	groupDestroyCairoLayer (s, layer);
-	layer = groupCreateCairoLayer (s, width, height);
-	if (!layer)
-		return NULL;
+    groupDestroyCairoLayer (s, layer);
+    layer = groupCreateCairoLayer (s, width, height);
+    if (!layer)
+	return NULL;
 
-	layer->animationTime = timeBuf;
-	layer->state = stateBuf;
+    layer->animationTime = timeBuf;
+    layer->state = stateBuf;
 
-	return layer;
+    return layer;
 }
 
 /*
@@ -55,12 +55,12 @@ groupRebuildCairoLayer (CompScreen      *s,
 void
 groupClearCairoLayer (GroupCairoLayer *layer)
 {
-	cairo_t *cr = layer->cairo;
+    cairo_t *cr = layer->cairo;
 
-	cairo_save (cr);
-	cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
-	cairo_paint (cr);
-	cairo_restore (cr);
+    cairo_save (cr);
+    cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
+    cairo_paint (cr);
+    cairo_restore (cr);
 }
 
 /*
@@ -69,20 +69,20 @@ groupClearCairoLayer (GroupCairoLayer *layer)
  */
 void
 groupDestroyCairoLayer (CompScreen      *s,
-						GroupCairoLayer *layer)
+			GroupCairoLayer *layer)
 {
-	if (layer->cairo)
-		cairo_destroy (layer->cairo);
+    if (layer->cairo)
+	cairo_destroy (layer->cairo);
 
-	if (layer->surface)
-		cairo_surface_destroy (layer->surface);
+    if (layer->surface)
+	cairo_surface_destroy (layer->surface);
 
-	finiTexture (s, &layer->texture);
-	
-	if (layer->buffer)
-		free (layer->buffer);
+    finiTexture (s, &layer->texture);
 
-	free (layer);
+    if (layer->buffer)
+	free (layer->buffer);
+
+    free (layer);
 }
 
 /*
@@ -91,54 +91,59 @@ groupDestroyCairoLayer (CompScreen      *s,
  */
 GroupCairoLayer*
 groupCreateCairoLayer (CompScreen *s,
-					   int        width,
-					   int        height)
+		       int        width,
+		       int        height)
 {
-	GroupCairoLayer *layer;
+    GroupCairoLayer *layer;
 
-	
-	layer = malloc (sizeof (GroupCairoLayer));
 
-	layer->surface	= NULL;
-	layer->cairo	= NULL;
-	layer->buffer   = NULL;
-	layer->animationTime = 0;
-	layer->state = PaintOff;
-	layer->texWidth = width;
-	layer->texHeight = height;
+    layer = malloc (sizeof (GroupCairoLayer));
 
-	initTexture (s, &layer->texture);
+    layer->surface = NULL;
+    layer->cairo   = NULL;
+    layer->buffer  = NULL;
 
-	layer->buffer = calloc (4 * width * height, sizeof (unsigned char));
-	if (!layer->buffer)
-	{
-		printf ("ERROR: Failed to alloc buffer!\n");
-		groupDestroyCairoLayer (s, layer);
-		return NULL;
-	}
+    layer->animationTime = 0;
+    layer->state         = PaintOff;
 
-	layer->surface = cairo_image_surface_create_for_data (layer->buffer,
-														  CAIRO_FORMAT_ARGB32,
-														  width, height,
-														  4 * width);
-	if (cairo_surface_status (layer->surface) != CAIRO_STATUS_SUCCESS)
-	{
-		printf ("ERROR: Failed to create surface!\n");
-		groupDestroyCairoLayer (s, layer);
-        return NULL;
-	}
+    layer->texWidth  = width;
+    layer->texHeight = height;
 
-	layer->cairo = cairo_create (layer->surface);
-	if (cairo_status (layer->cairo) != CAIRO_STATUS_SUCCESS)
-	{
-		printf ("ERROR: Failed to create context!\n");
-		groupDestroyCairoLayer (s, layer);
-        return NULL;
-	}
+    initTexture (s, &layer->texture);
 
-	groupClearCairoLayer (layer);
+    layer->buffer = calloc (4 * width * height, sizeof (unsigned char));
+    if (!layer->buffer)
+    {
+	compLogMessage (s->display, "group", CompLogLevelError,
+			"Failed to allocate cairo layer buffer.");
+	groupDestroyCairoLayer (s, layer);
+	return NULL;
+    }
 
-	return layer;
+    layer->surface = cairo_image_surface_create_for_data (layer->buffer,
+							  CAIRO_FORMAT_ARGB32,
+							  width, height,
+							  4 * width);
+    if (cairo_surface_status (layer->surface) != CAIRO_STATUS_SUCCESS)
+    {
+	compLogMessage (s->display, "group", CompLogLevelError,
+			"Failed to create cairo layer surface.");
+	groupDestroyCairoLayer (s, layer);
+	return NULL;
+    }
+
+    layer->cairo = cairo_create (layer->surface);
+    if (cairo_status (layer->cairo) != CAIRO_STATUS_SUCCESS)
+    {
+	compLogMessage (s->display, "group", CompLogLevelError,
+			"Failed to create cairo layer context.");
+	groupDestroyCairoLayer (s, layer);
+	return NULL;
+    }
+
+    groupClearCairoLayer (layer);
+
+    return layer;
 }
 
 /*
@@ -148,57 +153,55 @@ groupCreateCairoLayer (CompScreen *s,
 void
 groupRenderTopTabHighlight (GroupSelection *group)
 {
-	GroupTabBar     *bar;
-	GroupCairoLayer *layer;
-	cairo_t         *cr;
-	int             width, height;
+    GroupTabBar     *bar = group->tabBar;
+    GroupCairoLayer *layer;
+    cairo_t         *cr;
+    int             width, height;
 
-	if (!group->tabBar || !HAS_TOP_WIN (group) ||
-		!group->tabBar->selectionLayer ||
-		!group->tabBar->selectionLayer->cairo)
-	{
-	    return;
-	}
+    if (!bar || !HAS_TOP_WIN (group) ||
+	!bar->selectionLayer || !bar->selectionLayer->cairo)
+    {
+	return;
+    }
 
-	bar = group->tabBar;
-	width = group->topTab->region->extents.x2 -
-		    group->topTab->region->extents.x1;
-	height = group->topTab->region->extents.y2 -
-		     group->topTab->region->extents.y1;
+    width = group->topTab->region->extents.x2 -
+	    group->topTab->region->extents.x1;
+    height = group->topTab->region->extents.y2 -
+	     group->topTab->region->extents.y1;
 
-	bar->selectionLayer = groupRebuildCairoLayer (group->screen,
-												  bar->selectionLayer,
-												  width, height);
-	if (!bar->selectionLayer)
-		return;
+    bar->selectionLayer = groupRebuildCairoLayer (group->screen,
+						  bar->selectionLayer,
+						  width, height);
+    if (!bar->selectionLayer)
+	return;
 
-	layer = bar->selectionLayer;
-	cr = bar->selectionLayer->cairo;
+    layer = bar->selectionLayer;
+    cr = bar->selectionLayer->cairo;
 
-	/* fill */
-	cairo_set_line_width (cr, 2);
-	cairo_set_source_rgba (cr,
-						   (group->color[0] / 65535.0f),
-						   (group->color[1] / 65535.0f),
-						   (group->color[2] / 65535.0f),
-						   (group->color[3] / (65535.0f*2)));
+    /* fill */
+    cairo_set_line_width (cr, 2);
+    cairo_set_source_rgba (cr,
+			   (group->color[0] / 65535.0f),
+			   (group->color[1] / 65535.0f),
+			   (group->color[2] / 65535.0f),
+			   (group->color[3] / (65535.0f * 2)));
 
-	cairo_move_to (cr, 0, 0);
-	cairo_rectangle (cr, 0, 0, width, height);
+    cairo_move_to (cr, 0, 0);
+    cairo_rectangle (cr, 0, 0, width, height);
 
-	cairo_fill_preserve (cr);
+    cairo_fill_preserve (cr);
 
-	/* outline */
-	cairo_set_source_rgba (cr,
-						   (group->color[0] / 65535.0f),
-						   (group->color[1] / 65535.0f),
-						   (group->color[2] / 65535.0f),
-						   (group->color[3] / 65535.0f));
-	cairo_stroke (cr);
+    /* outline */
+    cairo_set_source_rgba (cr,
+			   (group->color[0] / 65535.0f),
+			   (group->color[1] / 65535.0f),
+			   (group->color[2] / 65535.0f),
+			   (group->color[3] / 65535.0f));
+    cairo_stroke (cr);
 
-	imageBufferToTexture (group->screen,
-						  &layer->texture, (char*) layer->buffer,
-						  layer->texWidth, layer->texHeight);
+    imageBufferToTexture (group->screen,
+			  &layer->texture, (char*) layer->buffer,
+			  layer->texWidth, layer->texHeight);
 }
 
 /*
@@ -208,403 +211,404 @@ groupRenderTopTabHighlight (GroupSelection *group)
 void
 groupRenderTabBarBackground(GroupSelection *group)
 {
-	GroupTabBar     *bar;
-	GroupCairoLayer *layer;
-	cairo_t         *cr;
-	int             width, height, radius;
-	int             borderWidth;
-	float           r, g, b, a;
-	double          x0, y0, x1, y1;
+    GroupCairoLayer *layer;
+    cairo_t         *cr;
+    int             width, height, radius;
+    int             borderWidth;
+    float           r, g, b, a;
+    double          x0, y0, x1, y1;
+    CompScreen      *s = group->screen;
+    GroupTabBar     *bar = group->tabBar;
 
-	if (!group->tabBar || !HAS_TOP_WIN (group) ||
-		!group->tabBar->bgLayer ||
-		!group->tabBar->bgLayer->cairo)
+    if (!bar || !HAS_TOP_WIN (group) || !bar->bgLayer || !bar->bgLayer->cairo)
+	return;
+
+    width = bar->region->extents.x2 - bar->region->extents.x1;
+    height = bar->region->extents.y2 - bar->region->extents.y1;
+    radius = groupGetBorderRadius (s);
+
+    if (width > bar->bgLayer->texWidth)
+	width = bar->bgLayer->texWidth;
+
+    if (radius > width / 2)
+	radius = width / 2;
+
+    layer = bar->bgLayer;
+    cr = layer->cairo;
+
+    groupClearCairoLayer (layer);
+
+    borderWidth = groupGetBorderWidth (s);
+    cairo_set_line_width (cr, borderWidth);
+
+    cairo_save (cr);
+
+    x0 = borderWidth / 2.0f;
+    y0 = borderWidth / 2.0f;
+    x1 = width  - borderWidth / 2.0f;
+    y1 = height - borderWidth / 2.0f;
+    cairo_move_to (cr, x0 + radius, y0);
+    cairo_arc (cr, x1 - radius, y0 + radius, radius, M_PI * 1.5, M_PI * 2.0);
+    cairo_arc (cr, x1 - radius, y1 - radius, radius, 0.0, M_PI * 0.5);
+    cairo_arc (cr, x0 + radius, y1 - radius, radius, M_PI * 0.5, M_PI);
+    cairo_arc (cr, x0 + radius, y0 + radius, radius, M_PI, M_PI * 1.5);
+
+    cairo_close_path  (cr);
+
+    switch (groupGetTabStyle (s)) {
+    case TabStyleSimple:
 	{
-	    return;
+	    /* base color */
+	    r = groupGetTabBaseColorRed (s) / 65535.0f;
+	    g = groupGetTabBaseColorGreen (s) / 65535.0f;
+	    b = groupGetTabBaseColorBlue (s) / 65535.0f;
+	    a = groupGetTabBaseColorAlpha (s) / 65535.0f;
+	    cairo_set_source_rgba (cr, r, g, b, a);
+
+    	    cairo_fill_preserve (cr);
+	    break;
 	}
 
-	bar = group->tabBar;
-
-	width = bar->region->extents.x2 - bar->region->extents.x1;
-	height = bar->region->extents.y2 - bar->region->extents.y1;
-	radius = groupGetBorderRadius (group->screen);
-
-	if (width > bar->bgLayer->texWidth)
-		width = bar->bgLayer->texWidth;
-
-	if (radius > width / 2)
-		radius = width / 2;
-
-	layer = bar->bgLayer;
-	cr = layer->cairo;
-
-	groupClearCairoLayer (layer);
-
-	borderWidth = groupGetBorderWidth (group->screen);
-	cairo_set_line_width (cr, borderWidth);
-
-	cairo_save (cr);
-
-	x0 = borderWidth / 2.0f;
-	y0 = borderWidth / 2.0f;
-	x1 = width  - borderWidth / 2.0f;
-	y1 = height - borderWidth / 2.0f;
-	cairo_move_to (cr, x0 + radius, y0);
-	cairo_arc (cr, x1 - radius, y0 + radius, radius, M_PI * 1.5, M_PI * 2.0);
-	cairo_arc (cr, x1 - radius, y1 - radius, radius, 0.0, M_PI * 0.5);
-	cairo_arc (cr, x0 + radius, y1 - radius, radius, M_PI * 0.5, M_PI);
-	cairo_arc (cr, x0 + radius, y0 + radius, radius, M_PI, M_PI * 1.5);
-
-	cairo_close_path  (cr);
-
-	switch (groupGetTabStyle (group->screen))
+    case TabStyleGradient:
 	{
-	case TabStyleSimple:
-		{
-			/* base color */
-			r = groupGetTabBaseColorRed (group->screen) / 65535.0f;
-			g = groupGetTabBaseColorGreen (group->screen) / 65535.0f;
-			b = groupGetTabBaseColorBlue (group->screen) / 65535.0f;
-			a = groupGetTabBaseColorAlpha (group->screen) / 65535.0f;
-			cairo_set_source_rgba (cr, r, g, b, a);
+	    /* fill */
+	    cairo_pattern_t *pattern;
+	    pattern = cairo_pattern_create_linear (0, 0, width, height);
 
-			cairo_fill_preserve (cr);
-			break;
-		}
+	    /* highlight color */
+	    r = groupGetTabHighlightColorRed (s) / 65535.0f;
+	    g = groupGetTabHighlightColorGreen (s) / 65535.0f;
+	    b = groupGetTabHighlightColorBlue (s) / 65535.0f;
+	    a = groupGetTabHighlightColorAlpha (s) / 65535.0f;
+	    cairo_pattern_add_color_stop_rgba (pattern, 0.0f, r, g, b, a);
 
-	case TabStyleGradient:
-		{
-			/* fill */
-			cairo_pattern_t *pattern;
-			pattern = cairo_pattern_create_linear (0, 0, width, height);
+	    /* base color */
+	    r = groupGetTabBaseColorRed (s) / 65535.0f;
+	    g = groupGetTabBaseColorGreen (s) / 65535.0f;
+	    b = groupGetTabBaseColorBlue (s) / 65535.0f;
+	    a = groupGetTabBaseColorAlpha (s) / 65535.0f;
+	    cairo_pattern_add_color_stop_rgba (pattern, 1.0f, r, g, b, a);
 
-			/* highlight color */
-			r = groupGetTabHighlightColorRed (group->screen) / 65535.0f;
-			g = groupGetTabHighlightColorGreen (group->screen) / 65535.0f;
-			b = groupGetTabHighlightColorBlue (group->screen) / 65535.0f;
-			a = groupGetTabHighlightColorAlpha (group->screen) / 65535.0f;
-			cairo_pattern_add_color_stop_rgba (pattern, 0.0f, r, g, b, a);
-
-			/* base color */
-			r = groupGetTabBaseColorRed (group->screen) / 65535.0f;
-			g = groupGetTabBaseColorGreen (group->screen) / 65535.0f;
-			b = groupGetTabBaseColorBlue (group->screen) / 65535.0f;
-			a = groupGetTabBaseColorAlpha (group->screen) / 65535.0f;
-			cairo_pattern_add_color_stop_rgba (pattern, 1.0f, r, g, b, a);
-
-			cairo_set_source (cr, pattern);
-			cairo_fill_preserve (cr);
-			cairo_pattern_destroy (pattern);
-			break;
-		}
-
-		case TabStyleGlass:
-		{
-			cairo_pattern_t *pattern;
-
-			cairo_save (cr);
-
-			/* clip width rounded rectangle */
-			cairo_clip (cr);
-
-			/* ===== HIGHLIGHT ===== */
-
-			/* make draw the shape for the highlight and
-			   create a pattern for it */
-			cairo_rectangle (cr, 0, 0, width, height / 2);
-			pattern = cairo_pattern_create_linear (0, 0, 0, height);
-
-			/* highlight color */
-			r = groupGetTabHighlightColorRed (group->screen) / 65535.0f;
-			g = groupGetTabHighlightColorGreen (group->screen) / 65535.0f;
-			b = groupGetTabHighlightColorBlue (group->screen) / 65535.0f;
-			a = groupGetTabHighlightColorAlpha (group->screen) / 65535.0f;
-			cairo_pattern_add_color_stop_rgba (pattern, 0.0f, r, g, b, a);
-
-			/* base color */
-			r = groupGetTabBaseColorRed (group->screen) / 65535.0f;
-			g = groupGetTabBaseColorGreen (group->screen) / 65535.0f;
-			b = groupGetTabBaseColorBlue (group->screen) / 65535.0f;
-			a = groupGetTabBaseColorAlpha (group->screen) / 65535.0f;
-			cairo_pattern_add_color_stop_rgba (pattern, 0.6f, r, g, b, a);
-
-			cairo_set_source (cr, pattern);
-			cairo_fill (cr);
-			cairo_pattern_destroy (pattern);
-
-			/* ==== SHADOW ===== */
-
-			/* make draw the shape for the show and create a pattern for it */
-			cairo_rectangle (cr, 0, height / 2, width, height);
-			pattern = cairo_pattern_create_linear (0, 0, 0, height);
-
-			/* we don't want to use a full highlight here
-			   so we mix the colors */
-			r = (groupGetTabHighlightColorRed (group->screen) +
-			     groupGetTabBaseColorRed (group->screen)) / (2 * 65535.0f);
-			g = (groupGetTabHighlightColorGreen (group->screen) +
-			     groupGetTabBaseColorGreen (group->screen)) / (2 * 65535.0f);
-			b = (groupGetTabHighlightColorBlue (group->screen) +
-			     groupGetTabBaseColorBlue (group->screen)) / (2 * 65535.0f);
-			a = (groupGetTabHighlightColorAlpha (group->screen) +
-			     groupGetTabBaseColorAlpha (group->screen)) / (2 * 65535.0f);
-			cairo_pattern_add_color_stop_rgba (pattern, 1.0f, r, g, b, a);
-
-			/* base color */
-			r = groupGetTabBaseColorRed (group->screen) / 65535.0f;
-			g = groupGetTabBaseColorGreen (group->screen) / 65535.0f;
-			b = groupGetTabBaseColorBlue (group->screen) / 65535.0f;
-			a = groupGetTabBaseColorAlpha (group->screen) / 65535.0f;
-			cairo_pattern_add_color_stop_rgba (pattern, 0.5f, r, g, b, a);
-
-			cairo_set_source (cr, pattern);
-			cairo_fill (cr);
-			cairo_pattern_destroy (pattern);
-
-			cairo_restore (cr);
-
-			/* draw shape again for the outline */
-			cairo_move_to (cr, x0 + radius, y0);
-			cairo_arc (cr, x1 - radius, y0 + radius,
-					   radius, M_PI * 1.5, M_PI * 2.0);
-			cairo_arc (cr, x1 - radius, y1 - radius, radius, 0.0, M_PI * 0.5);
-			cairo_arc (cr, x0 + radius, y1 - radius, radius, M_PI * 0.5, M_PI);
-			cairo_arc (cr, x0 + radius, y0 + radius, radius, M_PI, M_PI * 1.5);
-
-			break;
-		}
-
-		case TabStyleMetal:
-		{
-			/* fill */
-			cairo_pattern_t *pattern;
-			pattern = cairo_pattern_create_linear (0, 0, 0, height);
-
-			/* base color #1 */
-			r = groupGetTabBaseColorRed (group->screen) / 65535.0f;
-			g = groupGetTabBaseColorGreen (group->screen) / 65535.0f;
-			b = groupGetTabBaseColorBlue (group->screen) / 65535.0f;
-			a = groupGetTabBaseColorAlpha (group->screen) / 65535.0f;
-			cairo_pattern_add_color_stop_rgba (pattern, 0.0f, r, g, b, a);
-
-			/* highlight color */
-			r = groupGetTabHighlightColorRed (group->screen) / 65535.0f;
-			g = groupGetTabHighlightColorGreen (group->screen) / 65535.0f;
-			b = groupGetTabHighlightColorBlue (group->screen) / 65535.0f;
-			a = groupGetTabHighlightColorAlpha (group->screen) / 65535.0f;
-			cairo_pattern_add_color_stop_rgba (pattern, 0.55f, r, g, b, a);
-
-			/* base color #2 */
-			r = groupGetTabBaseColorRed (group->screen) / 65535.0f;
-			g = groupGetTabBaseColorGreen (group->screen) / 65535.0f;
-			b = groupGetTabBaseColorBlue (group->screen) / 65535.0f;
-			a = groupGetTabBaseColorAlpha (group->screen) / 65535.0f;
-			cairo_pattern_add_color_stop_rgba (pattern, 1.0f, r, g, b, a);
-
-			cairo_set_source (cr, pattern);
-			cairo_fill_preserve (cr);
-			cairo_pattern_destroy (pattern);
-			break;
-		}
-
-		case TabStyleMurrina:
-		{
-			double ratio, transX;
-			cairo_pattern_t *pattern;
-
-			cairo_save (cr);
-
-			/* clip width rounded rectangle */
-			cairo_clip_preserve (cr);
-
-			/* ==== TOP ==== */
-
-			x0 = borderWidth / 2.0;
-			y0 = borderWidth / 2.0;
-			x1 = width  - borderWidth / 2.0;
-			y1 = height - borderWidth / 2.0;
-			radius = (y1 - y0) / 2;
-
-			/* setup pattern */
-			pattern = cairo_pattern_create_linear (0, 0, 0, height);
-
-			/* we don't want to use a full highlight here
-			   so we mix the colors */
-			r = (groupGetTabHighlightColorRed (group->screen) +
-			     groupGetTabBaseColorRed (group->screen)) / (2 * 65535.0f);
-			g = (groupGetTabHighlightColorGreen (group->screen) +
-			     groupGetTabBaseColorGreen (group->screen)) / (2 * 65535.0f);
-			b = (groupGetTabHighlightColorBlue (group->screen) +
-			     groupGetTabBaseColorBlue (group->screen)) / (2 * 65535.0f);
-			a = (groupGetTabHighlightColorAlpha (group->screen) +
-			     groupGetTabBaseColorAlpha (group->screen)) / (2 * 65535.0f);
-			cairo_pattern_add_color_stop_rgba (pattern, 0.0f, r, g, b, a);
-
-			/* highlight color */
-			r = groupGetTabHighlightColorRed (group->screen) / 65535.0f;
-			g = groupGetTabHighlightColorGreen (group->screen) / 65535.0f;
-			b = groupGetTabHighlightColorBlue (group->screen) / 65535.0f;
-			a = groupGetTabHighlightColorAlpha (group->screen) / 65535.0f;
-			cairo_pattern_add_color_stop_rgba (pattern, 1.0f, r, g, b, a);
-
-			cairo_set_source (cr, pattern);
-
-			cairo_fill (cr);
-			cairo_pattern_destroy (pattern);
-
-			/* ==== BOTTOM ===== */
-
-			x0 = borderWidth / 2.0;
-			y0 = borderWidth / 2.0;
-			x1 = width  - borderWidth / 2.0;
-			y1 = height - borderWidth / 2.0;
-			radius = (y1 - y0) / 2;
-
-			ratio = (double)width / (double)height;
-			transX = width - (width * ratio);
-
-			cairo_move_to (cr, x1, y1);
-			cairo_line_to (cr, x1, y0);
-			if (width < height)
-			{
-				cairo_translate (cr, transX, 0);
-				cairo_scale (cr, ratio, 1.0);
-			}
-			cairo_arc (cr, x1 - radius, y0, radius, 0.0, M_PI * 0.5);
-			if (width < height)
-			{
-				cairo_scale (cr, 1.0 / ratio, 1.0);
-				cairo_translate (cr, -transX, 0);
-				cairo_scale (cr, ratio, 1.0);
-			}
-			cairo_arc_negative (cr, x0 + radius, y1, radius, M_PI * 1.5, M_PI);
-			cairo_close_path (cr);
-
-			/* setup pattern */
-			pattern = cairo_pattern_create_linear (0, 0, 0, height);
-
-			/* base color */
-			r = groupGetTabBaseColorRed (group->screen) / 65535.0f;
-			g = groupGetTabBaseColorGreen (group->screen) / 65535.0f;
-			b = groupGetTabBaseColorBlue (group->screen) / 65535.0f;
-			a = groupGetTabBaseColorAlpha (group->screen) / 65535.0f;
-			cairo_pattern_add_color_stop_rgba (pattern, 0.0f, r, g, b, a);
-
-			/* we don't want to use a full highlight here
-			   so we mix the colors */
-			r = (groupGetTabHighlightColorRed (group->screen) +
-			     groupGetTabBaseColorRed (group->screen)) / (2 * 65535.0f);
-			g = (groupGetTabHighlightColorGreen (group->screen) +
-			     groupGetTabBaseColorGreen (group->screen)) / (2 * 65535.0f);
-			b = (groupGetTabHighlightColorBlue (group->screen) +
-			     groupGetTabBaseColorBlue (group->screen)) / (2 * 65535.0f);
-			a = (groupGetTabHighlightColorAlpha (group->screen) +
-			     groupGetTabBaseColorAlpha (group->screen)) / (2 * 65535.0f);
-			cairo_pattern_add_color_stop_rgba (pattern, 1.0f, r, g, b, a);
-
-			cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
-			cairo_set_source (cr, pattern);
-			cairo_fill (cr);
-			cairo_pattern_destroy (pattern);
-			cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
-
-			cairo_restore (cr);
-
-			/* draw shape again for the outline */
-			x0 = borderWidth / 2.0;
-			y0 = borderWidth / 2.0;
-			x1 = width  - borderWidth / 2.0;
-			y1 = height - borderWidth / 2.0;
-			radius = groupGetBorderRadius (group->screen);
-			cairo_move_to (cr, x0 + radius, y0);
-			cairo_arc (cr, x1 - radius, y0 + radius,
-					   radius, M_PI * 1.5, M_PI * 2.0);
-			cairo_arc (cr, x1 - radius, y1 - radius, radius, 0.0, M_PI * 0.5);
-			cairo_arc (cr, x0 + radius, y1 - radius, radius, M_PI * 0.5, M_PI);
-			cairo_arc (cr, x0 + radius, y0 + radius, radius, M_PI, M_PI * 1.5);
-
-			break;
-		}
-
-		default:
-			break;
+	    cairo_set_source (cr, pattern);
+	    cairo_fill_preserve (cr);
+	    cairo_pattern_destroy (pattern);
+	    break;
 	}
 
-	/* outline */
-	r = groupGetTabBorderColorRed (group->screen) / 65535.0f;
-	g = groupGetTabBorderColorGreen (group->screen) / 65535.0f;
-	b = groupGetTabBorderColorBlue (group->screen) / 65535.0f;
-	a = groupGetTabBorderColorAlpha (group->screen) / 65535.0f;
-	cairo_set_source_rgba (cr, r, g, b, a);
-	if (bar->bgAnimation != AnimationNone)
-		cairo_stroke_preserve (cr);
-	else
-		cairo_stroke (cr);
-
-	switch (bar->bgAnimation)
+    case TabStyleGlass:
 	{
-	case AnimationPulse:
-		{
-			double animationProgress;
-			double alpha;
-			
-			animationProgress = bar->bgAnimationTime /
-		 		                (groupGetPulseTime (group->screen) * 1000.0);
-			alpha = fabs (sin (PI * animationProgress)) * 0.75;
-			if (alpha <= 0)
-				break;
+	    cairo_pattern_t *pattern;
 
-			cairo_save (cr);
-			cairo_clip (cr);
-			cairo_set_operator (cr, CAIRO_OPERATOR_XOR);
-			cairo_rectangle (cr, 0.0, 0.0, width, height);
-			cairo_set_source_rgba (cr, 1.0, 1.0, 1.0, alpha);
-			cairo_fill (cr);
-			cairo_restore (cr);
-			break;
-		}
+	    cairo_save (cr);
 
-		case AnimationReflex:
-		{
-			double          animationProgress;
-			double          reflexWidth;
-			double          posX, alpha;
-			cairo_pattern_t *pattern;
+	    /* clip width rounded rectangle */
+	    cairo_clip (cr);
 
-			animationProgress = bar->bgAnimationTime /
-				                (groupGetReflexTime (group->screen) * 1000.0);
-			reflexWidth = (bar->nSlots / 2.0) * 30;
-			posX = (width + reflexWidth * 2.0) * animationProgress;
-			alpha = sin (PI * animationProgress) * 0.55;
-			if (alpha <= 0)
-				break;
+	    /* ===== HIGHLIGHT ===== */
 
-			cairo_save (cr);
-			cairo_clip (cr);
-			pattern = cairo_pattern_create_linear (posX - reflexWidth,
-												   0.0, posX, height);
-			cairo_pattern_add_color_stop_rgba (pattern,
-											   0.0f, 1.0, 1.0, 1.0, 0.0);
-			cairo_pattern_add_color_stop_rgba (pattern,
-											   0.5f, 1.0, 1.0, 1.0, alpha);
-			cairo_pattern_add_color_stop_rgba (pattern,
-											   1.0f, 1.0, 1.0, 1.0, 0.0);
-			cairo_rectangle (cr, 0.0, 0.0, width, height);
-			cairo_set_source (cr, pattern);
-			cairo_fill (cr);
-			cairo_restore (cr);
-			break;
-		}
+	    /* make draw the shape for the highlight and
+	       create a pattern for it */
+	    cairo_rectangle (cr, 0, 0, width, height / 2);
+	    pattern = cairo_pattern_create_linear (0, 0, 0, height);
 
-		case AnimationNone:
-		default:
-			break;
+	    /* highlight color */
+	    r = groupGetTabHighlightColorRed (s) / 65535.0f;
+	    g = groupGetTabHighlightColorGreen (s) / 65535.0f;
+	    b = groupGetTabHighlightColorBlue (s) / 65535.0f;
+	    a = groupGetTabHighlightColorAlpha (s) / 65535.0f;
+	    cairo_pattern_add_color_stop_rgba (pattern, 0.0f, r, g, b, a);
+
+	    /* base color */
+	    r = groupGetTabBaseColorRed (s) / 65535.0f;
+	    g = groupGetTabBaseColorGreen (s) / 65535.0f;
+	    b = groupGetTabBaseColorBlue (s) / 65535.0f;
+	    a = groupGetTabBaseColorAlpha (s) / 65535.0f;
+	    cairo_pattern_add_color_stop_rgba (pattern, 0.6f, r, g, b, a);
+
+	    cairo_set_source (cr, pattern);
+	    cairo_fill (cr);
+	    cairo_pattern_destroy (pattern);
+
+	    /* ==== SHADOW ===== */
+
+	    /* make draw the shape for the show and create a pattern for it */
+	    cairo_rectangle (cr, 0, height / 2, width, height);
+	    pattern = cairo_pattern_create_linear (0, 0, 0, height);
+
+	    /* we don't want to use a full highlight here
+	       so we mix the colors */
+	    r = (groupGetTabHighlightColorRed (s) +
+		 groupGetTabBaseColorRed (s)) / (2 * 65535.0f);
+	    g = (groupGetTabHighlightColorGreen (s) +
+		 groupGetTabBaseColorGreen (s)) / (2 * 65535.0f);
+	    b = (groupGetTabHighlightColorBlue (s) +
+		 groupGetTabBaseColorBlue (s)) / (2 * 65535.0f);
+	    a = (groupGetTabHighlightColorAlpha (s) +
+		 groupGetTabBaseColorAlpha (s)) / (2 * 65535.0f);
+	    cairo_pattern_add_color_stop_rgba (pattern, 1.0f, r, g, b, a);
+
+	    /* base color */
+	    r = groupGetTabBaseColorRed (s) / 65535.0f;
+	    g = groupGetTabBaseColorGreen (s) / 65535.0f;
+	    b = groupGetTabBaseColorBlue (s) / 65535.0f;
+	    a = groupGetTabBaseColorAlpha (s) / 65535.0f;
+	    cairo_pattern_add_color_stop_rgba (pattern, 0.5f, r, g, b, a);
+
+	    cairo_set_source (cr, pattern);
+	    cairo_fill (cr);
+	    cairo_pattern_destroy (pattern);
+
+	    cairo_restore (cr);
+
+	    /* draw shape again for the outline */
+	    cairo_move_to (cr, x0 + radius, y0);
+	    cairo_arc (cr, x1 - radius, y0 + radius,
+		       radius, M_PI * 1.5, M_PI * 2.0);
+	    cairo_arc (cr, x1 - radius, y1 - radius,
+		       radius, 0.0, M_PI * 0.5);
+	    cairo_arc (cr, x0 + radius, y1 - radius,
+		       radius, M_PI * 0.5, M_PI);
+	    cairo_arc (cr, x0 + radius, y0 + radius,
+		       radius, M_PI, M_PI * 1.5);
+
+	    break;
 	}
 
-	cairo_restore (cr);
-	imageBufferToTexture (group->screen,
-						  &layer->texture, (char*) layer->buffer,
-						  layer->texWidth, layer->texHeight);
+    case TabStyleMetal:
+	{
+	    /* fill */
+	    cairo_pattern_t *pattern;
+	    pattern = cairo_pattern_create_linear (0, 0, 0, height);
+
+	    /* base color #1 */
+	    r = groupGetTabBaseColorRed (s) / 65535.0f;
+	    g = groupGetTabBaseColorGreen (s) / 65535.0f;
+	    b = groupGetTabBaseColorBlue (s) / 65535.0f;
+	    a = groupGetTabBaseColorAlpha (s) / 65535.0f;
+	    cairo_pattern_add_color_stop_rgba (pattern, 0.0f, r, g, b, a);
+
+	    /* highlight color */
+	    r = groupGetTabHighlightColorRed (s) / 65535.0f;
+	    g = groupGetTabHighlightColorGreen (s) / 65535.0f;
+	    b = groupGetTabHighlightColorBlue (s) / 65535.0f;
+	    a = groupGetTabHighlightColorAlpha (s) / 65535.0f;
+	    cairo_pattern_add_color_stop_rgba (pattern, 0.55f, r, g, b, a);
+
+	    /* base color #2 */
+	    r = groupGetTabBaseColorRed (s) / 65535.0f;
+	    g = groupGetTabBaseColorGreen (s) / 65535.0f;
+	    b = groupGetTabBaseColorBlue (s) / 65535.0f;
+	    a = groupGetTabBaseColorAlpha (s) / 65535.0f;
+	    cairo_pattern_add_color_stop_rgba (pattern, 1.0f, r, g, b, a);
+
+	    cairo_set_source (cr, pattern);
+	    cairo_fill_preserve (cr);
+	    cairo_pattern_destroy (pattern);
+	    break;
+	}
+
+    case TabStyleMurrina:
+	{
+	    double          ratio, transX;
+	    cairo_pattern_t *pattern;
+
+	    cairo_save (cr);
+
+	    /* clip width rounded rectangle */
+	    cairo_clip_preserve (cr);
+
+	    /* ==== TOP ==== */
+
+	    x0 = borderWidth / 2.0;
+	    y0 = borderWidth / 2.0;
+	    x1 = width  - borderWidth / 2.0;
+	    y1 = height - borderWidth / 2.0;
+	    radius = (y1 - y0) / 2;
+
+	    /* setup pattern */
+	    pattern = cairo_pattern_create_linear (0, 0, 0, height);
+
+	    /* we don't want to use a full highlight here
+	       so we mix the colors */
+	    r = (groupGetTabHighlightColorRed (s) +
+		 groupGetTabBaseColorRed (s)) / (2 * 65535.0f);
+	    g = (groupGetTabHighlightColorGreen (s) +
+		 groupGetTabBaseColorGreen (s)) / (2 * 65535.0f);
+	    b = (groupGetTabHighlightColorBlue (s) +
+		 groupGetTabBaseColorBlue (s)) / (2 * 65535.0f);
+	    a = (groupGetTabHighlightColorAlpha (s) +
+		 groupGetTabBaseColorAlpha (s)) / (2 * 65535.0f);
+	    cairo_pattern_add_color_stop_rgba (pattern, 0.0f, r, g, b, a);
+
+	    /* highlight color */
+	    r = groupGetTabHighlightColorRed (s) / 65535.0f;
+	    g = groupGetTabHighlightColorGreen (s) / 65535.0f;
+	    b = groupGetTabHighlightColorBlue (s) / 65535.0f;
+	    a = groupGetTabHighlightColorAlpha (s) / 65535.0f;
+	    cairo_pattern_add_color_stop_rgba (pattern, 1.0f, r, g, b, a);
+
+	    cairo_set_source (cr, pattern);
+
+	    cairo_fill (cr);
+	    cairo_pattern_destroy (pattern);
+
+	    /* ==== BOTTOM ===== */
+
+	    x0 = borderWidth / 2.0;
+	    y0 = borderWidth / 2.0;
+	    x1 = width  - borderWidth / 2.0;
+	    y1 = height - borderWidth / 2.0;
+	    radius = (y1 - y0) / 2;
+
+	    ratio = (double)width / (double)height;
+	    transX = width - (width * ratio);
+
+	    cairo_move_to (cr, x1, y1);
+	    cairo_line_to (cr, x1, y0);
+	    if (width < height)
+	    {
+		cairo_translate (cr, transX, 0);
+		cairo_scale (cr, ratio, 1.0);
+	    }
+	    cairo_arc (cr, x1 - radius, y0, radius, 0.0, M_PI * 0.5);
+	    if (width < height)
+	    {
+		cairo_scale (cr, 1.0 / ratio, 1.0);
+		cairo_translate (cr, -transX, 0);
+		cairo_scale (cr, ratio, 1.0);
+	    }
+	    cairo_arc_negative (cr, x0 + radius, y1,
+				radius, M_PI * 1.5, M_PI);
+	    cairo_close_path (cr);
+
+	    /* setup pattern */
+	    pattern = cairo_pattern_create_linear (0, 0, 0, height);
+
+	    /* base color */
+	    r = groupGetTabBaseColorRed (s) / 65535.0f;
+	    g = groupGetTabBaseColorGreen (s) / 65535.0f;
+	    b = groupGetTabBaseColorBlue (s) / 65535.0f;
+	    a = groupGetTabBaseColorAlpha (s) / 65535.0f;
+	    cairo_pattern_add_color_stop_rgba (pattern, 0.0f, r, g, b, a);
+
+	    /* we don't want to use a full highlight here
+	       so we mix the colors */
+	    r = (groupGetTabHighlightColorRed (s) +
+		 groupGetTabBaseColorRed (s)) / (2 * 65535.0f);
+	    g = (groupGetTabHighlightColorGreen (s) +
+		 groupGetTabBaseColorGreen (s)) / (2 * 65535.0f);
+	    b = (groupGetTabHighlightColorBlue (s) +
+		 groupGetTabBaseColorBlue (s)) / (2 * 65535.0f);
+	    a = (groupGetTabHighlightColorAlpha (s) +
+		 groupGetTabBaseColorAlpha (s)) / (2 * 65535.0f);
+	    cairo_pattern_add_color_stop_rgba (pattern, 1.0f, r, g, b, a);
+
+	    cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
+	    cairo_set_source (cr, pattern);
+	    cairo_fill (cr);
+	    cairo_pattern_destroy (pattern);
+	    cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
+
+	    cairo_restore (cr);
+
+	    /* draw shape again for the outline */
+	    x0 = borderWidth / 2.0;
+	    y0 = borderWidth / 2.0;
+	    x1 = width  - borderWidth / 2.0;
+	    y1 = height - borderWidth / 2.0;
+	    radius = groupGetBorderRadius (s);
+
+	    cairo_move_to (cr, x0 + radius, y0);
+	    cairo_arc (cr, x1 - radius, y0 + radius,
+		       radius, M_PI * 1.5, M_PI * 2.0);
+	    cairo_arc (cr, x1 - radius, y1 - radius,
+		       radius, 0.0, M_PI * 0.5);
+	    cairo_arc (cr, x0 + radius, y1 - radius,
+		       radius, M_PI * 0.5, M_PI);
+	    cairo_arc (cr, x0 + radius, y0 + radius,
+		       radius, M_PI, M_PI * 1.5);
+
+    	    break;
+	}
+
+    default:
+	break;
+    }
+
+    /* outline */
+    r = groupGetTabBorderColorRed (s) / 65535.0f;
+    g = groupGetTabBorderColorGreen (s) / 65535.0f;
+    b = groupGetTabBorderColorBlue (s) / 65535.0f;
+    a = groupGetTabBorderColorAlpha (s) / 65535.0f;
+    cairo_set_source_rgba (cr, r, g, b, a);
+
+    if (bar->bgAnimation != AnimationNone)
+	cairo_stroke_preserve (cr);
+    else
+	cairo_stroke (cr);
+
+    switch (bar->bgAnimation) {
+    case AnimationPulse:
+	{
+	    double animationProgress;
+	    double alpha;
+
+	    animationProgress = bar->bgAnimationTime /
+		                (groupGetPulseTime (s) * 1000.0);
+	    alpha = fabs (sin (PI * animationProgress)) * 0.75;
+	    if (alpha <= 0)
+		break;
+
+	    cairo_save (cr);
+	    cairo_clip (cr);
+	    cairo_set_operator (cr, CAIRO_OPERATOR_XOR);
+	    cairo_rectangle (cr, 0.0, 0.0, width, height);
+	    cairo_set_source_rgba (cr, 1.0, 1.0, 1.0, alpha);
+	    cairo_fill (cr);
+	    cairo_restore (cr);
+	    break;
+	}
+
+    case AnimationReflex:
+	{
+	    double          animationProgress;
+	    double          reflexWidth;
+	    double          posX, alpha;
+	    cairo_pattern_t *pattern;
+
+	    animationProgress = bar->bgAnimationTime /
+		                (groupGetReflexTime (s) * 1000.0);
+	    reflexWidth = (bar->nSlots / 2.0) * 30;
+	    posX = (width + reflexWidth * 2.0) * animationProgress;
+	    alpha = sin (PI * animationProgress) * 0.55;
+	    if (alpha <= 0)
+		break;
+
+	    cairo_save (cr);
+	    cairo_clip (cr);
+	    pattern = cairo_pattern_create_linear (posX - reflexWidth,
+						   0.0, posX, height);
+	    cairo_pattern_add_color_stop_rgba (pattern,
+					       0.0f, 1.0, 1.0, 1.0, 0.0);
+	    cairo_pattern_add_color_stop_rgba (pattern,
+					       0.5f, 1.0, 1.0, 1.0, alpha);
+	    cairo_pattern_add_color_stop_rgba (pattern,
+					       1.0f, 1.0, 1.0, 1.0, 0.0);
+	    cairo_rectangle (cr, 0.0, 0.0, width, height);
+	    cairo_set_source (cr, pattern);
+	    cairo_fill (cr);
+	    cairo_restore (cr);
+	    break;
+	}
+
+    case AnimationNone:
+    default:
+	break;
+    }
+
+    cairo_restore (cr);
+    imageBufferToTexture (s, &layer->texture, (char*) layer->buffer,
+			  layer->texWidth, layer->texHeight);
 }
 
 /*
@@ -614,86 +618,83 @@ groupRenderTabBarBackground(GroupSelection *group)
 void
 groupRenderWindowTitle (GroupSelection *group)
 {
-	GroupTabBar     *bar;
-	GroupCairoLayer *layer;
-	void            *data = NULL;
-	int             width, height;
-	int             stride;
-	Bool            hasText = FALSE;
-	CompTextAttrib  textAttrib;
-	CompDisplay     *d = group->screen->display;
+    GroupCairoLayer *layer;
+    void            *data = NULL;
+    int             width, height;
+    int             stride;
+    Bool            hasText = FALSE;
+    CompTextAttrib  textAttrib;
+    CompScreen      *s = group->screen;
+    CompDisplay     *d = s->display;
+    GroupTabBar     *bar = group->tabBar;
 
-	GROUP_DISPLAY (d);
+    GROUP_DISPLAY (d);
 
-	if (!group->tabBar || !HAS_TOP_WIN(group) || !group->tabBar->textLayer)
-	    return;
+    if (!bar || !HAS_TOP_WIN (group) || !bar->textLayer)
+	return;
 
-	bar = group->tabBar;
+    width = bar->region->extents.x2 - bar->region->extents.x1;
+    height = bar->region->extents.y2 - bar->region->extents.y1;
 
-	width = bar->region->extents.x2 - bar->region->extents.x1;
-	height = bar->region->extents.y2 - bar->region->extents.y1;
+    bar->textLayer = groupRebuildCairoLayer (s, bar->textLayer, width, height);
+    layer = bar->textLayer;
+    if (!layer)
+	return;
 
-	bar->textLayer = groupRebuildCairoLayer (group->screen,
-											 bar->textLayer, width, height);
-	layer = bar->textLayer;
-	if (!layer)
-		return;
+    textAttrib.family = "Sans";
+    textAttrib.size = groupGetTabbarFontSize (s);
+    textAttrib.style = TEXT_STYLE_BOLD;
+    textAttrib.color[0] = groupGetTabbarFontColorRed (s);
+    textAttrib.color[1] = groupGetTabbarFontColorGreen (s);
+    textAttrib.color[2] = groupGetTabbarFontColorBlue (s);
+    textAttrib.color[3] = groupGetTabbarFontColorAlpha (s);
+    textAttrib.ellipsize = TRUE;
 
-	textAttrib.family = "Sans";
-	textAttrib.size = groupGetTabbarFontSize (group->screen);
-	textAttrib.style = TEXT_STYLE_BOLD;
-	textAttrib.color[0] = groupGetTabbarFontColorRed (group->screen);
-	textAttrib.color[1] = groupGetTabbarFontColorGreen (group->screen);
-	textAttrib.color[2] = groupGetTabbarFontColorBlue (group->screen);
-	textAttrib.color[3] = groupGetTabbarFontColorAlpha (group->screen);
-	textAttrib.ellipsize = TRUE;
+    textAttrib.maxWidth = width;
+    textAttrib.maxHeight = height;
+    textAttrib.screen = s;
+    textAttrib.renderMode = TextRenderWindowTitle;
 
-	textAttrib.maxWidth = width;
-	textAttrib.maxHeight = height;
-	textAttrib.screen = group->screen;
-	textAttrib.renderMode = TextRenderWindowTitle;
+    if (bar->textSlot && bar->textSlot->window)
+	textAttrib.data = (void*) bar->textSlot->window->id;
+    else
+	textAttrib.data = 0;
 
-	if (bar->textSlot && bar->textSlot->window)
-		textAttrib.data = (void*) bar->textSlot->window->id;
-	else
-		textAttrib.data = 0;
+    if (gd->textAvailable)
+	hasText = (*d->fileToImage) (d, TEXT_ID, (const char*) &textAttrib,
+				     &width, &height, &stride, &data);
 
-	if (gd->textAvailable)
-		hasText = (*d->fileToImage) (d, TEXT_ID, (const char*) &textAttrib,
-									 &width, &height, &stride, &data);
+    if (!hasText)
+    {
+	/* getting the pixmap failed, so create an empty one */
+	Pixmap emptyPixmap;
+	emptyPixmap = XCreatePixmap (d->display, s->root, width, height, 32);
 
-	if (!hasText)
+	if (emptyPixmap)
 	{
-		/* getting the pixmap failed, so create an empty one */
-		Pixmap emptyPixmap;
-		emptyPixmap = XCreatePixmap (d->display, group->screen->root,
-									 width, height, 32);
+	    XGCValues gcv;
+	    GC        gc;
 
-		if (emptyPixmap)
-		{
-			XGCValues gcv;
-			GC        gc;
+	    gcv.foreground = 0x00000000;
+	    gcv.plane_mask = 0xffffffff;
 
-			gcv.foreground = 0x00000000;
-			gcv.plane_mask = 0xffffffff;
+	    gc = XCreateGC (d->display, emptyPixmap,
+			    GCForeground, &gcv);
 
-			gc = XCreateGC (d->display, emptyPixmap,
-						    GCForeground, &gcv);
+	    XFillRectangle (d->display, emptyPixmap, gc,
+			    0, 0, width, height);
 
-			XFillRectangle (d->display, emptyPixmap, gc,
-							0, 0, width, height);
+	    XFreeGC (d->display, gc);
 
-			XFreeGC (d->display, gc);
-
-			data = (void*) emptyPixmap;
-		}
+	    data = (void*) emptyPixmap;
 	}
+    }
 
-	layer->texWidth = width;
-	layer->texHeight = height;
+    layer->texWidth = width;
+    layer->texHeight = height;
 
-	if (data)
-		bindPixmapToTexture (group->screen, &layer->texture, (Pixmap) data,
-							 layer->texWidth, layer->texHeight, 32);
+    if (data)
+	bindPixmapToTexture (s, &layer->texture, (Pixmap) data,
+			     layer->texWidth, layer->texHeight, 32);
 }
 
