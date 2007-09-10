@@ -227,23 +227,25 @@ scalefilterDrawFilterText (CompScreen *s,
 {
     FILTER_SCREEN (s);
 
-    GLboolean wasBlend;
-    GLint     oldBlendSrc, oldBlendDst;
-    int       ox1, ox2, oy1, oy2;
+    GLboolean  wasBlend;
+    GLint      oldBlendSrc, oldBlendDst;
+    int        k;
+    int        ox1, ox2, oy1, oy2;
+    float      width, height, border;
+    float      x, y;
+    CompMatrix *m;
 
-    float width = fs->filterInfo->textWidth;
-    float height = fs->filterInfo->textHeight;
-    float border = scalefilterGetBorderSize (s);
+    width = fs->filterInfo->textWidth;
+    height = fs->filterInfo->textHeight;
+    border = scalefilterGetBorderSize (s);
 
     ox1 = output->region.extents.x1;
     ox2 = output->region.extents.x2;
     oy1 = output->region.extents.y1;
     oy2 = output->region.extents.y2;
-    float x = ox1 + ((ox2 - ox1) / 2) - (width / 2);
-    float y = oy1 + ((oy2 - oy1) / 2) + (height / 2);
 
-    x = floor (x);
-    y = floor (y);
+    x = floor (ox1 + ((ox2 - ox1) / 2) - (width / 2));
+    y = floor (oy1 + ((oy2 - oy1) / 2) + (height / 2));
 
     wasBlend = glIsEnabled (GL_BLEND);
     glGetIntegerv (GL_BLEND_SRC, &oldBlendSrc);
@@ -272,7 +274,7 @@ scalefilterDrawFilterText (CompScreen *s,
 #define CORNER(a,b) \
     for (k = a; k < b; k++) \
     {\
-	float rad = k* (3.14159 / 180.0f);\
+	float rad = k * (3.14159 / 180.0f);\
 	glVertex2f (0.0f, 0.0f);\
 	glVertex2f (cos (rad) * border, sin (rad) * border);\
 	glVertex2f (cos ((k - 1) * (3.14159 / 180.0f)) * border, \
@@ -280,8 +282,6 @@ scalefilterDrawFilterText (CompScreen *s,
     }
 
     /* Rounded corners */
-    int k;
-
     glTranslatef (border, border, 0.0f);
     glBegin (GL_TRIANGLES);
     CORNER (180, 270) glEnd();
@@ -311,17 +311,17 @@ scalefilterDrawFilterText (CompScreen *s,
 
     enableTexture (s, &fs->filterInfo->textTexture, COMP_TEXTURE_FILTER_GOOD);
 
-    CompMatrix *m = &fs->filterInfo->textTexture.matrix;
+    m = &fs->filterInfo->textTexture.matrix;
 
     glBegin (GL_QUADS);
 
-    glTexCoord2f (COMP_TEX_COORD_X(m, 0),COMP_TEX_COORD_Y(m ,0));
+    glTexCoord2f (COMP_TEX_COORD_X (m, 0), COMP_TEX_COORD_Y (m ,0));
     glVertex2f (x, y - height);
-    glTexCoord2f (COMP_TEX_COORD_X(m, 0),COMP_TEX_COORD_Y(m, height));
+    glTexCoord2f (COMP_TEX_COORD_X (m, 0), COMP_TEX_COORD_Y (m, height));
     glVertex2f (x, y);
-    glTexCoord2f (COMP_TEX_COORD_X(m, width),COMP_TEX_COORD_Y(m, height));
+    glTexCoord2f (COMP_TEX_COORD_X (m, width), COMP_TEX_COORD_Y (m, height));
     glVertex2f (x + width, y);
-    glTexCoord2f (COMP_TEX_COORD_X(m, width),COMP_TEX_COORD_Y(m, 0));
+    glTexCoord2f (COMP_TEX_COORD_X (m, width), COMP_TEX_COORD_Y (m, 0));
     glVertex2f (x + width, y - height);
 
     glEnd ();
@@ -391,11 +391,12 @@ scalefilterRelayout (CompScreen *s)
 static void
 scalefilterInitFilterInfo (CompScreen *s)
 {
+    ScaleFilterInfo *info;
+
     FILTER_SCREEN (s);
     SCALE_SCREEN (s);
 
-    ScaleFilterInfo *info = fs->filterInfo;
-
+    info = fs->filterInfo;
     memset (info->filterString, 0, sizeof (info->filterString));
     info->filterStringLength = 0;
 
@@ -563,7 +564,7 @@ scalefilterHandleKeyPress (CompScreen *s,
     /* set the event type invalid if we
        don't want other plugins see it */
     if (dropKeyEvent)
-	event->type = LASTEvent+1;
+	event->type = LASTEvent + 1;
 
     if (needRelayout)
     {
@@ -639,18 +640,14 @@ scalefilterHandleCompizEvent (CompDisplay *d,
 		matchInit (&fs->scaleMatch);
 		matchCopy (&fs->scaleMatch, ss->currentMatch);
 		matchUpdate (d, &fs->scaleMatch);
-		fs->matchApplied = FALSE;
+	    }
+	    else if (fs->filterInfo)
+	    {
+    		ss->currentMatch = fs->filterInfo->origMatch;
+		scalefilterFiniFilterInfo (s, TRUE);
 	    }
 
-	    if (!activated)
-	    {
-		if (fs->filterInfo)
-		{
-		    ss->currentMatch = fs->filterInfo->origMatch;
-		    scalefilterFiniFilterInfo (s, TRUE);
-		}
-		fs->matchApplied = FALSE;
-	    }
+	    fs->matchApplied = FALSE;
 	}
     }
 }
