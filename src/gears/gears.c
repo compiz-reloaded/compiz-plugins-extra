@@ -34,26 +34,6 @@
 #include <compiz-core.h>
 #include <compiz-cube.h>
 
-
-#define DEG2RAD (M_PI / 180.0f)
-
-static const CompTransform identity =
-{
-   {
-	1.0, 0.0, 0.0, 0.0,
-	0.0, 1.0, 0.0, 0.0,
-	0.0, 0.0, 1.0, 0.0,
-	0.0, 0.0, 0.0, 1.0
-    }
-};
-
-#define MULTMV(m, v) { \
-	float v0 = m[0]*v[0] + m[4]*v[1] + m[8]*v[2] + m[12]*v[3]; \
-	float v1 = m[1]*v[0] + m[5]*v[1] + m[9]*v[2] + m[13]*v[3]; \
-	float v2 = m[2]*v[0] + m[6]*v[1] + m[10]*v[2] + m[14]*v[3]; \
-	float v3 = m[3]*v[0] + m[7]*v[1] + m[11]*v[2] + m[15]*v[3]; \
-	v[0] = v0; v[1] = v1; v[2] = v2; v[3] = v3; }
-
 static int displayPrivateIndex;
 
 static int cubeDisplayPrivateIndex;
