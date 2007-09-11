@@ -1,5 +1,5 @@
 /**
- * Beryl  ADD Helper. Makes it easier to concentrate.
+ * Compiz ADD Helper. Makes it easier to concentrate.
  *
  * Copyright (c) 2007 Kristian Lyngstøl <kristian@beryl-project.org>
  * Ported and highly modified by Patrick Niklaus <marex@beryl-project.org>
@@ -23,57 +23,49 @@
  *
  */
 
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
-#include <math.h>
-#include <X11/Xatom.h>
-#include <X11/extensions/Xrender.h>
 #include <compiz-core.h>
-
 #include "addhelper_options.h"
 
 #define GET_ADD_DISPLAY(d)                            \
-	((AddHelperDisplay *) (d)->base.privates[displayPrivateIndex].ptr)
+    ((AddHelperDisplay *) (d)->base.privates[displayPrivateIndex].ptr)
 #define ADD_DISPLAY(d)                                \
     AddHelperDisplay *ad = GET_ADD_DISPLAY (d)
 #define GET_ADD_SCREEN(s, ad)                         \
-	((AddHelperScreen *) (s)->base.privates[(ad)->screenPrivateIndex].ptr)
+    ((AddHelperScreen *) (s)->base.privates[(ad)->screenPrivateIndex].ptr)
 #define ADD_SCREEN(s)                                 \
-	AddHelperScreen *as = GET_ADD_SCREEN (s, GET_ADD_DISPLAY (s->display))
+    AddHelperScreen *as = GET_ADD_SCREEN (s, GET_ADD_DISPLAY (s->display))
 #define GET_ADD_WINDOW(w, as) \
-	((AddHelperWindow *) (w)->base.privates[ (as)->windowPrivateIndex].ptr)
+    ((AddHelperWindow *) (w)->base.privates[ (as)->windowPrivateIndex].ptr)
 #define ADD_WINDOW(w) \
-	AddHelperWindow *aw = GET_ADD_WINDOW (w, GET_ADD_SCREEN  (w->screen, GET_ADD_DISPLAY (w->screen->display)))
+    AddHelperWindow *aw = GET_ADD_WINDOW (w,          \
+			  GET_ADD_SCREEN  (w->screen, \
+			  GET_ADD_DISPLAY (w->screen->display)))
 
-static int displayPrivateIndex = 0;
+static int displayPrivateIndex;
 
 typedef struct _AddHelperDisplay
 {
-	int screenPrivateIndex;
-	int active_screen;
+    int screenPrivateIndex;
 
-	GLushort opacity;
-	GLushort brightness;
-	GLushort saturation;
+    GLushort opacity;
+    GLushort brightness;
+    GLushort saturation;
 
-	CompMatch *match;
-	Bool toggle;
-	Window lastActive;
+    Bool   toggle;
 
-	HandleEventProc handleEvent;
+    HandleEventProc handleEvent;
 } AddHelperDisplay;
 
 typedef struct _AddHelperScreen
 {
-	int windowPrivateIndex;
+    int windowPrivateIndex;
 
-	PaintWindowProc paintWindow;
+    PaintWindowProc paintWindow;
 } AddHelperScreen;
 
 typedef struct _AddHelperWindow
 {
-	Bool dim;
+    Bool dim;
 } AddHelperWindow;
 
 /* Walk through all windows of the screen and adjust them if they
@@ -81,243 +73,271 @@ typedef struct _AddHelperWindow
  * the windows, including the active. Otherwise, it will dim 
  * and reset the active. 
  */
-static void walk_windows(CompDisplay *d)
+static void
+walkWindows (CompDisplay *d)
 {
-	ADD_DISPLAY(d);
-	
-	CompScreen *s;
-	CompWindow *w;
-	for (s = d->screens; s; s = s->next)
+    CompScreen *s;
+    CompWindow *w;
+
+    ADD_DISPLAY (d);
+
+    for (s = d->screens; s; s = s->next)
+    {
+	for (w = s->windows; w; w = w->next)
 	{
-		for (w = s->windows; w; w = w->next)
-		{
-			ADD_WINDOW(w);
+	    ADD_WINDOW (w);
 
-			aw->dim = FALSE;
+	    aw->dim = FALSE;
 
-			if (!ad->toggle)
-				continue;
+	    if (!ad->toggle)
+		continue;
 
-			if (w->id == d->activeWindow)
-				continue;
+	    if (w->id == d->activeWindow)
+		continue;
 
-			if(w->invisible || w->destroyed || w->hidden || w->minimized)
-				continue;
+	    if (w->invisible || w->destroyed || w->hidden || w->minimized)
+		continue;
 
-			if (!matchEval(ad->match, w))
-				continue;
+	    if (!matchEval (addhelperGetWindowTypes (d), w))
+		continue;
 
-			aw->dim = TRUE;
-		}
-
-		damageScreen(s);
+	    aw->dim = TRUE;
 	}
+
+	damageScreen (s);
+    }
 }
 
 /* Checks if the window is dimmed and, if so, paints it with the modified
  * paint attributes.
  */
-static Bool addhelperPaintWindow(CompWindow *w, const WindowPaintAttrib *attrib,
-								  const CompTransform *transform,
-								  Region region, unsigned int mask)
+static Bool
+addhelperPaintWindow (CompWindow              *w,
+		      const WindowPaintAttrib *attrib,
+     		      const CompTransform     *transform,
+		      Region                  region,
+		      unsigned int            mask)
 {
-	ADD_SCREEN(w->screen);
-	ADD_DISPLAY(w->screen->display);
-	ADD_WINDOW(w);
-	Bool status;
+    Bool       status;
+    CompScreen *s = w->screen;
 
-	if (aw->dim)
-	{
-		// copy the paint attribute
-		WindowPaintAttrib wAttrib = *attrib;
+    ADD_DISPLAY (s->display);
+    ADD_SCREEN (s);
+    ADD_WINDOW (w);
 
-		// applies the lowest value
-		wAttrib.opacity = MIN(attrib->opacity, ad->opacity);
-		wAttrib.brightness = MIN(attrib->brightness, ad->brightness);
-		wAttrib.saturation = MIN(attrib->saturation, ad->saturation);
+    if (aw->dim)
+    {
+	/* copy the paint attribute */
+	WindowPaintAttrib wAttrib = *attrib;
 
-		// continue painting with the modified attribute
-		UNWRAP(as, w->screen, paintWindow);
-		status = (*w->screen->paintWindow) (w, &wAttrib, transform, region, mask);
-		WRAP(as, w->screen, paintWindow, addhelperPaintWindow);
-	}
-	else
-	{
-		// the window is not dimmed, so its painted normal
-		UNWRAP(as, w->screen, paintWindow);
-		status = (*w->screen->paintWindow) (w, attrib, transform, region, mask);
-		WRAP(as, w->screen, paintWindow, addhelperPaintWindow);
-	}
+	/* applies the lowest value */
+	wAttrib.opacity = MIN (attrib->opacity, ad->opacity);
+	wAttrib.brightness = MIN (attrib->brightness, ad->brightness);
+	wAttrib.saturation = MIN (attrib->saturation, ad->saturation);
 
-	return status;
+	/* continue painting with the modified attribute */
+	UNWRAP (as, s, paintWindow);
+	status = (*s->paintWindow) (w, &wAttrib, transform, region, mask);
+	WRAP (as, s, paintWindow, addhelperPaintWindow);
+    }
+    else
+    {
+	/* the window is not dimmed, so it's painted normal */
+	UNWRAP (as, s, paintWindow);
+	status = (*s->paintWindow) (w, attrib, transform, region, mask);
+	WRAP (as, s, paintWindow, addhelperPaintWindow);
+    }
+
+    return status;
 }
 
 /* Takes the inital event. 
  * This checks for focus change and acts on it.
  */
-static void addhelperHandleEvent(CompDisplay * d, XEvent * event)
+static void
+addhelperHandleEvent (CompDisplay *d,
+		      XEvent      *event)
 {
-	ADD_DISPLAY(d);
+    Window activeWindow = d->activeWindow;
 
-	UNWRAP(ad, d, handleEvent);
-	(*d->handleEvent) (d, event);
-	WRAP(ad, d, handleEvent, addhelperHandleEvent);
-	
-	if (!ad->toggle)
-		return;
+    ADD_DISPLAY (d);
 
-	if (event->type == PropertyNotify && ad->lastActive != d->activeWindow)
-	{
-		walk_windows(d);
-		ad->lastActive = d->activeWindow;
-	}
+    UNWRAP(ad, d, handleEvent);
+    (*d->handleEvent) (d, event);
+    WRAP(ad, d, handleEvent, addhelperHandleEvent);
+
+    if (!ad->toggle)
+	return;
+
+    if (activeWindow != d->activeWindow)
+	walkWindows (d);
 }
 
 /* Configuration, initialization, boring stuff. ----------------------- */
 
 /* Takes the action and toggles us.
- */
-static Bool addhelperToggle(CompDisplay * d, CompAction * ac,
-						   CompActionState state, CompOption * option,
-						   int nOption)
+*/
+static Bool
+addhelperToggle (CompDisplay     *d,
+		 CompAction      *action,
+		 CompActionState state,
+		 CompOption      *option,
+		 int             nOption)
 {
-	ADD_DISPLAY(d);
+    ADD_DISPLAY (d);
 
-	ad->toggle = !ad->toggle;
-	walk_windows(d);
+    ad->toggle = !ad->toggle;
+    walkWindows (d);
 
-	return TRUE;
+    return TRUE;
 }
 
 /* Change notify for bcop */
-static void addhelperDisplayOptionChanged(CompDisplay *d, CompOption *opt, AddhelperDisplayOptions num)
+static void
+addhelperDisplayOptionChanged (CompDisplay             *d,
+			       CompOption              *opt,
+			       AddhelperDisplayOptions num)
 {
-	ADD_DISPLAY(d);
+    ADD_DISPLAY (d);
 
-	switch (num)
-	{
-	case AddhelperDisplayOptionBrightness:
-		ad->brightness = (addhelperGetBrightness(d) * 0xffff) / 100;
-		break;
-	case AddhelperDisplayOptionSaturation:
-		ad->saturation = (addhelperGetSaturation(d) * 0xffff) / 100;
-		break;
-	case AddhelperDisplayOptionOpacity:
-		ad->opacity = (addhelperGetOpacity(d) * 0xffff) / 100;
-		break;
-	case AddhelperDisplayOptionWindowTypes:
-		ad->match = addhelperGetWindowTypes(d);
-		break;
-	default:
-		break;
-	}
-
-}
-
-static Bool addhelperInitWindow(CompPlugin * p, CompWindow * w)
-{
-	ADD_SCREEN(w->screen);
-
-	AddHelperWindow *aw = (AddHelperWindow *) malloc(sizeof(AddHelperWindow));
-
-	w->base.privates[as->windowPrivateIndex].ptr = aw;
-
-	aw->dim = FALSE;
-
-	return TRUE;
-}
-
-static void addhelperFiniWindow(CompPlugin * p, CompWindow * w)
-{
-	ADD_WINDOW(w);
-
-	free(aw);
-}
-
-static Bool addhelperInitScreen(CompPlugin * p, CompScreen * s)
-{
-	ADD_DISPLAY(s->display);
-
-	AddHelperScreen *as = (AddHelperScreen*) malloc(sizeof(AddHelperScreen));
-
-	as->windowPrivateIndex = allocateWindowPrivateIndex(s);
-	if (as->windowPrivateIndex < 0)
-	{
-		free(as);
-		return FALSE;
-	}
-
-	WRAP(as, s, paintWindow, addhelperPaintWindow);
-
-	s->base.privates[ad->screenPrivateIndex].ptr = as;
-
-	return TRUE;
-}
-
-static void addhelperFiniScreen(CompPlugin * p, CompScreen * s)
-{
-	ADD_SCREEN(s);
-
-	UNWRAP(as, s, paintWindow);
-	
-	free(as);
-}
-
-static Bool addhelperInitDisplay(CompPlugin * p, CompDisplay * d)
-{
-	AddHelperDisplay *ad;
-
-	if (!checkPluginABI ("core", CORE_ABIVERSION))
-		return FALSE;
-
-	ad = (AddHelperDisplay *) malloc(sizeof(AddHelperDisplay));
-
-	ad->screenPrivateIndex = allocateScreenPrivateIndex(d);
-	if (ad->screenPrivateIndex < 0)
-	{
-		free(ad);
-		return FALSE;
-	}
-
-	d->base.privates[displayPrivateIndex].ptr = ad;
-
-	addhelperSetToggleKeyInitiate(d, addhelperToggle);
-	addhelperSetBrightnessNotify(d, addhelperDisplayOptionChanged);
-	addhelperSetOpacityNotify(d, addhelperDisplayOptionChanged);
-	addhelperSetSaturationNotify(d, addhelperDisplayOptionChanged);
-
-	ad->active_screen = d->screens->screenNum;
-	ad->toggle = FALSE;
-	ad->match = addhelperGetWindowTypes(d);
+    switch (num) {
+    case AddhelperDisplayOptionBrightness:
 	ad->brightness = (addhelperGetBrightness(d) * 0xffff) / 100;
-	ad->opacity = (addhelperGetOpacity(d) * 0xffff) / 100;
+	break;
+    case AddhelperDisplayOptionSaturation:
 	ad->saturation = (addhelperGetSaturation(d) * 0xffff) / 100;
-	ad->lastActive = None;
-
-	WRAP(ad, d, handleEvent, addhelperHandleEvent);
-
-	return TRUE;
+	break;
+    case AddhelperDisplayOptionOpacity:
+	ad->opacity = (addhelperGetOpacity(d) * 0xffff) / 100;
+	break;
+    default:
+	break;
+    }
 }
 
-static void addhelperFiniDisplay(CompPlugin * p, CompDisplay * d)
+static Bool
+addhelperInitWindow (CompPlugin *p,
+		     CompWindow *w)
 {
-	ADD_DISPLAY(d);
+    AddHelperWindow *aw;
 
-	UNWRAP(ad, d, handleEvent);
+    ADD_SCREEN (w->screen);
 
-	freeScreenPrivateIndex(d, ad->screenPrivateIndex);
-	free(ad);
+    aw = malloc (sizeof (AddHelperWindow));
+    if (!aw)
+	return FALSE;
+
+    w->base.privates[as->windowPrivateIndex].ptr = aw;
+
+    aw->dim = FALSE;
+
+    return TRUE;
+}
+
+static void
+addhelperFiniWindow (CompPlugin *p,
+		     CompWindow *w)
+{
+    ADD_WINDOW (w);
+
+    free (aw);
+}
+
+static Bool
+addhelperInitScreen (CompPlugin *p,
+		     CompScreen *s)
+{
+    AddHelperScreen *as;
+
+    ADD_DISPLAY (s->display);
+
+    as = malloc (sizeof (AddHelperScreen));
+    if (!as)
+	return FALSE;
+
+    as->windowPrivateIndex = allocateWindowPrivateIndex (s);
+    if (as->windowPrivateIndex < 0)
+    {
+	free (as);
+	return FALSE;
+    }
+
+    WRAP (as, s, paintWindow, addhelperPaintWindow);
+
+    s->base.privates[ad->screenPrivateIndex].ptr = as;
+
+    return TRUE;
+}
+
+static void
+addhelperFiniScreen (CompPlugin *p,
+		     CompScreen *s)
+{
+    ADD_SCREEN (s);
+
+    UNWRAP (as, s, paintWindow);
+
+    free (as);
+}
+
+static Bool
+addhelperInitDisplay (CompPlugin  *p,
+		      CompDisplay *d)
+{
+    AddHelperDisplay *ad;
+
+    if (!checkPluginABI ("core", CORE_ABIVERSION))
+	return FALSE;
+
+    ad = malloc (sizeof (AddHelperDisplay));
+    if (!ad)
+	return FALSE;
+
+    ad->screenPrivateIndex = allocateScreenPrivateIndex (d);
+    if (ad->screenPrivateIndex < 0)
+    {
+	free (ad);
+	return FALSE;
+    }
+
+    d->base.privates[displayPrivateIndex].ptr = ad;
+
+    addhelperSetToggleKeyInitiate (d, addhelperToggle);
+    addhelperSetBrightnessNotify (d, addhelperDisplayOptionChanged);
+    addhelperSetOpacityNotify (d, addhelperDisplayOptionChanged);
+    addhelperSetSaturationNotify (d, addhelperDisplayOptionChanged);
+
+    ad->toggle = FALSE;
+    ad->brightness = (addhelperGetBrightness (d) * BRIGHT) / 100;
+    ad->opacity = (addhelperGetOpacity (d) * OPAQUE) / 100;
+    ad->saturation = (addhelperGetSaturation (d) * COLOR) / 100;
+
+    WRAP (ad, d, handleEvent, addhelperHandleEvent);
+
+    return TRUE;
+}
+
+static void
+addhelperFiniDisplay (CompPlugin  *p,
+		      CompDisplay *d)
+{
+    ADD_DISPLAY (d);
+
+    UNWRAP (ad, d, handleEvent);
+
+    freeScreenPrivateIndex (d, ad->screenPrivateIndex);
+    free (ad);
 }
 
 static CompBool
 addhelperInitObject (CompPlugin *p,
-		       CompObject *o)
+		     CompObject *o)
 {
-	static InitPluginObjectProc dispTab[] = {
-		(InitPluginObjectProc) 0, /* InitCore */
-		(InitPluginObjectProc) addhelperInitDisplay,
-		(InitPluginObjectProc) addhelperInitScreen,
-		(InitPluginObjectProc) addhelperInitWindow
+    static InitPluginObjectProc dispTab[] = {
+	(InitPluginObjectProc) 0, /* InitCore */
+	(InitPluginObjectProc) addhelperInitDisplay,
+	(InitPluginObjectProc) addhelperInitScreen,
+	(InitPluginObjectProc) addhelperInitWindow
     };
 
     RETURN_DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), TRUE, (p, o));
@@ -325,44 +345,46 @@ addhelperInitObject (CompPlugin *p,
 
 static void
 addhelperFiniObject (CompPlugin *p,
-		       CompObject *o)
+		     CompObject *o)
 {
     static FiniPluginObjectProc dispTab[] = {
-		(FiniPluginObjectProc) 0, /* FiniCore */
-		(FiniPluginObjectProc) addhelperFiniDisplay,
-		(FiniPluginObjectProc) addhelperFiniScreen,
-		(FiniPluginObjectProc) addhelperFiniWindow
+	(FiniPluginObjectProc) 0, /* FiniCore */
+	(FiniPluginObjectProc) addhelperFiniDisplay,
+	(FiniPluginObjectProc) addhelperFiniScreen,
+	(FiniPluginObjectProc) addhelperFiniWindow
     };
 
     DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), (p, o));
 }
 
-static Bool addhelperInit(CompPlugin * p)
+static Bool
+addhelperInit (CompPlugin *p)
 {
-	displayPrivateIndex = allocateDisplayPrivateIndex();
-	if (displayPrivateIndex < 0)
-		return FALSE;
-	return TRUE;
+    displayPrivateIndex = allocateDisplayPrivateIndex ();
+    if (displayPrivateIndex < 0)
+	return FALSE;
+    return TRUE;
 }
 
-static void addhelperFini(CompPlugin * p)
+static void
+addhelperFini (CompPlugin *p)
 {
-	if (displayPrivateIndex >= 0)
-		freeDisplayPrivateIndex(displayPrivateIndex);
+    freeDisplayPrivateIndex (displayPrivateIndex);
 }
 
 CompPluginVTable addhelperVTable = {
-	"addhelper",
-	0,
-	addhelperInit,
-	addhelperFini,
-	addhelperInitObject,
-	addhelperFiniObject,
-	0,
-	0
+    "addhelper",
+    0,
+    addhelperInit,
+    addhelperFini,
+    addhelperInitObject,
+    addhelperFiniObject,
+    0,
+    0
 };
 
-CompPluginVTable *getCompPluginInfo(void)
+CompPluginVTable*
+getCompPluginInfo (void)
 {
-	return &addhelperVTable;
+    return &addhelperVTable;
 }
