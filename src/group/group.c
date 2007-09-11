@@ -1765,6 +1765,7 @@ groupWindowMoveNotify (CompWindow *w,
 {
     CompScreen *s = w->screen;
     Bool       viewportChange;
+    Bool       preventGroupMove;
     int        i;
 
     GROUP_SCREEN (s);
@@ -1809,11 +1810,15 @@ groupWindowMoveNotify (CompWindow *w,
 	}
     }
 
-    if (!groupGetMoveAll (s) || gd->ignoreMode ||
+    preventGroupMove = gd->ignoreMode && !gw->group->tabBar;
+
+    if (!groupGetMoveAll (s) || preventGroupMove ||
 	(gw->group->tabbingState != NoTabbing) ||
 	(gw->group->grabWindow != w->id) ||
 	!(gw->group->grabMask & CompWindowGrabMoveMask))
+    {
 	return;
+    }
 
     for (i = 0; i < gw->group->nWins; i++)
     {
@@ -1825,6 +1830,9 @@ groupWindowMoveNotify (CompWindow *w,
 	    continue;
 
 	GROUP_WINDOW (cw);
+
+	gw->destination.x += dx;
+	gw->destination.y += dy;
 
 	if (cw->state & MAXIMIZE_STATE)
 	{
@@ -1928,64 +1936,61 @@ groupWindowUngrabNotify (CompWindow *w)
 
     if (gw->group && !gd->ignoreMode && !gs->queued)
     {
-	if (!gw->group->tabBar)
+	int        i;
+	XRectangle rect;
+
+	groupDequeueMoveNotifies (s);
+
+	if (gd->resizeInfo)
 	{
-	    int        i;
-	    XRectangle rect;
+	    rect.x      = WIN_X (w);
+	    rect.y      = WIN_Y (w);
+	    rect.width  = WIN_WIDTH (w);
+	    rect.height = WIN_HEIGHT (w);
+	}
 
-	    groupDequeueMoveNotifies (s);
+	for (i = 0; i < gw->group->nWins; i++)
+	{
+	    CompWindow *cw = gw->group->windows[i];
+	    if (!cw)
+		continue;
 
-	    if (gd->resizeInfo)
+	    if (cw->id != w->id)
 	    {
-		rect.x      = WIN_X (w);
-		rect.y      = WIN_Y (w);
-		rect.width  = WIN_WIDTH (w);
-		rect.height = WIN_HEIGHT (w);
-	    }
+		GROUP_WINDOW (cw);
 
-	    for (i = 0; i < gw->group->nWins; i++)
-	    {
-		CompWindow *cw = gw->group->windows[i];
-		if (!cw)
-		    continue;
-
-		if (cw->id != w->id)
+		if (gw->resizeGeometry)
 		{
-		    GROUP_WINDOW (cw);
+		    unsigned int mask;
 
-		    if (gw->resizeGeometry)
+		    gw->resizeGeometry->x      = WIN_X (cw);
+		    gw->resizeGeometry->y      = WIN_Y (cw);
+		    gw->resizeGeometry->width  = WIN_WIDTH (cw);
+		    gw->resizeGeometry->height = WIN_HEIGHT (cw);
+
+		    mask = groupUpdateResizeRectangle (cw, &rect, FALSE);
+		    if (mask)
 		    {
-			unsigned int mask;
+			XWindowChanges xwc;
+			xwc.x      = gw->resizeGeometry->x;
+			xwc.y      = gw->resizeGeometry->y;
+			xwc.width  = gw->resizeGeometry->width;
+			xwc.height = gw->resizeGeometry->height;
 
-			gw->resizeGeometry->x      = WIN_X (cw);
-			gw->resizeGeometry->y      = WIN_Y (cw);
-			gw->resizeGeometry->width  = WIN_WIDTH (cw);
-			gw->resizeGeometry->height = WIN_HEIGHT (cw);
-
-			mask = groupUpdateResizeRectangle (cw, &rect, FALSE);
-			if (mask)
-			{
-			    XWindowChanges xwc;
-			    xwc.x      = gw->resizeGeometry->x;
-			    xwc.y      = gw->resizeGeometry->y;
-			    xwc.width  = gw->resizeGeometry->width;
-			    xwc.height = gw->resizeGeometry->height;
-
-			    configureXWindow (cw, mask, &xwc);
-			}
-			else
-			{
-			    free (gw->resizeGeometry);
-			    gw->resizeGeometry =  NULL;
-			}
+			configureXWindow (cw, mask, &xwc);
 		    }
-		    if (gw->needsPosSync)
+		    else
 		    {
-			syncWindowPosition (cw);
-			gw->needsPosSync = FALSE;
+			free (gw->resizeGeometry);
+			gw->resizeGeometry =  NULL;
 		    }
-		    groupEnqueueUngrabNotify (cw);
 		}
+		if (gw->needsPosSync)
+		{
+		    syncWindowPosition (cw);
+		    gw->needsPosSync = FALSE;
+		}
+		groupEnqueueUngrabNotify (cw);
 	    }
 	}
 
