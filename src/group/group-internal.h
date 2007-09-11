@@ -174,6 +174,12 @@ struct _GroupPendingUngrabs {
     GroupPendingUngrabs *next;
 };
 
+typedef struct _GroupPendingSyncs GroupPendingSyncs;
+struct _GroupPendingSyncs {
+    CompWindow        *w;
+    GroupPendingSyncs *next;
+};
+
 /*
  * Pointer to display list
  */

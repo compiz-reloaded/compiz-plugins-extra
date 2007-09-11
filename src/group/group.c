@@ -1747,7 +1747,7 @@ groupWindowResizeNotify (CompWindow *w,
 		dx = WIN_CENTER_X (w) - WIN_CENTER_X (cw);
 		dy = WIN_CENTER_Y (w) - WIN_CENTER_Y (cw);
 
-		groupEnqueueMoveNotify (cw, dx, dy, TRUE, TRUE); 
+		groupEnqueueMoveNotify (cw, dx, dy, TRUE, TRUE);
 	    }
 	}
     }
@@ -1835,12 +1835,9 @@ groupWindowMoveNotify (CompWindow *w,
 	if (cw->state & MAXIMIZE_STATE)
 	{
 	    if (viewportChange)
-	    {
-		gw->needsPosSync = TRUE;
 		groupEnqueueMoveNotify (cw, -dx, -dy, immediate, TRUE);
-	    }
 	}
-	else if (!viewportChange)
+	else if (!viewportChange || gw->group->tabBar)
 	{
 	    gw->needsPosSync = TRUE;
 	    groupEnqueueMoveNotify (cw, dx, dy, immediate,

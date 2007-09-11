@@ -72,10 +72,33 @@ groupEnqueueMoveNotify (CompWindow *w,
     }
 }
 
+static void
+groupDequeueSyncs (GroupPendingSyncs *syncs)
+{
+    GroupPendingSyncs *sync;
+
+    while (syncs)
+    {
+	sync = syncs;
+	syncs = sync->next;
+	
+	GROUP_WINDOW (sync->w);
+	if (gw->needsPosSync)
+	{
+	    syncWindowPosition (sync->w);
+	    gw->needsPosSync = FALSE;
+	}
+
+	free (sync);
+    }
+
+}
+
 void
 groupDequeueMoveNotifies (CompScreen *s)
 {
     GroupPendingMoves *move;
+    GroupPendingSyncs *syncs = NULL, *sync;
 
     GROUP_SCREEN (s);
 
@@ -88,10 +111,23 @@ groupDequeueMoveNotifies (CompScreen *s)
 
 	moveWindow (move->w, move->dx, move->dy, TRUE, move->immediate);
 	if (move->sync)
-	    syncWindowPosition (move->w);
+	{
+	    sync = malloc (sizeof (GroupPendingSyncs));
+	    if (sync)
+	    {
+		GROUP_WINDOW (move->w);
 
+		gw->needsPosSync = TRUE;
+		sync->w          = move->w;
+		sync->next       = syncs;
+		syncs            = sync;
+	    }
+	}
 	free (move);
     }
+
+    if (syncs)
+	groupDequeueSyncs (syncs);
 
     gs->queued = FALSE;
 }
