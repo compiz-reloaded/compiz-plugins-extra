@@ -1627,6 +1627,7 @@ groupChangeTab (GroupTabBarSlot             *topTab,
     if (topTab != group->nextTopTab)
     {
 	groupSetWindowVisibility (w, TRUE);
+	syncWindowPosition (w);
 
 	if (HAS_PREV_TOP_WIN (group))
 	{

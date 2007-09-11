@@ -1829,16 +1829,7 @@ groupWindowMoveNotify (CompWindow *w,
 
 	GROUP_WINDOW (cw);
 
-	gw->destination.x += dx;
-	gw->destination.y += dy;
-
-	if (gw->group->tabBar)
-	{
-	    groupEnqueueMoveNotify (cw, dx, dy, immediate,
-				    !(gw->group->grabMask &
-				      CompWindowGrabMoveMask));
-	}
-	else if (cw->state & MAXIMIZE_STATE)
+	if (cw->state & MAXIMIZE_STATE)
 	{
 	    if (viewportChange)
 		groupEnqueueMoveNotify (cw, -dx, -dy, immediate, TRUE);
