@@ -793,6 +793,7 @@ widgetInitWindow (CompPlugin *p,
         return FALSE;
 
     ww->isWidget = FALSE;
+    ww->propertyState = PropertyNotSet;
     ww->parentWidget = NULL;
     ww->wasUnmapped = FALSE;
     ww->matchUpdateHandle = 0;
