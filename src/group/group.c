@@ -1832,23 +1832,21 @@ groupWindowMoveNotify (CompWindow *w,
 	gw->destination.x += dx;
 	gw->destination.y += dy;
 
-	if (cw->state & MAXIMIZE_STATE)
+	if (gw->group->tabBar)
+	{
+	    groupEnqueueMoveNotify (cw, dx, dy, immediate,
+				    !(gw->group->grabMask &
+				      CompWindowGrabMoveMask));
+	}
+	else if (cw->state & MAXIMIZE_STATE)
 	{
 	    if (viewportChange)
 		groupEnqueueMoveNotify (cw, -dx, -dy, immediate, TRUE);
 	}
-	else if (!viewportChange || gw->group->tabBar)
+	else if (!viewportChange)
 	{
-	    Bool needImmediateSync = FALSE;
-
-	    if (gw->group->tabBar &&
-		!(gw->group->grabMask & CompWindowGrabMoveMask))
-	    {
-		needImmediateSync = TRUE;
-	    }
-
 	    gw->needsPosSync = TRUE;
-	    groupEnqueueMoveNotify (cw, dx, dy, immediate, needImmediateSync);
+	    groupEnqueueMoveNotify (cw, dx, dy, immediate, FALSE);
 	}
     }
 }
