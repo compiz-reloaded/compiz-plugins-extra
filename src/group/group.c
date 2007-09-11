@@ -1765,7 +1765,6 @@ groupWindowMoveNotify (CompWindow *w,
 {
     CompScreen *s = w->screen;
     Bool       viewportChange;
-    Bool       preventGroupMove;
     int        i;
 
     GROUP_SCREEN (s);
@@ -1810,14 +1809,13 @@ groupWindowMoveNotify (CompWindow *w,
 	}
     }
 
-    preventGroupMove = gd->ignoreMode && !gw->group->tabBar;
-
-    if (!groupGetMoveAll (s) || preventGroupMove ||
+    if (!groupGetMoveAll (s) || gd->ignoreMode ||
 	(gw->group->tabbingState != NoTabbing) ||
 	(gw->group->grabWindow != w->id) ||
 	!(gw->group->grabMask & CompWindowGrabMoveMask))
     {
-	return;
+	if (!gw->group->tabBar)
+	    return;
     }
 
     for (i = 0; i < gw->group->nWins; i++)
@@ -1845,7 +1843,8 @@ groupWindowMoveNotify (CompWindow *w,
 	else if (!viewportChange)
 	{
 	    gw->needsPosSync = TRUE;
-	    groupEnqueueMoveNotify (cw, dx, dy, immediate, FALSE);
+	    groupEnqueueMoveNotify (cw, dx, dy, immediate,
+				    (gw->group->tabBar != NULL));
 	}
     }
 }
