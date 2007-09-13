@@ -1545,7 +1545,7 @@ Bool
 groupChangeTab (GroupTabBarSlot             *topTab,
 		ChangeTabAnimationDirection direction)
 {
-    CompWindow     *w;
+    CompWindow     *w, *oldTopTab;
     GroupSelection *group;
 
     if (!topTab)
@@ -1565,6 +1565,8 @@ groupChangeTab (GroupTabBarSlot             *topTab,
 
     if (group->changeState != NoTabChange && group->nextTopTab == topTab)
 	return TRUE;
+
+    oldTopTab = group->topTab ? group->topTab->window : NULL;
 
     if (group->changeState != NoTabChange)
 	group->nextDirection = direction;
@@ -1627,7 +1629,20 @@ groupChangeTab (GroupTabBarSlot             *topTab,
     if (topTab != group->nextTopTab)
     {
 	groupSetWindowVisibility (w, TRUE);
-	syncWindowPosition (w);
+	if (oldTopTab)
+	{
+	    int dx, dy;
+
+	    GROUP_SCREEN (w->screen);
+
+	    dx = WIN_CENTER_X (oldTopTab) - WIN_CENTER_X (w);
+	    dy = WIN_CENTER_Y (oldTopTab) - WIN_CENTER_Y (w);
+
+	    gs->queued = TRUE;
+	    moveWindow (w, dx, dy, FALSE, TRUE);
+	    syncWindowPosition (w);
+	    gs->queued = FALSE;
+	}
 
 	if (HAS_PREV_TOP_WIN (group))
 	{
