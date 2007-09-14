@@ -559,7 +559,6 @@ showdesktopPaintWindow (CompWindow              *w,
 		      (sw->placer->offScreenY - sw->placer->onScreenY) :
 		      (sw->placer->onScreenY - sw->placer->offScreenY);
 
-	    wAttrib.opacity = OPAQUE;
 	    mask |= PAINT_WINDOW_TRANSFORMED_MASK;
 
 	    matrixTranslate (&wTransform, w->attrib.x, w->attrib.y, 0.0f);
