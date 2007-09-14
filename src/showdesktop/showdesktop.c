@@ -626,21 +626,22 @@ showdesktopHandleEvent (CompDisplay *d,
     WRAP (sd, d, handleEvent, showdesktopHandleEvent);
 }
 
-static unsigned int
-showdesktopGetAllowedActionsForWindow (CompWindow *w)
+static void
+showdesktopGetAllowedActionsForWindow (CompWindow   *w,
+				       unsigned int *setActions,
+				       unsigned int *clearActions)
 {
     CompScreen   *s = w->screen;
-    unsigned int actions;
 
     SD_SCREEN (s);
     SD_WINDOW (w);
 
     UNWRAP (ss, s, getAllowedActionsForWindow);
-    actions = (*s->getAllowedActionsForWindow) (w);
+    (*s->getAllowedActionsForWindow) (w, setActions, clearActions);
     WRAP (ss, s, getAllowedActionsForWindow,
 	  showdesktopGetAllowedActionsForWindow);
 
-    return (actions & ~sw->notAllowedMask);
+    *clearActions |= sw->notAllowedMask;
 }
 
 static void
