@@ -19,14 +19,7 @@
  *
  */
 
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
 #include <math.h>
-#include <X11/Xatom.h>
-#include <X11/extensions/Xrender.h>
-#include <sys/stat.h>
-#include <unistd.h>
 
 #include <compiz-core.h>
 
