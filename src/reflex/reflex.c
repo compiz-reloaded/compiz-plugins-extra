@@ -18,14 +18,6 @@
  * GNU General Public License for more details.
  *
  */
-
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
-
-#include <X11/Xatom.h>
-#include <X11/extensions/Xrender.h>
-
 #include <compiz-core.h>
 
 #include "reflex_options.h"
