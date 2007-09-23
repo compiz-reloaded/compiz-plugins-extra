@@ -216,12 +216,12 @@ cubecapsPaintCap (CompScreen	    *s,
 		  CubeCap	    *capInside,
 		  unsigned short    *colorOutside,
 		  unsigned short    *colorInside,
-		  Bool		    clamp_to_border_outside,
-		  Bool		    clamp_to_border_inside)
+		  Bool		    clampToBorderOutside,
+		  Bool		    clampToBorderInside)
 {
     CubeCap	    *cap;
     unsigned short  opacity;
-    Bool	    clamp_to_border;
+    Bool	    clampToBorder;
 
     CUBE_SCREEN(s);
 
@@ -230,7 +230,7 @@ cubecapsPaintCap (CompScreen	    *s,
     if (cs->invert == 1)
     {
 	cap = capOutside;
-	clamp_to_border = clamp_to_border_outside;
+	clampToBorder = clampToBorderOutside;
 	if (opacity == OPAQUE)
 	    opacity = colorOutside[3];
 	glColor4us (colorOutside[0],
@@ -241,7 +241,7 @@ cubecapsPaintCap (CompScreen	    *s,
     else if (cs->invert != 1)
     {
 	cap = capInside;
-	clamp_to_border = clamp_to_border_inside;
+	clampToBorder = clampToBorderInside;
 	if (opacity == OPAQUE)
 	    opacity = colorInside[4];
 	glColor4us (colorInside[0],
@@ -284,7 +284,7 @@ cubecapsPaintCap (CompScreen	    *s,
 	/* Use CLAMP_TO_BORDER if available to avoid weird looking clamping 
 	 * of non-scaled images (it also improves scaled images a bit but 
 	 * that's much less obvious) */
-	if (clamp_to_border && s->textureBorderClamp)
+	if (clampToBorder && s->textureBorderClamp)
 	{
 	    glTexParameteri (cap->texture.target, GL_TEXTURE_WRAP_S,
 			     GL_CLAMP_TO_BORDER);
