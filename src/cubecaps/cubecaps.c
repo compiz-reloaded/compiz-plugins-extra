@@ -379,8 +379,10 @@ cubecapsPreparePaintScreen (CompScreen *s,
 	cs->rotationState != RotationManual)
 	return;
 
-    cs->paintAllViewports |= !cubecapsGetDrawTop (s)   |
-			     !cubecapsGetDrawBottom (s);
+    cs->paintAllViewports |= !cubecapsGetDrawTop (s)			|
+			     !cubecapsGetDrawBottom (s)			|
+			     (cubecapsGetTopColorAlpha (s) != OPAQUE)	|
+			     (cubecapsGetBottomColorAlpha (s) != OPAQUE);
 }
 
 /* Cube hooks --------------------------------------------------------------- */
