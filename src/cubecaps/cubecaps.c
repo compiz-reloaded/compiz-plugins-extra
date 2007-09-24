@@ -38,15 +38,15 @@ typedef struct _CubeCapsDisplay
 
 typedef struct _CubeCap
 {
-	int		    current;
-	CompListValue	    *files;
+    int		    current;
+    CompListValue	    *files;
 
-	CompTexture	    texture;
-	GLfloat		    tc[12];
+    CompTexture	    texture;
+    GLfloat		    tc[12];
 
-	Bool		    scale;
-	int		    pw;
-	int		    ph;
+    Bool		    scale;
+    int		    pw;
+    int		    ph;
 } CubeCap;
 
 typedef struct _CubeCapsScreen
