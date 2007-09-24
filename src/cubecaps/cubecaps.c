@@ -51,6 +51,7 @@ typedef struct _CubeCap
 
 typedef struct _CubeCapsScreen
 {
+    PreparePaintScreenProc  preparePaintScreen;
     CubePaintTopProc	    paintTop;
     CubePaintBottomProc	    paintBottom;
 
@@ -356,6 +357,26 @@ cubecapsPaintCap (CompScreen	    *s,
 
     glDisable (GL_BLEND);
     glBlendFunc (GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+}
+
+/* Core painting hooks ------------------------------------------------------ */
+
+/*
+ * Force cube to paint all viewports if not drawing top or bottom cap(s)
+ */
+static void
+cubecapsPreparePaintScreen (CompScreen *s,
+			    int	       msSinceLastPaint)
+{
+    CUBE_SCREEN (s);
+    CUBECAPS_SCREEN (s);
+
+    UNWRAP (ccs, s, preparePaintScreen);
+    (*s->preparePaintScreen) (s, msSinceLastPaint);
+    WRAP (ccs, s, preparePaintScreen, cubecapsPreparePaintScreen);
+
+    cs->paintAllViewports |= !cubecapsGetDrawTop (s)   |
+			     !cubecapsGetDrawBottom (s);
 }
 
 /* Cube hooks --------------------------------------------------------------- */
@@ -727,6 +748,7 @@ cubecapsInitScreen (CompPlugin *p,
     cubecapsSetScaleTopImageNotify (s, cubecapsScaleTopImageChanged);
     cubecapsSetScaleBottomImageNotify (s, cubecapsScaleBottomImageChanged);
 
+    WRAP (ccs, s, preparePaintScreen, cubecapsPreparePaintScreen);
     WRAP (ccs, cs, paintTop, cubecapsPaintTop);
     WRAP (ccs, cs, paintBottom, cubecapsPaintBottom);
 
@@ -747,6 +769,7 @@ cubecapsFiniScreen (CompPlugin *p,
 
     UNWRAP (ccs, cs, paintTop);
     UNWRAP (ccs, cs, paintBottom);
+    UNWRAP (ccs, s, preparePaintScreen);
 
     free (ccs);
 }
