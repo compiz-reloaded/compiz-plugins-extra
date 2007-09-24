@@ -375,6 +375,10 @@ cubecapsPreparePaintScreen (CompScreen *s,
     (*s->preparePaintScreen) (s, msSinceLastPaint);
     WRAP (ccs, s, preparePaintScreen, cubecapsPreparePaintScreen);
 
+    if (cs->rotationState == RotationNone ||
+	cs->rotationState != RotationManual)
+	return;
+
     cs->paintAllViewports |= !cubecapsGetDrawTop (s)   |
 			     !cubecapsGetDrawBottom (s);
 }
