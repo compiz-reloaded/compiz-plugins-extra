@@ -101,8 +101,7 @@ groupFindWindowsInRegion (CompScreen *s,
 
     for (w = s->reverseWindows; w; w = w->prev)
     {
-	if (matchEval (groupGetWindowMatch (s), w) &&
-	    !w->invisible &&
+	if (groupIsGroupWindow (w) &&
 	    groupWindowInRegion (w, reg, precision))
 	{
 	    GROUP_WINDOW (w);
@@ -185,7 +184,7 @@ groupSelectWindow (CompWindow *w)
     GROUP_WINDOW (w);
 
     /* filter out windows we don't want to be groupable */
-    if (w->invisible || !matchEval (groupGetWindowMatch (w->screen), w))
+    if (!groupIsGroupWindow (w))
 	return;
 
     if (gw->inSelection)

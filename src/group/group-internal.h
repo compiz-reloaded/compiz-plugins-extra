@@ -484,6 +484,9 @@ typedef struct _GroupWindow {
  * group.c
  */
 
+Bool
+groupIsGroupWindow (CompWindow *w);
+
 void
 groupUpdateWindowProperty (CompWindow *w);
 

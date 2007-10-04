@@ -25,6 +25,28 @@
 #include "group-internal.h"
 
 /*
+ * groupIsGroupWindow
+ *
+ */
+Bool
+groupIsGroupWindow (CompWindow *w)
+{
+    if (w->attrib.override_redirect)
+	return FALSE;
+
+    if (w->type & CompWindowTypeDesktopMask)
+	return FALSE;
+
+    if (w->invisible)
+	return FALSE;
+
+    if (!matchEval (groupGetWindowMatch (w->screen), w))
+	return FALSE;
+
+    return TRUE;
+}
+
+/*
  * groupDragHoverTimeout
  *
  * Description:
@@ -453,8 +475,7 @@ groupRemoveWindowFromGroup (CompWindow *w)
 	/* no tab bar - delete immediately */
 	groupDeleteGroupWindow (w);
 
-	if (groupGetAutotabCreate (w->screen) &&
-	    matchEval (groupGetWindowMatch (w->screen), w))
+	if (groupGetAutotabCreate (w->screen) && groupIsGroupWindow (w))
 	{
 	    groupAddWindowToGroup (w, NULL, 0);
 	    groupTabGroup (w);
@@ -498,8 +519,7 @@ groupDeleteGroup (GroupSelection *group)
 	    updateWindowOutputExtents (cw);
 	    groupUpdateWindowProperty (cw);
 
-	    if (groupGetAutotabCreate (s) &&
-		matchEval (groupGetWindowMatch (s), cw))
+	    if (groupGetAutotabCreate (s) && groupIsGroupWindow (cw))
 	    {
 		groupAddWindowToGroup (cw, NULL, 0);
 		groupTabGroup (cw);
@@ -1625,8 +1645,7 @@ groupHandleEvent (CompDisplay *d,
 		GROUP_WINDOW (w);
 
 		if (gw->group && gw->group->tabBar &&
-		    IS_TOP_TAB (w, gw->group)      &&
-		    gw->group->inputPrevention && gw->group->ipwMapped)
+		    IS_TOP_TAB (w, gw->group) && gw->group->inputPrevention)
 		{
 		    XWindowChanges xwc;
 
@@ -1998,8 +2017,7 @@ groupDamageWindowRect (CompWindow *w,
 
     if (initial)
     {
-	if (groupGetAutotabCreate (s) &&
-	    matchEval (groupGetWindowMatch (s), w))
+	if (groupGetAutotabCreate (s) && groupIsGroupWindow (w))
 	{
 	    if (!gw->group && (gw->windowState == WindowNormal))
 	    {

@@ -172,8 +172,7 @@ groupApplyInitialActions (void *closure)
 	    damageScreen (w->screen);
 	}
 
-	if (groupGetAutotabCreate (s) && !w->invisible &&
-	    matchEval (groupGetWindowMatch (s), w))
+	if (groupGetAutotabCreate (s) && groupIsGroupWindow (w))
 	{
 	    if (!gw->group && (gw->windowState == WindowNormal))
 	    {
