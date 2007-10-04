@@ -1645,7 +1645,8 @@ groupHandleEvent (CompDisplay *d,
 		GROUP_WINDOW (w);
 
 		if (gw->group && gw->group->tabBar &&
-		    IS_TOP_TAB (w, gw->group) && gw->group->inputPrevention)
+		    IS_TOP_TAB (w, gw->group)      &&
+		    gw->group->inputPrevention && gw->group->ipwMapped)
 		{
 		    XWindowChanges xwc;
 
