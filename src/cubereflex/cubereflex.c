@@ -33,23 +33,6 @@
 
 #define DEG2RAD (M_PI / 180.0f)
 
-static const CompTransform identity =
-{
-    {
-	1.0, 0.0, 0.0, 0.0,
-	0.0, 1.0, 0.0, 0.0,
-	0.0, 0.0, 1.0, 0.0,
-	0.0, 0.0, 0.0, 1.0
-    }
-};
-
-#define MULTMV(m, v) { \
-	float v0 = m[0]*v[0] + m[4]*v[1] + m[8]*v[2] + m[12]*v[3]; \
-	float v1 = m[1]*v[0] + m[5]*v[1] + m[9]*v[2] + m[13]*v[3]; \
-	float v2 = m[2]*v[0] + m[6]*v[1] + m[10]*v[2] + m[14]*v[3]; \
-	float v3 = m[3]*v[0] + m[7]*v[1] + m[11]*v[2] + m[15]*v[3]; \
-	v[0] = v0; v[1] = v1; v[2] = v2; v[3] = v3; }
-
 static int displayPrivateIndex;
 
 static int cubeDisplayPrivateIndex;
@@ -145,7 +128,7 @@ cubereflexCheckOrientation (CompScreen              *s,
 			    const ScreenPaintAttrib *sAttrib,
 			    const CompTransform     *transform,
 			    CompOutput              *outputPtr,
-			    float                   points[3][3])
+			    CompVector              *points)
 {
     CUBEREFLEX_SCREEN (s);
     CUBE_SCREEN (s);
@@ -239,12 +222,12 @@ cubereflexPaintTransformedOutput (CompScreen              *s,
 	else
 	{
 	    CompTransform rTransform = *transform;
-	    CompTransform pTransform = identity;
+	    CompTransform pTransform;
 	    float angle = 360.0 / ( (float) s->hsize * cs->nOutput);
 	    float xRot, vRot, xRotate, xRotate2, vRotate;
 	    float rYTrans;
-	    double point[4] = { -0.5, -0.5, cs->distance, 1.0};
-	    double point2[4] = { -0.5, 0.5, cs->distance, 1.0};
+	    CompVector point  = { .v = { -0.5, -0.5, cs->distance, 1.0 } };
+	    CompVector point2 = { .v = { -0.5,  0.5, cs->distance, 1.0 } };
 
 	    (*cs->getRotation) (s, &xRot, &vRot);
 
@@ -270,26 +253,26 @@ cubereflexPaintTransformedOutput (CompScreen              *s,
 	    if (xRotate2 >= angle / 2.0)
 		xRotate2 = angle - xRotate2;
 
+	    matrixGetIdentity (&pTransform);
 	    matrixRotate (&pTransform, xRotate, 0.0f, 1.0f, 0.0f);
 	    matrixRotate (&pTransform, vRotate, cosf (xRotate * DEG2RAD),
 			  0.0f, sinf (xRotate * DEG2RAD) );
 
-	    MULTMV (pTransform.m, point);
+	    matrixMultiplyVector (&point, &point, &pTransform);
 
-	    pTransform = identity;
-
+	    matrixGetIdentity (&pTransform);
 	    matrixRotate (&pTransform, xRotate2, 0.0f, 1.0f, 0.0f);
 	    matrixRotate (&pTransform, vRotate, cosf (xRotate2 * DEG2RAD),
 			  0.0f, sinf (xRotate2 * DEG2RAD) );
 
-	    MULTMV (pTransform.m, point2);
+	    matrixMultiplyVector (&point2, &point2, &pTransform);
 
 	    switch (cubereflexGetMode (s) )
 	    {
 
 	    case ModeJumpyReflection:
 		rs->yTrans     = 0.0;
-		rYTrans        = (point[1] * 2.0);
+		rYTrans        = (point.y * 2.0);
 		break;
 
 	    case ModeDistance:
@@ -299,8 +282,8 @@ cubereflexPaintTransformedOutput (CompScreen              *s,
 		break;
 
 	    default:
-		rs->yTrans     = -point[1] - 0.5;
-		rYTrans        = point[1] - 0.5;
+		rs->yTrans     = -point.y - 0.5;
+		rYTrans        = point.y - 0.5;
 		break;
 
 	    }
@@ -310,7 +293,7 @@ cubereflexPaintTransformedOutput (CompScreen              *s,
 		 cubereflexGetZoomManualOnly (s)))
 		rs->zTrans = 0.0;
 	    else
-		rs->zTrans = -point2[2] + cs->distance;
+		rs->zTrans = -point2.z + cs->distance;
 
 	    if (cubereflexGetMode (s) == ModeAbove)
 		rs->zTrans      = 0.0;
@@ -320,18 +303,19 @@ cubereflexPaintTransformedOutput (CompScreen              *s,
 		rs->backVRotate = rs->vRot;
 		rs->yTrans      = 0.0;
 		rYTrans         = 0.0;
-		pTransform = identity;
-		(*s->applyScreenTransform) (s, sAttrib, output, &pTransform);
-		point[0] = point[1] = 0.0;
-		point[2] = -cs->distance;
-		point[3] = 1.0;
-		MULTMV (pTransform.m, point);
 
-		matrixTranslate (&rTransform, 0.0, 0.0, point[2]);
+		matrixGetIdentity (&pTransform);
+		(*s->applyScreenTransform) (s, sAttrib, output, &pTransform);
+		point.x = point.y = 0.0;
+		point.z = -cs->distance;
+		point.w = 1.0;
+		matrixMultiplyVector (&point, &point, &pTransform);
+
+		matrixTranslate (&rTransform, 0.0, 0.0, point.z);
 		matrixRotate (&rTransform, rs->vRot, 1.0, 0.0, 0.0);
 		matrixScale (&rTransform, 1.0, -1.0, 1.0);
 		matrixTranslate (&rTransform, 0.0, 1.0, 0.0);
-		matrixTranslate (&rTransform, 0.0, 0.0, -point[2]);
+		matrixTranslate (&rTransform, 0.0, 0.0, -point.z);
 	    }
 	    else
 	    {
