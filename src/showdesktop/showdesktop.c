@@ -146,6 +146,10 @@ isSDWin (CompWindow *w)
     if (!matchEval (showdesktopGetWindowMatch (w->screen), w))
 	return FALSE;
 
+    if (w->wmType & (CompWindowTypeDesktopMask |
+		     CompWindowTypeDockMask))
+	return FALSE;
+
     if (w->state & CompWindowStateSkipPagerMask)
 	return FALSE;
 
