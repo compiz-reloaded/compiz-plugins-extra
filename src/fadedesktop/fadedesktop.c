@@ -114,6 +114,13 @@ static Bool isFDWin(CompWindow *w)
 	if (!w->managed)
 		return FALSE;
 
+	if (w->type & (CompWindowTypeDesktopMask |
+		       CompWindowTypeDockMask))
+	    return FALSE;
+
+	if (w->state & CompWindowStateSkipPagerMask)
+	    return FALSE;
+
 	if (!matchEval(fadedesktopGetWindowMatch(w->screen), w))
 		return FALSE;
 
