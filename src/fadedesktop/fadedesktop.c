@@ -114,8 +114,8 @@ static Bool isFDWin(CompWindow *w)
 	if (!w->managed)
 		return FALSE;
 
-	if (w->type & (CompWindowTypeDesktopMask |
-		       CompWindowTypeDockMask))
+	if (w->wmType & (CompWindowTypeDesktopMask |
+			 CompWindowTypeDockMask))
 	    return FALSE;
 
 	if (w->state & CompWindowStateSkipPagerMask)
