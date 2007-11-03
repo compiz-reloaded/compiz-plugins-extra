@@ -802,9 +802,11 @@ groupUnGroupWindows (CompDisplay     *d,
 		     CompOption      *option,
 		     int             nOption)
 {
+    Window     xid;
     CompWindow *w;
 
-    w = findTopLevelWindowAtDisplay (d, d->activeWindow);
+    xid = getIntOptionNamed (option, nOption, "window", 0);
+    w   = findTopLevelWindowAtDisplay (d, xid);
     if (w)
     {
 	GROUP_WINDOW (w);
@@ -827,9 +829,11 @@ groupRemoveWindow (CompDisplay     *d,
 		   CompOption      *option,
 		   int             nOption)
 {
+    Window     xid;
     CompWindow *w;
 
-    w = findWindowAtDisplay (d, d->activeWindow);
+    xid = getIntOptionNamed (option, nOption, "window", 0);
+    w   = findWindowAtDisplay (d, xid);
     if (w)
     {
 	GROUP_WINDOW (w);
@@ -852,9 +856,11 @@ groupCloseWindows (CompDisplay     *d,
 		   CompOption      *option,
 		   int             nOption)
 {
+    Window     xid;
     CompWindow *w;
 
-    w = findWindowAtDisplay (d, d->activeWindow);
+    xid = getIntOptionNamed (option, nOption, "window", 0);
+    w   = findWindowAtDisplay (d, xid);
     if (w)
     {
 	GROUP_WINDOW (w);
@@ -883,9 +889,11 @@ groupChangeColor (CompDisplay     *d,
 		  CompOption      *option,
 		  int             nOption)
 {
+    Window     xid;
     CompWindow *w;
 
-    w = findWindowAtDisplay (d, d->activeWindow);
+    xid = getIntOptionNamed (option, nOption, "window", 0);
+    w   = findWindowAtDisplay (d, xid);
     if (w)
     {
 	GROUP_WINDOW (w);
@@ -893,10 +901,11 @@ groupChangeColor (CompDisplay     *d,
 	if (gw->group)
 	{
 	    GLushort *color = gw->group->color;
+	    float    factor = ((float)RAND_MAX + 1) / 0xffff;
 
-	    color[0] = (int)(rand () / (((double)RAND_MAX + 1) / 0xffff));
-	    color[1] = (int)(rand () / (((double)RAND_MAX + 1) / 0xffff));
-	    color[2] = (int)(rand () / (((double)RAND_MAX + 1) / 0xffff));
+	    color[0] = (int)(rand () / factor);
+	    color[1] = (int)(rand () / factor);
+	    color[2] = (int)(rand () / factor);
 
 	    groupRenderTopTabHighlight (gw->group);
 	    damageScreen (w->screen);

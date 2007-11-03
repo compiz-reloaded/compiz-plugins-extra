@@ -2589,10 +2589,12 @@ groupInitTab (CompDisplay     *d,
 	      CompOption      *option,
 	      int             nOption)
 {
+    Window     xid;
     CompWindow *w;
     Bool       allowUntab = TRUE;
 
-    w = findWindowAtDisplay (d, d->activeWindow);
+    xid = getIntOptionNamed (option, nOption, "window", 0);
+    w   = findWindowAtDisplay (d, xid);
     if (!w)
 	return TRUE;
 
@@ -2601,8 +2603,9 @@ groupInitTab (CompDisplay     *d,
     if (gw->inSelection)
     {
 	groupGroupWindows (d, action, state, option, nOption);
-	/* If the window was selected, we don't want to untab the group,
-	   because the user probably wanted to tab the selected windows. */
+	/* If the window was selected, we don't want to
+	   untab the group, because the user probably
+	   wanted to tab the selected windows. */
 	allowUntab = FALSE;
     }
 
@@ -2630,9 +2633,11 @@ groupChangeTabLeft (CompDisplay     *d,
 		    CompOption      *option,
 		    int             nOption)
 {
+    Window     xid;
     CompWindow *w, *topTab;
 
-    w = topTab = findWindowAtDisplay (d, d->activeWindow);
+    xid = getIntOptionNamed (option, nOption, "window", 0);
+    w   = topTab = findWindowAtDisplay (d, xid);
     if (!w)
 	return TRUE;
 
@@ -2670,9 +2675,11 @@ groupChangeTabRight (CompDisplay     *d,
 		     CompOption      *option,
 		     int             nOption)
 {
+    Window     xid;
     CompWindow *w, *topTab;
 
-    w = topTab = findWindowAtDisplay (d, d->activeWindow);
+    xid = getIntOptionNamed (option, nOption, "window", 0);
+    w   = topTab = findWindowAtDisplay (d, xid);
     if (!w)
 	return TRUE;
 

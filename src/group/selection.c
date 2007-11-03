@@ -259,9 +259,11 @@ groupSelectSingle (CompDisplay     *d,
 		   CompOption      *option,
 		   int             nOption)
 {
+    Window     xid;
     CompWindow *w;
 
-    w = findWindowAtDisplay (d, d->activeWindow);
+    xid = getIntOptionNamed (option, nOption, "window", 0);
+    w   = findWindowAtDisplay (d, xid);
     if (w)
 	groupSelectWindow (w);
 
@@ -279,9 +281,11 @@ groupSelect (CompDisplay     *d,
 	     CompOption      *option,
 	     int             nOption)
 {
+    Window     xid;
     CompWindow *w;
 
-    w = findWindowAtDisplay (d, d->activeWindow);
+    xid = getIntOptionNamed (option, nOption, "window", 0);
+    w   = findWindowAtDisplay (d, xid);
     if (w)
     {
 	GROUP_SCREEN (w->screen);
