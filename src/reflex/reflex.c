@@ -157,6 +157,9 @@ getReflexFragmentFunction (CompScreen  *s,
 
 	handle = createFragmentFunction (s, "reflex", data);
 
+	if (rs->function.handle)
+	    destroyFragmentFunction (s, rs->function.handle);
+
 	rs->function.handle = handle;
 	rs->function.target = target;
 	rs->function.param  = param;
