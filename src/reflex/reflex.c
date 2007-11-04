@@ -36,6 +36,8 @@ ReflexDisplay;
 
 typedef struct _ReflexFunction
 {
+    struct _ReflexFunction *next;
+
     int handle;
     int target;
     int param;
@@ -54,7 +56,7 @@ typedef struct _ReflexScreen
     unsigned int width;
     unsigned int height;
 
-    ReflexFunction function;
+    ReflexFunction *reflexFunctions;
 }
 ReflexScreen;
 
@@ -88,6 +90,7 @@ getReflexFragmentFunction (CompScreen  *s,
 			   int         param,
 			   int         unit)
 {
+    ReflexFunction   *function;
     CompFunctionData *data;
 
     REFLEX_SCREEN (s);
@@ -113,12 +116,11 @@ getReflexFragmentFunction (CompScreen  *s,
 	targetString = "RECT";
     }
 
-
-    if (rs->function.handle &&
-    	rs->function.param  == param  &&
-	rs->function.target == target &&
-	rs->function.unit   == unit)
-	return rs->function.handle;
+    for (function = rs->reflexFunctions; function; function = function->next)
+	if (function->param  == param  &&
+	    function->target == target &&
+	    function->unit   == unit)
+	    return function->handle;
 
     data = createFunctionData ();
 
@@ -155,15 +157,19 @@ getReflexFragmentFunction (CompScreen  *s,
 	    return 0;
 	}
 
-	handle = createFragmentFunction (s, "reflex", data);
+	function = malloc (sizeof (ReflexFunction));
+	if (function)
+	{
+	    handle = createFragmentFunction (s, "reflex", data);
 
-	if (rs->function.handle)
-	    destroyFragmentFunction (s, rs->function.handle);
+	    function->handle = handle;
+	    function->target = target;
+	    function->param  = param;
+	    function->unit   = unit;
 
-	rs->function.handle = handle;
-	rs->function.target = target;
-	rs->function.param  = param;
-	rs->function.unit   = unit;
+	    function->next = rs->reflexFunctions;
+	    rs->reflexFunctions = function;
+	}
 
 	destroyFunctionData (data);
 
@@ -340,6 +346,25 @@ reflexMatchPropertyChanged (CompDisplay *d,
     WRAP (rd, d, matchPropertyChanged, reflexMatchPropertyChanged);
 }
 
+static void
+reflexDestroyFragmentFunctions (CompScreen     *s,
+				ReflexFunction **reflexFunctions)
+{
+    ReflexFunction *function, *next;
+
+    function = *reflexFunctions;
+    while (function)
+    {
+	destroyFragmentFunction (s, function->handle);
+
+	next = function->next;
+	free (function);
+	function = next;
+    }
+
+    *reflexFunctions = NULL;
+}
+
 static Bool
 reflexInitDisplay (CompPlugin  *p,
 		   CompDisplay *d)
@@ -414,7 +439,7 @@ reflexInitScreen (CompPlugin *p,
 
     s->base.privates[rd->screenPrivateIndex].ptr = rs;
 
-    rs->function.handle = 0;
+    rs->reflexFunctions = NULL;
 
     WRAP (rs, s, drawWindowTexture, reflexDrawWindowTexture);
 
@@ -428,12 +453,11 @@ reflexFiniScreen (CompPlugin *p,
 {
     REFLEX_SCREEN (s);
 
+    reflexDestroyFragmentFunctions (s, &rs->reflexFunctions);
+
     freeWindowPrivateIndex (s, rs->windowPrivateIndex);
 
     UNWRAP (rs, s, drawWindowTexture);
-
-    if (rs->function.handle)
-	destroyFragmentFunction (s, rs->function.handle);
 
     free (rs);
 }
