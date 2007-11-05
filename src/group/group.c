@@ -643,7 +643,7 @@ groupAddWindowToGroup (CompWindow     *w,
 	    return;
 
 	g->windows = malloc (sizeof (CompWindow *));
-	if (!g->windows) 
+	if (!g->windows)
 	    return;
 
 	g->windows[0] = w;
