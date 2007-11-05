@@ -639,8 +639,12 @@ groupAddWindowToGroup (CompWindow     *w,
     {
 	/* create new group */
 	GroupSelection *g = malloc (sizeof (GroupSelection));
+	if (!g)
+	    return;
 
 	g->windows = malloc (sizeof (CompWindow *));
+	if (!g->windows) 
+	    return;
 
 	g->windows[0] = w;
 	g->screen     = w->screen;

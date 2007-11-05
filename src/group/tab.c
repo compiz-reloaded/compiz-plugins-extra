@@ -2175,6 +2175,9 @@ void groupCreateSlot (GroupSelection *group,
 	return;
 
     slot = malloc (sizeof (GroupTabBarSlot));
+    if (!slot)
+        return;
+
     slot->window = w;
 
     slot->region = XCreateRegion ();

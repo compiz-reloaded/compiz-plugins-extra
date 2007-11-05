@@ -98,6 +98,8 @@ groupCreateCairoLayer (CompScreen *s,
 
 
     layer = malloc (sizeof (GroupCairoLayer));
+    if (!layer)
+        return NULL;
 
     layer->surface = NULL;
     layer->cairo   = NULL;
