@@ -262,7 +262,8 @@ gearsPaintInside (CompScreen              *s,
 
     ScreenPaintAttrib sA = *sAttrib;
 
-    sA.yRotate += (360.0f / size) * (cs->xRotations - (s->x * cs->nOutput));
+    sA.yRotate += cs->invert * (360.0f / size) *
+		  (cs->xRotations - (s->x * cs->nOutput));
 
     CompTransform mT = *transform;
 
