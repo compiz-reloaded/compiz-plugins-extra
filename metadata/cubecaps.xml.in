@@ -128,6 +128,7 @@
 		    <_short>Top image files</_short>
 		    <_long>List of PNG and SVG files that should be rendered on top face of cube</_long>
 		    <type>string</type>
+		    <hints>file;image;</hints>
 		    <default>
 			<value>fusioncap.png</value>
 		    </default>
@@ -137,6 +138,7 @@
 		    <_short>Bottom image files</_short>
 		    <_long>List of PNG and SVG files that should be rendered on bottom face of cube</_long>
 		    <type>string</type>
+		    <hints>file;image;</hints>
 		    <default>
 			<value>compizcap.png</value>
 		    </default>
