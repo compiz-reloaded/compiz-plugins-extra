@@ -454,6 +454,7 @@ groupInitWindow (CompPlugin *p,
     gw->glowQuads    = NULL;
     gw->inSelection  = FALSE;
     gw->needsPosSync = FALSE;
+    gw->readOnlyProperty = FALSE;
 
     /* for tab */
     gw->animateState = 0;
@@ -500,6 +501,7 @@ groupFiniWindow (CompPlugin *p,
     if (gw->windowHideInfo)
 	groupSetWindowVisibility (w, TRUE);
 
+    gw->readOnlyProperty = TRUE;
     if (gw->group)
 	groupDeleteGroupWindow (w);
 

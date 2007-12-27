@@ -453,6 +453,10 @@ typedef struct _GroupWindow {
     GroupSelection *group;
     Bool inSelection;
 
+    /* To prevent freeing the group
+       property in groupFiniWindow. */
+    Bool readOnlyProperty;
+
     /* For the tab bar */
     GroupTabBarSlot *slot;
 

@@ -135,6 +135,10 @@ groupUpdateWindowProperty (CompWindow *w)
     GROUP_WINDOW (w);
     GROUP_DISPLAY (d);
 
+    // Do not change anything in this case
+    if (gw->readOnlyProperty)
+	return;
+
     if (gw->group)
     {
 	long int buffer[5];
