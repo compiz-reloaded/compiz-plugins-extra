@@ -49,14 +49,6 @@ static int scaleDisplayPrivateIndex;
 #define MAX_FILTER_STRING_LEN (MAX_FILTER_SIZE+1)
 #define MAX_FILTER_TEXT_LEN (MAX_FILTER_SIZE+8)
 
-#define ADDCHARTOFILTER(c) \
-    if (info->filterStringLength < MAX_FILTER_SIZE)          \
-    {                                                        \
-        info->filterString[info->filterStringLength++] = c;  \
-	info->filterString[info->filterStringLength] = '\0'; \
-	needRelayout = TRUE;                                 \
-    }                                                        \
-
 typedef struct _ScaleFilterInfo {
     CompTimeoutHandle timeoutHandle;
 
@@ -561,17 +553,11 @@ scalefilterHandleKeyPress (CompScreen *s,
 	    info->timeoutHandle = compAddTimeout (timeout,
 				     		  scalefilterFilterTimeout, s);
 
-	switch (wbuffer[0]) {
-	case '[':
-	case ']':
-	    if (!info->filterStringLength ||
-		info->filterString[info->filterStringLength - 1] != '\\')
-	    {
-		ADDCHARTOFILTER ('\\');
-	    }
-	default:
-	    ADDCHARTOFILTER (wbuffer[0]);
-	    break;
+	if (info->filterStringLength < MAX_FILTER_SIZE)
+	{
+	    info->filterString[info->filterStringLength++] = wbuffer[0];
+	    info->filterString[info->filterStringLength] = '\0';
+	    needRelayout = TRUE;
 	}
     }
 
