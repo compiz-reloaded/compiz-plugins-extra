@@ -6,6 +6,9 @@
  * Copyright : (C) 2007 Guillaume Seguin
  * E-mail    : guillaume@segu.in
  *
+ * Modifications for proper handling of opacity added by:
+ * Kevin Lange <klange@ogunderground.com>
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
@@ -232,8 +235,8 @@ cubecapsPaintCap (CompScreen	    *s,
     {
 	cap = capOutside;
 	clampToBorder = clampToBorderOutside;
-	if (opacity == OPAQUE)
-	    opacity = colorOutside[3];
+	// Honor selected opacity AND cube opacity
+	opacity = (opacity * colorOutside[3]) / 0xffff;
 	glColor4us (colorOutside[0],
 		    colorOutside[1],
 		    colorOutside[2],
@@ -243,8 +246,7 @@ cubecapsPaintCap (CompScreen	    *s,
     {
 	cap = capInside;
 	clampToBorder = clampToBorderInside;
-	if (opacity == OPAQUE)
-	    opacity = colorInside[3];
+	opacity = (opacity * colorInside[3]) / 0xffff;
 	glColor4us (colorInside[0],
 		    colorInside[1],
 		    colorInside[2],
@@ -264,6 +266,7 @@ cubecapsPaintCap (CompScreen	    *s,
 	screenTexEnvMode (s, GL_MODULATE);
 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glDrawArrays (GL_TRIANGLE_FAN, offset, cs->nVertices >> 1);
+	glBlendFunc (GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     }
     else
 	glDrawArrays (GL_TRIANGLE_FAN, offset, cs->nVertices >> 1);
@@ -275,11 +278,8 @@ cubecapsPaintCap (CompScreen	    *s,
     if (cap && cap->texture.name && s->hsize >= 4)
     {
 	/* Apply blend strategy to blend correctly color and image */
-	if (opacity != OPAQUE)
-	    glBlendFunc (GL_DST_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	else
-	    glBlendFunc (GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-
+	
+	glColor4us (cs->desktopOpacity,cs->desktopOpacity,cs->desktopOpacity,cs->desktopOpacity);
 	enableTexture (s, &cap->texture, COMP_TEXTURE_FILTER_GOOD);
 
 	/* Use CLAMP_TO_BORDER if available to avoid weird looking clamping 
@@ -348,7 +348,6 @@ cubecapsPaintCap (CompScreen	    *s,
 
 	    glEnd ();
 	}
-
 	disableTexture (s, &cap->texture);
     }
 
@@ -356,7 +355,6 @@ cubecapsPaintCap (CompScreen	    *s,
 	screenTexEnvMode (s, GL_REPLACE);
 
     glDisable (GL_BLEND);
-    glBlendFunc (GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 /* Core painting hooks ------------------------------------------------------ */
