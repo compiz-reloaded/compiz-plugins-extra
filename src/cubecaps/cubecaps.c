@@ -270,7 +270,7 @@ cubecapsPaintCap (CompScreen	    *s,
     }
     else
 	glDrawArrays (GL_TRIANGLE_FAN, offset, cs->nVertices >> 1);
-    
+
     glColor4usv (defaultColor);
 
     /* It is not really a good idea to draw the cap texture when there are 
@@ -279,7 +279,8 @@ cubecapsPaintCap (CompScreen	    *s,
     {
 	/* Apply blend strategy to blend correctly color and image */
 	
-	glColor4us (cs->desktopOpacity,cs->desktopOpacity,cs->desktopOpacity,cs->desktopOpacity);
+	glColor4us (cs->desktopOpacity, cs->desktopOpacity,
+		    cs->desktopOpacity, cs->desktopOpacity);
 	enableTexture (s, &cap->texture, COMP_TEXTURE_FILTER_GOOD);
 
 	/* Use CLAMP_TO_BORDER if available to avoid weird looking clamping 
