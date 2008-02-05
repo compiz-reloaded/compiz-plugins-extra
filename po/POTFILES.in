@@ -15,3 +15,5 @@ metadata/showdesktop.xml.in
 metadata/splash.xml.in
 metadata/trailfocus.xml.in
 metadata/widget.xml.in
+metadata/showmouse.xml.in
+metadata/loginout.xml.in
