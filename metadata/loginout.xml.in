@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<compiz>
+	<plugin name="loginout" useBcop="true">
+		<_short>Login/Logout</_short>
+		<_long>Login/Logout effect</_long>
+		<category>Effects</category>
+		<deps>
+			<requirement>
+				<plugin>regex</plugin>
+			</requirement>
+			<relation type="after">
+				<plugin>decoration</plugin>
+			</relation>
+		</deps>
+		<screen>
+			<group>
+				<_short>Login</_short>
+				<option name="in_match" type="match">
+					<_short>Login Window match</_short>
+					<_long>Login Window Match</_long>
+					<default>(iclass=^ksplash)</default>
+				</option>
+				<option name="in_time" type="float">
+					<_short>Fade In/Out Time</_short>
+					<_long>Fade In/Out Time.</_long>
+					<default>1.0</default>
+					<min>0.0</min>
+					<max>100.0</max>
+					<precision>0.1</precision>
+				</option>
+				<option name="in_saturation" type="float">
+					<_short>Saturation</_short>
+					<_long>Background/Window saturation.</_long>
+					<default>0.0</default>
+					<min>0.0</min>
+					<max>100.0</max>
+					<precision>0.1</precision>
+				</option>
+				<option name="in_brightness" type="float">
+					<_short>Brightness</_short>
+					<_long>Background/Window brightness.</_long>
+					<default>100.0</default>
+					<min>0.0</min>
+					<max>100.0</max>
+					<precision>0.1</precision>
+				</option>
+				<option name="in_opacity" type="float">
+					<_short>Opacity</_short>
+					<_long>Window opacity.</_long>
+					<default>100.0</default>
+					<min>0.0</min>
+					<max>100.0</max>
+					<precision>0.1</precision>
+				</option>
+			</group>
+			<group>
+				<_short>Logout</_short>
+				<option name="out_match" type="match">
+					<_short>Logout Window match</_short>
+					<_long>Logout Window Match</_long>
+					<default>(class=Ksmserver &amp; (role=logoutdialog | role=logouteffect)) | (class=Libssui-tool &amp; type=Dialog)</default>
+				</option>
+				<option name="out_time" type="float">
+					<_short>Fade In/Out Time</_short>
+					<_long>Fade In/Out Time.</_long>
+					<default>1.0</default>
+					<min>0.0</min>
+					<max>100.0</max>
+					<precision>0.1</precision>
+				</option>
+				<option name="out_saturation" type="float">
+					<_short>Saturation</_short>
+					<_long>Background/Window saturation.</_long>
+					<default>0.0</default>
+					<min>0.0</min>
+					<max>100.0</max>
+					<precision>0.1</precision>
+				</option>
+				<option name="out_brightness" type="float">
+					<_short>Brightness</_short>
+					<_long>Background/Window brightness.</_long>
+					<default>100.0</default>
+					<min>0.0</min>
+					<max>100.0</max>
+					<precision>0.1</precision>
+				</option>
+				<option name="out_opacity" type="float">
+					<_short>Opacity</_short>
+					<_long>Window opacity.</_long>
+					<default>100.0</default>
+					<min>0.0</min>
+					<max>100.0</max>
+					<precision>0.1</precision>
+				</option>
+			</group>
+		</screen>
+	</plugin>
+</compiz>
