@@ -93,8 +93,8 @@ typedef struct _TrailfocusWindow
 static Bool
 isTrailfocusWindow (CompWindow *w)
 {
-    if (WIN_LEFT (w) > w->screen->width || WIN_RIGHT (w) < 0 ||
-	WIN_TOP (w) > w->screen->height || WIN_BOTTOM (w) < 0)
+    if (WIN_LEFT (w) >= w->screen->width || WIN_RIGHT (w) <= 0 ||
+	WIN_TOP (w) >= w->screen->height || WIN_BOTTOM (w) <= 0)
     {
 	return FALSE;
     }
