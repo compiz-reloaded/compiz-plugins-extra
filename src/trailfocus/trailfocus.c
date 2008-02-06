@@ -81,6 +81,12 @@ typedef struct _TrailfocusWindow
 			       GET_TRAILFOCUS_SCREEN(w->screen, \
 			       GET_TRAILFOCUS_DISPLAY (w->screen->display)))
 
+/* helper macros for getting the window's extents */
+#define WIN_LEFT(w)   (w->attrib.x - w->input.left)
+#define WIN_RIGHT(w)  (w->attrib.x + w->attrib.width + w->input.right)
+#define WIN_TOP(w)    (w->attrib.y - w->input.top)
+#define WIN_BOTTOM(w) (w->attrib.y + w->attrib.height + w->input.bottom)
+
 /* Core trailfocus functions. These do the real work. ---------------*/
 
 /* Walks through the window-list and sets the opacity-levels for
@@ -106,7 +112,12 @@ setWindows (CompScreen *s)
 	wasTfWindow = tw->isTfWindow;
 	tw->isTfWindow = TRUE;
 
-	if (w->invisible || w->hidden || w->minimized)
+	if (WIN_LEFT (w) > s->width || WIN_RIGHT (w) < 0 ||
+	    WIN_TOP (w) > s->height || WIN_BOTTOM (w) < 0)
+	{
+	    tw->isTfWindow = FALSE;
+	}
+	else if (w->invisible || w->hidden || w->minimized || w->shaded)
 	    tw->isTfWindow = FALSE;
 	else if (!matchEval (trailfocusGetWindowMatch (s), w))
 	    tw->isTfWindow = FALSE;
@@ -293,6 +304,18 @@ trailfocusHandleEvent (CompDisplay *d,
 	s = popWindow (d, event->xdestroywindow.window);
 	if (s)
 	    setWindows (s);
+	break;
+    case PropertyNotify:
+	if (event->xproperty.atom == d->desktopViewportAtom)
+	{
+	    s = findScreenAtDisplay (d, event->xproperty.window);
+	    if (s)
+	    {
+	    	cleanList (s);
+		pushWindow (d, d->activeWindow);
+		setWindows (s);
+	    }
+	}
 	break;
     default:
 	break;
