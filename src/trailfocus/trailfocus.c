@@ -89,6 +89,25 @@ typedef struct _TrailfocusWindow
 
 /* Core trailfocus functions. These do the real work. ---------------*/
 
+/* Determines if a window should be handled by trailfocus or not */
+static Bool
+isTrailfocusWindow (CompWindow *w)
+{
+    if (WIN_LEFT (w) > w->screen->width || WIN_RIGHT (w) < 0 ||
+	WIN_TOP (w) > w->screen->height || WIN_BOTTOM (w) < 0)
+    {
+	return FALSE;
+    }
+
+    if (w->invisible || w->hidden || w->minimized || w->shaded)
+	return FALSE;
+
+    if (!matchEval (trailfocusGetWindowMatch (w->screen), w))
+	return FALSE;
+
+    return TRUE;
+}
+
 /* Walks through the window-list and sets the opacity-levels for
  * all windows. The inner loop will result in ts->win[i] either
  * representing a recently focused window, or the least
@@ -110,17 +129,7 @@ setWindows (CompScreen *s)
 	TRAILFOCUS_WINDOW (w);
 
 	wasTfWindow = tw->isTfWindow;
-	tw->isTfWindow = TRUE;
-
-	if (WIN_LEFT (w) > s->width || WIN_RIGHT (w) < 0 ||
-	    WIN_TOP (w) > s->height || WIN_BOTTOM (w) < 0)
-	{
-	    tw->isTfWindow = FALSE;
-	}
-	else if (w->invisible || w->hidden || w->minimized || w->shaded)
-	    tw->isTfWindow = FALSE;
-	else if (!matchEval (trailfocusGetWindowMatch (s), w))
-	    tw->isTfWindow = FALSE;
+	tw->isTfWindow = isTrailfocusWindow (w);
 
 	if (wasTfWindow && !tw->isTfWindow)
 	    addWindowDamage (w);
@@ -174,7 +183,7 @@ pushWindow (CompDisplay *d,
     TRAILFOCUS_SCREEN (w->screen);
 
     winMax = trailfocusGetWindowsCount (w->screen);
-    if (!matchEval (trailfocusGetWindowMatch (w->screen), w))
+    if (!isTrailfocusWindow (w))
 	return NULL;
 
     for (i = 0; i < winMax; i++)
@@ -238,8 +247,7 @@ popWindow (CompDisplay *d,
 
     	for (cw = w->prev; cw; cw = cw->prev)
 	{
-	    if (matchEval (trailfocusGetWindowMatch (s), cw) &&
-		!w->invisible && !w->hidden && !w->minimized)
+	    if (isTrailfocusWindow (w))
 	    {
 		ts->win[winMax - 1] = cw->id;
 		break;
@@ -267,8 +275,10 @@ cleanList (CompScreen *s)
     for (i = 0; i < winMax; i++)
     {
 	w = findWindowAtScreen (s, ts->win[i]);
-	if (!w || !matchEval (trailfocusGetWindowMatch (s), w))
+	if (!w || !isTrailfocusWindow (w))
+	{
 	    ts->win[i] = 0;
+	}
     }
 
     length = winMax;
