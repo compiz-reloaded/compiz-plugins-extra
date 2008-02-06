@@ -293,6 +293,35 @@ cleanList (CompScreen *s)
     }
     for (; length < winMax; length++)
 	ts->win[length] = 0;
+
+    pushWindow (s->display, s->display->activeWindow);
+
+    /* make sure that enough windows are in the list */
+    for (i = 0; i < winMax; i++)
+	if (!ts->win[i])
+	    break;
+
+    if (i < winMax)
+    {
+	w = s->windows;
+	if (w)
+	    w = w->next;
+
+	for (; w && (i < winMax); w = w->next)
+	{
+	    if (!isTrailfocusWindow (w))
+		continue;
+
+	    for (j = 0; j < winMax; j++)
+		if (w->id == ts->win[j])
+		    break;
+
+	    if (j < winMax)
+		continue;
+
+	    ts->win[i++] = w->id;
+	}
+    }
 }
 
 /* Handles the event if it was a FocusIn event.  */
@@ -322,7 +351,6 @@ trailfocusHandleEvent (CompDisplay *d,
 	    if (s)
 	    {
 	    	cleanList (s);
-		pushWindow (d, d->activeWindow);
 		setWindows (s);
 	    }
 	}
@@ -443,7 +471,6 @@ trailfocusScreenOptionChanged (CompScreen              *s,
     }
 
     cleanList (s);
-    pushWindow (s->display, s->display->activeWindow);
     setWindows (s);
 }
 
