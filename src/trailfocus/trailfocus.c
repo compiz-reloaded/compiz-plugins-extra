@@ -81,7 +81,32 @@ typedef struct _TrailfocusWindow
 			       GET_TRAILFOCUS_SCREEN(w->screen, \
 			       GET_TRAILFOCUS_DISPLAY (w->screen->display)))
 
+/* helper macros for getting the window's extents */
+#define WIN_LEFT(w)   (w->attrib.x - w->input.left)
+#define WIN_RIGHT(w)  (w->attrib.x + w->attrib.width + w->input.right)
+#define WIN_TOP(w)    (w->attrib.y - w->input.top)
+#define WIN_BOTTOM(w) (w->attrib.y + w->attrib.height + w->input.bottom)
+
 /* Core trailfocus functions. These do the real work. ---------------*/
+
+/* Determines if a window should be handled by trailfocus or not */
+static Bool
+isTrailfocusWindow (CompWindow *w)
+{
+    if (WIN_LEFT (w) >= w->screen->width || WIN_RIGHT (w) <= 0 ||
+	WIN_TOP (w) >= w->screen->height || WIN_BOTTOM (w) <= 0)
+    {
+	return FALSE;
+    }
+
+    if (w->invisible || w->hidden || w->minimized || w->shaded)
+	return FALSE;
+
+    if (!matchEval (trailfocusGetWindowMatch (w->screen), w))
+	return FALSE;
+
+    return TRUE;
+}
 
 /* Walks through the window-list and sets the opacity-levels for
  * all windows. The inner loop will result in ts->win[i] either
@@ -104,12 +129,7 @@ setWindows (CompScreen *s)
 	TRAILFOCUS_WINDOW (w);
 
 	wasTfWindow = tw->isTfWindow;
-	tw->isTfWindow = TRUE;
-
-	if (w->invisible || w->hidden || w->minimized)
-	    tw->isTfWindow = FALSE;
-	else if (!matchEval (trailfocusGetWindowMatch (s), w))
-	    tw->isTfWindow = FALSE;
+	tw->isTfWindow = isTrailfocusWindow (w);
 
 	if (wasTfWindow && !tw->isTfWindow)
 	    addWindowDamage (w);
@@ -163,7 +183,7 @@ pushWindow (CompDisplay *d,
     TRAILFOCUS_SCREEN (w->screen);
 
     winMax = trailfocusGetWindowsCount (w->screen);
-    if (!matchEval (trailfocusGetWindowMatch (w->screen), w))
+    if (!isTrailfocusWindow (w))
 	return NULL;
 
     for (i = 0; i < winMax; i++)
@@ -227,8 +247,7 @@ popWindow (CompDisplay *d,
 
     	for (cw = w->prev; cw; cw = cw->prev)
 	{
-	    if (matchEval (trailfocusGetWindowMatch (s), cw) &&
-		!w->invisible && !w->hidden && !w->minimized)
+	    if (isTrailfocusWindow (w))
 	    {
 		ts->win[winMax - 1] = cw->id;
 		break;
@@ -256,8 +275,10 @@ cleanList (CompScreen *s)
     for (i = 0; i < winMax; i++)
     {
 	w = findWindowAtScreen (s, ts->win[i]);
-	if (!w || !matchEval (trailfocusGetWindowMatch (s), w))
+	if (!w || !isTrailfocusWindow (w))
+	{
 	    ts->win[i] = 0;
+	}
     }
 
     length = winMax;
@@ -272,6 +293,35 @@ cleanList (CompScreen *s)
     }
     for (; length < winMax; length++)
 	ts->win[length] = 0;
+
+    pushWindow (s->display, s->display->activeWindow);
+
+    /* make sure that enough windows are in the list */
+    for (i = 0; i < winMax; i++)
+	if (!ts->win[i])
+	    break;
+
+    if (i < winMax)
+    {
+	w = s->windows;
+	if (w)
+	    w = w->next;
+
+	for (; w && (i < winMax); w = w->next)
+	{
+	    if (!isTrailfocusWindow (w))
+		continue;
+
+	    for (j = 0; j < winMax; j++)
+		if (w->id == ts->win[j])
+		    break;
+
+	    if (j < winMax)
+		continue;
+
+	    ts->win[i++] = w->id;
+	}
+    }
 }
 
 /* Handles the event if it was a FocusIn event.  */
@@ -293,6 +343,17 @@ trailfocusHandleEvent (CompDisplay *d,
 	s = popWindow (d, event->xdestroywindow.window);
 	if (s)
 	    setWindows (s);
+	break;
+    case PropertyNotify:
+	if (event->xproperty.atom == d->desktopViewportAtom)
+	{
+	    s = findScreenAtDisplay (d, event->xproperty.window);
+	    if (s)
+	    {
+	    	cleanList (s);
+		setWindows (s);
+	    }
+	}
 	break;
     default:
 	break;
@@ -410,7 +471,6 @@ trailfocusScreenOptionChanged (CompScreen              *s,
     }
 
     cleanList (s);
-    pushWindow (s->display, s->display->activeWindow);
     setWindows (s);
 }
 

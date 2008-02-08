@@ -16,7 +16,9 @@ xml_in_files = 	         \
 	showdesktop.xml.in \
 	splash.xml.in \
 	trailfocus.xml.in \
-	widget.xml.in
+	widget.xml.in \
+	showmouse.xml.in \
+	loginout.xml.in
 
 xml_files    = $(xml_in_files:.xml.in=.xml)
 xml_DATA     = $(xml_files)

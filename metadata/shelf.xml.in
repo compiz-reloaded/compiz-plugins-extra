@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<compiz>
+  <plugin name="shelf" useBcop="true">
+    <_short>Shelf</_short>
+	<_long>Visually scales a window down to allow easy monitoring without true/traditional resizing.  </_long>
+	<category>Window Management</category>
+    <display>
+      <group>
+        <_short>Bindings</_short>
+        <option name="trigger_key" type="key">
+          <_short>Trigger scale down</_short>
+          <_long> Scale a window down to a portion of it's size.  </_long>
+          <default>&lt;Super&gt;l</default>
+        </option>
+        <option name="triggerscreen_key" type="key">
+          <_short>Trigger scale down to screen</_short>
+          <_long> Scale a window down to a ration of the screen size. Respectively half, a third or a sixth of the screen.</_long>
+          <default>&lt;Super&gt;p</default>
+        </option>
+        <option name="dec_button" type="button">
+          <_short>Make the window smaller</_short>
+          <_long> Reduces the scale factor making the window smaller.  </_long>
+          <default>&lt;Alt&gt;&lt;Super&gt;Button4</default>
+        </option>
+        <option name="inc_button" type="button">
+          <_short>Make the window bigger</_short>
+          <_long> Increase the scale factor making the window bigger.  </_long>
+          <default>&lt;Alt&gt;&lt;Super&gt;Button5</default>
+        </option>
+      </group>
+      <option name="animtime" type="int">
+       <_short>Animation duration</_short>
+       <_long> Duration of the animation in milliseconds. </_long>
+       <default>150</default>
+       <min>1</min>
+       <max>10000</max>
+      </option>
+      <option name="interval" type="float">
+       <_short>Scale interval</_short>
+       <_long> The number to divide the scale factor by or multiply it with when (respectively) increasing and decreasing the scale level manually.  Higher number means finer changes.  </_long>
+       <default>0.9</default>
+       <min>0.100</min>
+       <max>0.999</max>
+       <precision>0.001</precision>
+      </option>
+    </display>
+  </plugin>
+</compiz>

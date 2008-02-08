@@ -10,10 +10,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: compiz-fusion-plugins\n"
 "Report-Msgid-Bugs-To: http://bugs.opencompositing.org\n"
-"POT-Creation-Date: 2007-12-22 16:21+0530\n"
-"PO-Revision-Date: 2007-12-19 15:31+0100\n"
+"POT-Creation-Date: 2008-01-29 17:14+0530\n"
+"PO-Revision-Date: 2008-01-11 00:27+0100\n"
 "Last-Translator: jiro kawada <jiro.kawada@gmail.com>\n"
-"Language-Team: Japanese <LL@li.org>\n"
+"Language-Team: Japanese <jiro.kawada@gmail.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -62,6 +62,13 @@ msgstr "ウィンドウ間の間隙の大きさを変更(キューブサイズ�
 msgid "Change the speed of the 3D animation"
 msgstr "立体アニメーションの速度を変更"
 
+msgid "Color of an inactive window's depth"
+msgstr ""
+
+#, fuzzy
+msgid "Color of the active window's depth"
+msgstr "アクティブ・ウィンドウのネガ表示のオンオフ"
+
 msgid "Elevates windows while rotating the cube"
 msgstr "キューブ回転時にウィンドウを上昇"
 
@@ -83,6 +90,14 @@ msgstr "その他オプション"
 
 msgid "Roundoff corners for consistency with rounded decorations"
 msgstr "角の丸い装飾と調和させるために立体の角を丸める"
+
+#, fuzzy
+msgid "Window Color (Active)"
+msgstr "ウィンドウタイトル"
+
+#, fuzzy
+msgid "Window Color (Inactive)"
+msgstr "ウィンドウの中心"
 
 msgid "Window Depth"
 msgstr "ウィンドウの厚み"
@@ -115,14 +130,11 @@ msgid ""
 "Make it slightly easier to concentrate by dimming all but the active window."
 msgstr "アクティブ・ウィンドウ以外を暗くして若干集中しやすくする"
 
-msgid "Misc. options"
-msgstr "その他オプション"
-
 msgid "Opacity"
-msgstr "非透過率"
+msgstr "不透明度"
 
 msgid "Opacity of faded windows"
-msgstr "フェードしたウィンドウの非透過率"
+msgstr "フェードしたウィンドウの不透明度"
 
 msgid "Saturation"
 msgstr "彩度"
@@ -140,7 +152,7 @@ msgid "Window Types"
 msgstr "ウィンドウの種類"
 
 msgid "Window types that should be Opacified."
-msgstr "透過の対象にするウィンドウの種類"
+msgstr "半透明化の対象にするウィンドウの種類"
 
 msgid "Airplane"
 msgstr "飛行機"
@@ -498,8 +510,7 @@ msgid ""
 "Pool of effects to be chosen from if Random effect is selected. Click reset "
 "to restore full list."
 msgstr ""
-"ランダム効果選択の場合の選択候補群です。フルリストに戻すにはリセットをクリッ"
-"ク。"
+"ランダム効果選択の場合の選択候補群。フルリストに戻すにはリセットをクリック。"
 
 msgid "Random"
 msgstr "ランダム"
@@ -799,44 +810,38 @@ msgstr "最小化時にタスクバーにズーム"
 msgid "Colors"
 msgstr "色"
 
-#, fuzzy
 msgid "Cube Atlantis"
-msgstr "キューブのふた"
+msgstr "キューブ・アトランティス"
 
 msgid "Dolphin size"
-msgstr ""
+msgstr "イルカの大きさ"
 
 msgid "Dolphin size."
-msgstr ""
+msgstr "イルカの大きさ"
 
-#, fuzzy
 msgid "Enable colors"
-msgstr "発光効果を有効化"
+msgstr "色付けを有効化"
 
 msgid "Fish size"
-msgstr ""
+msgstr "魚の大きさ"
 
-#, fuzzy
 msgid "Number of fish"
-msgstr "粒子数"
+msgstr "魚の数"
 
-#, fuzzy
 msgid "Number of fish inside the cube"
-msgstr "炎の数"
+msgstr "キューブ内の魚の数"
 
-#, fuzzy
 msgid "Render some fish inside of the transparent cube"
-msgstr "透明なキューブ内にギアを表示"
+msgstr "透明なキューブ内に魚を描画"
 
 msgid "Shark size"
-msgstr ""
+msgstr "サメの大きさ"
 
 msgid "Whale size"
-msgstr ""
+msgstr "クジラの大きさ"
 
-#, fuzzy
 msgid "Whale size."
-msgstr "炎の大きさ"
+msgstr "クジラの大きさ"
 
 msgid "A simple benchmark plugin"
 msgstr "簡単なベンチマークプラグイン"
@@ -891,6 +896,66 @@ msgstr "ベンチマークウィンドウのY座標"
 
 msgid "Y position"
 msgstr "Y座標"
+
+msgid "Brightness Decrease"
+msgstr "明度を下げる"
+
+msgid "Brightness Increase"
+msgstr "明度を上げる"
+
+msgid "Brightness Step"
+msgstr "明度の変更刻み"
+
+msgid "Brightness and Saturation"
+msgstr "明度と彩度"
+
+msgid "Brightness and Saturation adjustments"
+msgstr "明度と彩度の調節"
+
+msgid "Brightness settings"
+msgstr "明度の設定"
+
+msgid "Brightness values for windows"
+msgstr "ウィンドウに割り当てる明度"
+
+msgid "Brightness window values"
+msgstr "指定ウィンドウの明度"
+
+msgid "Brightness windows"
+msgstr "明度指定ウィンドウ"
+
+msgid "General"
+msgstr "一般"
+
+msgid "Saturation Decrease"
+msgstr "彩度を下げる"
+
+msgid "Saturation Increase"
+msgstr "彩度を上げる"
+
+msgid "Saturation Step"
+msgstr "彩度の変更刻み"
+
+msgid "Saturation settings"
+msgstr "彩度の設定"
+
+msgid "Saturation values for windows"
+msgstr "ウィンドウに割り当てる彩度"
+
+msgid "Saturation window values"
+msgstr "指定ウィンドウの彩度"
+
+msgid "Saturation windows"
+msgstr "彩度指定ウィンドウ"
+
+msgid "Window specific"
+msgstr "特定ウィンドウ"
+
+msgid "Windows that should have a different brightness by default"
+msgstr "デフォルトで他とは異なる明度を持たせるウィンドウ"
+
+msgid "Windows that should have a different saturation by default"
+msgstr "デフォルトで他とは異なる彩度を持たせるウィンドウ"
 
 msgid "Color filter"
 msgstr "カラーフィルタ"
@@ -1304,7 +1369,7 @@ msgid ""
 "Use this if you don't intend to draw a scaled pointer or hide the original "
 "pointer. The zoomed area will move as you move your mouse."
 msgstr ""
-"ズーム域をマウスの場所と常に同期させたりします。拡大されたポインタを描画した"
+"ズーム域をマウスの場所と常に同期、その逆も同様。拡大されたポインタを描画した"
 "くない場合、または元ポインタを隠したくない場合に使用してください。ズーム域は"
 "マウスの移動に合わせて移動します。"
 
@@ -1315,8 +1380,8 @@ msgid ""
 "Attempt to keep the zoomed mouse visible by warping it when it is moved "
 "outside the zoom area."
 msgstr ""
-"拡大されたマウスを常に見えるようにするため、ズーム域外へ移動したときはワープ"
-"させます。"
+"拡大されたマウスがズーム域外へ移動したときはワープさせて、常に見えるようにす"
+"る。"
 
 msgid "Center the mouse"
 msgstr "マウスを中央に"
@@ -1337,7 +1402,7 @@ msgstr ""
 msgid "Enhanced Zoom Desktop"
 msgstr "デスクトップのズーム機能強化版"
 
-msgid "Enhanced zoom functions for visually imparied and others"
+msgid "Enhanced zoom functions for the visually impaired and other users"
 msgstr "視覚障害者等向けの機能強化版ズーム"
 
 msgid "Filter Linear"
@@ -1351,20 +1416,23 @@ msgid ""
 "focus tracking."
 msgstr ""
 "フォーカス追従によりズーム域が移動する際に、ズーム域をそのウィンドウの大きさ"
-"に合わせます。"
+"に合わせる。"
 
 msgid ""
 "Fit the zoomed area to the window when the zoomed area moves as a result of "
 "focus tracking. Even when not initially zoomed in."
 msgstr ""
 "フォーカス追従によりズーム域が移動する際に、ズームインしていない状態からも含"
-"めて、ズーム域をそのウィンドウの大きさに合わせます。"
+"めて、ズーム域をそのウィンドウの大きさに合わせる。"
 
 msgid "Fit zoom level to window on focus change"
 msgstr "フォーカス変更時にズーム率をウィンドウに合わせる"
 
 msgid "Fit zoomed area to window"
 msgstr "ズーム域をウィンドウに合わせる"
+
+msgid "Fitting"
+msgstr "調整"
 
 msgid "Focus Tracking"
 msgstr "フォーカス追従"
@@ -1382,10 +1450,10 @@ msgid ""
 "How often to poll the mouse position, in miliseconds. Reduce this to reduce "
 "choppy behavior."
 msgstr ""
-"ミリ秒単位でのマウス位置読み取り間隔です。ぎくしゃくした動きを抑制するにはこ"
-"の値を減らしてください。"
+"ミリ秒単位でのマウス位置読み取り間隔。ぎくしゃくした動きを抑制するにはこの値"
+"を減らしてください。"
 
-msgid "Mouse Behavior"
+msgid "Mouse Behaviour"
 msgstr "マウス動作"
 
 msgid "Mouse Poll Interval"
@@ -1442,6 +1510,9 @@ msgstr "ズーム域を上に移動"
 msgid "Pan the zoom area when the mouse cursor moves outside the visible area."
 msgstr "マウスカーソルが表示域の外へ移動したときズーム域を移動"
 
+msgid "Panning"
+msgstr "移動"
+
 msgid "Puts the mouse in the middle of the screen (Regardless of zoom level)"
 msgstr "マウスを画面中央に配置（ズーム率に関係なく）"
 
@@ -1453,6 +1524,9 @@ msgstr "マウスをズーム域に制限"
 
 msgid "Scale the mouse pointer"
 msgstr "マウスポインタを拡大"
+
+msgid "Specific Zoom"
+msgstr "特定ズーム"
 
 msgid "Specific zoom factor 1"
 msgstr "特定ズーム係数 1"
@@ -1489,11 +1563,14 @@ msgstr ""
 msgid "Use linear filter when zoomed in"
 msgstr "ズームインの際に線形フィルタを使用"
 
+msgid "Zoom Area Movement"
+msgstr "ズーム域の移動"
+
 msgid "Zoom In"
 msgstr "ズームイン"
 
-msgid "Zoom Movement"
-msgstr "ズーム動作"
+msgid "Zoom In/Out"
+msgstr "ズーム イン/アウト"
 
 msgid "Zoom Out"
 msgstr "ズームアウト"
@@ -1644,7 +1721,7 @@ msgid "Paint fire or other particles on the screen"
 msgstr "画面に炎や粒子を描画"
 
 msgid "Cube Gears"
-msgstr "キューブギア"
+msgstr "キューブ・ギア"
 
 msgid "Render gears inside of the transparent cube"
 msgstr "透明なキューブ内にギアを表示"
@@ -1693,8 +1770,8 @@ msgid ""
 "the spring model. If the distance is larger than that value, the model isn't "
 "applied."
 msgstr ""
-"タブバーとバネ効果を適用するドラッグスロットとの間の距離（ピクセル）。この値"
-"より距離が大きい場合、バネモデルは適用されません。"
+"バネ効果を適用する、タブバーとドラッグされたスロットとの間の距離（ピクセ"
+"ル）。この値より距離が大きい場合、バネ効果は適用されません。"
 
 msgid "Duration (in s) of the animation that happens when changing tabs"
 msgstr "タブ切り替え時に生じるアニメーションの持続時間(秒)"
@@ -1734,9 +1811,6 @@ msgstr "フォントの色"
 
 msgid "Font Size"
 msgstr "フォントの大きさ"
-
-msgid "General"
-msgstr "一般"
 
 msgid "Glass"
 msgstr "ガラス"
@@ -1781,46 +1855,46 @@ msgid ""
 "If one window in the group is (un)maximized, all other group windows are (un)"
 "maximized as well."
 msgstr ""
-"グループ内のウィンドウが（非）最大化された場合、それ以外のすべてのグループ"
-"ウィンドウも同様に（非）最大化"
+"グループの1つのウィンドウが（非）最大化された場合、そのグループ内の他のすべて"
+"のウィンドウも同様に（非）最大化"
 
 msgid ""
 "If one window in the group is (un)minimized, all other group windows are (un)"
 "minimized as well."
 msgstr ""
-"グループ内のウィンドウが（非）最小化された場合、それ以外のすべてのグループ"
-"ウィンドウも同様に（非）最小化"
+"グループの1つのウィンドウが（非）最小化された場合、そのグループ内の他のすべて"
+"のウィンドウも同様に（非）最小化"
 
 msgid ""
 "If one window in the group is (un)shaded, all other group windows are (un)"
 "shaded as well."
 msgstr ""
-"グループ内のウィンドウが（非）シェードされた場合、それ以外のすべてのグループ"
-"ウィンドウも同様に（非）シェード"
+"グループの1つのウィンドウが（非）シェードされた場合、そのグループ内の他のすべ"
+"てのウィンドウも同様に（非）シェード"
 
 msgid ""
 "If one window in the group is activated, all other group windows are raised "
 "as well."
 msgstr ""
-"グループ内のウィンドウが（非）アクティブになった場合、それ以外のすべてのグ"
-"ループウィンドウも同様に（非）アクティブ化"
+"グループの1つのウィンドウがアクティブになった場合、そのグループ内の他のすべて"
+"のウィンドウも同様に前面に上げる"
 
 msgid ""
 "If one window in the group is moved, all other group windows are moved as "
 "well."
 msgstr ""
-"グループ内のウィンドウが移動した場合、それ以外のすべてのグループウィンドウも"
-"同様に移動"
+"グループの1つのウィンドウが移動した場合、そのグループ内の他のすべてのウィンド"
+"ウも同様に移動"
 
 msgid ""
 "If one window in the group is resized, all other group windows are resized "
 "as well."
 msgstr ""
-"グループ内のウィンドウをサイズ変更した場合、それ以外のすべてのグループウィン"
-"ドウも同様にサイズ変更"
+"グループの1つのウィンドウをサイズ変更した場合、そのグループ内の他のすべての"
+"ウィンドウも同様にサイズ変更"
 
 msgid "If there is only 1 window left in the group, it will be ungrouped."
-msgstr "グループ内のウィンドウが１つだけになった場合、グループ化を解除"
+msgstr "グループにウィンドウが１つだけ残った状態になった場合、グループ化を解除"
 
 msgid ""
 "If you don't like the current glow color, you can change it with this key."
@@ -1846,7 +1920,7 @@ msgid "Line color of the selection rectangle"
 msgstr "選択矩形の線の色"
 
 msgid "Maximize/unmaximize with group"
-msgstr "グループで最大化/非最大化"
+msgstr "グループで最大化"
 
 msgid "Metal"
 msgstr "メタル"
@@ -1865,7 +1939,7 @@ msgid "Murrina"
 msgstr "輪切りの花模様"
 
 msgid "Opacity of selected windows"
-msgstr "選択したウィンドウの非透過率"
+msgstr "選択したウィンドウの不透明度"
 
 msgid "Play animations on the tab bar e.g. on fade in."
 msgstr "タブバー上でのアニメーション効果（例 フェードイン）"
@@ -1893,7 +1967,7 @@ msgid "Remove window from group after dropping it outside a tab bar"
 msgstr "ウィンドウをタブバーの外側にドロップした後はグループから外す"
 
 msgid "Resize every window in the group"
-msgstr "グループ内のすべてのウィンドウのサイズ変更"
+msgstr "グループ内のすべてのウィンドウをサイズ変更"
 
 msgid "Saturation of selected windows"
 msgstr "選択ウィンドウの彩度"
@@ -2071,7 +2145,7 @@ msgid "Untab when closing top tab"
 msgstr "先頭タブを閉じたときタブから外す"
 
 msgid "Use tab bar animations"
-msgstr "タブバーのアニメーションを使用"
+msgstr "タブバーでアニメーションを使用"
 
 msgid "Window Title Font"
 msgstr "ウィンドウのタイトルフォント"
@@ -2139,6 +2213,39 @@ msgstr "モーションブラー効果のオンオフ"
 msgid "Visibility/Performance"
 msgstr "見え方/パフォーマンス"
 
+msgid "Action"
+msgstr "アクション"
+
+msgid "Action that is to be invoked."
+msgstr "呼び出すアクション"
+
+msgid "Assign mousegestures to any existing action"
+msgstr "既存のあらゆるアクションにマウスジェスチャーを割り当て"
+
+msgid "Gesture"
+msgstr "ジェスチャー"
+
+msgid "Gesture assignment"
+msgstr "ジェスチャー割り当て"
+
+msgid "Gestures"
+msgstr "ジェスチャー"
+
+msgid "Mouse gesture to assign an action to."
+msgstr "アクションに割り当てるマウスジェスチャー"
+
+msgid "Mousegestures"
+msgstr "マウスジェスチャー"
+
+msgid "Plugin"
+msgstr "プラグイン"
+
+msgid "Plugin the action belongs to."
+msgstr "当該アクションが帰属しているプラグイン"
+
+msgid "Start gesture"
+msgstr "ジェスチャー開始"
+
 msgid "Begin Gesture"
 msgstr "ジェスチャーを開始"
 
@@ -2181,14 +2288,52 @@ msgstr "デフォルトでネガ表示の対象となるウィンドウ"
 msgid "Windows to exclude from negating"
 msgstr "ネガ表示の適用から除外するウィンドウ"
 
+msgid "Debug"
+msgstr "デバグ"
+
+msgid "Display errors and other messages using libnotify."
+msgstr "libnotify を使用して、エラーやその他のメッセージを表示"
+
+msgid "Error"
+msgstr "エラー"
+
+msgid "Error Notifications"
+msgstr "エラー通知"
+
+msgid "Fatal"
+msgstr "致命的"
+
+msgid "Hide Timeout"
+msgstr "非表示タイムアウト"
+
+msgid "Info"
+msgstr "情報"
+
+msgid "Maximum Log Level"
+msgstr "最高ログ出力レベル"
+
+msgid "The maximum log level to display"
+msgstr "表示対象のログ出力最高レベル"
+
+msgid ""
+"Timeout (in seconds) before hiding the notification, set to -1 for system "
+"default and 0 for indefinite"
+msgstr ""
+"通知表示を隠し始めるまでのタイムアウト（ミリ秒）。-1 に設定するとシステムのデ"
+"フォルトに、0 に設定すると無期限に。 "
+
+msgid "Warning"
+msgstr "警告"
+
 msgid "Active Opacity"
-msgstr "アクティブの非透過率"
+msgstr "アクティブの不透明度"
 
 msgid ""
 "Bypass delay when Opacify is reducing the opacity on one or more windows "
 "already."
 msgstr ""
-"半透明 がすでに１つ以上のウィンドウの非透過率を減少させているときは遅延を無視"
+"’半透明’がすでに１つ以上のウィンドウの不透明度を減少させているときは遅延を無"
+"視"
 
 msgid "Bypass delay when the new active window is the focused window."
 msgstr "新しいアクティブ・ウィンドウがフォーカスされたときは遅延を無視"
@@ -2209,39 +2354,39 @@ msgid "Make windows easily visible by hovering the mouse over them"
 msgstr "ウィンドウをマウスのホバーで見やすくする"
 
 msgid "Only increase opacity if a window is blocking"
-msgstr "ウィンドウが覆い隠している場合は非透過率の上昇のみ"
+msgstr "ウィンドウが覆い隠している場合は不透明度の上昇のみ"
 
 msgid ""
 "Only increase the opacity on the targeted window if it has one or more "
 "windows blocking it from view."
 msgstr ""
-"アクティブ・ウィンドウが1つ以上のウィンドウに覆われている場合は非透過率の上昇"
+"アクティブ・ウィンドウが1つ以上のウィンドウに覆われている場合は不透明度の上昇"
 "のみ"
 
 msgid "Opacify"
 msgstr "半透明"
 
 msgid "Opacity Levels"
-msgstr "非透過率"
+msgstr "不透明度"
 
 msgid "Passive Opacity"
-msgstr "パッシブの非透過率"
+msgstr "パッシブの不透明度"
 
 msgid "Reset opacity to original values when toggling"
-msgstr "オンオフ切り替えで非透過率を元の値に戻す"
+msgstr "オンオフ切り替えで不透明度を元の値に戻す"
 
 msgid ""
 "Reset the opacity of all windows modified by opacify when toggling Opacify "
 "with the defined key-combination."
 msgstr ""
 "定義されたキー組み合わせで’半透明’のオンオフが切り替えられたとき、’半透明’で"
-"変更されたすべてのウィンドウの非透過率をリセット"
+"変更されたすべてのウィンドウの不透明度をリセット"
 
 msgid ""
 "The delay (in ms) before Opacify changes opacity after the active window has "
 "changed."
 msgstr ""
-"アクティブ・ウィンドウが変更された後、’半透明’が非透過率を変更するまでの遅延"
+"アクティブ・ウィンドウが変更された後、’半透明’が不透明度を変更するまでの遅延"
 "時間（ミリ秒）"
 
 msgid ""
@@ -2249,8 +2394,8 @@ msgid ""
 "can have. A blocking window will have either this opacity or the preset "
 "opacity, whichever is lower."
 msgstr ""
-"現在のアクティブ・ウィンドウを覆い隠しているウィンドウが持てる最大の非透過"
-"率。覆っているウィンドウには、この非透過率またはプリセットの非透過率のどちら"
+"現在のアクティブ・ウィンドウを覆い隠しているウィンドウが持てる最大の不透明"
+"度。覆っているウィンドウには、この不透明度またはプリセットの不透明度のどちら"
 "かより低いほうが割り当てられます。"
 
 msgid ""
@@ -2258,8 +2403,8 @@ msgid ""
 "window will have either this opacity or the preset opacity, whichever is "
 "higher."
 msgstr ""
-"アクティブ・ウィンドウに保持させる最低限の非透過率。このウィンドウには、この"
-"非透過率またはプリセットの非透過率のどちらか高いほうが割り当てられます。"
+"アクティブ・ウィンドウに保持させる最低限の不透明度。このウィンドウには、この"
+"不透明度またはプリセットの不透明度のどちらか高いほうが割り当てられます。"
 
 msgid ""
 "This enables you to let Opacify instantly opacify new windows when you're "
@@ -2267,7 +2412,7 @@ msgid ""
 "while looking through layers of hidden windows."
 msgstr ""
 "有効にすると、すでに1つ以上のウィンドウを半透明にしているとき、新しいウィンド"
-"ウに’半透明’による非透過率を直ちに適用します。隠されたウィンドウ層を通して見"
+"ウに’半透明’による不透明度を直ちに適用します。隠されたウィンドウ層を通して見"
 "ながら素早い動作ができます。"
 
 msgid "Toggle Opacify"
@@ -2280,7 +2425,7 @@ msgid ""
 "Use this to enable/disable Opacify on the fly. Previously opacified windows "
 "will not be reset once you disable it like this."
 msgstr ""
-"これを使用して’半透明’の即時オンオフ。すでに非透過率が変更されたウィンドウ"
+"これを使用して’半透明’の即時オンオフ。すでに不透明度が変更されたウィンドウ"
 "は、この方法で ’半透明’をオフにしただけでは、リセットされません。"
 
 msgid "Windows that should be opacified."
@@ -2629,7 +2774,7 @@ msgstr "スイッチャのアクティブ中にクリックでのウィンドウ
 
 msgid ""
 "Amount of opacity (in percent) for windows in the ring which are not selected"
-msgstr "リングの非選択ウィンドウに適用する非透過率（％単位）"
+msgstr "リングの非選択ウィンドウに適用する不透明度（％単位）"
 
 msgid "Background Color"
 msgstr "背景色"
@@ -2679,7 +2824,7 @@ msgid "Font size for the window title"
 msgstr "ウィンドウタイトルのフォントの大きさ"
 
 msgid "Inactive Window Opacity"
-msgstr "非アクティブ・ウィンドウの非透過率"
+msgstr "非アクティブ・ウィンドウの不透明度"
 
 msgid "Maximum horizontal size of a thumbnail in the ring"
 msgstr "リングのサムネイルの最大水平サイズ"
@@ -2762,9 +2907,6 @@ msgstr "最小化を表示"
 msgid "Show Window Title"
 msgstr "ウィンドウタイトルを表示"
 
-msgid "Show minimized windows"
-msgstr "最小化されているウィンドウも表示"
-
 msgid ""
 "Show switcher if not visible and select next window of the current "
 "application."
@@ -2799,6 +2941,9 @@ msgstr "スイッチャが非表示の場合は表示して、前のウィンド
 msgid "Show window title of currently selected window."
 msgstr "現在選択しているウィンドウのウィンドウタイトルを表示"
 
+msgid "Show windows that are minimized, shaded or in show desktop mode."
+msgstr ""
+
 msgid "Text Placement"
 msgstr "テキスト配置"
 
@@ -2813,6 +2958,10 @@ msgstr "ウィンドウタイトル表示"
 
 msgid "Windows that should be shown in ring"
 msgstr "リングに表示する対象ウィンドウ"
+
+#, fuzzy
+msgid "All windows"
+msgstr "ウィンドウの整列"
 
 msgid "Background color of the window title"
 msgstr "ウィンドウタイトルの背景色"
@@ -2841,6 +2990,14 @@ msgstr "強調表示色"
 msgid "Highlights the hovered window with the given color"
 msgstr "ホバーされているウィンドウを指定色で強調表示"
 
+#, fuzzy
+msgid "Hovered window only"
+msgstr "ウィンドウを座標X、Yへ移動"
+
+#, fuzzy
+msgid "No display"
+msgstr "ウィンドウタイトル表示"
+
 msgid "Normal"
 msgstr "通常"
 
@@ -2852,9 +3009,6 @@ msgstr "スケールのアドオン"
 
 msgid "Selects the mode to layout the windows in scale mode"
 msgstr "スケールモードでのウィンドウの配列方式の選択"
-
-msgid "Show window title in scale mode"
-msgstr "スケールモードでウィンドウタイトルを表示"
 
 msgid "Size of the border around the window title"
 msgstr "ウィンドウタイトル周りの枠の大きさ"
@@ -2876,6 +3030,14 @@ msgstr "ウィンドウの配列方式"
 
 msgid "Window Title"
 msgstr "ウィンドウタイトル"
+
+#, fuzzy
+msgid "Window Title Display"
+msgstr "ウィンドウタイトル表示"
+
+#, fuzzy
+msgid "Window title display in scale mode"
+msgstr "スケールモードでウィンドウタイトルを表示"
 
 msgid "Zoom Windows In Scale"
 msgstr "スケールのウィンドウをズーム"
@@ -2911,15 +3073,87 @@ msgid ""
 "Embeds a Guile scheme interpreter and provides bindings for meaningful "
 "Compiz integration."
 msgstr ""
+"Guile スキーム・インタプリタを組み込み、有意義な Compiz 統合のためのバイン"
+"ディングを提供"
 
 msgid "Scheme Interpreter"
-msgstr ""
+msgstr "スキーム・インタプリタ"
 
 msgid "Toggle Prompt Visible"
-msgstr ""
+msgstr "プロンプト表示のオンオフ"
 
 msgid "Toggle prompt visible."
+msgstr "プロンプト表示のオンオフ"
+
+msgid "Directory"
+msgstr "ディレクトリ"
+
+msgid "Initiate screencasting"
+msgstr "スクリーンキャスト開始"
+
+msgid "Put screenshot images in this directory"
+msgstr "このディレクトリにスクリーンショット画像を保存"
+
+msgid "ScreenCast plugin"
+msgstr "スクリーンキャスト・プラグイン"
+
+msgid "ScreenCasting"
+msgstr "スクリーンキャスティング"
+
+msgid "Animation duration"
+msgstr "アニメーション持続時間"
+
+msgid "Duration of the animation in milliseconds."
+msgstr "アニメーションの持続時間（ミリ秒）"
+
+msgid "Increase the scale factor making the window bigger."
+msgstr "ウィンドウを大きくするために拡縮率を上げる"
+
+msgid "Make the window bigger"
+msgstr "ウィンドウを大きくする"
+
+msgid "Make the window smaller"
+msgstr "ウィンドウを小さくする"
+
+msgid "Reduces the scale factor making the window smaller."
+msgstr "ウィンドウを小さくするために拡縮率を下げる"
+
+#, fuzzy
+msgid "Scale a window down to a portion of it's size."
+msgstr "ウィンドウを半分の大きさに縮尺"
+
+msgid ""
+"Scale a window down to a ration of the screen size. Respectively half, a "
+"third or a sixth of the screen."
 msgstr ""
+
+msgid "Scale interval"
+msgstr "拡縮間隔"
+
+msgid "Shelf"
+msgstr "シェルフ"
+
+msgid ""
+"The number to divide the scale factor by or multiply it with when "
+"(respectively) increasing and decreasing the scale level manually. Higher "
+"number means finer changes."
+msgstr ""
+"手動で拡縮率の上げ下げをした際に、この数字で拡縮率を乗除。高い数字ほど、ウィ"
+"ンドウの大きさの変化がより細かくなります。"
+
+msgid "Trigger scale down"
+msgstr "縮尺のオンオフ"
+
+#, fuzzy
+msgid "Trigger scale down to screen"
+msgstr "縮尺のオンオフ"
+
+msgid ""
+"Visually scales a window down to allow easy monitoring without true/"
+"traditional resizing."
+msgstr ""
+"従来のようなサイズ変更の必要なく簡単に監視可能にするため、ウィンドウを縮尺表"
+"示"
 
 msgid "Background intensity"
 msgstr "背景の輝度"
@@ -3061,7 +3295,7 @@ msgid "Up/Down"
 msgstr "上下"
 
 msgid "Window Opacity"
-msgstr "ウィンドウの非透過率"
+msgstr "ウィンドウの不透明度"
 
 msgid "Window Part Size"
 msgstr "ウィンドウのサイズ"
@@ -3073,7 +3307,7 @@ msgid "Window movement timestep"
 msgstr "ウィンドウ移動の刻み時間"
 
 msgid "Window opacity when showdesktop'd"
-msgstr "デスクトップ表示が有効な時のウインドウの非透過率"
+msgstr "デスクトップ表示が有効な時のウインドウの不透明度"
 
 msgid "Window part size when showdesktop'd"
 msgstr "デスクトップ表示が有効な時のウインドウのサイズ"
@@ -3144,9 +3378,6 @@ msgstr "ウィンドウエッジ"
 
 msgid "Bottom to Top"
 msgstr "下から上へ"
-
-msgid "Debug"
-msgstr "デバグ"
 
 msgid ""
 "Delay (in ms) between screen updates. Decreasing this value may make snow "
@@ -3527,7 +3758,7 @@ msgid ""
 "Adjust the opacity, saturation and brightness of windows based on when they "
 "last had focus."
 msgstr ""
-"ウィンドウの非透過率や彩度、明度を最後にフォーカスがあった時点をベースに調節"
+"ウィンドウの不透明度や彩度、明度を最後にフォーカスがあった時点をベースに調節"
 
 msgid "Brightness Level of Focused Windows"
 msgstr "フォーカス・ウィンドウの明度"
@@ -3561,24 +3792,24 @@ msgstr ""
 "フォーカスがないものとされます。"
 
 msgid "Opacity Level of Focused Windows"
-msgstr "フォーカス・ウィンドウの非透過率"
+msgstr "フォーカス・ウィンドウの不透明度"
 
 msgid "Opacity Level of Unfocused Windows"
-msgstr "非フォーカス・ウィンドウの非透過率"
+msgstr "非フォーカス・ウィンドウの不透明度"
 
 msgid ""
 "Opacity of the currently focused window. Windows will get opacity levels "
 "between the focused and minimum."
 msgstr ""
-"現在フォーカスのあるウィンドウの非透過率。ウィンドウは、この値と追跡順番が"
-"もっとも古いフォーカス・ウィンドウの値との間の透過率を得ます。"
+"現在フォーカスのあるウィンドウの不透明度。ウィンドウは、この値と追跡順番が"
+"もっとも古いフォーカス・ウィンドウの値との間の不透明度を得ます。"
 
 msgid ""
 "Opacity of the least focused window. Windows will get opacity levels between "
 "the focused and minimum."
 msgstr ""
-"追跡順番のもっとも古いフォーカス・ウィンドウの非透過率。ウィンドウは、現在"
-"フォーカス・ウィンドウの値とこの値との間の透過率を得ます。"
+"追跡順番のもっとも古いフォーカス・ウィンドウの不透明度。ウィンドウは、現在"
+"フォーカス・ウィンドウの値とこの値との間の不透明度を得ます。"
 
 msgid "Saturation Level of Focused Windows"
 msgstr "フォーカス・ウィンドウの彩度"
@@ -3848,7 +4079,7 @@ msgid "Flip up"
 msgstr "上にめくる"
 
 msgid "Flip viewport when dragging an object to a screen edge"
-msgstr "ドラッグされているものが画面の端にきたときビューポートをめくる"
+msgstr "オブジェクトを画面の端にドラッグしたときビューポートをめくる"
 
 msgid "Flip viewport when moving a window to a screen edge"
 msgstr "ウィンドウが画面の端にきたときビューポートをめくる"
@@ -3980,69 +4211,66 @@ msgstr "背景"
 msgid "Draw the desktop wallpaper"
 msgstr "デスクトップの壁紙を描画"
 
+#, fuzzy
+msgid "Enable true alpha blending for transparent wallpapers"
+msgstr "雪片のアルファ合成を有効"
+
+#, fuzzy
+msgid "Enable true blending"
+msgstr "合成を有効"
+
 msgid "The background specifications (as explained in DOCUMENTATION) to use."
 msgstr "使用する背景の指定"
 
 msgid "Tile backgrounds as opposed to stretching"
 msgstr "ストレッチ時のタイルの背景"
 
-msgid "Tile or Stretch"
-msgstr "タイル か ストレッチ"
-
 msgid "Wallpaper"
 msgstr "壁紙"
 
-#, fuzzy
 msgid "Background Brightness"
 msgstr "背景の明度"
 
-#, fuzzy
 msgid "Background Saturation"
 msgstr "背景の彩度"
 
-#, fuzzy
 msgid "Background in Widget Mode"
-msgstr "背景画像ファイル"
+msgstr "ウィジェット・モード時の背景"
 
-#, fuzzy
 msgid "Brightness of non-widget windows in widget modes."
-msgstr "フェードしたウィンドウの明るさ"
+msgstr "ウィジェット・モード時の非ウィジェット・ウィンドウの明度"
 
 msgid "End Widget Mode on Click"
-msgstr ""
+msgstr "クリックでウィジェット・モード終了"
 
 msgid "End widget mode when a non-widget window is clicked."
 msgstr ""
+"非ウィジェット・ウィンドウがクリックされたとき、ウィジェット・モードを終了さ"
+"せる"
 
-#, fuzzy
 msgid "Saturation of non-widget windows in widget modes."
-msgstr "フェードしたウィンドウの彩度"
+msgstr "ウィジェット・モード時の非ウィジェット・ウィンドウの彩度"
 
-#, fuzzy
 msgid "Show or hide widget windows"
-msgstr "最小化されているウィンドウも表示"
+msgstr "ウィジェット・ウィンドウを表示/隠す"
 
 msgid "Show widget windows on a separate layer"
-msgstr ""
+msgstr "ウィジェット・ウィンドウを別個のレイヤに表示"
 
 msgid "Time (in s) for fading into/out of the widget layer."
-msgstr ""
+msgstr "ウィジェット・レイヤのフェードインやアウトの持続時間"
 
-#, fuzzy
 msgid "Toggle Widget Display"
-msgstr "ウィンドウのネガ表示のオンオフ"
+msgstr "ウィジェット表示のオンオフ"
 
-#, fuzzy
 msgid "Widget Layer"
-msgstr "ウィジェット"
+msgstr "ウィジェット・レイヤ"
 
-#, fuzzy
 msgid "Widget Windows"
-msgstr "リング・ウィンドウ"
+msgstr "ウィジェット・ウィンドウ"
 
-#, fuzzy
 msgid "Windows that always should be treated as widgets"
-msgstr "デフォルトで指定サイズに変更するウィンドウ"
+msgstr "常にウィジェットとして扱わせるウィンドウ"
 
 msgid "Above others windows"
 msgstr "他のウィンドウより上に"
@@ -4158,6 +4386,12 @@ msgstr "FireFoxのメニュー修正"
 msgid "Fix broken glProgramEnvParameter4f implementation."
 msgstr "壊れた glProgramEnvParameter4f 実装の修正"
 
+msgid "Fix for broken GLX_MESA_copy_sub_buffer on XGL in fglrx."
+msgstr ""
+
+msgid "Fix screen updates in XGL with fglrx."
+msgstr ""
+
 msgid "Fix window type of Firefox and Thunderbird menus."
 msgstr "FirefoxとThunderbirdのメニューのウィンドウタイプの修正"
 
@@ -4215,54 +4449,31 @@ msgstr ""
 msgid "Workarounds"
 msgstr "次善策"
 
-#~ msgid "Corner Bevelling"
-#~ msgstr "コーナーの角度"
+#~ msgid "Misc. options"
+#~ msgstr "その他オプション"
 
-#~ msgid "Create Mipmaps"
-#~ msgstr "Mipmapの作成"
+#~ msgid "Show minimized windows"
+#~ msgstr "最小化されているウィンドウも表示"
 
-#~ msgid "Disable Caps for Inside Cube"
-#~ msgstr "キューブ内での上側を利用不可能にする"
-
-#~ msgid ""
-#~ "Disables the drawing of the cube caps when the inside cube mode is set."
-#~ msgstr "キューブの内部モードでは、キューブの上側の描画を利用不可能にする"
-
-#~ msgid "Draw Window Backsides"
-#~ msgstr "ウィンドウの裏側を描画する"
-
-#~ msgid "Enables the drawing of the backside of windows."
-#~ msgstr "ウィンドウの裏側描画を可能にする"
+#~ msgid "Tile or Stretch"
+#~ msgstr "タイル か ストレッチ"
 
 #~ msgid ""
+#~ "Timeout in seconds before hiding the notificationUses libnotify to "
+#~ "display errorsCorner BevellingCreate MipmapsDisable Caps for Inside "
+#~ "CubeDisables the drawing of the cube caps when the inside cube mode is "
+#~ "set.Draw Window BacksidesEnables the drawing of the backside of windows."
 #~ "This will create mipmaps which improve overall texture appearence, and "
-#~ "reduce jagged edges."
+#~ "reduce jagged edges.Window widthBeginGoto viewport specified by "
+#~ "numbersSpring model on moveUse spring model for the tab bar when moving "
+#~ "the windowSet window as widgetAppearenceBackground Base ColorBackground "
+#~ "Highlight Color"
 #~ msgstr ""
-#~ "テクスチャの見栄えを良くし、ギザギザなエッジを少なくするmipmapを作成する"
-
-#~ msgid "Window width"
-#~ msgstr "ウィンドウ幅"
-
-#~ msgid "Begin"
-#~ msgstr "開始"
-
-#~ msgid "Goto viewport specified by numbers"
-#~ msgstr "数値で指定されたビューポートに移動"
-
-#~ msgid "Spring model on move"
-#~ msgstr "移動時のスプリングモデル"
-
-#~ msgid "Use spring model for the tab bar when moving the window"
-#~ msgstr "ウィンドウの移動時にタブバーをスプリングモードにする"
-
-#~ msgid "Set window as widget"
-#~ msgstr "ウィンドウをウィジェットにしてください"
-
-#~ msgid "Appearence"
-#~ msgstr "見栄え"
-
-#~ msgid "Background Base Color"
-#~ msgstr "背景の基本色"
-
-#~ msgid "Background Highlight Color"
-#~ msgstr "背景の明るい部分の色"
+#~ "通知表示を隠し始めるまでのタイムアウト（秒）libnotify を使用してエラーを表"
+#~ "示コーナーの角度Mipmapの作成キューブ内での上側を利用不可能にするキューブの"
+#~ "内部モードでは、キューブの上側の描画を利用不可能にするウィンドウの裏側を描"
+#~ "画するウィンドウの裏側描画を可能にするテクスチャの見栄えを良くし、ギザギザ"
+#~ "なエッジを少なくするmipmapを作成するウィンドウ幅開始数値で指定されたビュー"
+#~ "ポートに移動移動時のスプリングモデルウィンドウの移動時にタブバーをスプリン"
+#~ "グモードにするウィンドウをウィジェットにしてください見栄え背景の基本色背景"
+#~ "の明るい部分の色"

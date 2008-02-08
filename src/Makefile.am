@@ -15,4 +15,6 @@ SUBDIRS = addhelper \
 	  showdesktop \
 	  splash \
 	  trailfocus \
-	  widget
+	  widget \
+	  showmouse \
+	  loginout
