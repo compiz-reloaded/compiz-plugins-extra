@@ -3,7 +3,7 @@
   <plugin name="maximumize" useBcop="true">
     <_short>Maximumize</_short>
 	<_long>Maximumizes windows (resize them to fit the available screenspace).</_long>
-	<category></category>
+	<category>Window Management</category>
     <display>
       <option name="ignore_sticky" type="bool">
          <_short>Ignore sticky windows in the calculations</_short>
