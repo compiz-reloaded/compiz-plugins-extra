@@ -130,10 +130,16 @@ fi
 PKG_CHECK_MODULES(COMPIZCUBE, compiz-cube, [have_compiz_cube=yes], [have_compiz_cube=no])
 AM_CONDITIONAL(CUBEREFLEX_PLUGIN, test "x$have_compiz_cube" = "xyes")
 AM_CONDITIONAL(CUBECAPS_PLUGIN, test "x$have_compiz_cube" = "xyes")
+AM_CONDITIONAL(THREED_PLUGIN, test "x$have_compiz_cube" = "xyes")
 
 PKG_CHECK_MODULES(COMPIZMOUSEPOLL, compiz-mousepoll, [have_compiz_mousepoll=yes], [have_compiz_mousepoll=no])
 AM_CONDITIONAL(SHOWMOUSE_PLUGIN, test "x$have_compiz_mousepoll" = "xyes")
 
+PKG_CHECK_MODULES(LIBNOTIFY, libnotify, [have_libnotify=yes], [have_libnotify=no])
+AM_CONDITIONAL(NOTIFICATION_PLUGIN, test "x$have_libnotify" = "xyes")
+if test "$have_libnotify" = yes; then
+  AC_DEFINE(USE_NOTIFICATION, 1, [Build notification plugin])
+fi
 
 AC_ARG_ENABLE(schemas,
   [  --enable-schemas         Build gconf schemas],
@@ -166,6 +172,7 @@ Makefile
 images/Makefile
 metadata/Makefile
 src/Makefile
+src/3d/Makefile
 src/addhelper/Makefile
 src/bench/Makefile
 src/crashhandler/Makefile
@@ -176,9 +183,12 @@ src/fadedesktop/Makefile
 src/firepaint/Makefile
 src/gears/Makefile
 src/group/Makefile
+src/maximumize/Makefile
 src/mblur/Makefile
+src/notification/Makefile
 src/reflex/Makefile
 src/scalefilter/Makefile
+src/shelf/Makefile
 src/showdesktop/Makefile
 src/splash/Makefile
 src/trailfocus/Makefile

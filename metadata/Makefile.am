@@ -1,5 +1,6 @@
 xmldir       = $(metadatadir)
 xml_in_files = 	         \
+	3d.xml.in \
 	addhelper.xml.in \
 	bench.xml.in \
 	crashhandler.xml.in \
@@ -10,9 +11,12 @@ xml_in_files = 	         \
 	firepaint.xml.in \
 	gears.xml.in \
 	group.xml.in \
+	maximumize.xml.in \
 	mblur.xml.in \
+	notification.xml.in \
 	reflex.xml.in \
 	scalefilter.xml.in \
+	shelf.xml.in \
 	showdesktop.xml.in \
 	splash.xml.in \
 	trailfocus.xml.in \

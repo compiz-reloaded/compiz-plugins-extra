@@ -1,5 +1,6 @@
 ## Process this file with automake to produce Makefile.in
-SUBDIRS = addhelper \
+SUBDIRS = 3d \
+	  addhelper \
 	  bench \
 	  crashhandler \
 	  cubecaps \
@@ -9,9 +10,12 @@ SUBDIRS = addhelper \
 	  firepaint \
 	  gears \
 	  group \
+	  maximumize \
 	  mblur \
+	  notification \
 	  reflex \
 	  scalefilter \
+	  shelf \
 	  showdesktop \
 	  splash \
 	  trailfocus \
