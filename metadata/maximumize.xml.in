@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<compiz>
+  <plugin name="maximumize" useBcop="true">
+    <_short>Maximumize</_short>
+	<_long>Maximumizes windows (resize them to fit the available screenspace).</_long>
+	<category></category>
+    <display>
+      <option name="ignore_sticky" type="bool">
+         <_short>Ignore sticky windows in the calculations</_short>
+	 <_long>Treat sticky windows as non-existant when calculating space
+	 to use for the maximumize window.</_long>
+         <default>true</default>
+      </option>
+      <group>
+        <_short>Bindings</_short>
+        <option name="trigger_key" type="key">
+          <_short>Trigger maximumize</_short>
+          <_long>Trigger a resize of the window currently focused so it fits as
+	  much of the available screenspae as possible.</_long>
+          <default>&lt;Super&gt;m</default>
+        </option>
+      </group>
+    </display>
+  </plugin>
+</compiz>
