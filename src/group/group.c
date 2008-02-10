@@ -648,7 +648,10 @@ groupAddWindowToGroup (CompWindow     *w,
 
 	g->windows = malloc (sizeof (CompWindow *));
 	if (!g->windows)
+	{
+	    free (g);
 	    return;
+	}
 
 	g->windows[0] = w;
 	g->screen     = w->screen;
