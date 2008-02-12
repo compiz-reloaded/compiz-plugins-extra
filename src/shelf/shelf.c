@@ -26,7 +26,6 @@
  * Todo: 
  *  - Check for XShape events
  *  - Handle input in a sane way
- *  - Correct damage handeling
  *  - Mouse-over?
  */
 
@@ -701,10 +700,6 @@ shelfHandleEvent (CompDisplay *d,
 
 /* The window was damaged, adjust the damage to fit the actual area we
  * care about.
- *
- * FIXME:
- * This should not cause total screen damage, but only adjust the rect
- * correctly.
  */
 static Bool
 shelfDamageWindowRect (CompWindow *w,
@@ -717,7 +712,7 @@ shelfDamageWindowRect (CompWindow *w,
 
     if (sw->scale != 1.0f)
     {
-	damageScreen (w->screen);
+	damageTransformedWindowRect (w, sw->scale, sw->scale, 0, 0, rect);
 	status = TRUE;
     }
 
@@ -756,14 +751,10 @@ shelfPaintWindow (CompWindow		    *w,
     if (sw->scale != 1.0f)
     {
 	CompTransform mTransform = *transform;
-	int           xOrigin, yOrigin;
 
-	xOrigin = w->attrib.x - w->input.left;
-	yOrigin = w->attrib.y - w->input.top;
-	
-	matrixTranslate (&mTransform, xOrigin, yOrigin,  0);
+	matrixTranslate (&mTransform, w->attrib.x, w->attrib.y,  0);
 	matrixScale (&mTransform, sw->scale, sw->scale, 0);
-	matrixTranslate (&mTransform, -xOrigin, -yOrigin,  0);
+	matrixTranslate (&mTransform, -w->attrib.x, -w->attrib.y,  0);
 	
 	mask |= PAINT_WINDOW_TRANSFORMED_MASK;
 
