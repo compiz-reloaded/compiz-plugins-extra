@@ -712,7 +712,8 @@ shelfDamageWindowRect (CompWindow *w,
 
     if (sw->scale != 1.0f)
     {
-	damageTransformedWindowRect (w, sw->scale, sw->scale, 0, 0, rect);
+	damageTransformedWindowRect (w, sw->scale, sw->scale,
+				     -w->input.left, -w->input.top, rect);
 	status = TRUE;
     }
 
@@ -751,10 +752,14 @@ shelfPaintWindow (CompWindow		    *w,
     if (sw->scale != 1.0f)
     {
 	CompTransform mTransform = *transform;
+	int           xOrigin, yOrigin;
 
-	matrixTranslate (&mTransform, w->attrib.x, w->attrib.y,  0);
+	xOrigin = w->attrib.x - w->input.left;
+	yOrigin = w->attrib.y - w->input.top;
+
+	matrixTranslate (&mTransform, xOrigin, yOrigin, 0);
 	matrixScale (&mTransform, sw->scale, sw->scale, 0);
-	matrixTranslate (&mTransform, -w->attrib.x, -w->attrib.y,  0);
+	matrixTranslate (&mTransform, -xOrigin, -yOrigin, 0);
 	
 	mask |= PAINT_WINDOW_TRANSFORMED_MASK;
 
