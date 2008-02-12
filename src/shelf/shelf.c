@@ -317,7 +317,7 @@ shelfAdjustIPW (CompWindow *w)
     xwc.y          = w->attrib.y - w->input.top;
     xwc.width      = (int) width;
     xwc.height     = (int) height;
-    xwc.stack_mode = Above;
+    xwc.stack_mode = Below;
     xwc.sibling    = w->id;
 
     XConfigureWindow (w->screen->display->display, sw->info->ipw,
@@ -336,7 +336,26 @@ shelfAdjustIPWStacking (CompScreen *s)
 
     for (run = ss->shelfedWindows; run; run = run->next)
     {
-	if (!run->w->next || run->w->next->id != run->ipw)
+	Bool stackingRight = FALSE;
+
+	if (run->w->prev)
+	{
+	    /* the stacking is correct if either
+	       a) the window under the main window is the IPW or
+	       b) the second window under the main window is the IPW,
+	          if the first one is the frame
+	    */
+	    if (run->w->prev->id == run->ipw)
+		stackingRight = TRUE;
+	    else if (run->w->prev->id == run->w->frame)
+	    {
+		if (run->w->prev->prev)
+		    if (run->w->prev->prev->id == run->ipw)
+			stackingRight = TRUE;
+	    }
+	}
+
+	if (!stackingRight)
 	    shelfAdjustIPW (run->w);
     }
 }
@@ -354,6 +373,8 @@ shelfCreateIPW (CompWindow *w)
 	return;
 
     attrib.override_redirect = TRUE;
+    attrib.event_mask        = 0;
+
     ipw = XCreateWindow (w->screen->display->display,
 			 w->screen->root,
 			 w->serverX - w->input.left,
@@ -361,8 +382,9 @@ shelfCreateIPW (CompWindow *w)
 			 w->serverWidth + w->input.left + w->input.right,
 			 w->serverHeight + w->input.top + w->input.bottom,
 			 0, CopyFromParent, InputOnly, CopyFromParent,
-			 CWOverrideRedirect, &attrib);
-    
+			 CWEventMask | CWOverrideRedirect,
+			 &attrib);
+ 
     sw->info->ipw = ipw;
 }
 
@@ -854,6 +876,7 @@ shelfInitScreen (CompPlugin *p,
     ss->lastPointerY  = 0;
     ss->noLastPointer = TRUE;
 
+    ss->grabIndex      = 0;
     ss->grabbedWindow  = None;
     ss->shelfedWindows = NULL;
 
