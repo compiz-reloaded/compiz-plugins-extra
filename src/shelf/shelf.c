@@ -73,7 +73,8 @@ typedef struct {
 
     ShelfedWindowInfo *shelfedWindows;
 
-    PaintWindowProc        paintWindow;    
+    PaintWindowProc        paintWindow;
+    PaintOutputProc        paintOutput;
     DamageWindowRectProc   damageWindowRect;
     PreparePaintScreenProc preparePaintScreen;
     WindowMoveNotifyProc   windowMoveNotify;
@@ -786,6 +787,28 @@ shelfPaintWindow (CompWindow		    *w,
     return status;
 }
 
+static Bool
+shelfPaintOutput (CompScreen		  *s,
+		  const ScreenPaintAttrib *sAttrib,
+		  const CompTransform	  *transform,
+		  Region		  region,
+		  CompOutput		  *output,
+		  unsigned int		  mask)
+{
+    Bool status;
+
+    SHELF_SCREEN (s);
+
+    if (ss->shelfedWindows)
+	mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_MASK;
+
+    UNWRAP (ss, s, paintOutput);
+    status = (*s->paintOutput) (s, sAttrib, transform, region, output, mask);
+    WRAP (ss, s, paintOutput, shelfPaintOutput);
+
+    return status;
+}
+
 static void
 shelfWindowMoveNotify (CompWindow *w,
 		       int        dx,
@@ -834,6 +857,7 @@ shelfInitScreen (CompPlugin *p,
 
     WRAP (ss, s, preparePaintScreen, shelfPreparePaintScreen);
     WRAP (ss, s, paintWindow, shelfPaintWindow); 
+    WRAP (ss, s, paintOutput, shelfPaintOutput);
     WRAP (ss, s, damageWindowRect, shelfDamageWindowRect);
     WRAP (ss, s, windowMoveNotify, shelfWindowMoveNotify);
 
@@ -850,6 +874,7 @@ shelfFiniScreen (CompPlugin *p,
 
     UNWRAP (ss, s, preparePaintScreen);
     UNWRAP (ss, s, paintWindow);
+    UNWRAP (ss, s, paintOutput);
     UNWRAP (ss, s, damageWindowRect);
     UNWRAP (ss, s, windowMoveNotify);
 
