@@ -33,6 +33,7 @@
 #include <X11/extensions/shape.h>
 #include <X11/cursorfont.h>
 #include <math.h>
+#include <string.h>
 #include "shelf_options.h"
 
 typedef struct _ShelfedWindowInfo {
@@ -630,6 +631,20 @@ handleButtonRelease (CompWindow *w)
     }
 }
 
+static void
+handleWindowEnter (CompWindow *w,
+		   XEvent     *event)
+{
+    XEvent enterEvent;
+
+    memcpy (&enterEvent.xcrossing, &event->xcrossing,
+	    sizeof (XCrossingEvent));
+    enterEvent.xcrossing.window = w->id;
+
+    XSendEvent (w->screen->display->display, w->id,
+		FALSE, EnterWindowMask, &enterEvent);
+}
+
 static CompWindow *
 shelfFindRealWindowID (CompDisplay *d,
 		       Window      wid)
@@ -654,6 +669,11 @@ shelfHandleEvent (CompDisplay *d,
 
     switch (event->type)
     {
+	case EnterNotify:
+	    w = shelfFindRealWindowID (d, event->xcrossing.window);
+	    if (w)
+		handleWindowEnter (w, event);
+	    break;
 	case ButtonPress:
 	    w = shelfFindRealWindowID (d, event->xbutton.window);
 	    if (w)
