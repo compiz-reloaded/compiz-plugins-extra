@@ -300,6 +300,7 @@ static void
 shelfAdjustIPW (CompWindow *w)
 {
     XWindowChanges xwc;
+    Display        *dpy = w->screen->display->display;
     float          width, height;
 
     SHELF_WINDOW (w);
@@ -321,11 +322,11 @@ shelfAdjustIPW (CompWindow *w)
     xwc.stack_mode = Below;
     xwc.sibling    = w->id;
 
-    XConfigureWindow (w->screen->display->display, sw->info->ipw,
+    XConfigureWindow (dpy, sw->info->ipw,
 		      CWSibling | CWStackMode | CWX | CWY | CWWidth | CWHeight,
 		      &xwc);
 
-    XMapWindow (w->screen->display->display, sw->info->ipw);
+    XMapWindow (dpy, sw->info->ipw);
 }
 
 static void
@@ -419,7 +420,7 @@ shelfScaleWindow (CompWindow *w,
 	sw->targetScale = SHELF_MIN_SIZE / (float) w->width;
 
     if (shelfHandleShelfInfo (w))
-	    shelfAdjustIPW (w);
+	shelfAdjustIPW (w);
 
     damageScreen (w->screen);
 }
