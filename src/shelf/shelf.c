@@ -322,6 +322,20 @@ shelfAdjustIPW (CompWindow *w)
     XMapWindow (w->screen->display->display, sw->info->ipw);
 }
 
+static void
+shelfAdjustIPWStacking (CompScreen *s)
+{
+    ShelfedWindowInfo *run;
+
+    SHELF_SCREEN (s);
+
+    for (run = ss->shelfedWindows; run; run = run->next)
+    {
+	if (!run->w->next || run->w->next->id != run->ipw)
+	    shelfAdjustIPW (run->w);
+    }
+}
+
 /* Create an input prevention window */
 static void
 shelfCreateIPW (CompWindow *w)
@@ -613,7 +627,7 @@ static void
 shelfHandleEvent (CompDisplay *d,
 		  XEvent      *event)
 {
-    CompWindow *w;
+    CompWindow *w, *oldPrev, *oldNext;
     CompScreen *s;
 
     SHELF_DISPLAY (d);
@@ -638,11 +652,33 @@ shelfHandleEvent (CompDisplay *d,
 	case MotionNotify:
 	    handleMotionEvent (d, event);
 	    break;
+	case ConfigureNotify:
+	    w = findWindowAtDisplay (d, event->xconfigure.window);
+	    if (w)
+	    {
+		oldPrev = w->prev;
+		oldNext = w->next;
+	    }
+	    break;
     }
 
     UNWRAP (sd, d, handleEvent);
     (*d->handleEvent) (d, event);
     WRAP (sd, d, handleEvent, shelfHandleEvent);
+
+    switch (event->type)
+    {
+	case ConfigureNotify:
+	    if (w) /* already assigned above */
+	    {
+		if (w->prev != oldPrev || w->next != oldNext)
+		{
+		    /* restacking occured, ensure ipw stacking */
+		    shelfAdjustIPWStacking (w->screen);
+		}
+	    }
+	    break;
+    }
 }
 
 /* The window was damaged, adjust the damage to fit the actual area we
