@@ -108,14 +108,16 @@ static int displayPrivateIndex;
 static CompWindow *
 shelfGetRealWindow (CompWindow *w)
 {
-    CompWindow *rw;
+    ShelfedWindowInfo *run;
 
-    for (rw = w->screen->windows; rw; rw = rw->next)
+    SHELF_SCREEN (w->screen);
+
+    for (run = ss->shelfedWindows; run; run = run->next)
     {
-	SHELF_WINDOW (rw);
-	if (sw->info && sw->info->ipw == w->id)
-	    return rw;
+	if (w->id == run->ipw)
+	    return run->w;
     }
+
     return NULL;
 }
 
@@ -357,7 +359,7 @@ shelfCreateIPW (CompWindow *w)
 			 w->serverHeight + w->input.top + w->input.bottom,
 			 0, CopyFromParent, InputOnly, CopyFromParent,
 			 CWOverrideRedirect, &attrib);
-
+    
     sw->info->ipw = ipw;
 }
 
@@ -605,7 +607,6 @@ handleButtonRelease (CompWindow *w)
 	moveInputFocusToWindow (w);
 	removeScreenGrab (s, ss->grabIndex, NULL);
 	ss->grabIndex = 0;
-	ss->grabbedWindow = 0;
     }
 }
 
@@ -809,6 +810,7 @@ shelfInitScreen (CompPlugin *p,
     ss->lastPointerY  = 0;
     ss->noLastPointer = TRUE;
 
+    ss->grabbedWindow  = None;
     ss->shelfedWindows = NULL;
 
     WRAP (ss, s, preparePaintScreen, shelfPreparePaintScreen);
