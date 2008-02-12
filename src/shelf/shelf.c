@@ -541,7 +541,7 @@ handleButtonPress (CompWindow *w)
 
     if (!otherScreenGrabExist (s, "shelf", 0))
     {
-	moveInputFocusToWindow (w);
+	activateWindow (w);
 	ss->grabbedWindow = w->id;
 	ss->grabIndex = pushScreenGrab (s, ss->moveCursor, "shelf");
     }
@@ -602,7 +602,6 @@ handleButtonRelease (CompWindow *w)
 	ss->lastPointerX  = 0;
 	ss->lastPointerY  = 0;
 
-	/* FIXME: shouldn't we better activateWindow() here? */
 	moveInputFocusToWindow (w);
 	removeScreenGrab (s, ss->grabIndex, NULL);
 	ss->grabIndex = 0;
