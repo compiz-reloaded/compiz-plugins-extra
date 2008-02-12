@@ -336,26 +336,7 @@ shelfAdjustIPWStacking (CompScreen *s)
 
     for (run = ss->shelfedWindows; run; run = run->next)
     {
-	Bool stackingRight = FALSE;
-
-	if (run->w->prev)
-	{
-	    /* the stacking is correct if either
-	       a) the window under the main window is the IPW or
-	       b) the second window under the main window is the IPW,
-	          if the first one is the frame
-	    */
-	    if (run->w->prev->id == run->ipw)
-		stackingRight = TRUE;
-	    else if (run->w->prev->id == run->w->frame)
-	    {
-		if (run->w->prev->prev)
-		    if (run->w->prev->prev->id == run->ipw)
-			stackingRight = TRUE;
-	    }
-	}
-
-	if (!stackingRight)
+	if (!run->w->prev || run->w->prev->id != run->ipw)
 	    shelfAdjustIPW (run->w);
     }
 }
