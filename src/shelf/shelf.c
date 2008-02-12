@@ -446,6 +446,22 @@ shelfTrigger (CompDisplay     *d,
     return TRUE;
 }
 
+/* Reset window to 1.0f scale */
+static Bool
+shelfReset (CompDisplay     *d,
+	    CompAction      *action,
+	    CompActionState state,
+	    CompOption      *option,
+	    int             nOption)
+{
+    CompWindow *w = findWindowAtDisplay (d, d->activeWindow);
+    if (!w)
+	return TRUE;
+
+    shelfScaleWindow (w, 1.0f);
+    return TRUE;
+}
+
 /* Returns the ratio to multiply by to get a window that's 1/ration the
  * size of the screen.
  */
@@ -870,6 +886,7 @@ shelfInitDisplay (CompPlugin  *p,
     }
 
     shelfSetTriggerKeyInitiate (d, shelfTrigger);
+    shelfSetResetKeyInitiate (d, shelfReset);
     shelfSetTriggerscreenKeyInitiate (d, shelfTriggerScreen);
     shelfSetIncButtonInitiate (d, shelfInc);
     shelfSetDecButtonInitiate (d, shelfDec);
