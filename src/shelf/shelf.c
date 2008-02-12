@@ -36,7 +36,10 @@
 #include <math.h>
 #include "shelf_options.h"
 
-typedef struct {
+typedef struct _ShelfedWindowInfo {
+    CompWindow                *w;
+    struct _ShelfedWindowInfo *next;
+
     Window     ipw;
 
     XRectangle *inputRects;
@@ -67,6 +70,8 @@ typedef struct {
     Bool noLastPointer;
     int  lastPointerX;
     int  lastPointerY;
+
+    ShelfedWindowInfo *shelfedWindows;
 
     PaintWindowProc        paintWindow;    
     DamageWindowRectProc   damageWindowRect;
@@ -242,6 +247,47 @@ shelfPreparePaintScreen (CompScreen *s,
     WRAP (ss, s, preparePaintScreen, shelfPreparePaintScreen);
 }
 
+static void
+shelfAddWindowToList (ShelfedWindowInfo *info)
+{
+    CompScreen        *s = info->w->screen;
+    ShelfedWindowInfo *run;
+
+    SHELF_SCREEN (s);
+
+    run = ss->shelfedWindows;
+    if (!run)
+	ss->shelfedWindows = info;
+    else
+    {
+	for (; run->next; run = run->next);
+	run->next = info;
+    }
+}
+
+static void
+shelfRemoveWindowFromList (ShelfedWindowInfo *info)
+{
+    CompScreen        *s = info->w->screen;
+    ShelfedWindowInfo *run;
+
+    SHELF_SCREEN (s);
+
+    if (!ss->shelfedWindows)
+	return;
+
+    if (ss->shelfedWindows == info)
+	ss->shelfedWindows = info->next;
+    else
+    {
+	for (run = ss->shelfedWindows; run->next; run = run->next)
+	{
+	    if (run->next == info)
+		run->next = info->next;
+	}
+    }
+}
+
 /* Adjust size and location of the input prevention window
  */
 static void 
@@ -312,6 +358,7 @@ shelfHandleShelfInfo (CompWindow *w)
 	    XDestroyWindow (w->screen->display->display, sw->info->ipw);
 
 	shelfUnshapeInput (w);
+	shelfRemoveWindowFromList (sw->info);
 
 	free (sw->info);
 	sw->info = NULL;
@@ -324,8 +371,10 @@ shelfHandleShelfInfo (CompWindow *w)
 	if (!sw->info)
 	    return FALSE;
 
+	sw->info->w = w;
 	shelfShapeInput (w);
 	shelfCreateIPW (w);
+	shelfAddWindowToList (sw->info);
     }
 
     return TRUE;
@@ -724,6 +773,8 @@ shelfInitScreen (CompPlugin *p,
     ss->lastPointerX  = 0;
     ss->lastPointerY  = 0;
     ss->noLastPointer = TRUE;
+
+    ss->shelfedWindows = NULL;
 
     WRAP (ss, s, preparePaintScreen, shelfPreparePaintScreen);
     WRAP (ss, s, paintWindow, shelfPaintWindow); 
