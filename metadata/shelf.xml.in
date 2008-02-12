@@ -2,8 +2,13 @@
 <compiz>
   <plugin name="shelf" useBcop="true">
     <_short>Shelf</_short>
-	<_long>Visually scales a window down to allow easy monitoring without true/traditional resizing.  </_long>
-	<category>Window Management</category>
+    <_long>Visually scales a window down to allow easy monitoring without true/traditional resizing.  </_long>
+    <category>Window Management</category>
+    <deps>
+	<relation type="after">
+	    <plugin>wall</plugin>
+	</relation>
+    </deps>
     <display>
       <group>
         <_short>Bindings</_short>
