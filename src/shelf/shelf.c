@@ -415,10 +415,8 @@ shelfScaleWindow (CompWindow *w,
     if ((float) w->width * sw->targetScale < SHELF_MIN_SIZE)
 	sw->targetScale = SHELF_MIN_SIZE / (float) w->width;
 
-    if (!shelfHandleShelfInfo (w))
-	return;
-
-    shelfAdjustIPW (w);
+    if (shelfHandleShelfInfo (w))
+	    shelfAdjustIPW (w);
 
     damageScreen (w->screen);
 }
