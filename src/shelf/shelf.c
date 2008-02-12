@@ -285,7 +285,10 @@ shelfRemoveWindowFromList (ShelfedWindowInfo *info)
 	for (run = ss->shelfedWindows; run->next; run = run->next)
 	{
 	    if (run->next == info)
+	    {
 		run->next = info->next;
+		break;
+	    }
 	}
     }
 }
@@ -443,22 +446,6 @@ shelfTrigger (CompDisplay     *d,
     else 
 	shelfScaleWindow (w, 1.0f);
 
-    return TRUE;
-}
-
-/* Reset window to 1.0f scale */
-static Bool
-shelfReset (CompDisplay     *d,
-	    CompAction      *action,
-	    CompActionState state,
-	    CompOption      *option,
-	    int             nOption)
-{
-    CompWindow *w = findWindowAtDisplay (d, d->activeWindow);
-    if (!w)
-	return TRUE;
-
-    shelfScaleWindow (w, 1.0f);
     return TRUE;
 }
 
@@ -886,7 +873,6 @@ shelfInitDisplay (CompPlugin  *p,
     }
 
     shelfSetTriggerKeyInitiate (d, shelfTrigger);
-    shelfSetResetKeyInitiate (d, shelfReset);
     shelfSetTriggerscreenKeyInitiate (d, shelfTriggerScreen);
     shelfSetIncButtonInitiate (d, shelfInc);
     shelfSetDecButtonInitiate (d, shelfDec);
