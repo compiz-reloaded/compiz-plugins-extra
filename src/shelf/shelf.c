@@ -15,6 +15,7 @@
  *
  * Author(s): 
  * Kristian Lyngstøl <kristian@bohemians.org>
+ * Danny Baumann <maniac@opencompositing.org>
  *
  * Description:
  *
@@ -39,36 +40,50 @@ typedef struct {
     float scale;
     float targetScale;
     float steps;
+
     Window ipw;
-} shelfWindow;
+} ShelfWindow;
 
 typedef struct {
-    int grabIndex;
-    Cursor moveCursor;
-    Window grabbedWindow;
-    Bool noLastPointer;
-    int lastPointerX;
-    int lastPointerY;
-    PaintWindowProc paintWindow;    
-    DamageWindowRectProc damageWindowRect;
-    PreparePaintScreenProc preparePaintScreen;
-    WindowMoveNotifyProc windowMoveNotify;
     int windowPrivateIndex;
-} shelfScreen;
+
+    int grabIndex;
+    Window grabbedWindow;
+
+    Cursor moveCursor;
+
+    Bool noLastPointer;
+    int  lastPointerX;
+    int  lastPointerY;
+
+    PaintWindowProc        paintWindow;    
+    DamageWindowRectProc   damageWindowRect;
+    PreparePaintScreenProc preparePaintScreen;
+    WindowMoveNotifyProc   windowMoveNotify;
+} ShelfScreen;
 
 typedef struct {
+    int screenPrivateIndex;
+
     HandleEventProc handleEvent;
-} shelfDisplay;
+} ShelfDisplay;
 
-static shelfDisplay sdtmp;
-static shelfDisplay *sd = &sdtmp;
 static int displayPrivateIndex;
-static int screenPrivateIndex;
 
+#define GET_SHELF_DISPLAY(d) \
+    ((ShelfDisplay *) (d)->base.privates[displayPrivateIndex].ptr)
+#define SHELF_DISPLAY(d) \
+    ShelfDisplay *sd = GET_SHELF_DISPLAY (d)
+#define GET_SHELF_SCREEN(s, sd) \
+    ((ShelfScreen *) (s)->base.privates[(sd)->screenPrivateIndex].ptr)
 #define SHELF_SCREEN(s) \
-    shelfScreen *ss = s->base.privates[screenPrivateIndex].ptr;
+    ShelfScreen *ss = GET_SHELF_SCREEN (s, GET_SHELF_DISPLAY (s->display))
+#define GET_SHELF_WINDOW(w, ss) \
+    ((ShelfWindow *) (w)->base.privates[(ss)->windowPrivateIndex].ptr)
 #define SHELF_WINDOW(w) \
-    shelfWindow *sw = w->base.privates[ss->windowPrivateIndex].ptr;
+    ShelfWindow *sw = GET_SHELF_WINDOW  (w,                  \
+		      GET_SHELF_SCREEN  (w->screen,          \
+		      GET_SHELF_DISPLAY (w->screen->display)))
 
 #define SHELF_MIN_SIZE 50.0f // Minimum pixelsize a window can be scaled to
 
@@ -76,8 +91,8 @@ static int screenPrivateIndex;
 static CompWindow *
 shelfGetRealWindow (CompWindow *w)
 {
-    SHELF_SCREEN (w->screen);
     CompWindow *rw;
+
     for (rw = w->screen->windows; rw; rw = rw->next)
     {
 	SHELF_WINDOW (rw);
@@ -94,7 +109,8 @@ static void
 shelfShapeInput (CompWindow *w)
 {
     XRectangle rect;
-    SHELF_SCREEN (w->screen);
+    Display    *dpy = w->screen->display->display;
+
     SHELF_WINDOW (w);
 
     rect.x = 0;
@@ -108,14 +124,15 @@ shelfShapeInput (CompWindow *w)
 	rect.width = (w->serverWidth + w->serverBorderWidth);
 	rect.height = (w->serverHeight + w->serverBorderWidth);
     }
-    XShapeSelectInput (w->screen->display->display, w->id, NoEventMask);
-    XShapeCombineRectangles  (w->screen->display->display, w->id, 
-			      ShapeInput, 0, 0, &rect, 1,  ShapeSet, 0);
+
+    XShapeSelectInput (dpy, w->id, NoEventMask);
+    XShapeCombineRectangles  (dpy, w->id, ShapeInput, 0, 0,
+			      &rect, 1,  ShapeSet, 0);
     
     if (w->frame)
-	XShapeCombineRectangles  (w->screen->display->display, w->frame, 
-				  ShapeInput, 0, 0, &rect, 1,  ShapeSet, 0);
-    XShapeSelectInput (w->screen->display->display, w->id, ShapeNotify);
+	XShapeCombineRectangles  (dpy, w->frame, ShapeInput, 0, 0,
+				  &rect, 1,  ShapeSet, 0);
+    XShapeSelectInput (dpy, w->id, ShapeNotify);
 }
 
 static void
@@ -123,7 +140,8 @@ shelfPreparePaintScreen (CompScreen *s,
 			 int	    msSinceLastPaint)
 {
     CompWindow *w;
-    float steps;
+    float      steps;
+
     SHELF_SCREEN (s);
 
     steps =  (float)msSinceLastPaint / (float)shelfGetAnimtime(s->display);
@@ -131,9 +149,10 @@ shelfPreparePaintScreen (CompScreen *s,
     if (steps < 0.005)
 	steps = 0.005;
 
+    /* FIXME: should only loop over all windows if at least one animation
+       is running */
     for (w = s->windows; w; w = w->next)
-	((shelfWindow *)w->base.privates[ss->windowPrivateIndex].ptr)->steps
-	    = steps;
+	GET_SHELF_WINDOW (w, ss)->steps = steps;
     
     UNWRAP (ss, s, preparePaintScreen);
     (*s->preparePaintScreen) (s, msSinceLastPaint);
@@ -145,9 +164,10 @@ shelfPreparePaintScreen (CompScreen *s,
 static void 
 shelfAdjustIPW (CompWindow *w)
 {
-    SHELF_SCREEN (w->screen);
-    SHELF_WINDOW (w);
     XWindowChanges xwc;
+    float          width, height;
+
+    SHELF_WINDOW (w);
 
     if (!sw->ipw)
 	return;
@@ -157,60 +177,69 @@ shelfAdjustIPW (CompWindow *w)
 	sw->ipw = None;
 	return;
     }
-    xwc.x = w->attrib.x - w->input.left;
-    xwc.y = w->attrib.y - w->input.top;
-    xwc.width = (int) ((float) (w->width + 2 + w->attrib.border_width +
-				w->input.left + w->input.right) * sw->targetScale);
-    xwc.height = (int) ((float) (w->height + 2 + w->attrib.border_width + w->input.top +
-				 w->input.bottom) * sw->targetScale);
 
+    width  = w->width + 2 * w->attrib.border_width +
+	     w->input.left + w->input.right + 2.0f;
+    width  *= sw->targetScale;
+    height = w->height + 2 * w->attrib.border_width +
+	     w->input.top + w->input.bottom + 2.0f;
+    height *= sw->targetScale;
+
+    xwc.x          = w->attrib.x - w->input.left;
+    xwc.y          = w->attrib.y - w->input.top;
+    xwc.width      = (int) width;
+    xwc.height     = (int) height;
     xwc.stack_mode = Above;
-    xwc.sibling = w->id;
-    XConfigureWindow (w->screen->display->display, sw->ipw,
-		      CWSibling | CWStackMode | CWX | CWY |
-		      CWWidth | CWHeight, &xwc);
-    XMapWindow (w->screen->display->display, sw->ipw);
-    return;
+    xwc.sibling    = w->id;
 
+    XConfigureWindow (w->screen->display->display, sw->ipw,
+		      CWSibling | CWStackMode | CWX | CWY | CWWidth | CWHeight,
+		      &xwc);
+
+    XMapWindow (w->screen->display->display, sw->ipw);
 }
 
 /* Create an input prevention window */
 static void
-shelfMkIPW (CompWindow *w)
+shelfCreateIPW (CompWindow *w)
 {
-    SHELF_SCREEN (w->screen);
+    XSetWindowAttributes attrib;
+
     SHELF_WINDOW (w);
 
     if (sw->ipw)
 	return;
-    XSetWindowAttributes attrib;
+
     attrib.override_redirect = TRUE;
-    sw->ipw = XCreateWindow (w->screen->display->display, w->screen->root,
-			     w->serverX - w->input.left, w->serverY -
-			     w->input.top, w->serverWidth + w->input.left +
-			     w->input.right, w->serverHeight + w->input.top
-			     + w->input.bottom, 0, CopyFromParent,
-			     InputOnly, CopyFromParent, CWOverrideRedirect,
-			     &attrib);
+    sw->ipw = XCreateWindow (w->screen->display->display,
+			     w->screen->root,
+			     w->serverX - w->input.left,
+			     w->serverY - w->input.top,
+			     w->serverWidth + w->input.left + w->input.right,
+			     w->serverHeight + w->input.top + w->input.bottom,
+			     0, CopyFromParent, InputOnly, CopyFromParent,
+			     CWOverrideRedirect, &attrib);
 }
 
 /* Sets the scale level and adjust the shape */
 static void
-shelfScaleWindow (CompWindow *w, float scale)
+shelfScaleWindow (CompWindow *w,
+		  float      scale)
 {
-    SHELF_SCREEN (w->screen);
     SHELF_WINDOW (w);
 
     if (w->wmType & (CompWindowTypeDesktopMask | CompWindowTypeDockMask))
 	return;
-    sw->targetScale = scale;
-    if (sw->targetScale > 1.0f)
-	sw->targetScale = 1.0f;
-    else if ((float)w->width * sw->targetScale < SHELF_MIN_SIZE )
-	sw->targetScale = SHELF_MIN_SIZE / (float)w->width;
+
+    sw->targetScale = MIN (scale, 1.0f);
+
+    if ((float) w->width * sw->targetScale < SHELF_MIN_SIZE)
+	sw->targetScale = SHELF_MIN_SIZE / (float) w->width;
+
     shelfShapeInput (w);
-    shelfMkIPW (w);
+    shelfCreateIPW (w);
     shelfAdjustIPW (w);
+
     damageScreen (w->screen);
 }
 
@@ -228,14 +257,16 @@ shelfTrigger (CompDisplay     *d,
     CompWindow *w = findWindowAtDisplay (d, d->activeWindow);
     if (!w)
 	return TRUE;
-    SHELF_SCREEN (w->screen);
+
     SHELF_WINDOW (w);
+
     if (sw->targetScale > 0.5f)
 	shelfScaleWindow (w, 0.5f);
     else if (sw->targetScale <= 0.5f && sw->targetScale > 0.25)
 	shelfScaleWindow (w, 0.25f);
     else 
 	shelfScaleWindow (w, 1.0f);
+
     return TRUE;
 }
 
@@ -244,18 +275,20 @@ shelfTrigger (CompDisplay     *d,
  */
 static inline float
 shelfRat (CompWindow *w,
-	  float ratio)
+	  float      ratio)
 {
-    float winHeight = (float) w->height;
-    float winWidth = (float) w->width;
-    float scrHeight = (float) w->screen->height;
-    float scrWidth = (float) w->screen->width;
+    float winHeight    = (float) w->height;
+    float winWidth     = (float) w->width;
+    float screenHeight = (float) w->screen->height;
+    float screenWidth  = (float) w->screen->width;
     float ret;
-    if (winHeight/scrHeight < winWidth/scrWidth)
-	ret = scrWidth/winWidth;
+
+    if (winHeight / screenHeight < winWidth / screenWidth)
+	ret = screenWidth / winWidth;
     else
-	ret = scrHeight/winHeight;
-    return ret/ratio;
+	ret = screenHeight / winHeight;
+
+    return ret / ratio;
 }
 
 static Bool
@@ -268,18 +301,21 @@ shelfTriggerScreen (CompDisplay *d,
     CompWindow *w = findWindowAtDisplay (d, d->activeWindow);
     if (!w)
 	return TRUE;
-    SHELF_SCREEN (w->screen);
+
     SHELF_WINDOW (w);
-    if (sw->targetScale > shelfRat(w,2.0f))
-	shelfScaleWindow (w, shelfRat(w,2.0f));
-    else if (sw->targetScale <= shelfRat(w,2.0f) && 
-	     sw->targetScale > shelfRat(w,3.0f))
-	shelfScaleWindow (w, shelfRat(w,3.0f));
-    else if (sw->targetScale <= shelfRat(w,3.0f) && 
-	     sw->targetScale > shelfRat(w,6.0f))
-	shelfScaleWindow (w, shelfRat(w,6.0f));
+
+    /* FIXME: better should save calculated ratio and reuse it */
+    if (sw->targetScale > shelfRat (w, 2.0f))
+	shelfScaleWindow (w, shelfRat (w, 2.0f));
+    else if (sw->targetScale <= shelfRat (w, 2.0f) && 
+	     sw->targetScale > shelfRat (w, 3.0f))
+	shelfScaleWindow (w, shelfRat (w, 3.0f));
+    else if (sw->targetScale <= shelfRat (w, 3.0f) && 
+	     sw->targetScale > shelfRat (w, 6.0f))
+	shelfScaleWindow (w, shelfRat (w, 6.0f));
     else 
 	shelfScaleWindow (w, 1.0f);
+
     return TRUE;
 }
 
@@ -296,9 +332,11 @@ shelfInc (CompDisplay     *d,
     CompWindow *w = findWindowAtDisplay (d, d->activeWindow);
     if (!w)
 	return TRUE;
-    SHELF_SCREEN (w->screen);
+
     SHELF_WINDOW (w);
+
     shelfScaleWindow (w, sw->targetScale / shelfGetInterval (d));
+
     return TRUE;
 }
 
@@ -312,9 +350,11 @@ shelfDec (CompDisplay     *d,
     CompWindow *w = findWindowAtDisplay (d, d->activeWindow);
     if (!w)
 	return TRUE;
-    SHELF_SCREEN (w->screen);
+
     SHELF_WINDOW (w);
+
     shelfScaleWindow (w, sw->targetScale * shelfGetInterval (d));
+
     return TRUE;
 }
 
@@ -322,7 +362,9 @@ static void
 handleButtonPress (CompWindow *w)
 {
     CompScreen *s = w->screen;
+
     SHELF_SCREEN (s);
+
     if (!otherScreenGrabExist (s, "shelf", 0))
     {
 	moveInputFocusToWindow (w);
@@ -336,16 +378,21 @@ handleMotionEvent (CompDisplay *d, XEvent *event)
 {
     CompScreen *s;
     CompWindow *w;
-    int x,y;
+    int        x,y;
+
     s = findScreenAtDisplay (d, event->xmotion.root);
     if (!s)
 	return;
+
     SHELF_SCREEN (s);
+
     if (!ss->grabIndex)
 	return;
+
     w = findWindowAtScreen (s, ss->grabbedWindow);
     if (!w)
 	return;
+
     x = event->xmotion.x_root;
     y = event->xmotion.y_root;
 
@@ -356,12 +403,13 @@ handleMotionEvent (CompDisplay *d, XEvent *event)
 	ss->lastPointerY = y;
 	return;
     }
+
     moveWindow (w,
 		-ss->lastPointerX + x,
 		-ss->lastPointerY + y,
-		TRUE,
-		FALSE);
+		TRUE, FALSE);
     syncWindowPosition (w);
+
     ss->lastPointerX = event->xmotion.x_root;
     ss->lastPointerY = event->xmotion.y_root;
 }
@@ -370,13 +418,17 @@ static void
 handleButtonRelease (CompWindow *w)
 {
     CompScreen *s = w->screen;
+
     SHELF_SCREEN (s);
+
     ss->grabbedWindow = None;
     if (ss->grabIndex)
     {
 	ss->noLastPointer = TRUE;
-	ss->lastPointerX = 0;
-	ss->lastPointerY = 0;
+	ss->lastPointerX  = 0;
+	ss->lastPointerY  = 0;
+
+	/* FIXME: shouldn't we better activateWindow() here? */
 	moveInputFocusToWindow (w);
 	removeScreenGrab (s, ss->grabIndex, NULL);
 	ss->grabIndex = 0;
@@ -385,20 +437,27 @@ handleButtonRelease (CompWindow *w)
 }
 
 static CompWindow *
-shelfFindRealWindowID (CompDisplay *d, Window wid)
+shelfFindRealWindowID (CompDisplay *d,
+		       Window      wid)
 {
     CompWindow *orig;
+
     orig = findWindowAtDisplay (d, wid);
     if (!orig)
 	return NULL;
+
     return shelfGetRealWindow (orig);
 }
 
 static void
-shelfHandleEvent (CompDisplay *d, XEvent *event)
+shelfHandleEvent (CompDisplay *d,
+		  XEvent      *event)
 {
     CompWindow *w;
     CompScreen *s;
+
+    SHELF_DISPLAY (d);
+
     switch (event->type)
     {
 	case ButtonPress:
@@ -408,16 +467,19 @@ shelfHandleEvent (CompDisplay *d, XEvent *event)
 	    break;
 	case ButtonRelease:
 	    s = findScreenAtDisplay (d, event->xbutton.root);
-	    SHELF_SCREEN (s);
-	    w = findWindowAtDisplay (d, ss->grabbedWindow);
-	    if (w)
-		handleButtonRelease (w);
+	    if (s)
+	    {
+		SHELF_SCREEN (s);
+		w = findWindowAtDisplay (d, ss->grabbedWindow);
+		if (w)
+		    handleButtonRelease (w);
+	    }
 	    break;
 	case MotionNotify:
 	    handleMotionEvent (d, event);
 	    break;
-	    
     }
+
     UNWRAP (sd, d, handleEvent);
     (*d->handleEvent) (d, event);
     WRAP (sd, d, handleEvent, shelfHandleEvent);
@@ -464,21 +526,23 @@ shelfPaintWindow (CompWindow		    *w,
 		  Region		    region,
 		  unsigned int		    mask)
 {
-    Bool status;
+    Bool       status;
     CompScreen *s = w->screen;
+
     SHELF_SCREEN (s);
     SHELF_WINDOW (w);
 
     if (sw->targetScale != sw->scale && sw->steps)
     {
 	sw->scale += (float) sw->steps * (sw->targetScale - sw->scale);
-	if (fabsf(sw->targetScale - sw->scale) < 0.005)
+	if (fabsf (sw->targetScale - sw->scale) < 0.005)
 	    sw->scale = sw->targetScale;
     }
+
     if (sw->scale != 1.0f)
     {
 	CompTransform mTransform = *transform;
-	int xOrigin, yOrigin;
+	int           xOrigin, yOrigin;
 
 	xOrigin = w->attrib.x - w->input.left;
 	yOrigin = w->attrib.y - w->input.top;
@@ -488,8 +552,11 @@ shelfPaintWindow (CompWindow		    *w,
 	matrixTranslate (&mTransform, -xOrigin, -yOrigin,  0);
 	
 	mask |= PAINT_WINDOW_TRANSFORMED_MASK;
+
+	/* FIXME: should better use DonePaintScreen for that */
 	if (sw->scale != sw->targetScale)
 	    addWindowDamage (w);	    
+
 	UNWRAP (ss, s, paintWindow);
 	status = (*s->paintWindow) (w, attrib, &mTransform, region, mask);
 	WRAP (ss, s, paintWindow, shelfPaintWindow);
@@ -500,17 +567,19 @@ shelfPaintWindow (CompWindow		    *w,
 	status = (*s->paintWindow) (w, attrib, transform, region, mask);
 	WRAP (ss, s, paintWindow, shelfPaintWindow);
     }
+
     return status;
 }
 
 static void
 shelfWindowMoveNotify (CompWindow *w,
-		       int dx,
-		       int dy,
-		       Bool immediate)
+		       int        dx,
+		       int        dy,
+		       Bool       immediate)
 {
     SHELF_SCREEN (w->screen);
     SHELF_WINDOW (w);
+
     if (sw->targetScale != 1.00f)
 	shelfAdjustIPW (w);
 
@@ -518,66 +587,86 @@ shelfWindowMoveNotify (CompWindow *w,
     (*w->screen->windowMoveNotify) (w, dx, dy, immediate);
     WRAP (ss, w->screen, windowMoveNotify, shelfWindowMoveNotify);
 }
+
 /* Configuration, initialization, boring stuff. --------------------- */
+static Bool
+shelfInitScreen (CompPlugin *p,
+		 CompScreen *s)
+{
+    ShelfScreen *ss;
+
+    SHELF_DISPLAY (s->display);
+
+    ss = malloc (sizeof (ShelfScreen));
+    if (!ss)
+	return FALSE; // fixme: error message.
+
+    ss->windowPrivateIndex = allocateWindowPrivateIndex (s);
+    if (ss->windowPrivateIndex < 0)
+    {
+	free (ss);
+	return FALSE;
+    }
+
+    ss->moveCursor = XCreateFontCursor (s->display->display, XC_fleur);
+
+    ss->lastPointerX  = 0;
+    ss->lastPointerY  = 0;
+    ss->noLastPointer = TRUE;
+
+    WRAP (ss, s, preparePaintScreen, shelfPreparePaintScreen);
+    WRAP (ss, s, paintWindow, shelfPaintWindow); 
+    WRAP (ss, s, damageWindowRect, shelfDamageWindowRect);
+    WRAP (ss, s, windowMoveNotify, shelfWindowMoveNotify);
+
+    s->base.privates[sd->screenPrivateIndex].ptr = ss;
+
+    return TRUE; 
+}
+
 static void
 shelfFiniScreen (CompPlugin *p,
 		 CompScreen *s)
 {
     SHELF_SCREEN (s);
-    if (!ss)
-	return ;
+
     UNWRAP (ss, s, preparePaintScreen);
     UNWRAP (ss, s, paintWindow);
     UNWRAP (ss, s, damageWindowRect);
     UNWRAP (ss, s, windowMoveNotify);
-    if (ss->windowPrivateIndex)
-	freeWindowPrivateIndex (s, ss->windowPrivateIndex);
+
+    freeWindowPrivateIndex (s, ss->windowPrivateIndex);
+
+    if (ss->moveCursor)
+	XFreeCursor (s->display->display, ss->moveCursor);
+
     free (ss);
-}
-
-static Bool
-shelfInitScreen (CompPlugin *p,
-		 CompScreen *s)
-{
-    shelfScreen *ss;
-    ss = malloc (sizeof (shelfScreen));
-    if (!ss)
-	return FALSE; // fixme: error message.
-    ss->windowPrivateIndex = allocateWindowPrivateIndex (s);
-    s->base.privates[screenPrivateIndex].ptr = ss;
-    ss->moveCursor = XCreateFontCursor (s->display->display, XC_fleur);
-    ss->lastPointerX = 0;
-    ss->lastPointerY = 0;
-    ss->noLastPointer = TRUE;
-    WRAP (ss, s, preparePaintScreen, shelfPreparePaintScreen);
-    WRAP (ss, s, paintWindow, shelfPaintWindow); 
-    WRAP (ss, s, damageWindowRect, shelfDamageWindowRect);
-    WRAP (ss, s, windowMoveNotify, shelfWindowMoveNotify);
-    return TRUE; 
-}
-
-static void
-shelfFiniDisplay (CompPlugin  *p,
-		  CompDisplay *d)
-{
-    if (screenPrivateIndex >= 0)
-        freeScreenPrivateIndex (d, screenPrivateIndex);
-    UNWRAP (sd, d, handleEvent);
 }
 
 static Bool
 shelfInitDisplay (CompPlugin  *p,
 		  CompDisplay *d)
 {
+    ShelfDisplay *sd;
+
     if (!checkPluginABI ("core", CORE_ABIVERSION))
 	return FALSE;
-    screenPrivateIndex = allocateScreenPrivateIndex (d); 
-    if (screenPrivateIndex < 0)
-	return FALSE;
+
     if (!d->shapeExtension)
     {
-	printf ("shelf: No Shape extension found. Shelfing not possible.\n");
-	freeScreenPrivateIndex (d, screenPrivateIndex);
+	compLogMessage (d, "shelf", CompLogLevelError,
+			"No Shape extension found. Shelfing not possible.\n");
+	return FALSE;
+    }
+
+    sd = malloc (sizeof (ShelfDisplay));
+    if (!sd)
+	return FALSE;
+
+    sd->screenPrivateIndex = allocateScreenPrivateIndex (d); 
+    if (sd->screenPrivateIndex < 0)
+    {
+	free (sd);
 	return FALSE;
     }
 
@@ -585,15 +674,31 @@ shelfInitDisplay (CompPlugin  *p,
     shelfSetTriggerscreenKeyInitiate (d, shelfTriggerScreen);
     shelfSetIncButtonInitiate (d, shelfInc);
     shelfSetDecButtonInitiate (d, shelfDec);
+
     WRAP (sd, d, handleEvent, shelfHandleEvent);
+    
+    d->base.privates[displayPrivateIndex].ptr = sd;
+
     return TRUE;
+}
+
+static void
+shelfFiniDisplay (CompPlugin  *p,
+		  CompDisplay *d)
+{
+    SHELF_DISPLAY (d);
+
+    freeScreenPrivateIndex (d, sd->screenPrivateIndex);
+
+    UNWRAP (sd, d, handleEvent);
+
+    free (sd);
 }
 
 static void
 shelfFini (CompPlugin *p)
 {
-    if (displayPrivateIndex >= 0)
-       freeDisplayPrivateIndex (displayPrivateIndex);
+    freeDisplayPrivateIndex (displayPrivateIndex);
 }
 
 static Bool
@@ -602,6 +707,29 @@ shelfInit (CompPlugin *p)
     displayPrivateIndex = allocateDisplayPrivateIndex ();
     if (displayPrivateIndex < 0)
 	return FALSE;
+
+    return TRUE;
+}
+
+static Bool
+shelfInitWindow (CompPlugin *p,
+		 CompWindow *w)
+{
+    ShelfWindow *sw;
+
+    SHELF_SCREEN (w->screen);
+
+    sw = malloc (sizeof (ShelfWindow));
+    if (!sw)
+	return FALSE;
+
+    sw->scale       = 1.0f;
+    sw->targetScale = 1.0f;
+
+    sw->ipw = None;
+
+    w->base.privates[ss->windowPrivateIndex].ptr = sw;
+
     return TRUE;
 }
 
@@ -609,28 +737,9 @@ static void
 shelfFiniWindow (CompPlugin *p,
 		 CompWindow *w)
 {
-    SHELF_SCREEN (w->screen);
     SHELF_WINDOW (w);
-    if (sw)
-	free (sw);
-}
 
-static Bool
-shelfInitWindow (CompPlugin *p,
-		 CompWindow *w)
-{
-    SHELF_SCREEN(w->screen);
-
-    shelfWindow *sw;
-    sw = malloc (sizeof (shelfWindow));
-    if (!sw)
-	return FALSE;
-
-    sw->scale = 1.0f;
-    sw->targetScale = 1.0f;
-    sw->ipw = None;
-    w->base.privates[ss->windowPrivateIndex].ptr = sw;
-    return TRUE;
+    free (sw);
 }
 
 static CompBool
@@ -638,7 +747,7 @@ shelfInitObject (CompPlugin *p,
 		 CompObject *o)
 {
     static InitPluginObjectProc dispTab[] = {
-	    (InitPluginObjectProc) shelfInit, /* InitCore */
+	    (InitPluginObjectProc) 0, /* InitCore */
 	    (InitPluginObjectProc) shelfInitDisplay,
 	    (InitPluginObjectProc) shelfInitScreen, 
 	    (InitPluginObjectProc) shelfInitWindow
@@ -652,7 +761,7 @@ shelfFiniObject (CompPlugin *p,
 		 CompObject *o)
 {
     static FiniPluginObjectProc dispTab[] = {
-	(FiniPluginObjectProc) shelfFini, /* InitCore */
+	(FiniPluginObjectProc) 0, /* InitCore */
 	(FiniPluginObjectProc) shelfFiniDisplay,
 	(FiniPluginObjectProc) shelfFiniScreen, 
 	(FiniPluginObjectProc) shelfFiniWindow
@@ -664,8 +773,8 @@ shelfFiniObject (CompPlugin *p,
 CompPluginVTable shelfVTable = {
     "shelf",
     0,
-    0,
-    0,
+    shelfInit,
+    shelfFini,
     shelfInitObject,
     shelfFiniObject,
     0,
