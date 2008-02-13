@@ -67,7 +67,6 @@ typedef struct {
 
     Cursor moveCursor;
 
-    Bool noLastPointer;
     int  lastPointerX;
     int  lastPointerY;
 
@@ -557,7 +556,9 @@ shelfDec (CompDisplay     *d,
 }
 
 static void
-handleButtonPress (CompWindow *w)
+handleButtonPress (CompWindow   *w,
+		   unsigned int x,
+		   unsigned int y)
 {
     CompScreen *s = w->screen;
 
@@ -568,20 +569,19 @@ handleButtonPress (CompWindow *w)
 	activateWindow (w);
 	ss->grabbedWindow = w->id;
 	ss->grabIndex = pushScreenGrab (s, ss->moveCursor, "shelf");
+
+	ss->lastPointerX = x;
+	ss->lastPointerY = y;
     }
 }
 
 static void
-handleMotionEvent (CompDisplay *d, XEvent *event)
+handleMotionEvent (CompScreen   *s,
+		   unsigned int x,
+		   unsigned int y)
 {
-    CompScreen *s;
-    CompWindow *w;
-    int        x,y;
-
-    s = findScreenAtDisplay (d, event->xmotion.root);
-    if (!s)
-	return;
-
+    CompWindow   *w;
+    unsigned int dx, dy;
     SHELF_SCREEN (s);
 
     if (!ss->grabIndex)
@@ -591,25 +591,14 @@ handleMotionEvent (CompDisplay *d, XEvent *event)
     if (!w)
 	return;
 
-    x = event->xmotion.x_root;
-    y = event->xmotion.y_root;
+    dx = x - ss->lastPointerX;
+    dy = y - ss->lastPointerY;
 
-    if (ss->noLastPointer)
-    {
-	ss->noLastPointer = FALSE;
-	ss->lastPointerX = x;
-	ss->lastPointerY = y;
-	return;
-    }
-
-    moveWindow (w,
-		-ss->lastPointerX + x,
-		-ss->lastPointerY + y,
-		TRUE, FALSE);
+    moveWindow (w, dx, dy, TRUE, FALSE);
     syncWindowPosition (w);
 
-    ss->lastPointerX = event->xmotion.x_root;
-    ss->lastPointerY = event->xmotion.y_root;
+    ss->lastPointerX += dx;
+    ss->lastPointerY += dy;
 }
 
 static void
@@ -622,10 +611,6 @@ handleButtonRelease (CompWindow *w)
     ss->grabbedWindow = None;
     if (ss->grabIndex)
     {
-	ss->noLastPointer = TRUE;
-	ss->lastPointerX  = 0;
-	ss->lastPointerY  = 0;
-
 	moveInputFocusToWindow (w);
 	removeScreenGrab (s, ss->grabIndex, NULL);
 	ss->grabIndex = 0;
@@ -678,7 +663,9 @@ shelfHandleEvent (CompDisplay *d,
 	case ButtonPress:
 	    w = shelfFindRealWindowID (d, event->xbutton.window);
 	    if (w)
-		handleButtonPress (w);
+		handleButtonPress (w,
+				   event->xbutton.x_root,
+				   event->xbutton.y_root);
 	    break;
 	case ButtonRelease:
 	    s = findScreenAtDisplay (d, event->xbutton.root);
@@ -691,7 +678,11 @@ shelfHandleEvent (CompDisplay *d,
 	    }
 	    break;
 	case MotionNotify:
-	    handleMotionEvent (d, event);
+	    s = findScreenAtDisplay (d, event->xmotion.root);
+	    if (s)
+		handleMotionEvent (s,
+				   event->xmotion.x_root,
+				   event->xmotion.y_root);
 	    break;
 	case ConfigureNotify:
 	    w = findWindowAtDisplay (d, event->xconfigure.window);
@@ -876,7 +867,6 @@ shelfInitScreen (CompPlugin *p,
 
     ss->lastPointerX  = 0;
     ss->lastPointerY  = 0;
-    ss->noLastPointer = TRUE;
 
     ss->grabIndex      = 0;
     ss->grabbedWindow  = None;
