@@ -81,6 +81,7 @@ typedef struct _WidgetWindow
 {
     Bool                isWidget;
     Bool                wasUnmapped;
+    Bool                oldManaged;
     CompWindow          *parentWidget;
     CompTimeoutHandle   matchUpdateHandle;
     CompTimeoutHandle   widgetStatusUpdateHandle;
@@ -210,6 +211,7 @@ widgetUpdateWidgetMapState (CompWindow *w,
 	XMapWindow (w->screen->display->display, w->id);
 	raiseWindow (w);
 	ww->wasUnmapped = FALSE;
+	w->managed = ww->oldManaged;
     }
     else if (!map && !ww->wasUnmapped)
     {
@@ -220,6 +222,7 @@ widgetUpdateWidgetMapState (CompWindow *w,
 	{
 	    XUnmapWindow (w->screen->display->display, w->id);
 	    ww->wasUnmapped = TRUE;
+	    ww->oldManaged = w->managed;
 	}
     }
 }
