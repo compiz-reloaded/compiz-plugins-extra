@@ -111,6 +111,9 @@ static Bool isFDWin(CompWindow *w)
 	if (w->attrib.override_redirect)
 		return FALSE;
 
+	if (w->grabbed)
+	    return FALSE;
+
 	if (!w->managed)
 		return FALSE;
 
