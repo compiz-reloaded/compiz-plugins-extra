@@ -140,6 +140,9 @@ static int displayPrivateIndex;
 static Bool
 isSDWin (CompWindow *w)
 {
+    if (w->grabbed)
+	return FALSE;
+
     if (!(*w->screen->focusWindow) (w))
 	return FALSE;
 
