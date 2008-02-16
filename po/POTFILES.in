@@ -17,3 +17,7 @@ metadata/trailfocus.xml.in
 metadata/widget.xml.in
 metadata/showmouse.xml.in
 metadata/loginout.xml.in
+metadata/shelf.xml.in
+metadata/maximumize.xml.in
+metadata/notification.xml.in
+metadata/3d.xml.in
