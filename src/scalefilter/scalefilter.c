@@ -372,9 +372,6 @@ scalefilterRelayout (CompScreen *s)
 
     SCALE_DISPLAY (s->display);
 
-    sd->selectedWindow = None;
-    sd->hoveredWindow = None;
-
     action = &sd->opt[SCALE_DISPLAY_OPTION_RELAYOUT].value.action;
 
     o[0].type    = CompOptionTypeInt;
