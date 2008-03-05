@@ -1,6 +1,8 @@
 AC_PREREQ(2.57)
 
-AC_INIT([compiz-fusion-plugins-extra],esyscmd(. ./VERSION;echo -n $VERSION), [maniac@opencompositing.org])
+m4_define([plugins_extra_version], [esyscmd(. ./VERSION;echo -n $VERSION)])
+
+AC_INIT([compiz-fusion-plugins-extra], [plugins_extra_version], [maniac@opencompositing.org])
 
 #AC_CONFIG_AUX_DIR(config)
 
