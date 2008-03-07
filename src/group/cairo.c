@@ -608,6 +608,20 @@ groupRenderTabBarBackground(GroupSelection *group)
 	break;
     }
 
+    /* draw inner outline */
+    cairo_move_to (cr, x0 + radius + 1.0, y0 + 1.0);
+    cairo_arc (cr, x1 - radius - 1.0, y0 + radius + 1.0,
+		radius, M_PI * 1.5, M_PI * 2.0);
+    cairo_arc (cr, x1 - radius - 1.0, y1 - radius - 1.0,
+		radius, 0.0, M_PI * 0.5);
+    cairo_arc (cr, x0 + radius + 1.0, y1 - radius - 1.0,
+		radius, M_PI * 0.5, M_PI);
+    cairo_arc (cr, x0 + radius + 1.0, y0 + radius + 1.0,
+		radius, M_PI, M_PI * 1.5);
+
+    cairo_set_source_rgba(cr, 1.0, 1.0, 1.0, 0.3);
+    cairo_stroke(cr);
+
     cairo_restore (cr);
     imageBufferToTexture (s, &layer->texture, (char*) layer->buffer,
 			  layer->texWidth, layer->texHeight);
