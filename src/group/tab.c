@@ -698,7 +698,7 @@ groupHandleAnimation (GroupSelection *group)
 
 	group->changeState = TabChangeNewIn;
 
-	activateWindow (top);
+	(*s->activateWindow) (top);
     }
 
     if (group->changeState == TabChangeNewIn &&
@@ -1660,7 +1660,7 @@ groupChangeTab (GroupTabBarSlot             *topTab,
 		group->prevTopTab = group->topTab;
 	    else
 		group->prevTopTab = NULL;
-	    activateWindow (w);
+	    (*w->screen->activateWindow) (w);
 	}
     }
 

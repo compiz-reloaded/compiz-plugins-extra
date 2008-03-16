@@ -71,7 +71,7 @@ groupDragHoverTimeout (void* closure)
 	bar->bgAnimationTime = groupGetPulseTime (w->screen) * 1000;
     }
 
-    activateWindow (w);
+    (*w->screen->activateWindow) (w);
     gs->dragHoverTimeoutHandle = 0;
 
     return FALSE;
