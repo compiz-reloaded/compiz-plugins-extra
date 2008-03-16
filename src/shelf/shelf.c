@@ -566,7 +566,7 @@ handleButtonPress (CompWindow   *w,
 
     if (!otherScreenGrabExist (s, "shelf", 0))
     {
-	activateWindow (w);
+	(*s->activateWindow) (w);
 	ss->grabbedWindow = w->id;
 	ss->grabIndex = pushScreenGrab (s, ss->moveCursor, "shelf");
 
