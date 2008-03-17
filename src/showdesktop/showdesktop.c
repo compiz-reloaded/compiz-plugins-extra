@@ -184,7 +184,6 @@ setSDWindowHints (CompWindow *w,
     }
 
     changeWindowState (w, state);
-    recalcWindowActions (w);
 
     if (enterSDMode)
     {
