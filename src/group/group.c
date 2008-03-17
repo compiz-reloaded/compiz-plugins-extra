@@ -1989,6 +1989,9 @@ groupWindowUngrabNotify (CompWindow *w)
 			xwc.width  = gw->resizeGeometry->width;
 			xwc.height = gw->resizeGeometry->height;
 
+			if (w->mapNum && (mask & (CWWidth | CWHeight)))
+			    sendSyncRequest (w);
+
 			configureXWindow (cw, mask, &xwc);
 		    }
 		    else
