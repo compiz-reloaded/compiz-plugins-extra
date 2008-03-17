@@ -930,16 +930,21 @@ void
 groupUpdateTabBars (CompScreen *s,
 		    Window     enteredWin)
 {
-    CompWindow     *w;
+    CompWindow     *w = NULL;
     GroupSelection *hoveredGroup = NULL;
 
     GROUP_SCREEN (s);
 
-    /* first check if the entered window is a frame */
-    for (w = s->windows; w; w = w->next)
+    /* do nothing if the screen is grabbed, as the frame might be drawn
+       transformed */
+    if (!otherScreenGrabExist (s, "group", "group-drag", 0))
     {
-	if (w->frame == enteredWin)
-	    break;
+	/* first check if the entered window is a frame */
+	for (w = s->windows; w; w = w->next)
+	{
+	    if (w->frame == enteredWin)
+		break;
+	}
     }
 
     if (w)
