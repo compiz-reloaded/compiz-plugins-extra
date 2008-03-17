@@ -66,8 +66,6 @@ fullscreenWindow (CompWindow *w,
     newState |= state;
 
     changeWindowState (w, newState);
-    recalcWindowType (w);
-    recalcWindowActions (w);
     updateWindowAttributes (w, CompStackingUpdateModeNormal);
 }
 
