@@ -137,7 +137,7 @@ tdPreparePaintScreen (CompScreen *s,
     TD_SCREEN (s);
     CUBE_SCREEN (s);
 
-    active = (cs->rotationState != RotationNone) &&
+    active = (cs->rotationState != RotationNone) && s->hsize > 2 &&
 	     !(tdGetManualOnly(s) && (cs->rotationState != RotationManual));
 
     amount = ((float)msSinceLastPaint * tdGetSpeed (s) / 1000.0);
