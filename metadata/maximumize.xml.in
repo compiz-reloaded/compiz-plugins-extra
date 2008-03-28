@@ -7,9 +7,13 @@
     <display>
       <option name="ignore_sticky" type="bool">
          <_short>Ignore sticky windows in the calculations</_short>
-	 <_long>Treat sticky windows as non-existant when calculating space
-	 to use for the maximumize window.</_long>
+	 <_long>Treat sticky windows as non-existant when calculating space to use for the maximumize window.</_long>
          <default>true</default>
+      </option>
+      <option name="ignore_overlapping" type="bool">
+         <_short>Ignore already overlapping windows in the calculations</_short>
+	 <_long>Treat windows that are already overlapping with the current window as non-existant when calculating space to use for the maximumize window.</_long>
+         <default>false</default>
       </option>
       <group>
         <_short>Bindings</_short>

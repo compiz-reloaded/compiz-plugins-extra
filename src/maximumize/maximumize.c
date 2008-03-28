@@ -29,6 +29,18 @@
 #include <compiz-core.h>
 #include "maximumize_options.h"
 
+/* Returns true if rectangles a and b intersect by at least 40 in both directions
+ */
+static Bool 
+maximumizeSubstantialOverlap(XRectangle a, XRectangle b)
+{
+    if (a.x + a.width <= b.x + 40) return False;
+    if (b.x + b.width <= a.x + 40) return False;
+    if (a.y + a.height <= b.y + 40) return False;
+    if (b.y + b.height <= a.y + 40) return False;
+    return True;
+}
+
 /* Generates a region containing free space (here the
  * active window counts as free space). The region argument
  * is the start-region (ie: the output dev).
@@ -41,7 +53,7 @@ maximumizeEmptyRegion (CompWindow *window,
     CompScreen *s = window->screen;
     CompWindow *w;
     Region     newRegion, tmpRegion;
-    XRectangle tmpRect;
+    XRectangle tmpRect, windowRect;
 
     newRegion = XCreateRegion ();
     if (!newRegion)
@@ -55,6 +67,15 @@ maximumizeEmptyRegion (CompWindow *window,
     }
 
     XUnionRegion (region, newRegion, newRegion);
+
+    if (maximumizeGetIgnoreOverlapping(s->display)) {
+	windowRect.x = window->serverX - window->input.left;
+	windowRect.y = window->serverY - window->input.top;
+	windowRect.width  = window->serverWidth + window->input.right + 
+	    window->input.left;
+	windowRect.height = window->serverHeight + window->input.top +
+	    window->input.bottom;
+    }
 
     for (w = s->windows; w; w = w->next)
     {
@@ -71,11 +92,16 @@ maximumizeEmptyRegion (CompWindow *window,
 	    (w->state & CompWindowStateStickyMask) &&
 	    !(w->wmType & CompWindowTypeDockMask))
 	    continue;
+
 	tmpRect.x = w->serverX - w->input.left;
 	tmpRect.y = w->serverY - w->input.top;
 	tmpRect.width  = w->serverWidth + w->input.right + w->input.left;
 	tmpRect.height = w->serverHeight + w->input.top +
 	                 w->input.bottom;
+
+	if (maximumizeGetIgnoreOverlapping(s->display) &&
+		maximumizeSubstantialOverlap(tmpRect, windowRect))
+	    continue;
 
 	EMPTY_REGION (tmpRegion);
 	XUnionRectWithRegion (&tmpRect, tmpRegion, tmpRegion);
