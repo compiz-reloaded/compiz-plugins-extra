@@ -143,13 +143,14 @@ cubereflexCheckOrientation (CompScreen              *s,
 static void
 cubereflexGetRotation (CompScreen *s,
 		       float      *x,
-		       float      *v)
+		       float      *v,
+		       float      *progress)
 {
     CUBE_SCREEN (s);
     CUBEREFLEX_SCREEN (s);
 
     UNWRAP (rs, cs, getRotation);
-    (*cs->getRotation) (s, x, v);
+    (*cs->getRotation) (s, x, v, progress);
     WRAP (rs, cs, getRotation, cubereflexGetRotation);
 
     if (cubereflexGetMode (s) == ModeAbove && *v > 0.0 && rs->reflection)
@@ -221,12 +222,12 @@ cubereflexPaintTransformedOutput (CompScreen              *s,
 	    CompTransform rTransform = *transform;
 	    CompTransform pTransform;
 	    float         angle = 360.0 / ((float) s->hsize * cs->nOutput);
-	    float         xRot, vRot, xRotate, xRotate2, vRotate;
+	    float         xRot, vRot, xRotate, xRotate2, vRotate, p;
 	    float         rYTrans;
 	    CompVector    point  = { .v = { -0.5, -0.5, cs->distance, 1.0 } };
 	    CompVector    point2 = { .v = { -0.5,  0.5, cs->distance, 1.0 } };
 
-	    (*cs->getRotation) (s, &xRot, &vRot);
+	    (*cs->getRotation) (s, &xRot, &vRot, &p);
 
 	    rs->backVRotate = 0.0;
 
