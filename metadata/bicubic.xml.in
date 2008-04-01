@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<compiz>
+	<plugin name="bicubic">
+		<_short>Bicubic filter</_short>
+		<_long>Bicubic texture filtering</_long>
+		<category>Effects</category>
+		<deps>
+			<relation type="after">
+				<plugin>blur</plugin>
+			</relation>
+		</deps>
+	</plugin>
+</compiz>
