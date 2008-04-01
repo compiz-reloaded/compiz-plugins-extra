@@ -2,6 +2,7 @@
 SUBDIRS = 3d \
 	  addhelper \
 	  bench \
+	  bicubic \
 	  crashhandler \
 	  cubecaps \
 	  cubereflex \
