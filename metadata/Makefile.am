@@ -3,6 +3,7 @@ xml_in_files = 	         \
 	3d.xml.in \
 	addhelper.xml.in \
 	bench.xml.in \
+	bicubic.xml.in \
 	crashhandler.xml.in \
 	cubecaps.xml.in \
 	cubereflex.xml.in \
@@ -11,6 +12,7 @@ xml_in_files = 	         \
 	firepaint.xml.in \
 	gears.xml.in \
 	group.xml.in \
+	loginout.xml.in \
 	maximumize.xml.in \
 	mblur.xml.in \
 	notification.xml.in \
@@ -18,11 +20,10 @@ xml_in_files = 	         \
 	scalefilter.xml.in \
 	shelf.xml.in \
 	showdesktop.xml.in \
+	showmouse.xml.in \
 	splash.xml.in \
 	trailfocus.xml.in \
-	widget.xml.in \
-	showmouse.xml.in \
-	loginout.xml.in
+	widget.xml.in
 
 xml_files    = $(xml_in_files:.xml.in=.xml)
 xml_DATA     = $(xml_files)
