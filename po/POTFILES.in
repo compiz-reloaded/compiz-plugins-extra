@@ -1,5 +1,6 @@
 metadata/addhelper.xml.in
 metadata/bench.xml.in
+metadata/bicubic.xml.in
 metadata/crashhandler.xml.in
 metadata/cubecaps.xml.in
 metadata/cubereflex.xml.in
