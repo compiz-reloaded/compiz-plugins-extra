@@ -696,7 +696,7 @@ scalefilterSetScaledPaintAttributes (CompWindow        *w,
 
     UNWRAP (fs, ss, setScaledPaintAttributes);
     ret = (*ss->setScaledPaintAttributes) (w, attrib);
-    WRAP (fs, ss, setScaledPaintAttributes, 
+    WRAP (fs, ss, setScaledPaintAttributes,
 	  scalefilterSetScaledPaintAttributes);
 
     if (fs->matchApplied ||
