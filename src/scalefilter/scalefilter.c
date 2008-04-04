@@ -704,7 +704,7 @@ scalefilterSetScaledPaintAttributes (CompWindow        *w,
     {
 	SCALE_WINDOW (w);
 
-	if (ret && !sw->slot)
+	if (ret && !sw->slot && ss->state != SCALE_STATE_IN)
 	{
 	    ret = FALSE;
     	    attrib->opacity = 0;
