@@ -198,6 +198,11 @@ cubeaddonShouldPaintViewport (CompScreen              *s,
     CUBEADDON_SCREEN (s);
     CUBE_SCREEN (s);
 
+    UNWRAP (cas, cs, shouldPaintViewport);
+    rv = (*cs->shouldPaintViewport) (s, sAttrib, transform,
+				     outputPtr, order);
+    WRAP (cas, cs, shouldPaintViewport, cubeaddonShouldPaintViewport);
+
     if (cas->deform > 0.0)
     {
 	float z[3];
@@ -225,14 +230,7 @@ cubeaddonShouldPaintViewport (CompScreen              *s,
 					outputPtr, vPoints[2]);
 
 	return (order == FTB && (ftb1 || ftb2 || ftb3)) ||
-	       (order == BTF && (!ftb1 || !ftb2 || !ftb3));
-    }
-    else
-    {
-	UNWRAP (cas, cs, shouldPaintViewport);
-	rv = (*cs->shouldPaintViewport) (s, sAttrib, transform,
-					 outputPtr, order);
-	WRAP (cas, cs, shouldPaintViewport, cubeaddonShouldPaintViewport);
+	       (order == BTF && (!ftb1 || !ftb2 || !ftb3)) || rv;
     }
 
     return rv;
