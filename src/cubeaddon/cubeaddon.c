@@ -395,8 +395,7 @@ cubeaddonAddWindowGeometry (CompWindow *w,
 	int         offX = 0, offY = 0;
 	int         sx1, sx2, sw;
 
-	const float angle = atan (0.5 / cs->distance);
-	const float rad = 0.5 / sin (angle);
+	const float radSquare = (cs->distance * cs->distance) + 0.25;
 	float       ang;
 			
 	reg.numRects = 1;
@@ -461,14 +460,13 @@ cubeaddonAddWindowGeometry (CompWindow *w,
 	    if (v[0] + offX >= sx1 - CUBEADDON_GRID_SIZE &&
 		v[0] + offX < sx2 + CUBEADDON_GRID_SIZE)
 	    {
-		ang = (((v[0] + offX - sx1) / (float)sw) - 0.5) / rad;
-		while (ang > 1.0)
-		    ang -= 2.0;
-		while (ang < -1.0)
-		    ang += 2.0;
-		ang = asin (ang);
-		v[2] = (cos (ang) * rad) - cs->distance;
-		v[2] *= cas->deform;
+		ang = (((v[0] + offX - sx1) / (float)sw) - 0.5);
+		ang *= ang;
+		if (ang < radSquare)
+		{
+		    v[2] = sqrt (radSquare - ang) - cs->distance;
+		    v[2] *= cas->deform;
+		}
 	    }
 
 	    v += w->vertexStride;
