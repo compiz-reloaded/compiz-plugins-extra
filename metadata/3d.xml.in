@@ -34,14 +34,6 @@
 					<min>0</min>
 					<max>50</max>
 				</option>
-				<option name="speed" type="float">
-					<_short>Animation Speed</_short>
-					<_long>Change the speed of the 3D animation</_long>
-					<default>0.2</default>
-					<min>0.0</min>
-					<max>1.0</max>
-					<precision>0.01</precision>
-				</option>
 				<option name="manual_only" type="bool">
 					<_short>3D Only On Mouse Rotate</_short>
 					<_long>Initiates the 3D display only if rotate is mouse driven. (Ex. You rotate the cube via the mouse)</_long>

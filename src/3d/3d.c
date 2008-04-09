@@ -128,7 +128,6 @@ tdPreparePaintScreen (CompScreen *s,
 		      int        msSinceLastPaint)
 {
     CompWindow *w;
-    float      amount;
     Bool       active;
 
     TD_SCREEN (s);
@@ -137,11 +136,13 @@ tdPreparePaintScreen (CompScreen *s,
     active = (cs->rotationState != RotationNone) && s->hsize > 2 &&
 	     !(tdGetManualOnly(s) && (cs->rotationState != RotationManual));
 
-    amount = ((float)msSinceLastPaint * tdGetSpeed (s) / 1000.0);
-    if (active)
+    if (active || tds->basicScale != 1.0)
     {
 	float maxDiv = (float) tdGetMaxWindowSpace (s) / 100;
 	float minScale = (float) tdGetMinCubeSize (s) / 100;
+	float x, progress;
+	
+	(*cs->getRotation) (s, &x, &x, &progress);
 
 	tds->maxDepth = 0;
 	for (w = s->windows; w; w = w->next)
@@ -159,17 +160,11 @@ tdPreparePaintScreen (CompScreen *s,
 	}
 
 	minScale =  MAX (minScale, 1.0 - (tds->maxDepth * maxDiv));
-	if (cs->invert == 1)
-	    tds->basicScale = MAX (minScale, tds->basicScale - amount);
-	else
-	    tds->basicScale = MIN (2 - minScale, tds->basicScale + amount);
+	tds->basicScale = 1.0 - ((1.0 - minScale) * progress);
     }
     else
     {
-	if (cs->invert == 1)
-	    tds->basicScale = MIN (1.0, tds->basicScale + amount);
-	else
-	    tds->basicScale = MAX (1.0, tds->basicScale - amount);
+	tds->basicScale = 1.0;
     }
 
     /* comparing float values with != is error prone, so better cache
