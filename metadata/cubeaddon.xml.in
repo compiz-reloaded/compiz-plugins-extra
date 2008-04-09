@@ -19,7 +19,7 @@
 				<short>Reflection</short>
 				<option name="reflection" type="bool">
 					<_short>Enabled</_short>
-					<_long>Deform cube to a cylinder.</_long>
+					<_long>Give cube a reflective ground.</_long>
 					<default>true</default>
 				</option>
 				<option name="ground_color1" type="color">
