@@ -435,6 +435,7 @@ tdPostPaintViewport (CompScreen              *s,
 	CompTransform screenSpace;
 	CompTransform screenSpaceOffset;
 	CompWindow    *w;
+	tdWindow      *tdw;
 	CompWalker    walk;
 	float         wDepth = 0.0;
 	float         pointZ = cs->invert * cs->distance;
@@ -448,29 +449,33 @@ tdPostPaintViewport (CompScreen              *s,
 	    wDepth = -MIN((tdGetWidth (s)) / 30, (1.0 - tds->basicScale) /
 			  tds->maxDepth);
 
-	/* all BTF windows in normal order */
-	for (w = s->windows; w; w = w->next)
+	if (wDepth != 0.0)
 	{
-	    TD_WINDOW (w);
-
-	    if (!tdw->is3D)
-		continue;
-
-	    if (foundFtb && FALSE)
+	    /* all BTF windows in normal order */
+	    for (w = s->windows; w; w = w->next)
 	    {
-		tdw->ftb = TRUE;
-		continue;
+		tdw = (tdWindow *)
+		      (w)->base.privates[tds->windowPrivateIndex].ptr;
+
+		if (!tdw->is3D)
+		    continue;
+
+		if (foundFtb && FALSE)
+		{
+		    tdw->ftb = TRUE;
+		    continue;
+		}
+
+		tds->currentScale = tds->basicScale +
+		                    (tdw->depth * ((1.0 - tds->basicScale) /
+				    tds->maxDepth));
+
+		tdw->ftb = (*cs->checkOrientation) (s, sAttrib, transform,
+						    output, vPoints);
+
+		if (tdw->ftb)
+		    foundFtb = TRUE;
 	    }
-
-	    tds->currentScale = tds->basicScale +
-		                (tdw->depth * ((1.0 - tds->basicScale) /
-					       tds->maxDepth));
-
-	    tdw->ftb = (*cs->checkOrientation) (s, sAttrib, transform,
-						output, vPoints);
-
-	    if (tdw->ftb)
-		foundFtb = TRUE;
 	}
 
 	tds->currentScale = tds->basicScale;
@@ -491,8 +496,6 @@ tdPostPaintViewport (CompScreen              *s,
 	    int           offX, offY;
 	    unsigned int  newMask = PAINT_WINDOW_ON_TRANSFORMED_SCREEN_MASK;
 
-	    TD_WINDOW (w);
-
 	    if (w->destroyed)
 		continue;
 
@@ -501,6 +504,8 @@ tdPostPaintViewport (CompScreen              *s,
 		if (w->attrib.map_state != IsViewable || !w->damaged)
 		    continue;
 	    }
+
+	    tdw = (tdWindow *) (w)->base.privates[tds->windowPrivateIndex].ptr;
 
 	    if (tdw->depth != 0.0f)
 	    {
