@@ -403,8 +403,7 @@ cubeaddonAddWindowGeometry (CompWindow *w,
 
 	reg.extents.y1 = region->extents.y1;
 	reg.extents.y2 = region->extents.y2;
-	
-	x1 = (region->extents.x1 / CUBEADDON_GRID_SIZE) * CUBEADDON_GRID_SIZE;
+
 	x1 = region->extents.x1;
 	x2 = MIN (x1 + CUBEADDON_GRID_SIZE, region->extents.x2);
 	
