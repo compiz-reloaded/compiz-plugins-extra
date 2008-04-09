@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<compiz>
+	<plugin name="cubeaddon" useBcop="true">
+		<_short>Cube Reflection and Cylinder</_short>
+		<_long>Compiz cube reflection and cylinder deformation</_long>
+		<category>Effects</category>
+		<deps>
+		<relation type="after">
+			<plugin>cube</plugin>
+			<plugin>rotate</plugin>
+			<plugin>cubecaps</plugin>
+		</relation>
+		<requirement>
+			<plugin>cube</plugin>
+		</requirement>
+		</deps>
+		<screen>
+			<group>
+				<short>Reflection</short>
+				<option name="reflection" type="bool">
+					<_short>Enabled</_short>
+					<_long>Deform cube to a cylinder.</_long>
+					<default>true</default>
+				</option>
+				<option name="ground_color1" type="color">
+					<_short>Ground color(near)</_short>
+					<_long>Color of the ground (near).</_long>
+					<default>
+						<red>0xb333</red>
+						<green>0xb333</green>
+						<blue>0xb333</blue>
+						<alpha>0xcccc</alpha>
+					</default>
+				</option>
+				<option name="ground_color2" type="color">
+					<_short>Ground color(far)</_short>
+					<_long>Color of the ground (far).</_long>
+					<default>
+						<red>0xb333</red>
+						<green>0xb333</green>
+						<blue>0xb333</blue>
+						<alpha>0x0000</alpha>
+					</default>
+				</option>
+				<option name="ground_size" type="float">
+					<_short>Reflection ground size</_short>
+					<_long>Reflection ground size.</_long>
+					<default>0.5</default>
+					<min>0.0</min>
+					<max>1.0</max>
+					<precision>0.01</precision>
+				</option>
+				<option name="intensity" type="float">
+					<_short>Intensity</_short>
+					<_long>Reflection intensity</_long>
+					<default>0.4</default>
+					<min>0.0</min>
+					<max>1.0</max>
+					<precision>0.01</precision>
+				</option>
+				<option name="auto_zoom" type="bool">
+					<_short>Auto zoom</_short>
+					<_long>Zoom out automatically to make the cube fit to the screen.</_long>
+					<default>true</default>
+				</option>
+				<option name="zoom_manual_only" type="bool">
+					<_short>Auto zoom only on Mouse Rotate</_short>
+					<_long>Zoom out automatically only on mouse rotate.</_long>
+					<default>true</default>
+				</option>
+				<option name="mode" type="int">
+					<_short>Reflection mode</_short>
+					<_long>Reflection mode.</_long>
+					<default>0</default>
+					<min>0</min>
+					<max>3</max>
+					<desc>
+						<value>0</value>
+						<_name>Jumpy</_name>
+					</desc>
+					<desc>
+						<value>1</value>
+						<_name>Jumpy reflection</_name>
+					</desc>
+					<desc>
+						<value>2</value>
+						<_name>Distance</_name>
+					</desc>
+					<desc>
+						<value>3</value>
+						<_name>Above</_name>
+					</desc>
+				</option>
+			</group>
+			<group>
+				<short>Cylinder</short>
+				<option name="cylinder" type="bool">
+					<_short>Enabled</_short>
+					<_long>Deform cube to a cylinder.</_long>
+					<default>true</default>
+				</option>
+				<option name="cylinder_manual_only" type="bool">
+					<_short>Deform only on mouse rotate</_short>
+					<_long>Initiates cube cylinder deformation only if rotation is mouse driven.</_long>
+					<default>false</default>
+				</option>
+				<subgroup>
+					<short>Cube caps</short>
+					<option name="fill_caps" type="bool">
+						<_short>Fill caps</_short>
+						<_long>Fill cap areas.</_long>
+						<default>true</default>
+					</option>
+					<option name="top_color" type="color">
+						<_short>Top cap fill Color</_short>
+						<_long>Color of top cap filled area</_long>
+						<default>
+							<red>0xfefe</red>
+							<green>0xffff</green>
+							<blue>0xc7c7</blue>
+						</default>
+					</option>
+					<option name="bottom_color" type="color">
+						<_short>Bottom cap fill Color</_short>
+						<_long>Color of bottom cap filled area</_long>
+						<default>
+							<red>0xfefe</red>
+							<green>0xffff</green>
+							<blue>0xc7c7</blue>
+						</default>
+					</option>
+				</subgroup>
+			</group>
+		</screen>
+	</plugin>
+</compiz>
