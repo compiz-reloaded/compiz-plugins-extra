@@ -50,6 +50,7 @@ typedef struct _CubeaddonScreen
     PreparePaintScreenProc     preparePaintScreen;
     PaintTransformedOutputProc paintTransformedOutput;
     AddWindowGeometryProc      addWindowGeometry;
+    DrawWindowProc	       drawWindow;
 
     CubeClearTargetOutputProc   clearTargetOutput;
     CubeGetRotationProc	        getRotation;
@@ -479,6 +480,44 @@ cubeaddonAddWindowGeometry (CompWindow *w,
     }
 }
 
+static Bool
+cubeaddonDrawWindow (CompWindow	          *w,
+		     const CompTransform  *transform,
+		     const FragmentAttrib *attrib,
+		     Region		  region,
+		     unsigned int	  mask)
+{
+    CompScreen *s = w->screen;
+    Bool       status;
+
+    CUBEADDON_SCREEN (s);
+
+    if (!(mask & PAINT_WINDOW_TRANSFORMED_MASK))
+    {
+	int offX = 0, offY = 0;
+	int x1, x2;
+
+	if (!windowOnAllViewports (w))
+	{
+	    getWindowMovementForOffset (w, s->windowOffsetX,
+                                        s->windowOffsetY, &offX, &offY);
+	}
+
+	x1 = w->attrib.x - w->output.left + offX;
+	x2 = w->attrib.x + w->width + w->output.right + offX;
+	if (x1 < 0 && x2 < 0)
+	    return FALSE;
+	if (x1 > s->width && x2 > s->width)
+	    return FALSE;
+    }
+
+    UNWRAP (cas, s, drawWindow);
+    status = (*s->drawWindow) (w, transform, attrib, region, mask);
+    WRAP (cas, s, drawWindow, cubeaddonDrawWindow);
+
+    return status;
+}
+
 static void
 cubeaddonPaintTransformedOutput (CompScreen              *s,
 				 const ScreenPaintAttrib *sAttrib,
@@ -875,6 +914,7 @@ cubeaddonInitScreen (CompPlugin *p,
     WRAP (cas, s, paintOutput, cubeaddonPaintOutput);
     WRAP (cas, s, donePaintScreen, cubeaddonDonePaintScreen);
     WRAP (cas, s, addWindowGeometry, cubeaddonAddWindowGeometry);
+    WRAP (cas, s, drawWindow, cubeaddonDrawWindow);
 
     WRAP (cas, cs, clearTargetOutput, cubeaddonClearTargetOutput);
     WRAP (cas, cs, getRotation, cubeaddonGetRotation);
@@ -899,6 +939,8 @@ cubeaddonFiniScreen (CompPlugin *p,
     UNWRAP (cas, s, paintOutput);
     UNWRAP (cas, s, donePaintScreen);
     UNWRAP (cas, s, addWindowGeometry);
+    UNWRAP (cas, s, drawWindow);
+
 
     UNWRAP (cas, cs, clearTargetOutput);
     UNWRAP (cas, cs, getRotation);
