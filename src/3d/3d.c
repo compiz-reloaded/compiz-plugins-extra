@@ -431,7 +431,7 @@ tdPostPaintViewport (CompScreen              *s,
 
     if (tds->active)
     {
-	CompTransform sTransform = *transform;
+	CompTransform mTransform;
 	CompTransform screenSpace;
 	CompTransform screenSpaceOffset;
 	CompWindow    *w;
@@ -440,6 +440,8 @@ tdPostPaintViewport (CompScreen              *s,
 	float         wDepth = 0.0;
 	float         pointZ = cs->invert * cs->distance;
 	Bool          foundFtb;
+	int           offX, offY;
+	unsigned int  newMask;
 
 	CompVector vPoints[3] = { { .v = { -0.5, 0.0, pointZ, 1.0 } },
 	                          { .v = {  0.0, 0.5, pointZ, 1.0 } },
@@ -489,13 +491,11 @@ tdPostPaintViewport (CompScreen              *s,
 	transformToScreenSpace (s, output, -sAttrib->zTranslate,
 				&screenSpace);
 
+	glPushMatrix ();
+
 	/* paint all windows from bottom to top */
 	for (w = (*walk.first) (s); w; w = (*walk.next) (w))
 	{
-	    CompTransform mTransform = sTransform;
-	    int           offX, offY;
-	    unsigned int  newMask = PAINT_WINDOW_ON_TRANSFORMED_SCREEN_MASK;
-
 	    if (w->destroyed)
 		continue;
 
@@ -504,6 +504,9 @@ tdPostPaintViewport (CompScreen              *s,
 		if (w->attrib.map_state != IsViewable || !w->damaged)
 		    continue;
 	    }
+
+	    mTransform = *transform;
+	    newMask = PAINT_WINDOW_ON_TRANSFORMED_SCREEN_MASK;
 
 	    tdw = (tdWindow *) (w)->base.privates[tds->windowPrivateIndex].ptr;
 
@@ -516,7 +519,7 @@ tdPostPaintViewport (CompScreen              *s,
 		if (wDepth != 0.0)
 		{
 		    tds->currentScale += wDepth;
-		    tds->bTransform   = sTransform;
+		    tds->bTransform   = *transform;
 		    (*s->applyScreenTransform) (s, sAttrib, output,
 						&tds->bTransform);
 		    tds->currentScale -= wDepth;
@@ -550,16 +553,16 @@ tdPostPaintViewport (CompScreen              *s,
 		    matrixMultiply (&mTransform, &mTransform, &screenSpace);
 		}
 
-		glPushMatrix ();
 		glLoadMatrixf (mTransform.m);
 
 		(*s->paintWindow) (w, &w->paint, &mTransform, &infiniteRegion,
 				   newMask);
-		glPopMatrix ();
 
 		(*s->disableOutputClipping) (s);
 	    }
 	}
+
+	glPopMatrix ();
 
 	tds->painting3D   = FALSE;
 	tds->currentScale = tds->basicScale;
