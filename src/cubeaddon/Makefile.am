@@ -1,10 +1,10 @@
 ## Process this file with automake to produce Makefile.in
 PFLAGS=-module -avoid-version -no-undefined
 
-if CUBEREFLEX_PLUGIN
-libcubereflex_la_LDFLAGS = $(PFLAGS)
-libcubereflex_la_LIBADD = @COMPIZ_LIBS@ @COMPIZCUBE_LIBS@
-libcubereflex_la_SOURCES = cubereflex_options.c cubereflex_options.h cubereflex.c
+if CUBEADDON_PLUGIN
+libcubeaddon_la_LDFLAGS = $(PFLAGS)
+libcubeaddon_la_LIBADD = @COMPIZ_LIBS@ @COMPIZCUBE_LIBS@
+libcubeaddon_la_SOURCES = cubeaddon_options.c cubeaddon_options.h cubeaddon.c
 endif
 
 INCLUDES =                              \
@@ -18,8 +18,8 @@ INCLUDES =                              \
 
 moduledir = $(plugindir)
 
-if CUBEREFLEX_PLUGIN
-module_LTLIBRARIES = libcubereflex.la
+if CUBEADDON_PLUGIN
+module_LTLIBRARIES = libcubeaddon.la
 endif
 
 CLEANFILES = *_options.c *_options.h

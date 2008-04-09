@@ -4,8 +4,8 @@ SUBDIRS = 3d \
 	  bench \
 	  bicubic \
 	  crashhandler \
+	  cubeaddon \
 	  cubecaps \
-	  cubereflex \
 	  extrawm \
 	  fadedesktop \
 	  firepaint \

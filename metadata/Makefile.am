@@ -5,8 +5,8 @@ xml_in_files = 	         \
 	bench.xml.in \
 	bicubic.xml.in \
 	crashhandler.xml.in \
+	cubeaddon.xml.in \
 	cubecaps.xml.in \
-	cubereflex.xml.in \
 	extrawm.xml.in \
 	fadedesktop.xml.in \
 	firepaint.xml.in \

@@ -130,7 +130,7 @@ if test "$use_group" = yes; then
 fi
 
 PKG_CHECK_MODULES(COMPIZCUBE, compiz-cube, [have_compiz_cube=yes], [have_compiz_cube=no])
-AM_CONDITIONAL(CUBEREFLEX_PLUGIN, test "x$have_compiz_cube" = "xyes")
+AM_CONDITIONAL(CUBEADDON_PLUGIN, test "x$have_compiz_cube" = "xyes")
 AM_CONDITIONAL(CUBECAPS_PLUGIN, test "x$have_compiz_cube" = "xyes")
 AM_CONDITIONAL(THREED_PLUGIN, test "x$have_compiz_cube" = "xyes")
 
@@ -179,8 +179,8 @@ src/addhelper/Makefile
 src/bench/Makefile
 src/bicubic/Makefile
 src/crashhandler/Makefile
+src/cubeaddon/Makefile
 src/cubecaps/Makefile
-src/cubereflex/Makefile
 src/extrawm/Makefile
 src/fadedesktop/Makefile
 src/firepaint/Makefile
