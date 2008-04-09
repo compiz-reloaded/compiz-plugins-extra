@@ -621,7 +621,8 @@ tdPaintOutput (CompScreen              *s,
 	CompPlugin *p;
 
 	mask |= PAINT_SCREEN_TRANSFORMED_MASK |
-	        PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_MASK;
+	        PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_MASK |
+		PAINT_SCREEN_NO_OCCLUSION_DETECTION_MASK;
 
 	tds->withDepth = TRUE;
 	
