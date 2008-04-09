@@ -124,10 +124,10 @@ drawBasicGround (CompScreen *s)
 
 static Bool
 cubeaddonCheckOrientation (CompScreen              *s,
-			    const ScreenPaintAttrib *sAttrib,
-			    const CompTransform     *transform,
-			    CompOutput              *outputPtr,
-			    CompVector              *points)
+			   const ScreenPaintAttrib *sAttrib,
+			   const CompTransform     *transform,
+			   CompOutput              *outputPtr,
+			   CompVector              *points)
 {
     Bool status;
 
@@ -147,9 +147,9 @@ cubeaddonCheckOrientation (CompScreen              *s,
 
 static void
 cubeaddonGetRotation (CompScreen *s,
-		       float      *x,
-		       float      *v,
-		       float      *progress)
+		      float      *x,
+		      float      *v,
+		      float      *progress)
 {
     CUBE_SCREEN (s);
     CUBEADDON_SCREEN (s);
@@ -169,8 +169,8 @@ cubeaddonGetRotation (CompScreen *s,
 
 static void
 cubeaddonClearTargetOutput (CompScreen *s,
-			     float      xRotate,
-			     float      vRotate)
+			    float      xRotate,
+			    float      vRotate)
 {
     CUBEADDON_SCREEN (s);
     CUBE_SCREEN (s);
@@ -188,10 +188,10 @@ cubeaddonClearTargetOutput (CompScreen *s,
 
 static Bool
 cubeaddonShouldPaintViewport (CompScreen              *s,
-			       const ScreenPaintAttrib *sAttrib,
-			       const CompTransform     *transform,
-			       CompOutput              *outputPtr,
-			       PaintOrder              order)
+			      const ScreenPaintAttrib *sAttrib,
+			      const CompTransform     *transform,
+			      CompOutput              *outputPtr,
+			      PaintOrder              order)
 {
     Bool rv = FALSE;
 
@@ -237,11 +237,11 @@ cubeaddonShouldPaintViewport (CompScreen              *s,
 }
 
 static void
-cubeaddonPaintTop (CompScreen		  *s,
-		  const ScreenPaintAttrib *sAttrib,
-		  const CompTransform     *transform,
-		  CompOutput		  *output,
-		  int			  size)
+cubeaddonPaintTop (CompScreen		   *s,
+		   const ScreenPaintAttrib *sAttrib,
+		   const CompTransform     *transform,
+		   CompOutput		   *output,
+		   int			   size)
 {
     ScreenPaintAttrib sa;
     CompTransform     sTransform;
@@ -308,11 +308,11 @@ cubeaddonPaintTop (CompScreen		  *s,
  * Paint bottom cube face
  */
 static void
-cubeaddonPaintBottom (CompScreen		     *s,
+cubeaddonPaintBottom (CompScreen	      *s,
 		      const ScreenPaintAttrib *sAttrib,
 		      const CompTransform     *transform,
-		      CompOutput		     *output,
-		      int		     size)
+		      CompOutput	      *output,
+		      int		      size)
 {
     ScreenPaintAttrib sa;
     CompTransform     sTransform;
@@ -377,10 +377,10 @@ cubeaddonPaintBottom (CompScreen		     *s,
 
 static void
 cubeaddonAddWindowGeometry (CompWindow *w,
-			     CompMatrix *matrix,
-			     int	nMatrix,
-			     Region     region,
-			     Region     clip)
+			    CompMatrix *matrix,
+			    int        nMatrix,
+			    Region     region,
+			    Region     clip)
 {
     CompScreen *s = w->screen;
 
@@ -481,11 +481,11 @@ cubeaddonAddWindowGeometry (CompWindow *w,
 
 static void
 cubeaddonPaintTransformedOutput (CompScreen              *s,
-				  const ScreenPaintAttrib *sAttrib,
-				  const CompTransform     *transform,
-				  Region                  region,
-				  CompOutput              *output,
-				  unsigned int            mask)
+				 const ScreenPaintAttrib *sAttrib,
+				 const CompTransform     *transform,
+				 Region                  region,
+				 CompOutput              *output,
+				 unsigned int            mask)
 {
     static GLfloat light0Position[] = { -0.5f, 0.5f, -9.0f, 1.0f };
     CompTransform  sTransform = *transform;
@@ -769,11 +769,11 @@ cubeaddonPaintTransformedOutput (CompScreen              *s,
 
 static Bool
 cubeaddonPaintOutput (CompScreen              *s,
-		       const ScreenPaintAttrib *sAttrib,
-		       const CompTransform     *transform,
-		       Region                  region,
-		       CompOutput              *output,
-		       unsigned int            mask)
+		      const ScreenPaintAttrib *sAttrib,
+		      const CompTransform     *transform,
+		      Region                  region,
+		      CompOutput              *output,
+		      unsigned int            mask)
 {
     Bool status;
 
@@ -808,7 +808,7 @@ cubeaddonDonePaintScreen (CompScreen * s)
 
 static Bool
 cubeaddonInitDisplay (CompPlugin  *p,
-		       CompDisplay *d)
+		      CompDisplay *d)
 {
     CubeaddonDisplay *cad;
 
@@ -839,7 +839,7 @@ cubeaddonInitDisplay (CompPlugin  *p,
 
 static void
 cubeaddonFiniDisplay (CompPlugin  *p,
-		       CompDisplay *d)
+		      CompDisplay *d)
 {
     CUBEADDON_DISPLAY (d);
 
@@ -849,7 +849,7 @@ cubeaddonFiniDisplay (CompPlugin  *p,
 
 static Bool
 cubeaddonInitScreen (CompPlugin *p,
-		      CompScreen *s)
+		     CompScreen *s)
 {
     CubeaddonScreen *cas;
 
@@ -888,7 +888,7 @@ cubeaddonInitScreen (CompPlugin *p,
 
 static void
 cubeaddonFiniScreen (CompPlugin *p,
-		      CompScreen *s)
+		     CompScreen *s)
 {
     CUBEADDON_SCREEN (s);
     CUBE_SCREEN (s);
@@ -929,7 +929,7 @@ cubeaddonFini (CompPlugin *p)
 
 static CompBool
 cubeaddonInitObject (CompPlugin *p,
-		      CompObject *o)
+		     CompObject *o)
 {
     static InitPluginObjectProc dispTab[] = {
 	(InitPluginObjectProc) 0, /* InitCore */
@@ -942,7 +942,7 @@ cubeaddonInitObject (CompPlugin *p,
 
 static void
 cubeaddonFiniObject (CompPlugin *p,
-		      CompObject *o)
+		     CompObject *o)
 {
     static FiniPluginObjectProc dispTab[] = {
 	(FiniPluginObjectProc) 0, /* FiniCore */
