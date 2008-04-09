@@ -436,7 +436,7 @@ tdPostPaintViewport (CompScreen              *s,
 	CompTransform screenSpaceOffset;
 	CompWindow    *w;
 	CompWalker    walk;
-	float         wDepth;
+	float         wDepth = 0.0;
 	float         pointZ = cs->invert * cs->distance;
 	Bool          foundFtb;
 
@@ -444,8 +444,9 @@ tdPostPaintViewport (CompScreen              *s,
 	                          { .v = {  0.0, 0.5, pointZ, 1.0 } },
 				  { .v = {  0.0, 0.0, pointZ, 1.0 } } };
 
-	wDepth = -MIN((tdGetWidth (s)) / 30, (1.0 - tds->basicScale) /
-					       tds->maxDepth);
+	if (tds->withDepth)
+	    wDepth = -MIN((tdGetWidth (s)) / 30, (1.0 - tds->basicScale) /
+			  tds->maxDepth);
 
 	/* all BTF windows in normal order */
 	for (w = s->windows; w; w = w->next)
@@ -507,11 +508,14 @@ tdPostPaintViewport (CompScreen              *s,
 		                    (tdw->depth * ((1.0 - tds->basicScale) /
 						   tds->maxDepth));
 
-		tds->currentScale += wDepth;
-		tds->bTransform   = sTransform;
-		(*s->applyScreenTransform) (s, sAttrib, output,
-					    &tds->bTransform);
-		tds->currentScale -= wDepth;
+		if (wDepth != 0.0)
+		{
+		    tds->currentScale += wDepth;
+		    tds->bTransform   = sTransform;
+		    (*s->applyScreenTransform) (s, sAttrib, output,
+						&tds->bTransform);
+		    tds->currentScale -= wDepth;
+		}
 
 		(*s->applyScreenTransform) (s, sAttrib, output, &mTransform);
 		(*s->enableOutputClipping) (s, &mTransform, region, output);
@@ -525,8 +529,9 @@ tdPostPaintViewport (CompScreen              *s,
 		    screenSpaceOffset = screenSpace;
 		    matrixTranslate (&screenSpaceOffset, offX, offY, 0);
 
-		    matrixMultiply (&tds->bTransform, &tds->bTransform,
-				    &screenSpaceOffset);
+		    if (wDepth != 0.0)
+		        matrixMultiply (&tds->bTransform, &tds->bTransform,
+					&screenSpaceOffset);
 		    matrixMultiply (&mTransform, &mTransform,
 				    &screenSpaceOffset);
 
@@ -534,8 +539,9 @@ tdPostPaintViewport (CompScreen              *s,
 		}
 		else
 		{
-		    matrixMultiply (&tds->bTransform, &tds->bTransform,
-				    &screenSpace);
+		    if (wDepth != 0.0)
+			matrixMultiply (&tds->bTransform, &tds->bTransform,
+					&screenSpace);
 		    matrixMultiply (&mTransform, &mTransform, &screenSpace);
 		}
 
