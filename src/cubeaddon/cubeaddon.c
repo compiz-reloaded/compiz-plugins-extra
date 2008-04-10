@@ -395,6 +395,7 @@ cubeaddonAddWindowGeometry (CompWindow *w,
 	GLfloat     *v;
 	int         offX = 0, offY = 0;
 	int         sx1, sx2, sw;
+	float       lastX, lastZ;
 
 	const float radSquare = (cs->distance * cs->distance) + 0.25;
 	float       ang;
@@ -472,11 +473,17 @@ cubeaddonAddWindowGeometry (CompWindow *w,
 	    sx2 = s->outputDev[cs->srcOutput].region.extents.x2;
 	    sw  = sx2 - sx1;
 	}
+
+	lastX = -1000000000.0;
 	
 	for (i = oldVCount; i < w->vCount; i++)
 	{
-	    if (v[0] + offX >= sx1 - CUBEADDON_GRID_SIZE &&
-		v[0] + offX < sx2 + CUBEADDON_GRID_SIZE)
+	    if (v[0] == lastX)
+	    {
+		v[2] = lastZ;
+	    }
+	    else if (v[0] + offX >= sx1 - CUBEADDON_GRID_SIZE &&
+		     v[0] + offX < sx2 + CUBEADDON_GRID_SIZE)
 	    {
 		ang = (((v[0] + offX - sx1) / (float)sw) - 0.5);
 		ang *= ang;
@@ -486,6 +493,9 @@ cubeaddonAddWindowGeometry (CompWindow *w,
 		    v[2] *= cas->deform;
 		}
 	    }
+
+	    lastX = v[0];
+	    lastZ = v[2];
 
 	    v += w->vertexStride;
 	}
