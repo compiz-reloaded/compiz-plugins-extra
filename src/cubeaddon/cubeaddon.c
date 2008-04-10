@@ -510,7 +510,7 @@ cubeaddonDrawWindow (CompWindow	          *w,
 
     CUBEADDON_SCREEN (s);
 
-    if (!(mask & PAINT_WINDOW_TRANSFORMED_MASK))
+    if (!(mask & PAINT_WINDOW_TRANSFORMED_MASK) && cas->deform)
     {
 	int offX = 0, offY = 0;
 	int x1, x2;
