@@ -395,7 +395,7 @@ cubeaddonAddWindowGeometry (CompWindow *w,
 	GLfloat     *v;
 	int         offX = 0, offY = 0;
 	int         sx1, sx2, sw;
-	float       lastX, lastZ;
+	float       lastX, lastZ = 0.0;
 
 	const float radSquare = (cs->distance * cs->distance) + 0.25;
 	float       ang;
