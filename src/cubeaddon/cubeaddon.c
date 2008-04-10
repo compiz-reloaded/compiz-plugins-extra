@@ -409,21 +409,39 @@ cubeaddonAddWindowGeometry (CompWindow *w,
 	x2 = MIN (x1 + CUBEADDON_GRID_SIZE, region->extents.x2);
 	
 	UNWRAP (cas, s, addWindowGeometry);
-	while (x1 < region->extents.x2)
+
+	if (region->numRects > 1)
 	{
-	    reg.extents.x1 = x1;
-	    reg.extents.x2 = x2;
-
-	    XIntersectRegion (region, &reg, cas->tmpRegion);
-
-	    if (!XEmptyRegion (cas->tmpRegion))
+	    while (x1 < region->extents.x2)
 	    {
-		(*w->screen->addWindowGeometry) (w, matrix, nMatrix,
-						 cas->tmpRegion, clip);
-	    }
+		reg.extents.x1 = x1;
+		reg.extents.x2 = x2;
 
-	    x1 = x2;
-	    x2 = MIN (x2 + CUBEADDON_GRID_SIZE, region->extents.x2);
+		XIntersectRegion (region, &reg, cas->tmpRegion);
+
+		if (!XEmptyRegion (cas->tmpRegion))
+		{
+		    (*w->screen->addWindowGeometry) (w, matrix, nMatrix,
+						     cas->tmpRegion, clip);
+		}
+
+		x1 = x2;
+		x2 = MIN (x2 + CUBEADDON_GRID_SIZE, region->extents.x2);
+	    }
+	}
+	else
+	{
+	    while (x1 < region->extents.x2)
+	    {
+		reg.extents.x1 = x1;
+		reg.extents.x2 = x2;
+
+		(*w->screen->addWindowGeometry) (w, matrix, nMatrix,
+						 &reg, clip);
+
+		x1 = x2;
+		x2 = MIN (x2 + CUBEADDON_GRID_SIZE, region->extents.x2);
+	    }
 	}
 	WRAP (cas, s, addWindowGeometry, cubeaddonAddWindowGeometry);
 	
