@@ -439,7 +439,7 @@ tdPostPaintViewport (CompScreen              *s,
 	CompWalker    walk;
 	float         wDepth = 0.0;
 	float         pointZ = cs->invert * cs->distance;
-	Bool          foundFtb;
+	Bool          foundFtb = FALSE;
 	int           offX, offY;
 	unsigned int  newMask;
 
