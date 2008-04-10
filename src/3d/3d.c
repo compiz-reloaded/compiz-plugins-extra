@@ -439,7 +439,6 @@ tdPostPaintViewport (CompScreen              *s,
 	CompWalker    walk;
 	float         wDepth = 0.0;
 	float         pointZ = cs->invert * cs->distance;
-	Bool          foundFtb = FALSE;
 	int           offX, offY;
 	unsigned int  newMask;
 
@@ -462,21 +461,12 @@ tdPostPaintViewport (CompScreen              *s,
 		if (!tdw->is3D)
 		    continue;
 
-		if (foundFtb && FALSE)
-		{
-		    tdw->ftb = TRUE;
-		    continue;
-		}
-
 		tds->currentScale = tds->basicScale +
 		                    (tdw->depth * ((1.0 - tds->basicScale) /
 				    tds->maxDepth));
 
 		tdw->ftb = (*cs->checkOrientation) (s, sAttrib, transform,
 						    output, vPoints);
-
-		if (tdw->ftb)
-		    foundFtb = TRUE;
 	    }
 	}
 
