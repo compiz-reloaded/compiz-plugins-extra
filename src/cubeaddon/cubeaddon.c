@@ -392,7 +392,7 @@ cubeaddonAddWindowGeometry (CompWindow *w,
     CUBEADDON_SCREEN (s);
     CUBE_SCREEN (s);
 
-    if (cas->deform > 0.0 && s->desktopWindowCount)
+    if (cas->deform > 0.0)
     {
 	int         x1, x2, i, oldVCount = w->vCount;
 	REGION      reg;
@@ -668,6 +668,7 @@ cubeaddonPaintTransformedOutput (CompScreen              *s,
     CUBE_SCREEN (s);
 
     if (cubeaddonGetCylinder (s) && s->hsize * cs->nOutput > 2 &&
+	s->desktopWindowCount &&
 	(cs->rotationState == RotationManual ||
 	(cs->rotationState == RotationChange &&
 	!cubeaddonGetCylinderManualOnly (s)) || cas->deform > 0.0))
