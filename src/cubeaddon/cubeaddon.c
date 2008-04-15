@@ -46,11 +46,10 @@ typedef struct _CubeaddonScreen
 {
     DonePaintScreenProc        donePaintScreen;
     PaintOutputProc            paintOutput;
-    PaintScreenProc            paintScreen;
-    PreparePaintScreenProc     preparePaintScreen;
     PaintTransformedOutputProc paintTransformedOutput;
     AddWindowGeometryProc      addWindowGeometry;
     DrawWindowProc	       drawWindow;
+    DrawWindowTextureProc      drawWindowTexture;
 
     CubeClearTargetOutputProc   clearTargetOutput;
     CubeGetRotationProc	        getRotation;
@@ -73,6 +72,11 @@ typedef struct _CubeaddonScreen
     float deform;
 
     Region tmpRegion;
+
+    GLfloat *vpNormals;
+
+    GLfloat      *winNormals;
+    unsigned int winNormSize;
 
     GLfloat capFill[CUBEADDON_CAP_ELEMENTS * 12];
 } CubeaddonScreen;
@@ -388,7 +392,7 @@ cubeaddonAddWindowGeometry (CompWindow *w,
     CUBEADDON_SCREEN (s);
     CUBE_SCREEN (s);
 
-    if (cas->deform > 0.0)
+    if (cas->deform > 0.0 && s->desktopWindowCount)
     {
 	int         x1, x2, i, oldVCount = w->vCount;
 	REGION      reg;
@@ -547,6 +551,108 @@ cubeaddonDrawWindow (CompWindow	          *w,
 }
 
 static void
+cubeaddonDrawWindowTexture (CompWindow	         *w,
+			    CompTexture	         *texture,
+			    const FragmentAttrib *attrib,
+			    unsigned int	 mask)
+{
+    CompScreen *s = w->screen;
+
+    CUBEADDON_SCREEN (s);
+
+    if (cas->deform > 0.0 && s->lighting)
+    {
+	int     i, idx;
+	int     sx1, sx2, sw;
+	int     offX = 0, offY = 0;
+	float   x;
+	GLfloat *v;
+	
+	CUBE_SCREEN (s);
+
+	if (cas->winNormSize < w->vCount * 3)
+	{
+	    cas->winNormals = realloc (cas->winNormals, 
+				       w->vCount * 3 * sizeof (GLfloat));
+	    if (!cas->winNormals)
+	    {
+		cas->winNormSize = 0;
+		return;
+	    }
+	    cas->winNormSize = w->vCount * 3;
+	}
+	
+	if (!windowOnAllViewports (w))
+	{
+	    getWindowMovementForOffset (w, s->windowOffsetX,
+                                        s->windowOffsetY, &offX, &offY);
+	}
+	
+	if (cs->moMode == CUBE_MOMODE_ONE)
+	{
+	    sx1 = 0;
+	    sx2 = s->width;
+	    sw  = s->width;
+	}
+	else if (cs->moMode == CUBE_MOMODE_MULTI)
+	{
+	    sx1 = cas->last->region.extents.x1;
+	    sx2 = cas->last->region.extents.x2;
+	    sw  = sx2 - sx1;
+	}
+	else
+	{
+	    sx1 = s->outputDev[cs->srcOutput].region.extents.x1;
+	    sx2 = s->outputDev[cs->srcOutput].region.extents.x2;
+	    sw  = sx2 - sx1;
+	}
+	
+	v = w->vertices + (w->vertexStride - 3);
+	
+	for (i = 0; i < w->vCount; i++)
+	{
+	    x = ((float)(v[0] + offX - sx1 - (sw / 2)) * 360.0) /
+		(float)(sw * s->hsize * cs->nOutput);
+	    while (x < 0)
+		x += 360.0;
+
+	    idx = floor (x);
+
+	    if (cs->paintOrder == FTB)
+	    {
+		cas->winNormals[i * 3] = -cas->vpNormals[idx * 3];
+		cas->winNormals[(i * 3) + 1] = -cas->vpNormals[(idx * 3) + 1];
+		cas->winNormals[(i * 3) + 2] = -cas->vpNormals[(idx * 3) + 2];
+	    }
+	    else
+	    {
+		cas->winNormals[i * 3] = cas->vpNormals[idx * 3];
+		cas->winNormals[(i * 3) + 1] = cas->vpNormals[(idx * 3) + 1];
+		cas->winNormals[(i * 3) + 2] = cas->vpNormals[(idx * 3) + 2];
+	    }
+	    v += w->vertexStride;
+	}
+	
+	glEnable (GL_NORMALIZE);
+	glNormalPointer (GL_FLOAT,0, cas->winNormals);
+	
+	glEnableClientState (GL_NORMAL_ARRAY);
+	
+	UNWRAP (cas, s, drawWindowTexture);
+	(*s->drawWindowTexture) (w, texture, attrib, mask);
+	WRAP (cas, s, drawWindowTexture, cubeaddonDrawWindowTexture);
+
+	glDisable (GL_NORMALIZE);
+	glDisableClientState (GL_NORMAL_ARRAY);
+	return;
+    }
+
+    UNWRAP (cas, s, drawWindowTexture);
+    (*s->drawWindowTexture) (w, texture, attrib, mask);
+    WRAP (cas, s, drawWindowTexture, cubeaddonDrawWindowTexture);
+}
+
+static void
 cubeaddonPaintTransformedOutput (CompScreen              *s,
 				 const ScreenPaintAttrib *sAttrib,
 				 const CompTransform     *transform,
@@ -562,7 +668,6 @@ cubeaddonPaintTransformedOutput (CompScreen              *s,
     CUBE_SCREEN (s);
 
     if (cubeaddonGetCylinder (s) && s->hsize * cs->nOutput > 2 &&
-	s->desktopWindowCount &&
 	(cs->rotationState == RotationManual ||
 	(cs->rotationState == RotationChange &&
 	!cubeaddonGetCylinderManualOnly (s)) || cas->deform > 0.0))
@@ -586,6 +691,15 @@ cubeaddonPaintTransformedOutput (CompScreen              *s,
 	    quad = &cas->capFill[(i + 1) * 3];
 	    quad[0] = x;
 	    quad[2] = cs->distance + z;
+	}
+	
+	for (i = 0; i < 360; i++)
+	{
+	    cas->vpNormals[i * 3] = (-sin ((float)i * DEG2RAD) / s->width) *
+				    cas->deform;
+	    cas->vpNormals[(i * 3) + 1] = 0.0;
+	    cas->vpNormals[(i * 3) + 2] = (-cos ((float)i * DEG2RAD) * 
+					  cas->deform) - (1 - cas->deform);
 	}
     }
     else
@@ -939,11 +1053,20 @@ cubeaddonInitScreen (CompPlugin *p,
     cas->tmpRegion  = XCreateRegion ();
     cas->deform     = 0.0;
 
+    cas->vpNormals = malloc (360 * 3 * sizeof (GLfloat));
+    if (!cas->vpNormals)
+	return FALSE;
+
+    cas->winNormals  = NULL;
+    cas->winNormSize = 0;
+
     WRAP (cas, s, paintTransformedOutput, cubeaddonPaintTransformedOutput);
     WRAP (cas, s, paintOutput, cubeaddonPaintOutput);
     WRAP (cas, s, donePaintScreen, cubeaddonDonePaintScreen);
     WRAP (cas, s, addWindowGeometry, cubeaddonAddWindowGeometry);
     WRAP (cas, s, drawWindow, cubeaddonDrawWindow);
+    WRAP (cas, s, drawWindowTexture, cubeaddonDrawWindowTexture);
+
 
     WRAP (cas, cs, clearTargetOutput, cubeaddonClearTargetOutput);
     WRAP (cas, cs, getRotation, cubeaddonGetRotation);
@@ -969,7 +1092,7 @@ cubeaddonFiniScreen (CompPlugin *p,
     UNWRAP (cas, s, donePaintScreen);
     UNWRAP (cas, s, addWindowGeometry);
     UNWRAP (cas, s, drawWindow);
-
+    UNWRAP (cas, s, drawWindowTexture);
 
     UNWRAP (cas, cs, clearTargetOutput);
     UNWRAP (cas, cs, getRotation);
