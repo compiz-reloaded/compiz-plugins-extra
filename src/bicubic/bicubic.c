@@ -152,10 +152,23 @@ getBicubicFragmentFunction (CompScreen  *s,
 	ok &= addDataOpToFunctionData (data,
 		"MAD cs00, program.env[%d], -hgY.x, cs00;", param + 1);
 
-	ok &= addFetchOpToFunctionData (data, "cs00", "cs00", target);
-	ok &= addFetchOpToFunctionData (data, "cs01", "cs01", target);
-	ok &= addFetchOpToFunctionData (data, "cs10", "cs10", target);
-	ok &= addFetchOpToFunctionData (data, "cs11", "cs11", target);
+	ok &= addDataOpToFunctionData (data, 
+		"ADD cs00, cs00, fragment.texcoord[0];");
+	ok &= addDataOpToFunctionData (data,
+		"ADD cs01, cs01, fragment.texcoord[0];");
+	ok &= addDataOpToFunctionData (data,
+		"ADD cs10, cs10, fragment.texcoord[0];");
+	ok &= addDataOpToFunctionData (data,
+		"ADD cs11, cs11, fragment.texcoord[0];");
+
+	ok &= addDataOpToFunctionData (data, 
+		"TEX cs00, cs00, texture[0], %s;", targetString);
+	ok &= addDataOpToFunctionData (data,
+		"TEX cs01, cs01, texture[0], %s;", targetString);
+	ok &= addDataOpToFunctionData (data, 
+		"TEX cs10, cs10, texture[0], %s;", targetString);
+	ok &= addDataOpToFunctionData (data, 
+		"TEX cs11, cs11, texture[0], %s;", targetString);
 
 	ok &= addDataOpToFunctionData (data, "LRP cs00, hgY.z, cs00, cs01;");
 	ok &= addDataOpToFunctionData (data, "LRP cs10, hgY.z, cs10, cs11;");
