@@ -696,8 +696,8 @@ cubeaddonPaintTransformedOutput (CompScreen              *s,
 	
 	for (i = 0; i < 360; i++)
 	{
-	    cas->vpNormals[i * 3] = (-sin ((float)i * DEG2RAD) / s->width) *
-				    cas->deform;
+	    cas->vpNormals[i * 3] = (-sin ((float)i * DEG2RAD) / output->width)
+				    * cas->deform;
 	    cas->vpNormals[(i * 3) + 1] = 0.0;
 	    cas->vpNormals[(i * 3) + 2] = (-cos ((float)i * DEG2RAD) * 
 					  cas->deform) - (1 - cas->deform);
