@@ -69,7 +69,7 @@ typedef struct _tdScreen
     ApplyScreenTransformProc  applyScreenTransform;
     PaintWindowProc           paintWindow;
 
-    CubePostPaintViewportProc   postPaintViewport;
+    CubePaintViewportProc     paintViewport;
     CubeShouldPaintViewportProc shouldPaintViewport;
 
     Bool  active;
@@ -416,18 +416,22 @@ tdApplyScreenTransform (CompScreen		*s,
 }
 
 static void
-tdPostPaintViewport (CompScreen              *s,
-		     const ScreenPaintAttrib *sAttrib,
-		     const CompTransform     *transform,
-		     CompOutput              *output,
-		     Region                  region)
+tdPaintViewport (CompScreen              *s,
+		 const ScreenPaintAttrib *sAttrib,
+		 const CompTransform     *transform,
+		 Region                  region,
+		 CompOutput              *output,
+		 unsigned int            mask)
 {
     TD_SCREEN (s);
     CUBE_SCREEN (s);
 
-    UNWRAP (tds, cs, postPaintViewport);
-    (*cs->postPaintViewport) (s, sAttrib, transform, output, region);
-    WRAP (tds, cs, postPaintViewport, tdPostPaintViewport);
+    if (cs->paintOrder == BTF)
+    {
+	UNWRAP (tds, cs, paintViewport);
+	(*cs->paintViewport) (s, sAttrib, transform, region, output, mask);
+	WRAP (tds, cs, paintViewport, tdPaintViewport);
+    }
 
     if (tds->active)
     {
@@ -556,6 +560,13 @@ tdPostPaintViewport (CompScreen              *s,
 
 	tds->painting3D   = FALSE;
 	tds->currentScale = tds->basicScale;
+    }
+
+    if (cs->paintOrder == FTB)
+    {
+	UNWRAP (tds, cs, paintViewport);
+	(*cs->paintViewport) (s, sAttrib, transform, region, output, mask);
+	WRAP (tds, cs, paintViewport, tdPaintViewport);
     }
 }
 
@@ -735,7 +746,7 @@ tdInitScreen (CompPlugin *p,
     WRAP (tds, s, donePaintScreen, tdDonePaintScreen);
     WRAP (tds, s, preparePaintScreen, tdPreparePaintScreen);
     WRAP (tds, s, applyScreenTransform, tdApplyScreenTransform);
-    WRAP (tds, cs, postPaintViewport, tdPostPaintViewport);
+    WRAP (tds, cs, paintViewport, tdPaintViewport);
     WRAP (tds, cs, shouldPaintViewport, tdShouldPaintViewport);
 
     return TRUE;
@@ -753,7 +764,7 @@ tdFiniScreen (CompPlugin *p,
     UNWRAP (tds, s, donePaintScreen);
     UNWRAP (tds, s, preparePaintScreen);
     UNWRAP (tds, s, applyScreenTransform);
-    UNWRAP (tds, cs, postPaintViewport);
+    UNWRAP (tds, cs, paintViewport);
     UNWRAP (tds, cs, shouldPaintViewport);
 
     freeWindowPrivateIndex (s, tds->windowPrivateIndex);
