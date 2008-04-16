@@ -828,7 +828,7 @@ cubeaddonPaintTransformedOutput (CompScreen              *s,
 		rYTrans         = 0.0;
 
 		matrixGetIdentity (&pTransform);
-		(*s->applyScreenTransform) (s, sAttrib, output, &pTransform);
+		applyScreenTransform (s, sAttrib, output, &pTransform);
 		point.x = point.y = 0.0;
 		point.z = -cs->distance;
 		point.z += deform;
