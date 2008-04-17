@@ -644,6 +644,7 @@ cubeaddonDrawWindowTexture (CompWindow	         *w,
 
 	glDisable (GL_NORMALIZE);
 	glDisableClientState (GL_NORMAL_ARRAY);
+	glNormal3f (0.0, 0.0, -1.0);
 	return;
     }
 
