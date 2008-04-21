@@ -167,8 +167,8 @@ scalefilterRenderFilterText (CompScreen *s)
     if (!fd->textAvailable)
 	return;
 
-    tA.maxWidth = x2 - x1 - (2 * scalefilterGetBorderSize (s));
-    tA.maxHeight = y2 - y1 - (2 * scalefilterGetBorderSize (s));
+    tA.maxWidth = x2 - x1;
+    tA.maxHeight = y2 - y1;
     tA.screen = s;
     tA.size = scalefilterGetFontSize (s);
     tA.color[0] = scalefilterGetFontColorRed (s);
@@ -177,8 +177,15 @@ scalefilterRenderFilterText (CompScreen *s)
     tA.color[3] = scalefilterGetFontColorAlpha (s);
     tA.style = (scalefilterGetFontBold (s)) ?
 	       TEXT_STYLE_BOLD : TEXT_STYLE_NORMAL;
+    tA.style |= TEXT_STYLE_BACKGROUND;
     tA.family = "Sans";
     tA.ellipsize = TRUE;
+    tA.backgroundHMargin = scalefilterGetBorderSize (s);
+    tA.backgroundVMargin = scalefilterGetBorderSize (s);
+    tA.backgroundColor[0] = scalefilterGetBackColorRed (s);
+    tA.backgroundColor[1] = scalefilterGetBackColorGreen (s);
+    tA.backgroundColor[2] = scalefilterGetBackColorBlue (s);
+    tA.backgroundColor[3] = scalefilterGetBackColorAlpha (s);
 
     wcstombs (buffer, fs->filterInfo->filterString, MAX_FILTER_STRING_LEN);
     tA.renderMode = TextRenderNormal;
@@ -210,8 +217,8 @@ scalefilterRenderFilterText (CompScreen *s)
     }
 
     /* damage the new draw rectangle */
-    width  = fs->filterInfo->textWidth + (2 * scalefilterGetBorderSize (s));
-    height = fs->filterInfo->textHeight + (2 * scalefilterGetBorderSize (s));
+    width  = fs->filterInfo->textWidth;
+    height = fs->filterInfo->textHeight;
 
     reg.extents.x1 = x1 + ((x2 - x1) / 2) - (width / 2) - 1;
     reg.extents.x2 = reg.extents.x1 + width + 1;
@@ -231,13 +238,12 @@ scalefilterDrawFilterText (CompScreen *s,
     GLint      oldBlendSrc, oldBlendDst;
     int        k;
     int        ox1, ox2, oy1, oy2;
-    float      width, height, border;
+    float      width, height;
     float      x, y;
     CompMatrix *m;
 
     width = fs->filterInfo->textWidth;
     height = fs->filterInfo->textHeight;
-    border = scalefilterGetBorderSize (s);
 
     ox1 = output->region.extents.x1;
     ox2 = output->region.extents.x2;
@@ -255,56 +261,6 @@ scalefilterDrawFilterText (CompScreen *s,
 	glEnable (GL_BLEND);
 
     glBlendFunc (GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-
-    glColor4us (scalefilterGetBackColorRed (s),
-		scalefilterGetBackColorGreen (s),
-		scalefilterGetBackColorBlue (s),
-		scalefilterGetBackColorAlpha (s));
-
-    glPushMatrix ();
-
-    glTranslatef (x, y - height, 0.0f);
-    glRectf (0.0f, height, width, 0.0f);
-    glRectf (0.0f, 0.0f, width, -border);
-    glRectf (0.0f, height + border, width, height);
-    glRectf (-border, height, 0.0f, 0.0f);
-    glRectf (width, height, width + border, 0.0f);
-    glTranslatef (-border, -border, 0.0f);
-
-#define CORNER(a,b) \
-    for (k = a; k < b; k++) \
-    {\
-	float rad = k * (3.14159 / 180.0f);\
-	glVertex2f (0.0f, 0.0f);\
-	glVertex2f (cos (rad) * border, sin (rad) * border);\
-	glVertex2f (cos ((k - 1) * (3.14159 / 180.0f)) * border, \
-		    sin ((k - 1) * (3.14159 / 180.0f)) * border);\
-    }
-
-    /* Rounded corners */
-    glTranslatef (border, border, 0.0f);
-    glBegin (GL_TRIANGLES);
-    CORNER (180, 270) glEnd();
-    glTranslatef (-border, -border, 0.0f);
-
-    glTranslatef (width + border, border, 0.0f);
-    glBegin (GL_TRIANGLES);
-    CORNER (270, 360) glEnd();
-    glTranslatef (-(width + border), -border, 0.0f);
-
-    glTranslatef (border, height + border, 0.0f);
-    glBegin (GL_TRIANGLES);
-    CORNER (90, 180) glEnd();
-    glTranslatef (-border, -(height + border), 0.0f);
-
-    glTranslatef (width + border, height + border, 0.0f);
-    glBegin (GL_TRIANGLES);
-    CORNER (0, 90) glEnd();
-    glTranslatef (-(width + border), -(height + border), 0.0f);
-
-    glPopMatrix ();
-
-#undef CORNER
 
     glTexEnvf (GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
     glColor4f (1.0, 1.0, 1.0, 1.0);
