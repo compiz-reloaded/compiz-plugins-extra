@@ -78,6 +78,7 @@ typedef struct _tdScreen
 
     float basicScale;
     float maxDepth;
+    Bool  damage;
 
     Bool withDepth;
 
@@ -161,6 +162,7 @@ tdPreparePaintScreen (CompScreen *s,
 
 	minScale =  MAX (minScale, 1.0 - (tds->maxDepth * maxDiv));
 	tds->basicScale = 1.0 - ((1.0 - minScale) * progress);
+	tds->damage = (progress != 0.0 && progress != 1.0);
     }
     else
     {
@@ -663,8 +665,11 @@ tdDonePaintScreen (CompScreen *s)
 {
     TD_SCREEN (s);
 
-    if (tds->active)
+    if (tds->active && tds->damage)
+    {
+	tds->damage = FALSE;
 	damageScreen (s);
+    }
 
     UNWRAP (tds, s, donePaintScreen);
     (*s->donePaintScreen) (s);
