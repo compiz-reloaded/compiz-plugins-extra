@@ -984,6 +984,12 @@ cubeaddonDonePaintScreen (CompScreen * s)
     cas->yTrans     = 0.0;
     cas->zTrans     = 0.0;
 
+    if (cas->deform != 0.0 && cas->deform != 1.0)
+    {
+	damageScreen (s);
+	cas->deform = 0.0;
+    }
+
     UNWRAP (cas, s, donePaintScreen);
     (*s->donePaintScreen) (s);
     WRAP (cas, s, donePaintScreen, cubeaddonDonePaintScreen);
