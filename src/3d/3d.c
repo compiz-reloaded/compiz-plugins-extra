@@ -408,6 +408,7 @@ tdApplyScreenTransform (CompScreen		*s,
 			CompTransform	        *transform)
 {
     TD_SCREEN (s);
+    CUBE_SCREEN (s);
 
     UNWRAP (tds, s, applyScreenTransform);
     (*s->applyScreenTransform) (s, sAttrib, output, transform);
@@ -645,10 +646,10 @@ tdPaintOutput (CompScreen              *s,
 
 	    option = (*p->vTable->getObjectOptions) (p, (CompObject *)s,
 						     &nOption);
-	    option = compFindOption (option, nOption, "cylinder", 0);
+	    option = compFindOption (option, nOption, "deformation", 0);
 
 	    if (option)
-		tds->withDepth = !option->value.b;
+		tds->withDepth = option->value.i == 0;
 	}
     }
 
