@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <compiz>
 	<plugin name="cubeaddon" useBcop="true">
-		<_short>Cube Reflection and Cylinder</_short>
-		<_long>Compiz cube reflection and cylinder deformation</_long>
+		<_short>Cube Reflection and Deformation</_short>
+		<_long>Compiz cube reflection and deformation</_long>
 		<category>Effects</category>
 		<deps>
 		<relation type="after">
@@ -93,11 +93,25 @@
 				</option>
 			</group>
 			<group>
-				<short>Cylinder</short>
-				<option name="cylinder" type="bool">
-					<_short>Enabled</_short>
-					<_long>Deform cube to a cylinder.</_long>
-					<default>true</default>
+				<short>Deformation</short>
+				<option name="deformation" type="int">
+					<_short>Deformation</_short>
+					<_long>Deformation mode.</_long>
+					<default>1</default>
+					<min>0</min>
+					<max>2</max>
+					<desc>
+						<value>0</value>
+						<_name>None</_name>
+					</desc>
+					<desc>
+						<value>1</value>
+						<_name>Cylinder</_name>
+					</desc>
+					<desc>
+						<value>2</value>
+						<_name>Sphere like</_name>
+					</desc>
 				</option>
 				<option name="cylinder_manual_only" type="bool">
 					<_short>Deform only on mouse rotate</_short>

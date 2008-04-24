@@ -70,10 +70,9 @@ typedef struct _CubeaddonScreen
     float vRot;
 
     float deform;
+    Bool  wasDeformed;
 
     Region tmpRegion;
-
-    GLfloat *vpNormals;
 
     GLfloat      *winNormals;
     unsigned int winNormSize;
@@ -208,14 +207,14 @@ cubeaddonShouldPaintViewport (CompScreen              *s,
 				     outputPtr, order);
     WRAP (cas, cs, shouldPaintViewport, cubeaddonShouldPaintViewport);
 
-    if (cas->deform > 0.0)
+    if (cas->deform > 0.0 && cubeaddonGetDeformation (s) == DeformationCylinder)
     {
 	float z[3];
 	Bool  ftb1, ftb2, ftb3;
 
 	z[0] = cs->invert * cs->distance;
 	z[1] = z[0] + (0.25 / cs->distance);
-	z[2] = cs->invert * sqrt (0.25 + (cs->distance * cs->distance));
+	z[2] = cs->invert * sqrtf (0.25 + (cs->distance * cs->distance));
 
 	CompVector vPoints[3][3] = { { {.v = { -0.5,  0.0, z[0], 1.0 } },
 				       {.v = {  0.0,  0.5, z[1], 1.0 } },
@@ -236,6 +235,42 @@ cubeaddonShouldPaintViewport (CompScreen              *s,
 
 	return (order == FTB && (ftb1 || ftb2 || ftb3)) ||
 	       (order == BTF && (!ftb1 || !ftb2 || !ftb3)) || rv;
+    }
+    else if (cas->deform > 0.0 &&
+	     cubeaddonGetDeformation (s) == DeformationSphereLike)
+    {
+	float z[4];
+	Bool  ftb1, ftb2, ftb3, ftb4;
+
+	z[0] = sqrtf (0.5 + (cs->distance * cs->distance));
+	z[1] = z[0] + (0.25 / cs->distance);
+	z[2] = sqrtf (0.25 + (cs->distance * cs->distance));
+	z[3] = z[2] + 0.5;
+
+	CompVector vPoints[4][3] = { { {.v = { -0.5,  0.5, z[2], 1.0 } },
+				       {.v = {  0.0,  0.0, z[3], 1.0 } },
+				       {.v = {  0.0,  0.5, z[2], 1.0 } } },
+				     { {.v = {  0.5, -0.5, z[2], 1.0 } },
+				       {.v = {  0.0,  0.0, z[3], 1.0 } },
+				       {.v = {  0.0, -0.5, z[2], 1.0 } } },
+	   			     { {.v = { -0.5, -0.5, z[0], 1.0 } },
+				       {.v = {  0.0,  0.0, z[1], 1.0 } },
+				       {.v = { -0.5,  0.0, z[0], 1.0 } } },
+				     { {.v = {  0.5,  0.5, z[0], 1.0 } },
+				       {.v = {  0.0,  0.0, z[1], 1.0 } },
+				       {.v = {  0.5,  0.0, z[0], 1.0 } } } };
+
+	ftb1 = (*cs->checkOrientation) (s, sAttrib, transform,
+					outputPtr, vPoints[0]);
+	ftb2 = (*cs->checkOrientation) (s, sAttrib, transform,
+					outputPtr, vPoints[1]);
+	ftb3 = (*cs->checkOrientation) (s, sAttrib, transform,
+					outputPtr, vPoints[2]);
+	ftb4 = (*cs->checkOrientation) (s, sAttrib, transform,
+					outputPtr, vPoints[3]);
+
+	return (order == FTB && (ftb1 || ftb2 || ftb3 || ftb4)) ||
+	       (order == BTF && (!ftb1 || !ftb2 || !ftb3 || !ftb4)) || rv;
     }
 
     return rv;
@@ -294,6 +329,8 @@ cubeaddonPaintTop (CompScreen		   *s,
 	(*s->applyScreenTransform) (s, &sa, output, &sTransform);
 
         glLoadMatrixf (sTransform.m);
+	glTranslatef (cs->outputXOffset, -cs->outputYOffset, 0.0f);
+	glScalef (cs->outputXScale, cs->outputYScale, 1.0f);
 
 	glDrawArrays (GL_TRIANGLE_FAN, 0, CUBEADDON_CAP_ELEMENTS + 2);
     }
@@ -365,6 +402,8 @@ cubeaddonPaintBottom (CompScreen	      *s,
 	(*s->applyScreenTransform) (s, &sa, output, &sTransform);
 
         glLoadMatrixf (sTransform.m);
+	glTranslatef (cs->outputXOffset, -cs->outputYOffset, 0.0f);
+	glScalef (cs->outputXScale, cs->outputYScale, 1.0f);
 
 	glDrawArrays (GL_TRIANGLE_FAN, 0, CUBEADDON_CAP_ELEMENTS + 2);
     }
@@ -394,58 +433,85 @@ cubeaddonAddWindowGeometry (CompWindow *w,
 
     if (cas->deform > 0.0)
     {
-	int         x1, x2, i, oldVCount = w->vCount;
+	int         x1, x2, y1, y2, yi, i, oldVCount = w->vCount;
 	REGION      reg;
 	GLfloat     *v;
 	int         offX = 0, offY = 0;
-	int         sx1, sx2, sw;
-	float       lastX, lastZ = 0.0;
+	int         sx1, sx2, sw, sy1, sy2, sh;
+	float       lastX, lastZ = 0.0, radSquare;
 
-	const float radSquare = (cs->distance * cs->distance) + 0.25;
-	float       ang;
-			
+	float       a1, a2, ang;
+
+	if (cubeaddonGetDeformation (s) == DeformationCylinder)
+	{
+	    yi = region->extents.y2 - region->extents.y1;
+	    radSquare = (cs->distance * cs->distance) + 0.25;
+	}
+	else
+	{
+	    yi = CUBEADDON_GRID_SIZE;
+	    radSquare = (cs->distance * cs->distance) + 0.5;
+	}
+
 	reg.numRects = 1;
 	reg.rects = &reg.extents;
 
-	reg.extents.y1 = region->extents.y1;
-	reg.extents.y2 = region->extents.y2;
-
-	x1 = region->extents.x1;
-	x2 = MIN (x1 + CUBEADDON_GRID_SIZE, region->extents.x2);
+	y1 = region->extents.y1;
+	y2 = MIN (y1 + y1, region->extents.y2);
 	
 	UNWRAP (cas, s, addWindowGeometry);
 
 	if (region->numRects > 1)
 	{
-	    while (x1 < region->extents.x2)
+	    while (y1 < region->extents.y2)
 	    {
-		reg.extents.x1 = x1;
-		reg.extents.x2 = x2;
+		reg.extents.y1 = y1;
+		reg.extents.y2 = y2;
 
-		XIntersectRegion (region, &reg, cas->tmpRegion);
+		x1 = region->extents.x1;
+		x2 = MIN (x1 + CUBEADDON_GRID_SIZE, region->extents.x2);
 
-		if (!XEmptyRegion (cas->tmpRegion))
+		while (x1 < region->extents.x2)
 		{
-		    (*w->screen->addWindowGeometry) (w, matrix, nMatrix,
-						     cas->tmpRegion, clip);
-		}
+		    reg.extents.x1 = x1;
+		    reg.extents.x2 = x2;
 
-		x1 = x2;
-		x2 = MIN (x2 + CUBEADDON_GRID_SIZE, region->extents.x2);
+		    XIntersectRegion (region, &reg, cas->tmpRegion);
+
+		    if (!XEmptyRegion (cas->tmpRegion))
+		    {
+			(*w->screen->addWindowGeometry) (w, matrix, nMatrix,
+							 cas->tmpRegion, clip);
+		    }
+
+		    x1 = x2;
+		    x2 = MIN (x2 + CUBEADDON_GRID_SIZE, region->extents.x2);
+		}
+		y1 = y2;
+		y2 = MIN (y2 + yi, region->extents.y2);
 	    }
 	}
 	else
 	{
-	    while (x1 < region->extents.x2)
+	    while (y1 < region->extents.y2)
 	    {
-		reg.extents.x1 = x1;
-		reg.extents.x2 = x2;
+		reg.extents.y1 = y1;
+		reg.extents.y2 = y2;
 
-		(*w->screen->addWindowGeometry) (w, matrix, nMatrix,
-						 &reg, clip);
-
-		x1 = x2;
-		x2 = MIN (x2 + CUBEADDON_GRID_SIZE, region->extents.x2);
+		x1 = region->extents.x1;
+		x2 = MIN (x1 + CUBEADDON_GRID_SIZE, region->extents.x2);
+	
+		while (x1 < region->extents.x2)
+		{
+		    reg.extents.x1 = x1;
+		    reg.extents.x2 = x2;
+		    (*w->screen->addWindowGeometry) (w, matrix, nMatrix,
+						     &reg, clip);
+		    x1 = x2;
+		    x2 = MIN (x2 + CUBEADDON_GRID_SIZE, region->extents.x2);
+	        }
+		y1 = y2;
+		y2 = MIN (y2 + CUBEADDON_GRID_SIZE, region->extents.y2);
 	    }
 	}
 	WRAP (cas, s, addWindowGeometry, cubeaddonAddWindowGeometry);
@@ -464,44 +530,90 @@ cubeaddonAddWindowGeometry (CompWindow *w,
 	    sx1 = 0;
 	    sx2 = s->width;
 	    sw  = s->width;
+	    sy1 = 0;
+	    sy2 = s->height;
+	    sh  = s->height;
 	}
 	else if (cs->moMode == CUBE_MOMODE_MULTI)
 	{
 	    sx1 = cas->last->region.extents.x1;
 	    sx2 = cas->last->region.extents.x2;
 	    sw  = sx2 - sx1;
+	    sy1 = cas->last->region.extents.y1;
+	    sy2 = cas->last->region.extents.y2;
+	    sh  = sy2 - sy1;
 	}
 	else
 	{
-	    sx1 = s->outputDev[cs->srcOutput].region.extents.x1;
-	    sx2 = s->outputDev[cs->srcOutput].region.extents.x2;
-	    sw  = sx2 - sx1;
+	    if (cs->nOutput != s->nOutputDev)
+	    {
+		sx1 = 0;
+		sx2 = s->width;
+		sw  = s->width;
+		sy1 = 0;
+		sy2 = s->height;
+		sh  = s->height;
+	    }
+	    else
+	    {
+		sx1 = s->outputDev[cs->srcOutput].region.extents.x1;
+		sx2 = s->outputDev[cs->srcOutput].region.extents.x2;
+		sw  = sx2 - sx1;
+		sy1 = s->outputDev[cs->srcOutput].region.extents.y1;
+		sy2 = s->outputDev[cs->srcOutput].region.extents.y2;
+		sh  = sy2 - sy1;
+	    }
 	}
 
-	lastX = -1000000000.0;
-	
-	for (i = oldVCount; i < w->vCount; i++)
+	if (cubeaddonGetDeformation (s) == DeformationCylinder)
 	{
-	    if (v[0] == lastX)
+	    lastX = -1000000000.0;
+	
+	    for (i = oldVCount; i < w->vCount; i++)
 	    {
-		v[2] = lastZ;
-	    }
-	    else if (v[0] + offX >= sx1 - CUBEADDON_GRID_SIZE &&
-		     v[0] + offX < sx2 + CUBEADDON_GRID_SIZE)
-	    {
-		ang = (((v[0] + offX - sx1) / (float)sw) - 0.5);
-		ang *= ang;
-		if (ang < radSquare)
+		if (v[0] == lastX)
 		{
-		    v[2] = sqrt (radSquare - ang) - cs->distance;
-		    v[2] *= cas->deform;
+		    v[2] = lastZ;
 		}
+		else if (v[0] + offX >= sx1 - CUBEADDON_GRID_SIZE &&
+			 v[0] + offX < sx2 + CUBEADDON_GRID_SIZE)
+		{
+		    ang = (((v[0] + offX - sx1) / (float)sw) - 0.5);
+		    ang *= ang;
+		    if (ang < radSquare)
+		    {
+			v[2] = sqrtf (radSquare - ang) - cs->distance;
+			v[2] *= cas->deform;
+		    }
+		}
+
+		lastX = v[0];
+		lastZ = v[2];
+
+		v += w->vertexStride;
 	    }
+	}
+	else
+	{
+	    for (i = oldVCount; i < w->vCount; i++)
+	    {
+		if (v[0] + offX >= sx1 - CUBEADDON_GRID_SIZE &&
+		    v[0] + offX < sx2 + CUBEADDON_GRID_SIZE &&
+		    v[1] + offY >= sy1 - CUBEADDON_GRID_SIZE &&
+		    v[1] + offY < sy2 + CUBEADDON_GRID_SIZE)
+		{
+		    a1 = (((v[0] + offX - sx1) / (float)sw) - 0.5);
+		    a2 = (((v[1] + offY - sy1) / (float)sh) - 0.5);
+		    a2 *= a2;
 
-	    lastX = v[0];
-	    lastZ = v[2];
+		    ang = atanf (a1 / cs->distance);
+		    a2 = sqrtf (radSquare - a2);
 
-	    v += w->vertexStride;
+		    v[2] += ((cosf (ang) * a2) - cs->distance) * cas->deform;
+		    v[0] += ((sinf (ang) * a2) - a1) * sw * cas->deform;
+		}
+		v += w->vertexStride;
+	    }
 	}
     }
     else
@@ -562,14 +674,16 @@ cubeaddonDrawWindowTexture (CompWindow	         *w,
 
     if (cas->deform > 0.0 && s->lighting)
     {
-	int     i, idx;
-	int     sx1, sx2, sw;
+	int     i;
+	int     sx1, sx2, sw, sy1, sy2, sh;
 	int     offX = 0, offY = 0;
-	float   x;
+	float   x, y, ym;
 	GLfloat *v;
 	
 	CUBE_SCREEN (s);
 
+	ym = (cubeaddonGetDeformation (s) == DeformationCylinder) ? 0.0 : 1.0;
+	
 	if (cas->winNormSize < w->vCount * 3)
 	{
 	    cas->winNormals = realloc (cas->winNormals, 
@@ -593,43 +707,61 @@ cubeaddonDrawWindowTexture (CompWindow	         *w,
 	    sx1 = 0;
 	    sx2 = s->width;
 	    sw  = s->width;
+	    sy1 = 0;
+	    sy2 = s->height;
+	    sh  = s->height;
 	}
 	else if (cs->moMode == CUBE_MOMODE_MULTI)
 	{
 	    sx1 = cas->last->region.extents.x1;
 	    sx2 = cas->last->region.extents.x2;
 	    sw  = sx2 - sx1;
+	    sy1 = cas->last->region.extents.y1;
+	    sy2 = cas->last->region.extents.y2;
+	    sh  = sy2 - sy1;
 	}
 	else
 	{
-	    sx1 = s->outputDev[cs->srcOutput].region.extents.x1;
-	    sx2 = s->outputDev[cs->srcOutput].region.extents.x2;
-	    sw  = sx2 - sx1;
+	    if (cs->nOutput != s->nOutputDev)
+	    {
+		sx1 = 0;
+		sx2 = s->width;
+		sw  = s->width;
+		sy1 = 0;
+		sy2 = s->height;
+		sh  = s->height;
+	    }
+	    else
+	    {
+		sx1 = s->outputDev[cs->srcOutput].region.extents.x1;
+		sx2 = s->outputDev[cs->srcOutput].region.extents.x2;
+		sw  = sx2 - sx1;
+		sy1 = s->outputDev[cs->srcOutput].region.extents.y1;
+		sy2 = s->outputDev[cs->srcOutput].region.extents.y2;
+		sh  = sy2 - sy1;
+	    }
 	}
 	
 	v = w->vertices + (w->vertexStride - 3);
 	
 	for (i = 0; i < w->vCount; i++)
 	{
-	    x = ((float)(v[0] + offX - sx1 - (sw / 2)) * 360.0) /
-		(float)(sw * s->hsize * cs->nOutput);
-	    while (x < 0)
-		x += 360.0;
-
-	    idx = floor (x);
+	    x = (((v[0] + offX - sx1) / (float)sw) - 0.5);
+	    y = (((v[1] + offY - sy1) / (float)sh) - 0.5);
 
 	    if (cs->paintOrder == FTB)
 	    {
-		cas->winNormals[i * 3] = -cas->vpNormals[idx * 3];
-		cas->winNormals[(i * 3) + 1] = -cas->vpNormals[(idx * 3) + 1];
-		cas->winNormals[(i * 3) + 2] = -cas->vpNormals[(idx * 3) + 2];
+		cas->winNormals[i * 3] = x / sw * cas->deform;
+		cas->winNormals[(i * 3) + 1] = y / sh * cas->deform * ym;
+		cas->winNormals[(i * 3) + 2] = v[2] + cs->distance;
 	    }
 	    else
 	    {
-		cas->winNormals[i * 3] = cas->vpNormals[idx * 3];
-		cas->winNormals[(i * 3) + 1] = cas->vpNormals[(idx * 3) + 1];
-		cas->winNormals[(i * 3) + 2] = cas->vpNormals[(idx * 3) + 2];
+		cas->winNormals[i * 3] = -x / sw * cas->deform;
+		cas->winNormals[(i * 3) + 1] = -y / sh * cas->deform * ym;
+		cas->winNormals[(i * 3) + 2] = -(v[2] + cs->distance);
 	    }
+
 	    v += w->vertexStride;
 	}
 	
@@ -668,11 +800,11 @@ cubeaddonPaintTransformedOutput (CompScreen              *s,
     CUBEADDON_SCREEN (s);
     CUBE_SCREEN (s);
 
-    if (cubeaddonGetCylinder (s) && s->hsize * cs->nOutput > 2 &&
-	s->desktopWindowCount &&
+    if (cubeaddonGetDeformation (s) != DeformationNone
+	&& s->hsize * cs->nOutput > 2 && s->desktopWindowCount &&
 	(cs->rotationState == RotationManual ||
 	(cs->rotationState == RotationChange &&
-	!cubeaddonGetCylinderManualOnly (s)) || cas->deform > 0.0))
+	!cubeaddonGetCylinderManualOnly (s)) || cas->wasDeformed))
     {
 	const float angle = atan (0.5 / cs->distance);
 	const float rad = 0.5 / sin (angle);
@@ -694,20 +826,13 @@ cubeaddonPaintTransformedOutput (CompScreen              *s,
 	    quad[0] = x;
 	    quad[2] = cs->distance + z;
 	}
-	
-	for (i = 0; i < 360; i++)
-	{
-	    cas->vpNormals[i * 3] = (-sin ((float)i * DEG2RAD) / output->width)
-				    * cas->deform;
-	    cas->vpNormals[(i * 3) + 1] = 0.0;
-	    cas->vpNormals[(i * 3) + 2] = (-cos ((float)i * DEG2RAD) * 
-					  cas->deform) - (1 - cas->deform);
-	}
     }
     else
     {
 	cas->deform = 0.0;
     }
+
+    cas->wasDeformed = (cas->deform > 0.0);
 
     if (cs->invert == 1 && cas->first && cubeaddonGetReflection (s))
     {
@@ -816,8 +941,12 @@ cubeaddonPaintTransformedOutput (CompScreen              *s,
 	    if (cubeaddonGetMode (s) == ModeAbove)
 		cas->zTrans = 0.0;
 
-	    deform = (sqrt (0.25 + (cs->distance * cs->distance)) -
-		     cs->distance) * -cas->deform;
+	    if (cubeaddonGetDeformation (s) == DeformationCylinder) 
+		deform = (sqrt (0.25 + (cs->distance * cs->distance)) -
+			  cs->distance) * -cas->deform;
+	    else if (cubeaddonGetDeformation (s) == DeformationSphereLike) 
+		deform = (sqrt (0.5 + (cs->distance * cs->distance)) -
+			  cs->distance) * -cas->deform;
 
 	    if (cas->deform > 0.0)
 	        cas->zTrans = deform;
@@ -984,7 +1113,7 @@ cubeaddonDonePaintScreen (CompScreen * s)
     cas->yTrans     = 0.0;
     cas->zTrans     = 0.0;
 
-    if (cas->deform != 0.0 && cas->deform != 1.0)
+    if (cas->deform)
     {
 	damageScreen (s);
 	cas->deform = 0.0;
@@ -1060,10 +1189,6 @@ cubeaddonInitScreen (CompPlugin *p,
     cas->zTrans     = 0.0;
     cas->tmpRegion  = XCreateRegion ();
     cas->deform     = 0.0;
-
-    cas->vpNormals = malloc (360 * 3 * sizeof (GLfloat));
-    if (!cas->vpNormals)
-	return FALSE;
 
     cas->winNormals  = NULL;
     cas->winNormSize = 0;
