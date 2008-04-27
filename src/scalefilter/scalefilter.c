@@ -10,10 +10,6 @@
  * Copyright : (C) 2006 Diogo Ferreira
  * E-mail    : diogo@underdev.org
  *
- * Rounded corner drawing taken from wall.c:
- * Copyright : (C) 2007 Robert Carr
- * E-mail    : racarr@beryl-project.org
- *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
@@ -46,8 +42,8 @@ static int displayPrivateIndex;
 static int scaleDisplayPrivateIndex;
 
 #define MAX_FILTER_SIZE 32
-#define MAX_FILTER_STRING_LEN (MAX_FILTER_SIZE+1)
-#define MAX_FILTER_TEXT_LEN (MAX_FILTER_SIZE+8)
+#define MAX_FILTER_STRING_LEN (MAX_FILTER_SIZE + 1)
+#define MAX_FILTER_TEXT_LEN (MAX_FILTER_SIZE + 8)
 
 typedef struct _ScaleFilterInfo {
     CompTimeoutHandle timeoutHandle;
@@ -84,7 +80,7 @@ typedef struct _ScaleFilterScreen {
     ScaleSetScaledPaintAttributesProc setScaledPaintAttributes;
 
     CompMatch scaleMatch;
-    Bool matchApplied;
+    Bool      matchApplied;
 
     ScaleFilterInfo *filterInfo;
 } ScaleFilterScreen;
@@ -113,7 +109,7 @@ scalefilterFreeFilterText (CompScreen *s)
     if (!fs->filterInfo->textPixmap)
 	return;
 
-    releasePixmapFromTexture(s, &fs->filterInfo->textTexture);
+    releasePixmapFromTexture (s, &fs->filterInfo->textTexture);
     XFreePixmap (s->display->display, fs->filterInfo->textPixmap);
     initTexture (s, &fs->filterInfo->textTexture);
     fs->filterInfo->textPixmap = None;
@@ -125,7 +121,7 @@ scalefilterRenderFilterText (CompScreen *s)
     CompDisplay    *d = s->display;
     CompTextAttrib tA;
     int            stride;
-    void*          data;
+    void           *data;
     int            x1, x2, y1, y2;
     int            width, height;
     REGION         reg;
@@ -236,7 +232,6 @@ scalefilterDrawFilterText (CompScreen *s,
 
     GLboolean  wasBlend;
     GLint      oldBlendSrc, oldBlendDst;
-    int        k;
     int        ox1, ox2, oy1, oy2;
     float      width, height;
     float      x, y;
@@ -296,22 +291,18 @@ scalefilterUpdateFilter (CompScreen *s,
 {
     char         filterMatch[2 * MAX_FILTER_TEXT_LEN];
     unsigned int offset;
+    char         *filterType;
 
     FILTER_SCREEN (s);
 
     matchFini (match);
     matchInit (match);
 
-    if (scalefilterGetFilterCaseInsensitive (s))
-    {
-	strncpy (filterMatch, "ititle=", MAX_FILTER_TEXT_LEN);
-	offset = 7;
-    }
-    else
-    {
-    	strncpy (filterMatch, "title=", MAX_FILTER_TEXT_LEN);
-	offset = 6;
-    }
+    filterType = (scalefilterGetFilterCaseInsensitive (s)) ? "ititle=" :
+	                                                     "title=";
+
+    strncpy (filterMatch, filterType, MAX_FILTER_TEXT_LEN);
+    offset = strlen (filterType);
 
     wcstombs (filterMatch + offset, fs->filterInfo->filterString,
 	      MAX_FILTER_STRING_LEN);
@@ -349,6 +340,9 @@ scalefilterInitFilterInfo (CompScreen *s)
     FILTER_SCREEN (s);
     SCALE_SCREEN (s);
 
+    if (!fs->filterInfo)
+	return;
+
     info = fs->filterInfo;
     memset (info->filterString, 0, sizeof (info->filterString));
     info->filterStringLength = 0;
@@ -372,7 +366,7 @@ scalefilterInitFilterInfo (CompScreen *s)
 
 static void
 scalefilterFiniFilterInfo (CompScreen *s,
-			   Bool freeTimeout)
+			   Bool       freeTimeout)
 {
     FILTER_SCREEN (s);
 
@@ -501,16 +495,20 @@ scalefilterHandleKeyPress (CompScreen *s,
 	else if (info->timeoutHandle)
 	    compRemoveTimeout (info->timeoutHandle);
 
-	timeout = scalefilterGetTimeout (s);
-	if (timeout > 0)
-	    info->timeoutHandle = compAddTimeout (timeout,
-				     		  scalefilterFilterTimeout, s);
-
-	if (info->filterStringLength < MAX_FILTER_SIZE)
+	if (info)
 	{
-	    info->filterString[info->filterStringLength++] = wbuffer[0];
-	    info->filterString[info->filterStringLength] = '\0';
-	    needRelayout = TRUE;
+	    timeout = scalefilterGetTimeout (s);
+	    if (timeout > 0)
+		info->timeoutHandle = compAddTimeout (timeout,
+						      scalefilterFilterTimeout,
+						      s);
+
+	    if (info->filterStringLength < MAX_FILTER_SIZE)
+	    {
+		info->filterString[info->filterStringLength++] = wbuffer[0];
+		info->filterString[info->filterStringLength] = '\0';
+		needRelayout = TRUE;
+	    }
 	}
     }
 
@@ -539,7 +537,7 @@ scalefilterHandleEvent (CompDisplay *d,
     switch (event->type)
     {
     case KeyPress:
-    	{
+	{
 	    CompScreen *s;
 	    s = findScreenAtDisplay (d, event->xkey.root);
 	    if (s)
@@ -578,15 +576,18 @@ scalefilterHandleCompizEvent (CompDisplay *d,
     if ((strcmp (pluginName, "scale") == 0) &&
 	(strcmp (eventName, "activate") == 0))
     {
-	Window xid = getIntOptionNamed (option, nOption, "root", 0);
-	Bool activated = getBoolOptionNamed (option, nOption, "active", FALSE);
-	CompScreen *s = findScreenAtDisplay (d, xid);
+	Window     xid;
+	CompScreen *s;
 
+	xid = getIntOptionNamed (option, nOption, "root", 0);
+	s   = findScreenAtDisplay (d, xid);
 	if (s)
 	{
+	    Bool activated;
 	    FILTER_SCREEN (s);
 	    SCALE_SCREEN (s);
 
+	    activated = getBoolOptionNamed (option, nOption, "active", FALSE);
 	    if (activated)
 	    {
 		matchFini (&fs->scaleMatch);
@@ -621,10 +622,9 @@ scalefilterPaintOutput (CompScreen              *s,
     status = (*s->paintOutput) (s, sAttrib, transform, region, output, mask);
     WRAP (fs, s, paintOutput, scalefilterPaintOutput);
 
-    if (status && fs->filterInfo)
+    if (status && fs->filterInfo && fs->filterInfo->textPixmap)
     {
-	if ((output->id == ~0 || output->id == fs->filterInfo->outputDevice) &&
-	    fs->filterInfo->textPixmap)
+	if (output->id == ~0 || output->id == fs->filterInfo->outputDevice)
 	{
 	    CompTransform sTransform = *transform;
 	    transformToScreenSpace (s, output, -DEFAULT_Z_CAMERA, &sTransform);
