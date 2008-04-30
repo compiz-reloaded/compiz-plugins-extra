@@ -21,9 +21,127 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <X11/Xatom.h>
 
 #include <compiz-core.h>
 #include "extrawm_options.h"
+
+static int ExtraWMDisplayPrivateIndex;
+
+typedef struct _DemandsAttentionWindow {
+    CompWindow                     *w;
+    struct _DemandsAttentionWindow *next;
+} DemandsAttentionWindow;
+
+typedef struct _ExtraWMDisplay {
+    int screenPrivateIndex;
+
+    HandleEventProc handleEvent;
+} ExtraWMDisplay;
+
+typedef struct _ExtraWMScreen {
+    WindowStateChangeNotifyProc windowStateChangeNotify;
+
+    DemandsAttentionWindow *attentionWindows;
+} ExtraWMScreen;
+
+#define EXTRAWM_DISPLAY(d) PLUGIN_DISPLAY(d, ExtraWM, e)
+#define EXTRAWM_SCREEN(s) PLUGIN_SCREEN(s, ExtraWM, e)
+
+static void
+addAttentionWindow (CompWindow *w)
+{
+    DemandsAttentionWindow *dw;
+
+    EXTRAWM_SCREEN (w->screen);
+
+    /* check if the window is already there */
+    for (dw = es->attentionWindows; dw; dw = dw->next)
+	if (dw->w == w)
+	    return;
+
+    dw = malloc (sizeof (DemandsAttentionWindow));
+    if (!dw)
+	return;
+
+    dw->w = w;
+    dw->next = es->attentionWindows;
+    es->attentionWindows = dw;
+}
+
+static void
+removeAttentionWindow (CompWindow *w)
+{
+    DemandsAttentionWindow *dw, *ldw;
+
+    EXTRAWM_SCREEN (w->screen);
+
+    for (dw = es->attentionWindows, ldw = NULL; dw; dw = dw->next)
+    {
+	if (w == dw->w)
+	{
+	    if (ldw)
+		ldw->next = dw->next;
+	    else
+		es->attentionWindows = dw->next;
+
+	    free (dw);
+	    break;
+	}
+
+	ldw = dw;
+    }
+}
+
+static void
+updateAttentionWindow (CompWindow *w)
+{
+    XWMHints *hints;
+    Bool     urgent = FALSE;
+
+    hints = XGetWMHints (w->screen->display->display, w->id);
+    if (hints)
+    {
+	if (hints->flags & XUrgencyHint)
+	    urgent = TRUE;
+
+	XFree (hints);
+    }
+
+    if (urgent || (w->state & CompWindowStateDemandsAttentionMask))
+	addAttentionWindow (w);
+    else
+	removeAttentionWindow (w);
+}
+
+static Bool
+activateDemandsAttention (CompDisplay     *d,
+			  CompAction      *action,
+			  CompActionState state,
+			  CompOption      *option,
+			  int             nOption)
+{
+    Window     xid;
+    CompScreen *s;
+
+    xid = getIntOptionNamed (option, nOption, "root", None);
+    s   = findScreenAtDisplay (d, xid);
+
+    if (s)
+    {
+	EXTRAWM_SCREEN (s);
+
+	if (es->attentionWindows)
+	{
+	    CompWindow *w = es->attentionWindows->w;
+
+	    removeAttentionWindow (w);
+	    (*w->screen->activateWindow) (w);
+	}
+    }
+
+    return FALSE;
+}
 
 static Bool
 activateWin (CompDisplay     *d,
@@ -43,7 +161,7 @@ activateWin (CompDisplay     *d,
     return TRUE;
 }
 
-static void 
+static void
 fullscreenWindow (CompWindow *w,
 		  int        state)
 {
@@ -156,31 +274,151 @@ toggleSticky (CompDisplay     *d,
     return TRUE;
 }
 
+static void
+extraWMHandleEvent (CompDisplay *d,
+		    XEvent      *event)
+{
+    EXTRAWM_DISPLAY (d);
+
+    UNWRAP (ed, d, handleEvent);
+    (*d->handleEvent) (d, event);
+    WRAP (ed, d, handleEvent, extraWMHandleEvent);
+
+    switch (event->type) {
+    case PropertyNotify:
+	if (event->xproperty.atom == XA_WM_HINTS)
+	{
+	    CompWindow *w;
+
+	    w = findWindowAtDisplay (d, event->xproperty.window);
+	    if (w)
+		updateAttentionWindow (w);
+	}
+	break;
+    default:
+	break;
+    }
+}
+
+static void
+extraWMWindowStateChangeNotify (CompWindow *w,
+				unsigned int lastState)
+{
+    CompScreen *s = w->screen;
+
+    EXTRAWM_SCREEN (s);
+
+    UNWRAP (es, s, windowStateChangeNotify);
+    (*s->windowStateChangeNotify) (w, lastState);
+    WRAP (es, s, windowStateChangeNotify, extraWMWindowStateChangeNotify);
+
+    if ((w->state ^ lastState) & CompWindowStateDemandsAttentionMask)
+	updateAttentionWindow (w);
+}
+
 static Bool
 extraWMInit (CompPlugin *p)
 {
+    ExtraWMDisplayPrivateIndex = allocateDisplayPrivateIndex ();
+    if (ExtraWMDisplayPrivateIndex < 0)
+	return FALSE;
+
     return TRUE;
 }
 
 static void
 extraWMFini (CompPlugin *p)
 {
+    freeDisplayPrivateIndex (ExtraWMDisplayPrivateIndex);
 }
 
 static Bool
 extraWMInitDisplay (CompPlugin  *p,
 		    CompDisplay *d)
 {
+    ExtraWMDisplay *ed;
+
     if (!checkPluginABI ("core", CORE_ABIVERSION))
 	return FALSE;
+
+    ed = malloc (sizeof (ExtraWMDisplay));
+    if (!ed)
+	return FALSE;
+
+    ed->screenPrivateIndex = allocateScreenPrivateIndex (d);
+    if (ed->screenPrivateIndex < 0)
+    {
+	free (ed);
+	return FALSE;
+    }
 
     extrawmSetToggleRedirectKeyInitiate (d, toggleRedirect);
     extrawmSetToggleAlwaysOnTopKeyInitiate (d, toggleAlwaysOnTop);
     extrawmSetToggleStickyKeyInitiate (d, toggleSticky);
     extrawmSetToggleFullscreenKeyInitiate (d, toggleFullscreen);
     extrawmSetActivateInitiate (d, activateWin);
+    extrawmSetActivateDemandsAttentionInitiate (d, activateDemandsAttention);
+
+    WRAP (ed, d, handleEvent, extraWMHandleEvent);
+
+    d->base.privates[ExtraWMDisplayPrivateIndex].ptr = ed;
 
     return TRUE;
+}
+
+static void
+extraWMFiniDisplay (CompPlugin  *p,
+		    CompDisplay *d)
+{
+    EXTRAWM_DISPLAY (d);
+
+    freeScreenPrivateIndex (d, ed->screenPrivateIndex);
+
+    UNWRAP (ed, d, handleEvent);
+
+    free (ed);
+}
+
+static Bool
+extraWMInitScreen (CompPlugin *p,
+		   CompScreen *s)
+{
+    ExtraWMScreen *es;
+
+    EXTRAWM_DISPLAY (s->display);
+
+    es = malloc (sizeof (ExtraWMScreen));
+    if (!es)
+	return FALSE;
+
+    es->attentionWindows = NULL;
+
+    WRAP (es, s, windowStateChangeNotify, extraWMWindowStateChangeNotify);
+
+    s->base.privates[ed->screenPrivateIndex].ptr = es;
+
+    return TRUE;
+}
+
+static void
+extraWMFiniScreen (CompPlugin *p,
+		   CompScreen *s)
+{
+    EXTRAWM_SCREEN (s);
+
+    UNWRAP (es, s, windowStateChangeNotify);
+
+    while (es->attentionWindows)
+	removeAttentionWindow (es->attentionWindows->w);
+
+    free (es);
+}
+
+static void
+extraWMFiniWindow (CompPlugin *p,
+		   CompWindow *w)
+{
+    removeAttentionWindow (w);
 }
 
 static CompBool
@@ -189,10 +427,25 @@ extraWMInitObject (CompPlugin *p,
 {
     static InitPluginObjectProc dispTab[] = {
 	(InitPluginObjectProc) 0, /* InitCore */
-	(InitPluginObjectProc) extraWMInitDisplay
+	(InitPluginObjectProc) extraWMInitDisplay,
+	(InitPluginObjectProc) extraWMInitScreen
     };
 
     RETURN_DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), TRUE, (p, o));
+}
+
+static void
+extraWMFiniObject (CompPlugin *p,
+		   CompObject *o)
+{
+    static InitPluginObjectProc dispTab[] = {
+	(InitPluginObjectProc) 0, /* InitCore */
+	(InitPluginObjectProc) extraWMFiniDisplay,
+	(InitPluginObjectProc) extraWMFiniScreen,
+	(InitPluginObjectProc) extraWMFiniWindow
+    };
+
+    DISPATCH (o, dispTab, ARRAY_SIZE (dispTab), (p, o));
 }
 
 CompPluginVTable extraWMVTable = {
@@ -201,7 +454,7 @@ CompPluginVTable extraWMVTable = {
     extraWMInit,
     extraWMFini,
     extraWMInitObject,
-    0,
+    extraWMFiniObject,
     0,
     0
 };
