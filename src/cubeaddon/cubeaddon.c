@@ -73,6 +73,8 @@ typedef struct _CubeaddonScreen
     Bool  wasDeformed;
 
     Region tmpRegion;
+    BoxPtr tmpBox;
+    int    nTmpBox;
 
     GLfloat      *winNormals;
     unsigned int winNormSize;
@@ -418,7 +420,7 @@ cubeaddonPaintBottom (CompScreen	      *s,
 
     glColor4usv (defaultColor);
 }
-
+	
 static void
 cubeaddonAddWindowGeometry (CompWindow *w,
 			    CompMatrix *matrix,
@@ -437,7 +439,7 @@ cubeaddonAddWindowGeometry (CompWindow *w,
 	REGION      reg;
 	GLfloat     *v;
 	int         offX = 0, offY = 0;
-	int         sx1, sx2, sw, sy1, sy2, sh;
+	int         sx1, sx2, sw, sy1, sy2, sh, nBox, currBox;
 	float       lastX, lastZ = 0.0, radSquare;
 
 	float       a1, a2, ang;
@@ -453,11 +455,15 @@ cubeaddonAddWindowGeometry (CompWindow *w,
 	    radSquare = (cs->distance * cs->distance) + 0.5;
 	}
 
+	nBox = (((region->extents.y2 - region->extents.y1) / yi) + 1) *
+	       (((region->extents.x2 - region->extents.x1) /
+	       CUBEADDON_GRID_SIZE) + 1);
+
 	reg.numRects = 1;
 	reg.rects = &reg.extents;
 
 	y1 = region->extents.y1;
-	y2 = MIN (y1 + y1, region->extents.y2);
+	y2 = MIN (y1 + yi, region->extents.y2);
 	
 	UNWRAP (cas, s, addWindowGeometry);
 
@@ -493,26 +499,40 @@ cubeaddonAddWindowGeometry (CompWindow *w,
 	}
 	else
 	{
+	    if (cas->nTmpBox < nBox)
+	    {
+		cas->tmpBox = realloc (cas->tmpBox, nBox * sizeof (BOX));
+		if (!cas->tmpBox)
+		    return;
+		cas->nTmpBox = nBox;
+	    }
+
+	    reg.extents = region->extents;
+	    reg.rects = cas->tmpBox;
+
+	    currBox = 0;
 	    while (y1 < region->extents.y2)
 	    {
-		reg.extents.y1 = y1;
-		reg.extents.y2 = y2;
-
 		x1 = region->extents.x1;
-		x2 = MIN (x1 + CUBEADDON_GRID_SIZE, region->extents.x2);
+		x2 = MIN (x1 + yi, region->extents.x2);
 	
 		while (x1 < region->extents.x2)
 		{
-		    reg.extents.x1 = x1;
-		    reg.extents.x2 = x2;
-		    (*w->screen->addWindowGeometry) (w, matrix, nMatrix,
-						     &reg, clip);
+		    reg.rects[currBox].y1 = y1;
+		    reg.rects[currBox].y2 = y2;
+		    reg.rects[currBox].x1 = x1;
+		    reg.rects[currBox].x2 = x2;
+
+		    currBox++;
+
 		    x1 = x2;
 		    x2 = MIN (x2 + CUBEADDON_GRID_SIZE, region->extents.x2);
 	        }
 		y1 = y2;
-		y2 = MIN (y2 + CUBEADDON_GRID_SIZE, region->extents.y2);
+		y2 = MIN (y2 + yi, region->extents.y2);
 	    }
+	    reg.numRects = currBox;
+	    (*w->screen->addWindowGeometry) (w, matrix, nMatrix, &reg, clip);
 	}
 	WRAP (cas, s, addWindowGeometry, cubeaddonAddWindowGeometry);
 	
@@ -832,8 +852,6 @@ cubeaddonPaintTransformedOutput (CompScreen              *s,
 	cas->deform = 0.0;
     }
 
-    cas->wasDeformed = (cas->deform > 0.0);
-
     if (cs->invert == 1 && cas->first && cubeaddonGetReflection (s))
     {
 	cas->first = FALSE;
@@ -1113,6 +1131,8 @@ cubeaddonDonePaintScreen (CompScreen * s)
     cas->yTrans     = 0.0;
     cas->zTrans     = 0.0;
 
+    cas->wasDeformed = (cas->deform > 0.0);
+
     if (cas->deform)
     {
 	damageScreen (s);
@@ -1192,6 +1212,9 @@ cubeaddonInitScreen (CompPlugin *p,
 
     cas->winNormals  = NULL;
     cas->winNormSize = 0;
+
+    cas->tmpBox  = NULL;
+    cas->nTmpBox = 0;
 
     WRAP (cas, s, paintTransformedOutput, cubeaddonPaintTransformedOutput);
     WRAP (cas, s, paintOutput, cubeaddonPaintOutput);
