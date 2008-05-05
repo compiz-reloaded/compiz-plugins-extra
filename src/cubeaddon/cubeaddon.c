@@ -209,6 +209,9 @@ cubeaddonShouldPaintViewport (CompScreen              *s,
 				     outputPtr, order);
     WRAP (cas, cs, shouldPaintViewport, cubeaddonShouldPaintViewport);
 
+    if (rv)
+	return rv;
+
     if (cas->deform > 0.0 && cubeaddonGetDeformation (s) == DeformationCylinder)
     {
 	float z[3];
@@ -235,8 +238,8 @@ cubeaddonShouldPaintViewport (CompScreen              *s,
 	ftb3 = (*cs->checkOrientation) (s, sAttrib, transform,
 					outputPtr, vPoints[2]);
 
-	return (order == FTB && (ftb1 || ftb2 || ftb3)) ||
-	       (order == BTF && (!ftb1 || !ftb2 || !ftb3)) || rv;
+	rv = (order == FTB && (ftb1 || ftb2 || ftb3)) ||
+	     (order == BTF && (!ftb1 || !ftb2 || !ftb3));
     }
     else if (cas->deform > 0.0 &&
 	     cubeaddonGetDeformation (s) == DeformationSphereLike)
@@ -249,17 +252,17 @@ cubeaddonShouldPaintViewport (CompScreen              *s,
 	z[2] = sqrtf (0.25 + (cs->distance * cs->distance));
 	z[3] = z[2] + 0.5;
 
-	CompVector vPoints[4][3] = { { {.v = { -0.5,  0.5, z[2], 1.0 } },
-				       {.v = {  0.0,  0.0, z[3], 1.0 } },
+	CompVector vPoints[4][3] = { { {.v = {  0.0,  0.0, z[3], 1.0 } },
+				       {.v = { -0.5,  0.5, z[2], 1.0 } },
 				       {.v = {  0.0,  0.5, z[2], 1.0 } } },
-				     { {.v = {  0.5, -0.5, z[2], 1.0 } },
-				       {.v = {  0.0,  0.0, z[3], 1.0 } },
+				     { {.v = {  0.0,  0.0, z[3], 1.0 } },
+				       {.v = {  0.5, -0.5, z[2], 1.0 } },
 				       {.v = {  0.0, -0.5, z[2], 1.0 } } },
-	   			     { {.v = { -0.5, -0.5, z[0], 1.0 } },
-				       {.v = {  0.0,  0.0, z[1], 1.0 } },
+	   			     { {.v = {  0.0,  0.0, z[1], 1.0 } },
+				       {.v = { -0.5, -0.5, z[0], 1.0 } },
 				       {.v = { -0.5,  0.0, z[0], 1.0 } } },
-				     { {.v = {  0.5,  0.5, z[0], 1.0 } },
-				       {.v = {  0.0,  0.0, z[1], 1.0 } },
+				     { {.v = {  0.0,  0.0, z[1], 1.0 } },
+				       {.v = {  0.5,  0.5, z[0], 1.0 } },
 				       {.v = {  0.5,  0.0, z[0], 1.0 } } } };
 
 	ftb1 = (*cs->checkOrientation) (s, sAttrib, transform,
@@ -271,8 +274,8 @@ cubeaddonShouldPaintViewport (CompScreen              *s,
 	ftb4 = (*cs->checkOrientation) (s, sAttrib, transform,
 					outputPtr, vPoints[3]);
 
-	return (order == FTB && (ftb1 || ftb2 || ftb3 || ftb4)) ||
-	       (order == BTF && (!ftb1 || !ftb2 || !ftb3 || !ftb4)) || rv;
+	rv = (order == FTB && (ftb1 || ftb2 || ftb3 || ftb4)) ||
+	     (order == BTF && (!ftb1 || !ftb2 || !ftb3 || !ftb4));
     }
 
     return rv;
@@ -435,12 +438,13 @@ cubeaddonAddWindowGeometry (CompWindow *w,
 
     if (cas->deform > 0.0)
     {
-	int         x1, x2, y1, y2, yi, i, oldVCount = w->vCount;
+	int         x1, x2, y1, y2, yi, i, j, oldVCount = w->vCount;
 	REGION      reg;
 	GLfloat     *v;
 	int         offX = 0, offY = 0;
-	int         sx1, sx2, sw, sy1, sy2, sh, nBox, currBox;
-	float       lastX, lastZ = 0.0, radSquare;
+	int         sx1, sx2, sw, sy1, sy2, sh, nBox, currBox, cLast;
+	float       lastX, lastZ = 0.0, radSquare, last[2][4];
+	Bool        found;
 
 	float       a1, a2, ang;
 
@@ -615,13 +619,30 @@ cubeaddonAddWindowGeometry (CompWindow *w,
 	}
 	else
 	{
+
+	    last[0][0] = -1000000000.0;
+	    last[1][0] = -1000000000.0;
+
+	    cLast = 0;
 	    for (i = oldVCount; i < w->vCount; i++)
 	    {
-		if (v[0] + offX >= sx1 - CUBEADDON_GRID_SIZE &&
+		found = FALSE;
+
+		for (j = 0; j < 2 && !found; j++)
+		    if (last[j][0] == v[0] && last[j][1] == v[1])
+		    {
+			v[0] = last[j][2];
+			v[2] = last[j][3];
+			found = TRUE;
+		    }
+
+		if (!found && v[0] + offX >= sx1 - CUBEADDON_GRID_SIZE &&
 		    v[0] + offX < sx2 + CUBEADDON_GRID_SIZE &&
 		    v[1] + offY >= sy1 - CUBEADDON_GRID_SIZE &&
 		    v[1] + offY < sy2 + CUBEADDON_GRID_SIZE)
 		{
+		    last[cLast][0] = v[0];
+		    last[cLast][1] = v[1];
 		    a1 = (((v[0] + offX - sx1) / (float)sw) - 0.5);
 		    a2 = (((v[1] + offY - sy1) / (float)sh) - 0.5);
 		    a2 *= a2;
@@ -631,6 +652,9 @@ cubeaddonAddWindowGeometry (CompWindow *w,
 
 		    v[2] += ((cosf (ang) * a2) - cs->distance) * cas->deform;
 		    v[0] += ((sinf (ang) * a2) - a1) * sw * cas->deform;
+		    last[cLast][2] = v[0];
+		    last[cLast][3] = v[2];
+		    cLast = (cLast + 1) & 1;
 		}
 		v += w->vertexStride;
 	    }
