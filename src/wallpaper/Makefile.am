@@ -1,15 +1,12 @@
 ## Process this file with automake to produce Makefile.in
 PFLAGS=-module -avoid-version -no-undefined
 
-if CUBECAPS_PLUGIN
-libcubecaps_la_LDFLAGS = $(PFLAGS)
-libcubecaps_la_LIBADD = @COMPIZ_LIBS@ @COMPIZCUBE_LIBS@
-libcubecaps_la_SOURCES = cubecaps_options.c cubecaps_options.h cubecaps.c
-endif
+libwallpaper_la_LDFLAGS = $(PFLAGS)
+libwallpaper_la_LIBADD = @COMPIZ_LIBS@
+libwallpaper_la_SOURCES = wallpaper_options.c wallpaper_options.h wallpaper.c
 
 INCLUDES =                              \
 	@COMPIZ_CFLAGS@                  \
-	@COMPIZCUBE_CFLAGS@              \
 	-DDATADIR='"$(compdatadir)"'        \
 	-DLIBDIR='"$(libdir)"'              \
 	-DLOCALEDIR="\"@datadir@/locale\""  \
@@ -18,9 +15,8 @@ INCLUDES =                              \
 
 moduledir = $(plugindir)
 
-if CUBECAPS_PLUGIN
-module_LTLIBRARIES = libcubecaps.la
-endif
+
+module_LTLIBRARIES = libwallpaper.la
 
 CLEANFILES = *_options.c *_options.h
 

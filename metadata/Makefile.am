@@ -6,7 +6,6 @@ xml_in_files = 	         \
 	bicubic.xml.in \
 	crashhandler.xml.in \
 	cubeaddon.xml.in \
-	cubecaps.xml.in \
 	extrawm.xml.in \
 	fadedesktop.xml.in \
 	firepaint.xml.in \
@@ -23,7 +22,8 @@ xml_in_files = 	         \
 	showmouse.xml.in \
 	splash.xml.in \
 	trailfocus.xml.in \
-	widget.xml.in
+	widget.xml.in \
+	wallpaper.xml.in
 
 xml_files    = $(xml_in_files:.xml.in=.xml)
 xml_DATA     = $(xml_files)

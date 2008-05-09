@@ -180,7 +180,6 @@ src/bench/Makefile
 src/bicubic/Makefile
 src/crashhandler/Makefile
 src/cubeaddon/Makefile
-src/cubecaps/Makefile
 src/extrawm/Makefile
 src/fadedesktop/Makefile
 src/firepaint/Makefile
@@ -198,5 +197,6 @@ src/trailfocus/Makefile
 src/widget/Makefile
 src/showmouse/Makefile
 src/loginout/Makefile
+src/wallpaper/Makefile
 po/Makefile.in
 ])

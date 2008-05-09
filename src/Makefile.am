@@ -5,7 +5,6 @@ SUBDIRS = 3d \
 	  bicubic \
 	  crashhandler \
 	  cubeaddon \
-	  cubecaps \
 	  extrawm \
 	  fadedesktop \
 	  firepaint \
@@ -22,4 +21,5 @@ SUBDIRS = 3d \
 	  trailfocus \
 	  widget \
 	  showmouse \
-	  loginout
+	  loginout \
+	  wallpaper

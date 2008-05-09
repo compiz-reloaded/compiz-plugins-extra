@@ -2,8 +2,7 @@ metadata/addhelper.xml.in
 metadata/bench.xml.in
 metadata/bicubic.xml.in
 metadata/crashhandler.xml.in
-metadata/cubecaps.xml.in
-metadata/cubereflex.xml.in
+metadata/cubeaddon.xml.in
 metadata/extrawm.xml.in
 metadata/fadedesktop.xml.in
 metadata/firepaint.xml.in
@@ -22,3 +21,4 @@ metadata/shelf.xml.in
 metadata/maximumize.xml.in
 metadata/notification.xml.in
 metadata/3d.xml.in
+metadata/wallpaper.xml.in
