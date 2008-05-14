@@ -166,6 +166,11 @@
 						<_name>Sphere</_name>
 					</desc>
 				</option>
+				<option name="unfold_deformation" type="bool">
+					<_short>Unfold cube deformation</_short>
+					<_long>Deformation in unfold cube mode.</_long>
+					<default>true</default>
+				</option>
 				<option name="cylinder_manual_only" type="bool">
 					<_short>Deform only on mouse rotate</_short>
 					<_long>Initiates cube cylinder deformation only if rotation is mouse driven.</_long>

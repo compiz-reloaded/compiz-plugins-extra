@@ -525,7 +525,7 @@ cubeaddonShouldPaintViewport (CompScreen              *s,
 				     outputPtr, order);
     WRAP (cas, cs, shouldPaintViewport, cubeaddonShouldPaintViewport);
 
-    if (rv)
+    if (rv || cs->unfolded)
 	return rv;
 
     if (cas->deform > 0.0 && cubeaddonGetDeformation (s) == DeformationCylinder)
@@ -866,7 +866,7 @@ cubeaddonAddWindowGeometry (CompWindow *w,
 
 	float       a1, a2, ang;
 
-	if (cubeaddonGetDeformation (s) == DeformationCylinder)
+	if (cubeaddonGetDeformation (s) == DeformationCylinder || cs->unfolded)
 	{
 	    yi = region->extents.y2 - region->extents.y1;
 	    radSquare = (cs->distance * cs->distance) + 0.25;
@@ -1007,7 +1007,7 @@ cubeaddonAddWindowGeometry (CompWindow *w,
 	    }
 	}
 
-	if (cubeaddonGetDeformation (s) == DeformationCylinder)
+	if (cubeaddonGetDeformation (s) == DeformationCylinder || cs->unfolded)
 	{
 	    lastX = -1000000000.0;
 	
@@ -1268,14 +1268,16 @@ cubeaddonPaintTransformedOutput (CompScreen              *s,
 	&& s->hsize * cs->nOutput > 2 && s->desktopWindowCount &&
 	(cs->rotationState == RotationManual ||
 	(cs->rotationState == RotationChange &&
-	!cubeaddonGetCylinderManualOnly (s)) || cas->wasDeformed))
+	!cubeaddonGetCylinderManualOnly (s)) || cas->wasDeformed) &&
+        (!cs->unfolded || cubeaddonGetUnfoldDeformation (s)))
     {
 	float x, progress;
 	
 	(*cs->getRotation) (s, &x, &x, &progress);
 	cas->deform = progress;
 
-	if (cubeaddonGetSphereAspect (s) > 0.0 && cs->invert == 1)
+	if (cubeaddonGetSphereAspect (s) > 0.0 && cs->invert == 1 &&
+	    cubeaddonGetDeformation (s) == DeformationSphere)
 	{
 	    float scale, val = cubeaddonGetSphereAspect (s) * cas->deform;
 
