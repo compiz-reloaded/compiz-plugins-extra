@@ -79,6 +79,7 @@ maximumizeEmptyRegion (CompWindow *window,
 
     for (w = s->windows; w; w = w->next)
     {
+	EMPTY_REGION (tmpRegion);
         if (w->id == window->id)
             continue;
 
@@ -87,6 +88,20 @@ maximumizeEmptyRegion (CompWindow *window,
 
 	if (w->wmType & CompWindowTypeDesktopMask)
 	    continue;
+
+	if (w->wmType & CompWindowTypeDockMask)
+	{
+	    if (w->struts) 
+	    {
+		XUnionRectWithRegion (&w->struts->left, tmpRegion, tmpRegion);
+		XUnionRectWithRegion (&w->struts->right, tmpRegion, tmpRegion);
+		XUnionRectWithRegion (&w->struts->top, tmpRegion, tmpRegion);
+		XUnionRectWithRegion (&w->struts->bottom, tmpRegion, tmpRegion);
+		XUnionRectWithRegion (&tmpRect, tmpRegion, tmpRegion);
+		XSubtractRegion (newRegion, tmpRegion, newRegion);
+	    }
+	    continue;
+	}
 
 	if (maximumizeGetIgnoreSticky(s->display) && 
 	    (w->state & CompWindowStateStickyMask) &&
@@ -102,8 +117,6 @@ maximumizeEmptyRegion (CompWindow *window,
 	if (maximumizeGetIgnoreOverlapping(s->display) &&
 		maximumizeSubstantialOverlap(tmpRect, windowRect))
 	    continue;
-
-	EMPTY_REGION (tmpRegion);
 	XUnionRectWithRegion (&tmpRect, tmpRegion, tmpRegion);
 	XSubtractRegion (newRegion, tmpRegion, newRegion);
     }
