@@ -1715,7 +1715,7 @@ cubeaddonDonePaintScreen (CompScreen * s)
 
     cas->wasDeformed = (cas->deform > 0.0);
 
-    if (cas->deform)
+    if (cas->deform > 0.0 && cas->deform < 1.0)
     {
 	damageScreen (s);
 	cas->deform = 0.0;
