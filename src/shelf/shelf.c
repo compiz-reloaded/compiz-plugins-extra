@@ -421,7 +421,7 @@ shelfScaleWindow (CompWindow *w,
     if (shelfHandleShelfInfo (w))
 	shelfAdjustIPW (w);
 
-    damageScreen (w->screen);
+    addWindowDamage (w);
 }
 
 /* Binding for toggle mode. 
