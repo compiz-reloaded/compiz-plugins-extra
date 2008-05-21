@@ -25,6 +25,11 @@
           <_long>Window types that should be Opacified.</_long>
           <default>Toolbar | Utility | Dialog | ModalDialog | Fullscreen | Normal</default>
         </option>
+	<option name="ononinit" type="bool">
+	  <_short>Enable ADD Helper on start</_short>
+	  <_long>Enables ADD helper when it is first loaded.</_long>
+	  <default>false</default>
+	</option>
         <option name="brightness" type="int">
           <_short>Brightness</_short>
           <_long>Brightness of faded windows</_long>

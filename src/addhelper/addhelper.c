@@ -185,7 +185,6 @@ addhelperToggle (CompDisplay     *d,
 		 int             nOption)
 {
     ADD_DISPLAY (d);
-
     ad->toggle = !ad->toggle;
     walkWindows (d);
 
@@ -210,6 +209,9 @@ addhelperDisplayOptionChanged (CompDisplay             *d,
     case AddhelperDisplayOptionOpacity:
 	ad->opacity = (addhelperGetOpacity(d) * 0xffff) / 100;
 	break;
+    case AddhelperDisplayOptionOnoninit:
+	ad->toggle = addhelperGetOnoninit (d);
+	break;
     default:
 	break;
     }
@@ -222,6 +224,7 @@ addhelperInitWindow (CompPlugin *p,
     AddHelperWindow *aw;
 
     ADD_SCREEN (w->screen);
+    ADD_DISPLAY (w->screen->display);
 
     aw = malloc (sizeof (AddHelperWindow));
     if (!aw)
@@ -229,7 +232,10 @@ addhelperInitWindow (CompPlugin *p,
 
     w->base.privates[as->windowPrivateIndex].ptr = aw;
 
-    aw->dim = FALSE;
+    if (ad->toggle && w->id != w->screen->display->activeWindow)
+	aw->dim = TRUE;
+    else
+	aw->dim = FALSE;
 
     return TRUE;
 }
@@ -306,11 +312,12 @@ addhelperInitDisplay (CompPlugin  *p,
     addhelperSetBrightnessNotify (d, addhelperDisplayOptionChanged);
     addhelperSetOpacityNotify (d, addhelperDisplayOptionChanged);
     addhelperSetSaturationNotify (d, addhelperDisplayOptionChanged);
+    addhelperSetOnoninitNotify (d, addhelperDisplayOptionChanged);
 
-    ad->toggle = FALSE;
     ad->brightness = (addhelperGetBrightness (d) * BRIGHT) / 100;
     ad->opacity = (addhelperGetOpacity (d) * OPAQUE) / 100;
     ad->saturation = (addhelperGetSaturation (d) * COLOR) / 100;
+    ad->toggle = addhelperGetOnoninit (d);
 
     WRAP (ad, d, handleEvent, addhelperHandleEvent);
 
