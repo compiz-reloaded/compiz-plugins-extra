@@ -232,7 +232,9 @@ addhelperInitWindow (CompPlugin *p,
 
     w->base.privates[as->windowPrivateIndex].ptr = aw;
 
-    if (ad->toggle && w->id != w->screen->display->activeWindow)
+    if (ad->toggle && 
+	w->id != w->screen->display->activeWindow &&
+	!w->attrib.override_redirect)
 	aw->dim = TRUE;
     else
 	aw->dim = FALSE;
