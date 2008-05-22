@@ -408,7 +408,6 @@ tdApplyScreenTransform (CompScreen		*s,
 			CompTransform	        *transform)
 {
     TD_SCREEN (s);
-    CUBE_SCREEN (s);
 
     UNWRAP (tds, s, applyScreenTransform);
     (*s->applyScreenTransform) (s, sAttrib, output, transform);
