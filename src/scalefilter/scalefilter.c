@@ -399,6 +399,59 @@ scalefilterFilterTimeout (void *closure)
     return FALSE;
 }
 
+static Bool
+scalefilterRemoveFilter (CompScreen *s)
+{
+    Bool retval = FALSE;
+
+    FILTER_SCREEN (s);
+    SCALE_SCREEN (s);
+
+    if (fs->filterInfo)
+    {
+	/* in input mode: drop current filter */
+	ss->currentMatch = fs->filterInfo->origMatch;
+	scalefilterFiniFilterInfo (s, TRUE);
+	retval = TRUE;
+    }
+    else if (fs->matchApplied)
+    {
+	/* remove filter applied previously
+	   if currently not in input mode */
+	matchFini (&ss->match);
+	matchInit (&ss->match);
+	matchCopy (&ss->match, &fs->scaleMatch);
+	matchUpdate (s->display, &ss->match);
+
+	ss->currentMatch = &ss->match;
+	fs->matchApplied = FALSE;
+	retval = TRUE;
+    }
+
+    return retval;
+}
+
+static void
+scalefilterHandleWindowRemove (CompDisplay *d,
+			       Window      id)
+{
+    CompWindow *w;
+
+    w = findWindowAtDisplay (d, id);
+    if (w)
+    {
+	SCALE_SCREEN (w->screen);
+
+	if (ss->state != SCALE_STATE_NONE && ss->state != SCALE_STATE_IN)
+	{
+	    if (ss->nWindows == 1 && ss->windows[0] == w)
+	    {
+		scalefilterRemoveFilter (w->screen);
+	    }
+	}
+    }
+}
+
 static void
 scalefilterHandleKeyPress (CompScreen *s,
 			   XKeyEvent  *event)
@@ -436,25 +489,10 @@ scalefilterHandleKeyPress (CompScreen *s,
 
     if (ks == XK_Escape)
     {
-	if (info)
+	/* Escape key - drop current filter or remove filter applied
+	   previously if currently not in input mode */
+	if (scalefilterRemoveFilter (s))
 	{
-	    /* Escape key - drop current filter */
-	    ss->currentMatch = info->origMatch;
-	    scalefilterFiniFilterInfo (s, TRUE);
-	    needRelayout = TRUE;
-	    dropKeyEvent = TRUE;
-	}
-	else if (fs->matchApplied)
-	{
-	    /* remove filter applied previously
-	       if currently not in input mode */
-	    matchFini (&ss->match);
-	    matchInit (&ss->match);
-	    matchCopy (&ss->match, &fs->scaleMatch);
-	    matchUpdate (s->display, &ss->match);
-
-	    ss->currentMatch = &ss->match;
-	    fs->matchApplied = FALSE;
 	    needRelayout = TRUE;
 	    dropKeyEvent = TRUE;
 	}
@@ -550,6 +588,12 @@ scalefilterHandleEvent (CompDisplay *d,
 		}
 	    }
 	}
+	break;
+    case UnmapNotify:
+	scalefilterHandleWindowRemove (d, event->xunmap.window);
+	break;
+    case DestroyNotify:
+	scalefilterHandleWindowRemove (d, event->xdestroywindow.window);
 	break;
     default:
 	break;
