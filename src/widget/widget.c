@@ -58,6 +58,8 @@ typedef struct _WidgetDisplay
     MatchExpHandlerChangedProc matchExpHandlerChanged;
     MatchInitExpProc           matchInitExp;
 
+    Window lastActiveWindow;
+
     Atom compizWidgetAtom;
 } WidgetDisplay;
 
@@ -231,7 +233,10 @@ static void
 widgetSetWidgetLayerMapState (CompScreen *s,
 			      Bool       map)
 {
-    CompWindow *w;
+    CompWindow   *w, *highest = NULL;
+    unsigned int highestActiveNum = 0;
+
+    WIDGET_DISPLAY (s->display);
 
     for (w = s->windows; w; w = w->next)
     {
@@ -240,7 +245,30 @@ widgetSetWidgetLayerMapState (CompScreen *s,
 	if (!ww->isWidget)
 	    continue;
 
+	if (w->activeNum > highestActiveNum)
+	{
+	    highest = w;
+	    highestActiveNum = w->activeNum;
+	}
+
 	widgetUpdateWidgetMapState (w, map);
+    }
+
+    if (widgetGetFocusWidgetLayer (s))
+    {
+	if (map && highest)
+	{
+	    if (!wd->lastActiveWindow)
+		wd->lastActiveWindow = s->display->activeWindow;
+	    moveInputFocusToWindow (highest);
+	}
+	else if (!map)
+	{
+	    w = findWindowAtDisplay (s->display, wd->lastActiveWindow);
+	    wd->lastActiveWindow = None;
+	    if (w)
+		moveInputFocusToWindow (w);
+	}
     }
 }
 
@@ -694,6 +722,7 @@ widgetInitDisplay (CompPlugin  *p,
     }
 
     wd->compizWidgetAtom = XInternAtom(d->display, "_COMPIZ_WIDGET", FALSE);
+    wd->lastActiveWindow = None;
 
     d->base.privates[displayPrivateIndex].ptr = wd;
 
@@ -726,7 +755,8 @@ widgetFiniDisplay (CompPlugin  *p,
     UNWRAP (wd, d, matchExpHandlerChanged);
     UNWRAP (wd, d, matchInitExp);
 
-    (*d->matchExpHandlerChanged) (d);
+    if (d->base.parent)
+	(*d->matchExpHandlerChanged) (d);
 
     free (wd);
 }
