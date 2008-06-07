@@ -510,6 +510,7 @@ trailfocusInitScreen (CompPlugin *p,
 		      CompScreen *s)
 {
     TrailfocusScreen *ts;
+    int              i, start;
 
     TRAILFOCUS_DISPLAY(s->display);
 
@@ -539,6 +540,10 @@ trailfocusInitScreen (CompPlugin *p,
     WRAP (ts, s, paintWindow, trailfocusPaintWindow);
 
     recalculateAttributes (s);
+    start = trailfocusGetWindowsStart (s) - 1;
+    for (i = 0; i < start; i++)
+	ts->win[i] = 0;
+
     pushWindow (s->display, s->display->activeWindow);
     ts->setupTimerHandle = compAddTimeout (0, setupTimeout, s);
 
