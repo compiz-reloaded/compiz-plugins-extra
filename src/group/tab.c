@@ -848,7 +848,8 @@ groupFinishTabbing (GroupSelection *group)
 
     if (group->ungroupState == UngroupAll)
 	groupDeleteGroup (group);
-    group->ungroupState = UngroupNone;
+    else
+	group->ungroupState = UngroupNone;
 }
 
 /*

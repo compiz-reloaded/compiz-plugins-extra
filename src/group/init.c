@@ -413,6 +413,9 @@ groupFiniScreen (CompPlugin *p,
     if (gs->tmpSel.windows)
 	free (gs->tmpSel.windows);
 
+    if (gs->grabIndex)
+	groupGrabScreen (s, ScreenGrabNone);
+
     freeWindowPrivateIndex (s, gs->windowPrivateIndex);
 
     UNWRAP (gs, s, windowMoveNotify);

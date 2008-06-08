@@ -600,6 +600,7 @@ groupRenderTabBarBackground(GroupSelection *group)
 	    cairo_set_source (cr, pattern);
 	    cairo_fill (cr);
 	    cairo_restore (cr);
+	    cairo_pattern_destroy (pattern);
 	    break;
 	}
 
