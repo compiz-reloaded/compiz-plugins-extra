@@ -1869,6 +1869,9 @@ cubeaddonFiniScreen (CompPlugin *p,
     CUBEADDON_SCREEN (s);
     CUBE_SCREEN (s);
 
+    if (cas->winNormals)
+	free (cas->winNormals);
+
     XDestroyRegion (cas->tmpRegion);
 
     UNWRAP (cas, s, paintTransformedOutput);
