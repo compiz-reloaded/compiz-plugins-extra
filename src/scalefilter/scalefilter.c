@@ -849,6 +849,8 @@ scalefilterFiniScreen (CompPlugin *p,
     UNWRAP (fs, s, paintOutput);
     UNWRAP (fs, ss, setScaledPaintAttributes);
 
+    matchFini (&fs->scaleMatch);
+
     if (fs->filterInfo)
     {
 	ss->currentMatch = fs->filterInfo->origMatch;
