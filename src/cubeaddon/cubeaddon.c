@@ -1796,14 +1796,15 @@ cubeaddonInitScreen (CompPlugin *p,
 
     s->base.privates[cad->screenPrivateIndex].ptr = cas;
 
-    cas->reflection = FALSE;
-    cas->first      = TRUE;
-    cas->last       = NULL;
-    cas->yTrans     = 0.0;
-    cas->zTrans     = 0.0;
-    cas->tmpRegion  = XCreateRegion ();
-    cas->deform     = 0.0;
-    cas->capDeform  = -1.0;
+    cas->reflection  = FALSE;
+    cas->first       = TRUE;
+    cas->last        = NULL;
+    cas->yTrans      = 0.0;
+    cas->zTrans      = 0.0;
+    cas->tmpRegion   = XCreateRegion ();
+    cas->deform      = 0.0;
+    cas->capDeform   = -1.0;
+    cas->capDistance = cs->distance;
 
     cas->winNormals  = NULL;
     cas->winNormSize = 0;
