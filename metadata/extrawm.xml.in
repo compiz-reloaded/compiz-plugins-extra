@@ -25,7 +25,7 @@
 		<_short>Toggle Sticky</_short>
 		<_long>Toggle window stickyness</_long>
 	    </option>
-	    <option name="activate_demands_attention" type="key">
+	    <option name="activate_demands_attention_key" type="key">
 		<_short>Activate Demanding Attention Window</_short>
 		<_long>Activate next window which has the "demands attention" flag set.</_long>
 	    </option>

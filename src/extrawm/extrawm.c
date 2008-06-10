@@ -357,7 +357,7 @@ extraWMInitDisplay (CompPlugin  *p,
     extrawmSetToggleStickyKeyInitiate (d, toggleSticky);
     extrawmSetToggleFullscreenKeyInitiate (d, toggleFullscreen);
     extrawmSetActivateInitiate (d, activateWin);
-    extrawmSetActivateDemandsAttentionInitiate (d, activateDemandsAttention);
+    extrawmSetActivateDemandsAttentionKeyInitiate (d, activateDemandsAttention);
 
     WRAP (ed, d, handleEvent, extraWMHandleEvent);
 
