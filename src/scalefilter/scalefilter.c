@@ -538,6 +538,7 @@ scalefilterHandleKeyPress (CompScreen *s,
 	    timeout = scalefilterGetTimeout (s);
 	    if (timeout > 0)
 		info->timeoutHandle = compAddTimeout (timeout,
+						      (float) timeout * 1.2,
 						      scalefilterFilterTimeout,
 						      s);
 
