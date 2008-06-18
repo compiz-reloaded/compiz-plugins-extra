@@ -743,6 +743,7 @@ groupHandleAnimation (GroupSelection *group)
 
 	    group->tabBar->timeoutHandle =
 		compAddTimeout (groupGetVisibilityTime (s) * 1000,
+				groupGetVisibilityTime (s) * 1200,
 				groupTabBarTimeout, group);
 	}
     }
@@ -1022,7 +1023,7 @@ groupUpdateTabBars (CompScreen *s,
 		if (gs->showDelayTimeoutHandle)
 		    compRemoveTimeout (gs->showDelayTimeoutHandle);
 		gs->showDelayTimeoutHandle =
-		    compAddTimeout (showDelayTime,
+		    compAddTimeout (showDelayTime, (float) showDelayTime * 1.2,
 				    groupShowDelayTimeout, hoveredGroup);
 	    }
 	    else

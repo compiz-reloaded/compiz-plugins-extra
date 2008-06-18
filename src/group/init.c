@@ -346,7 +346,7 @@ groupInitScreen (CompPlugin *p,
 
     /* one-shot timeout for stuff that needs to be initialized after
        all screens and windows are initialized */
-    compAddTimeout (0, groupApplyInitialActions, (void *) s);
+    compAddTimeout (0, 0, groupApplyInitialActions, (void *) s);
 
     initTexture (s, &gs->glowTexture);
 

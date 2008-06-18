@@ -1648,6 +1648,7 @@ groupHandleEvent (CompDisplay *d,
 			if (hoverTime > 0)
 			    gs->dragHoverTimeoutHandle =
 				compAddTimeout (hoverTime,
+						(float) hoverTime * 1.2,
 						groupDragHoverTimeout, w);
 		    }
 		}

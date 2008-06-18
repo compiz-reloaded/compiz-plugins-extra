@@ -67,7 +67,7 @@ groupEnqueueMoveNotify (CompWindow *w,
 
     if (!gs->dequeueTimerSet)
     {
-	compAddTimeout (0, groupDequeueTimer, (void *) w->screen);
+	compAddTimeout (0, 0, groupDequeueTimer, (void *) w->screen);
 	gs->dequeueTimerSet = TRUE;
     }
 }
@@ -167,7 +167,7 @@ groupEnqueueGrabNotify (CompWindow   *w,
 
     if (!gs->dequeueTimerSet)
     {
-	compAddTimeout (0, groupDequeueTimer, (void *) w->screen);
+	compAddTimeout (0, 0, groupDequeueTimer, (void *) w->screen);
 	gs->dequeueTimerSet = TRUE;
     }
 }
@@ -223,7 +223,7 @@ groupEnqueueUngrabNotify (CompWindow *w)
 
     if (!gs->dequeueTimerSet)
     {
-	compAddTimeout (0, groupDequeueTimer, (void *) w->screen);
+	compAddTimeout (0, 0, groupDequeueTimer, (void *) w->screen);
 	gs->dequeueTimerSet = TRUE;
     }
 }
