@@ -560,7 +560,7 @@ widgetMatchPropertyChanged (CompDisplay *d,
        is needed because we don't want to call wrapped functions
        recursively) */
     if (!ww->matchUpdateHandle)
-	ww->matchUpdateHandle = compAddTimeout (0, widgetUpdateMatch,
+	ww->matchUpdateHandle = compAddTimeout (0, 0, widgetUpdateMatch,
 						(void *) w);
 
     UNWRAP (wd, d, matchPropertyChanged);
@@ -737,7 +737,7 @@ widgetInitDisplay (CompPlugin  *p,
 
     /* one shot timeout to which will register the expression handler
        after all screens and windows have been initialized */
-    compAddTimeout (0, widgetRegisterExpHandler, (void *) d);
+    compAddTimeout (0, 0, widgetRegisterExpHandler, (void *) d);
 
     return TRUE;
 }
@@ -834,7 +834,7 @@ widgetInitWindow (CompPlugin *p,
 
     w->base.privates[ws->windowPrivateIndex].ptr = ww;
 
-    ww->widgetStatusUpdateHandle = compAddTimeout (0, widgetUpdateStatus,
+    ww->widgetStatusUpdateHandle = compAddTimeout (0, 0, widgetUpdateStatus,
 						   (void *) w);
 
     return TRUE;
