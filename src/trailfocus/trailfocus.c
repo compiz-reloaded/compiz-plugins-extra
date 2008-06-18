@@ -545,7 +545,7 @@ trailfocusInitScreen (CompPlugin *p,
 	ts->win[i] = 0;
 
     pushWindow (s->display, s->display->activeWindow);
-    ts->setupTimerHandle = compAddTimeout (0, setupTimeout, s);
+    ts->setupTimerHandle = compAddTimeout (0, 0, setupTimeout, s);
 
     return TRUE;
 }
