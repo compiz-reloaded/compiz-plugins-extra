@@ -1630,6 +1630,8 @@ groupChangeTab (GroupTabBarSlot             *topTab,
 
 	groupRenderWindowTitle (group);
 	groupRenderTopTabHighlight (group);
+	if (oldTopTab)
+	    addWindowDamage (oldTopTab);
 	addWindowDamage (w);
     }
 

@@ -79,9 +79,6 @@ groupDestroyCairoLayer (CompScreen      *s,
 
     finiTexture (s, &layer->texture);
 
-    if (layer->pixmap)
-	XFreePixmap (s->display->display, layer->pixmap);
-
     if (layer->buffer)
 	free (layer->buffer);
 
@@ -107,7 +104,6 @@ groupCreateCairoLayer (CompScreen *s,
     layer->surface = NULL;
     layer->cairo   = NULL;
     layer->buffer  = NULL;
-    layer->pixmap  = None;
 
     layer->animationTime = 0;
     layer->state         = PaintOff;
@@ -715,10 +711,7 @@ groupRenderWindowTitle (GroupSelection *group)
     layer->texHeight = height;
 
     if (data)
-    {
-	layer->pixmap = (Pixmap) data;
-	bindPixmapToTexture (s, &layer->texture, layer->pixmap,
+	bindPixmapToTexture (s, &layer->texture, (Pixmap) data,
 			     layer->texWidth, layer->texHeight, 32);
-    }
 }
 
