@@ -228,10 +228,15 @@ typedef enum {
 } TabbingState;
 
 typedef struct _GroupCairoLayer {
-    unsigned char   *buffer;
     CompTexture	    texture;
+
+    /* used if layer is used for cairo drawing */
+    unsigned char   *buffer;
     cairo_surface_t *surface;
     cairo_t	    *cairo;
+
+    /* used if layer is used for text drawing */
+    Pixmap pixmap;
 
     int texWidth;
     int texHeight;
