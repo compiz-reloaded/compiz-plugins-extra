@@ -719,5 +719,6 @@ groupRenderWindowTitle (GroupSelection *group)
 	layer->pixmap = (Pixmap) data;
 	bindPixmapToTexture (s, &layer->texture, layer->pixmap,
 			     layer->texWidth, layer->texHeight, 32);
+    }
 }
 
