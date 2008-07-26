@@ -160,7 +160,15 @@ widgetUpdateWidgetStatus (CompWindow *w)
 	isWidget = FALSE;
 	break;
     default:
-	isWidget = matchEval (widgetGetMatch (w->screen), w);
+	if (w->attrib.override_redirect ||
+	    (w->wmType & (CompWindowTypeDesktopMask | CompWindowTypeDockMask)))
+	{
+	    isWidget = FALSE;
+	}
+	else
+	{
+	    isWidget = matchEval (widgetGetMatch (w->screen), w);
+	}
 	break;
     }
 
