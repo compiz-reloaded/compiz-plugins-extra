@@ -154,7 +154,7 @@ fadeDesktopPreparePaintScreen(CompScreen *s, int msSinceLastPaint)
 
 			if (doFade)
 			{
-			    fw->opacity = w->opacity * 
+			    fw->opacity = w->paint.opacity * 
 					  (float)((fs->state == FD_STATE_OUT) ? fs->fadeTime : 
 				          fadedesktopGetFadetime(s) - fs->fadeTime) / 
 				          (float)fadedesktopGetFadetime(s);
@@ -260,7 +260,7 @@ static void fadeDesktopEnterShowDesktopMode(CompScreen *s)
 
 				fw->fading = TRUE;
 				w->inShowDesktopMode = TRUE;
-				fw->opacity = w->opacity;
+				fw->opacity = w->paint.opacity;
 			}
 		}
 
