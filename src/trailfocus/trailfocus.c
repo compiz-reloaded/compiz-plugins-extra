@@ -99,6 +99,9 @@ isTrailfocusWindow (CompWindow *w)
 	return FALSE;
     }
 
+    if (w->attrib.override_redirect)
+	return FALSE;
+
     if (w->invisible || w->hidden || w->minimized || w->shaded)
 	return FALSE;
 
