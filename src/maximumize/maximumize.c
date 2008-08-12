@@ -97,7 +97,6 @@ maximumizeEmptyRegion (CompWindow *window,
 		XUnionRectWithRegion (&w->struts->right, tmpRegion, tmpRegion);
 		XUnionRectWithRegion (&w->struts->top, tmpRegion, tmpRegion);
 		XUnionRectWithRegion (&w->struts->bottom, tmpRegion, tmpRegion);
-		XUnionRectWithRegion (&tmpRect, tmpRegion, tmpRegion);
 		XSubtractRegion (newRegion, tmpRegion, newRegion);
 	    }
 	    continue;
