@@ -24,6 +24,10 @@
 		<_long>Clear</_long>
 		<default></default>
 	    </option>
+	    <option type="action" name="add_particle">
+		<_short>Add Particle</_short>
+		<_long>Adds a fire particle at position (x,y), where x and y are floats.</_long>
+	    </option>
 	</display>
 	<screen>
 	    <option name="num_Particles" type="int">

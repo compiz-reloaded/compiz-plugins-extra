@@ -405,11 +405,12 @@ FireScreen;
 static void
 fireAddPoint (CompScreen *s,
 	      int        x,
-	      int        y)
+	      int        y,
+	      Bool       requireGrab)
 {
     FIRE_SCREEN (s);
 
-    if (fs->grabIndex)
+    if (!requireGrab || fs->grabIndex)
     {
 	if (fs->pointsSize < fs->numPoints + 1)
 	{
@@ -424,6 +425,36 @@ fireAddPoint (CompScreen *s,
 	fs->numPoints++;
     }
 }
+
+
+static Bool
+fireAddParticle (CompDisplay     *d,
+		 CompAction      *action,
+		 CompActionState state,
+		 CompOption      *option,
+		 int		 nOption)
+{
+    CompScreen *s;
+    Window     xid;
+
+    xid  = getIntOptionNamed (option, nOption, "root", 0);
+
+    s = findScreenAtDisplay (d, xid);
+    if (s)
+    {
+	float x, y;
+
+	x = getFloatOptionNamed (option, nOption, "x", 0);
+	y = getFloatOptionNamed (option, nOption, "y", 0);
+
+	fireAddPoint (s, x, y, FALSE);
+
+	damageScreen (s);
+    }
+
+    return FALSE;
+}
+
 
 static Bool
 fireInitiate (CompDisplay     *d,
@@ -455,7 +486,7 @@ fireInitiate (CompDisplay     *d,
 	if (state & CompActionStateInitKey)
 	    action->state |= CompActionStateTermKey;
 
-	fireAddPoint (s, pointerX, pointerY);
+	fireAddPoint (s, pointerX, pointerY, TRUE);
 
     }
 
@@ -752,14 +783,14 @@ fireHandleEvent (CompDisplay *d,
     case MotionNotify:
 	s = findScreenAtDisplay (d, event->xmotion.root);
 	if (s)
-	    fireAddPoint (s, pointerX, pointerY);
+	    fireAddPoint (s, pointerX, pointerY, TRUE);
 	break;
 
     case EnterNotify:
     case LeaveNotify:
 	s = findScreenAtDisplay (d, event->xcrossing.root);
 	if (s)
-	    fireAddPoint (s, pointerX, pointerY);
+	    fireAddPoint (s, pointerX, pointerY, TRUE);
 
     default:
 	break;
@@ -802,6 +833,7 @@ fireInitDisplay (CompPlugin  *p,
     firepaintSetInitiateButtonTerminate (d, fireTerminate);
     firepaintSetClearKeyInitiate (d, fireClear);
     firepaintSetClearButtonInitiate (d, fireClear);
+    firepaintSetAddParticleInitiate (d, fireAddParticle);
 
     return TRUE;
 }
