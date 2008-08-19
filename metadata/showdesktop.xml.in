@@ -3,8 +3,13 @@
   <plugin name="showdesktop" useBcop="true">
     <_short>Show desktop</_short>
     <_long>Access your desktop easily</_long>
-	<category>Desktop</category>
+    <category>Desktop</category>
     <feature>showdesktop</feature>
+    <deps>
+	<relation type="after">
+	    <plugin>fade</plugin>
+	</relation>
+    </deps>
     <screen>
       <group>
         <_short>Misc. Options</_short>
