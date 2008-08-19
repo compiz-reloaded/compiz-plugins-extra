@@ -515,6 +515,8 @@ showdesktopDonePaintScreen (CompScreen *s)
 			{
 			    free (sw->placer);
 			    sw->placer = NULL;
+			    sw->tx     = 0;
+			    sw->ty     = 0;
 			}
 		    }
 		}
