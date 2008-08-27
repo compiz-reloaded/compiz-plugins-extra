@@ -176,6 +176,7 @@ metadata/Makefile
 src/Makefile
 src/3d/Makefile
 src/addhelper/Makefile
+src/animationaddon/Makefile
 src/bench/Makefile
 src/bicubic/Makefile
 src/crashhandler/Makefile

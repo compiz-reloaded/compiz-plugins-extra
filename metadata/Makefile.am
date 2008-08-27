@@ -2,6 +2,7 @@ xmldir       = $(metadatadir)
 xml_in_files = 	         \
 	3d.xml.in \
 	addhelper.xml.in \
+	animationaddon.xml.in \
 	bench.xml.in \
 	bicubic.xml.in \
 	crashhandler.xml.in \
