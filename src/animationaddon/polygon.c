@@ -1030,7 +1030,7 @@ polygonsDrawCustomGeometry (CompWindow * w)
 
     // OpenGL stuff starts here
 
-    GLboolean normalArrayWas;
+    GLboolean normalArrayWas = FALSE;
 
     if (pset->thickness > 0)
     {
