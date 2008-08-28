@@ -143,6 +143,9 @@ if test "$have_libnotify" = yes; then
   AC_DEFINE(USE_NOTIFICATION, 1, [Build notification plugin])
 fi
 
+PKG_CHECK_MODULES(COMPIZANIMATION, compiz-animation, [have_compiz_animation=yes], [have_compiz_animation=no])
+AM_CONDITIONAL(ANIMATIONADDON_PLUGIN, test "x$have_compiz_animation" = "xyes")
+
 AC_ARG_ENABLE(schemas,
   [  --enable-schemas         Build gconf schemas],
   [use_schemas=$enableval], [use_schemas=no])
@@ -172,6 +175,7 @@ fi
 AC_OUTPUT([
 Makefile
 images/Makefile
+include/Makefile
 metadata/Makefile
 src/Makefile
 src/3d/Makefile
