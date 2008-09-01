@@ -145,7 +145,7 @@ splashPreparePaintScreen (CompScreen *s,
 
 		if (ss->hasBack)
 		{
-		    compLogMessage (d, "splash", CompLogLevelWarn,
+		    compLogMessage ("splash", CompLogLevelWarn,
 				    "Could not load splash background image "
 				    "\"%s\" using default!",
 				    splashGetBackground (d) );
@@ -161,7 +161,7 @@ splashPreparePaintScreen (CompScreen *s,
 
 		if (ss->hasLogo)
 		{
-		    compLogMessage (d, "splash", CompLogLevelWarn,
+		    compLogMessage ("splash", CompLogLevelWarn,
 				    "Could not load splash logo image "
 				    "\"%s\" using default!",
 				    splashGetLogo (d) );
@@ -169,12 +169,12 @@ splashPreparePaintScreen (CompScreen *s,
 	    }
 
 	    if (!ss->hasBack)
-		compLogMessage (d, "splash", CompLogLevelWarn,
+		compLogMessage ("splash", CompLogLevelWarn,
 				"Could not load splash background image "
 				"\"%s\" !", splashGetBackground (d) );
 
 	    if (!ss->hasLogo)
-		compLogMessage (d, "splash", CompLogLevelWarn,
+		compLogMessage ("splash", CompLogLevelWarn,
 				"Could not load splash logo image \"%s\" !",
 				splashGetLogo (d) );
 	}
