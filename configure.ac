@@ -131,7 +131,6 @@ fi
 
 PKG_CHECK_MODULES(COMPIZCUBE, compiz-cube, [have_compiz_cube=yes], [have_compiz_cube=no])
 AM_CONDITIONAL(CUBEADDON_PLUGIN, test "x$have_compiz_cube" = "xyes")
-AM_CONDITIONAL(CUBECAPS_PLUGIN, test "x$have_compiz_cube" = "xyes")
 AM_CONDITIONAL(THREED_PLUGIN, test "x$have_compiz_cube" = "xyes")
 
 PKG_CHECK_MODULES(COMPIZMOUSEPOLL, compiz-mousepoll, [have_compiz_mousepoll=yes], [have_compiz_mousepoll=no])
@@ -173,6 +172,7 @@ if test "$use_schemas" = yes; then
 fi
 
 AC_OUTPUT([
+compiz-animationaddon.pc
 Makefile
 images/Makefile
 include/Makefile

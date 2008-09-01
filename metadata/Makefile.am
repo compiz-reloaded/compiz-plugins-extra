@@ -1,30 +1,55 @@
 xmldir       = $(metadatadir)
-xml_in_files = 	         \
-	3d.xml.in \
-	addhelper.xml.in \
-	animationaddon.xml.in \
-	bench.xml.in \
-	bicubic.xml.in \
-	crashhandler.xml.in \
-	cubeaddon.xml.in \
-	extrawm.xml.in \
-	fadedesktop.xml.in \
-	firepaint.xml.in \
-	gears.xml.in \
-	group.xml.in \
-	loginout.xml.in \
-	maximumize.xml.in \
-	mblur.xml.in \
-	notification.xml.in \
-	reflex.xml.in \
-	scalefilter.xml.in \
-	shelf.xml.in \
-	showdesktop.xml.in \
-	showmouse.xml.in \
-	splash.xml.in \
-	trailfocus.xml.in \
-	widget.xml.in \
-	wallpaper.xml.in
+
+if ANIMATIONADDON_PLUGIN
+animationaddonxml = animationaddon.xml.in
+endif
+
+if CUBEADDON_PLUGIN
+cubeaddonxml = cubeaddon.xml.in
+endif
+
+if GROUP_PLUGIN
+groupxml = group.xml.in
+endif
+
+if NOTIFICATION_PLUGIN
+notificationxml = notification.xml.in
+endif
+
+if SHOWMOUSE_PLUGIN
+showmousexml = showmouse.xml.in
+endif
+
+if THREED_PLUGIN
+threedxml = 3d.xml.in
+endif
+
+xml_in_files = 	             \
+	addhelper.xml.in     \
+	bench.xml.in         \
+	bicubic.xml.in       \
+	crashhandler.xml.in  \
+	extrawm.xml.in       \
+	fadedesktop.xml.in   \
+	firepaint.xml.in     \
+	gears.xml.in         \
+	loginout.xml.in      \
+	maximumize.xml.in    \
+	mblur.xml.in         \
+	reflex.xml.in        \
+	scalefilter.xml.in   \
+	shelf.xml.in         \
+	showdesktop.xml.in   \
+	splash.xml.in        \
+	trailfocus.xml.in    \
+	widget.xml.in        \
+	wallpaper.xml.in     \
+	$(animationaddonxml) \
+	$(cubeaddonxml)      \
+	$(groupxml)          \
+	$(notificationxml)   \
+	$(showmousexml)      \
+	$(threedxml)
 
 xml_files    = $(xml_in_files:.xml.in=.xml)
 xml_DATA     = $(xml_files)
