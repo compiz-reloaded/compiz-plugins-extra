@@ -155,7 +155,7 @@ cubeaddonLoadCap (CompScreen *s,
 			     cap->files->value[cap->current].s,
 			     &width, &height))
     {
-	compLogMessage (s->display, "cubeaddon", CompLogLevelWarn,
+	compLogMessage ("cubeaddon", CompLogLevelWarn,
 			"Failed to load image: %s",
 			cap->files->value[cap->current].s);
 
