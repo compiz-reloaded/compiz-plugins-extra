@@ -1356,7 +1356,7 @@ groupTabGroup (CompWindow *main)
 
     if (!s->display->shapeExtension)
     {
-	compLogMessage (s->display, "group", CompLogLevelError,
+	compLogMessage ("group", CompLogLevelError,
 			"No X shape extension! Tabbing disabled.");
 	return;
     }

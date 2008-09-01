@@ -450,7 +450,7 @@ initBackground (void *object,
 	if (!readImageToTexture (s, &back->imgTex, back->image,
 				 &back->width, &back->height))
 	{
-	    compLogMessage (s->display, "wallpaper", CompLogLevelWarn,
+	    compLogMessage ("wallpaper", CompLogLevelWarn,
 			    "Failed to load image: %s", back->image);
 
 	    back->width  = 0;

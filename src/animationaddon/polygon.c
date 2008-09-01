@@ -195,8 +195,8 @@ tessellateIntoRectangles(CompWindow * w,
 	pset->polygons = calloc(pset->nPolygons, sizeof(PolygonObject));
 	if (!pset->polygons)
 	{
-	    compLogMessage (w->screen->display, "animationaddon",
-			    CompLogLevelError, "Not enough memory");
+	    compLogMessage ("animationaddon", CompLogLevelError,
+			    "Not enough memory");
 	    pset->nPolygons = 0;
 	    return FALSE;
 	}
@@ -242,8 +242,8 @@ tessellateIntoRectangles(CompWindow * w,
 
 	    if (!p->vertices)
 	    {
-		compLogMessage (w->screen->display, "animationaddon",
-				CompLogLevelError, "Not enough memory");
+		compLogMessage ("animationaddon", CompLogLevelError,
+				"Not enough memory");
 		freePolygonObjects(pset);
 		return FALSE;
 	    }
@@ -255,8 +255,7 @@ tessellateIntoRectangles(CompWindow * w,
 	    }
 	    if (!p->normals)
 	    {
-		compLogMessage (w->screen->display, "animationaddon",
-				CompLogLevelError,
+		compLogMessage ("animationaddon", CompLogLevelError,
 				"Not enough memory");
 		freePolygonObjects(pset);
 		return FALSE;
@@ -305,8 +304,8 @@ tessellateIntoRectangles(CompWindow * w,
 	    }
 	    if (!p->sideIndices)
 	    {
-		compLogMessage (w->screen->display, "animationaddon",
-				CompLogLevelError, "Not enough memory");
+		compLogMessage ("animationaddon", CompLogLevelError,
+				"Not enough memory");
 		freePolygonObjects(pset);
 		return FALSE;
 	    }
@@ -427,8 +426,8 @@ tessellateIntoHexagons(CompWindow * w,
 	pset->polygons = calloc(pset->nPolygons, sizeof(PolygonObject));
 	if (!pset->polygons)
 	{
-	    compLogMessage (w->screen->display, "animationaddon",
-			    CompLogLevelError, "Not enough memory");
+	    compLogMessage ("animationaddon", CompLogLevelError,
+			    "Not enough memory");
 	    pset->nPolygons = 0;
 	    return FALSE;
 	}
@@ -510,8 +509,8 @@ tessellateIntoHexagons(CompWindow * w,
 		p->vertices = calloc(6 * 2 * 3, sizeof(GLfloat));
 		if (!p->vertices)
 		{
-		    compLogMessage (w->screen->display, "animationaddon",
-				    CompLogLevelError, "Not enough memory");
+		    compLogMessage ("animationaddon", CompLogLevelError,
+				    "Not enough memory");
 		    freePolygonObjects(pset);
 		    return FALSE;
 		}
@@ -524,8 +523,8 @@ tessellateIntoHexagons(CompWindow * w,
 	    }
 	    if (!p->normals)
 	    {
-		compLogMessage (w->screen->display, "animationaddon",
-				CompLogLevelError, "Not enough memory");
+		compLogMessage ("animationaddon", CompLogLevelError,
+				"Not enough memory");
 		freePolygonObjects(pset);
 		return FALSE;
 	    }
@@ -590,8 +589,8 @@ tessellateIntoHexagons(CompWindow * w,
 	    }
 	    if (!p->sideIndices)
 	    {
-		compLogMessage (w->screen->display, "animationaddon",
-				CompLogLevelError, "Not enough memory");
+		compLogMessage ("animationaddon", CompLogLevelError,
+				"Not enough memory");
 		freePolygonObjects(pset);
 		return FALSE;
 	    }
@@ -687,7 +686,7 @@ tessellateIntoHexagons(CompWindow * w,
 	}
     }
     if (pset->nPolygons != p - pset->polygons)
-	compLogMessage (w->screen->display, "animationaddon", CompLogLevelError,
+	compLogMessage ("animationaddon", CompLogLevelError,
 			"%s: Error in tessellateIntoHexagons at line %d!",
 			__FILE__, __LINE__);
     return TRUE;
@@ -697,7 +696,6 @@ void
 polygonsStoreClips (CompWindow * w,
 		    int nClip, BoxPtr pClip, int nMatrix, CompMatrix * matrix)
 {
-    CompScreen *s = w->screen;
     ANIMADDON_WINDOW (w);
 
     PolygonSet *pset = aw->eng.polygonSet;
@@ -742,7 +740,7 @@ polygonsStoreClips (CompWindow * w,
 
 	if (!ensureLargerClipCapacity(pset))
 	{
-	    compLogMessage (s->display, "animationaddon", CompLogLevelError,
+	    compLogMessage ("animationaddon", CompLogLevelError,
 			    "Not enough memory");
 	    return;
 	}
@@ -833,7 +831,7 @@ static Bool processIntersectingPolygons(CompScreen * s, PolygonSet * pset)
 	    }
 	    if (!c->intersectingPolygons || !c->polygonVertexTexCoords)
 	    {
-		compLogMessage (s->display, "animationaddon", CompLogLevelError,
+		compLogMessage ("animationaddon", CompLogLevelError,
 				"Not enough memory");
 		freeClipsPolygons(pset);
 		return FALSE;
@@ -1470,7 +1468,7 @@ polygonsAnimStep (CompWindow *w, float time)
 	    polygonStepFunc (w, &aw->eng.polygonSet->polygons[i], forwardProgress);
     }
     else
-	compLogMessage (s->display, "animationaddon", CompLogLevelDebug,
+	compLogMessage ("animationaddon", CompLogLevelDebug,
 			"%s: pset null at line %d\n",__FILE__,  __LINE__);
 }
 
@@ -1596,8 +1594,7 @@ polygonsAnimInit (CompWindow * w)
 
     if (!aw->eng.polygonSet)
     {
-	compLogMessage (w->screen->display, 
-			"animationaddon", CompLogLevelError,
+	compLogMessage ("animationaddon", CompLogLevelError,
 			"Not enough memory");
 	return FALSE;
     }

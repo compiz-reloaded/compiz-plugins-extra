@@ -1,4 +1,4 @@
-PFLAGS=-module -avoid-version -no-undefined  
+PFLAGS=-module -avoid-version -no-undefined -lGLU
 
 if ANIMATIONADDON_PLUGIN
 libanimationaddon_la_LDFLAGS = $(PFLAGS)

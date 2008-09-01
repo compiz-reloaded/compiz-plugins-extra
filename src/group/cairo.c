@@ -120,7 +120,7 @@ groupCreateCairoLayer (CompScreen *s,
     layer->buffer = calloc (4 * width * height, sizeof (unsigned char));
     if (!layer->buffer)
     {
-	compLogMessage (s->display, "group", CompLogLevelError,
+	compLogMessage ("group", CompLogLevelError,
 			"Failed to allocate cairo layer buffer.");
 	groupDestroyCairoLayer (s, layer);
 	return NULL;
@@ -132,7 +132,7 @@ groupCreateCairoLayer (CompScreen *s,
 							  4 * width);
     if (cairo_surface_status (layer->surface) != CAIRO_STATUS_SUCCESS)
     {
-	compLogMessage (s->display, "group", CompLogLevelError,
+	compLogMessage ("group", CompLogLevelError,
 			"Failed to create cairo layer surface.");
 	groupDestroyCairoLayer (s, layer);
 	return NULL;
@@ -141,7 +141,7 @@ groupCreateCairoLayer (CompScreen *s,
     layer->cairo = cairo_create (layer->surface);
     if (cairo_status (layer->cairo) != CAIRO_STATUS_SUCCESS)
     {
-	compLogMessage (s->display, "group", CompLogLevelError,
+	compLogMessage ("group", CompLogLevelError,
 			"Failed to create cairo layer context.");
 	groupDestroyCairoLayer (s, layer);
 	return NULL;

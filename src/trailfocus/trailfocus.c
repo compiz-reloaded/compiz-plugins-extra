@@ -385,7 +385,7 @@ recalculateAttributes (CompScreen *s)
 
     if (start >= winMax)
     {
-	compLogMessage (s->display, "trailfocus", CompLogLevelWarn,
+	compLogMessage ("trailfocus", CompLogLevelWarn,
 			"Attempting to define start higher than max windows.");
 	start = winMax - 1;
     }

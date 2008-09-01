@@ -36,16 +36,25 @@
 #define NOTIFY_TIMEOUT_DEFAULT -1
 #define NOTIFY_TIMEOUT_NEVER    0
 
+static int corePrivateIndex;
 static int displayPrivateIndex;
 
 static CompMetadata notifyMetadata;
 
-typedef struct _NotifyDisplay {
+typedef struct _NotifyCore {
     LogMessageProc logMessage;
+} NotifyCore;
 
+typedef struct _NotifyDisplay {
     int        timeout;
     CompOption opt[NOTIFY_DISPLAY_OPTION_NUM];
 } NotifyDisplay;
+
+#define GET_NOTIFY_CORE(c)				       \
+    ((NotifyCore *) (c)->base.privates[corePrivateIndex].ptr)
+
+#define NOTIFY_CORE(c)		       \
+    NotifyCore *nc = GET_NOTIFY_CORE (c)
 
 #define GET_NOTIFY_DISPLAY(d)				       \
     ((NotifyDisplay *) (d)->base.privates[displayPrivateIndex].ptr)
@@ -57,8 +66,7 @@ typedef struct _NotifyDisplay {
 
 
 static void
-notifyLogMessage (CompDisplay  *d,
-		  const char   *component,
+notifyLogMessage (const char   *component,
 		  CompLogLevel level,
 		  const char   *message)
 {
@@ -66,14 +74,15 @@ notifyLogMessage (CompDisplay  *d,
     char               *logLevel, iconFile[256], *iconUri, *homeDir;
     int                maxLevel;
 
-    NOTIFY_DISPLAY (d);
+    NOTIFY_CORE (&core);
+    NOTIFY_DISPLAY (core.displays);
 
     maxLevel = nd->opt[NOTIFY_DISPLAY_OPTION_MAX_LEVEL].value.i;
     if (level > maxLevel)
     {
-	UNWRAP (nd, d, logMessage);
-	(*d->logMessage) (d, component, level, message);
-	WRAP (nd, d, logMessage, notifyLogMessage);
+	UNWRAP (nc, &core, logMessage);
+	(*core.logMessage) (component, level, message);
+	WRAP (nc, &core, logMessage, notifyLogMessage);
 
 	return;
     }
@@ -118,9 +127,9 @@ notifyLogMessage (CompDisplay  *d,
     g_object_unref (G_OBJECT (n));
     free (iconUri);
 
-    UNWRAP (nd, d, logMessage);
-    (*d->logMessage) (d, component, level, message);
-    WRAP (nd, d, logMessage, notifyLogMessage);
+    UNWRAP (nc, &core, logMessage);
+    (*core.logMessage) (component, level, message);
+    WRAP (nc, &core, logMessage, notifyLogMessage);
 }
 
 static const CompMetadataOptionInfo notifyDisplayOptionInfo[] = {
@@ -129,13 +138,53 @@ static const CompMetadataOptionInfo notifyDisplayOptionInfo[] = {
 };
 
 static Bool
+notifyInitCore (CompPlugin *p,
+		CompCore   *c)
+{
+    NotifyCore *nc;
+
+    if (!checkPluginABI ("core", CORE_ABIVERSION))
+	return FALSE;
+
+    nc = malloc (sizeof (NotifyCore));
+    if (!nc)
+	return FALSE;
+    
+    displayPrivateIndex = allocateDisplayPrivateIndex ();
+    if (displayPrivateIndex < 0)
+    {
+	free (nc);
+	return FALSE;
+    }
+
+    notify_init ("compiz");
+
+    c->base.privates[corePrivateIndex].ptr = nc;
+
+    WRAP (nc, c, logMessage, notifyLogMessage);
+
+    return TRUE;
+}
+
+static void
+notifyFiniCore (CompPlugin *p,
+		CompCore   *c)
+{
+    NOTIFY_CORE (c);
+
+    UNWRAP (nc, c, logMessage);
+
+    if (notify_is_initted ())
+	notify_uninit ();
+
+    free (nc);
+}
+
+static Bool
 notifyInitDisplay (CompPlugin  *p,
 		   CompDisplay *d)
 {
     NotifyDisplay *nd;
-
-    if (!checkPluginABI ("core", CORE_ABIVERSION))
-	return FALSE;
 
     nd = malloc (sizeof (NotifyDisplay));
     if (!nd)
@@ -151,12 +200,9 @@ notifyInitDisplay (CompPlugin  *p,
 	return FALSE;
     }
 
-    notify_init ("compiz");
     nd->timeout = 2000;
 
     d->base.privates[displayPrivateIndex].ptr = nd;
-
-    WRAP (nd, d, logMessage, notifyLogMessage);
 
     return TRUE;
 }
@@ -167,10 +213,7 @@ notifyFiniDisplay (CompPlugin  *p,
 {
     NOTIFY_DISPLAY (d);
 
-    UNWRAP (nd, d, logMessage);
-
-    if (notify_is_initted ())
-	notify_uninit ();
+    compFiniDisplayOptions (d, nd->opt, NOTIFY_DISPLAY_OPTION_NUM);
 
     free (nd);
 }
@@ -185,8 +228,8 @@ notifyInit (CompPlugin *p)
 					 0, 0))
 	return FALSE;
 
-    displayPrivateIndex = allocateDisplayPrivateIndex ();
-    if (displayPrivateIndex < 0)
+    corePrivateIndex = allocateCorePrivateIndex ();
+    if (corePrivateIndex < 0)
     {
 	compFiniMetadata (&notifyMetadata);
 	return FALSE;
@@ -202,7 +245,7 @@ notifyInitObject (CompPlugin *p,
 		  CompObject *o)
 {
     static InitPluginObjectProc dispTab[] = {
-    	(InitPluginObjectProc) 0, /* InitCore */
+    	(InitPluginObjectProc) notifyInitCore,
 	(InitPluginObjectProc) notifyInitDisplay
     };
 
@@ -214,7 +257,7 @@ notifyFiniObject (CompPlugin *p,
 		  CompObject *o)
 {
     static FiniPluginObjectProc dispTab[] = {
-	(FiniPluginObjectProc) 0, /* FiniCore */
+	(FiniPluginObjectProc) notifyFiniCore,
 	(FiniPluginObjectProc) notifyFiniDisplay
     };
 
@@ -298,7 +341,7 @@ notifySetObjectOption (CompPlugin      *plugin,
 static void
 notifyFini (CompPlugin *p)
 {
-    freeDisplayPrivateIndex (displayPrivateIndex);
+    freeCorePrivateIndex (corePrivateIndex);
     compFiniMetadata (&notifyMetadata);
 }
 

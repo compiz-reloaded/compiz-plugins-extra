@@ -359,7 +359,7 @@ BicubicInitScreen (CompPlugin *p,
 
     if (!s->fragmentProgram)
     {
-	compLogMessage (s->display, "bicube", CompLogLevelFatal,
+	compLogMessage ("bicube", CompLogLevelFatal,
 			"GL_ARB_fragment_program not supported.");
 	return FALSE;
     }
@@ -367,14 +367,14 @@ BicubicInitScreen (CompPlugin *p,
     glExtensions = (const char *) glGetString (GL_EXTENSIONS);
     if (!glExtensions)
     {
-	compLogMessage (s->display, "bicubic", CompLogLevelFatal,
+	compLogMessage ("bicubic", CompLogLevelFatal,
 			"No valid GL extensions string found.");
 	return FALSE;
     }
 
     if (!strstr (glExtensions, "GL_ARB_texture_float"))
     {
-	compLogMessage (s->display, "bicubic", CompLogLevelFatal,
+	compLogMessage ("bicubic", CompLogLevelFatal,
 			"GL_ARB_texture_float not supported. "
 		        "This can lead to visual artifacts.");
 	format = GL_RGBA;

@@ -64,8 +64,8 @@ tessellateIntoAirplane (CompWindow * w)
 	pset->polygons = calloc (pset->nPolygons, sizeof (PolygonObject));
 	if (!pset->polygons)
 	{
-	    compLogMessage (w->screen->display, "animationaddon",
-			    CompLogLevelError, "Not enough memory");
+	    compLogMessage ("animationaddon", CompLogLevelError,
+			    "Not enough memory");
 	    pset->nPolygons = 0;
 	    return FALSE;
 	}
@@ -218,8 +218,8 @@ tessellateIntoAirplane (CompWindow * w)
 	}
 	if (!p->vertices)
 	{
-	    compLogMessage (w->screen->display, "animation",
-			    CompLogLevelError, "Not enough memory");
+	    compLogMessage ("animation", CompLogLevelError,
+			    "Not enough memory");
 	    freePolygonObjects (pset);
 	    return FALSE;
 	}
@@ -267,8 +267,8 @@ tessellateIntoAirplane (CompWindow * w)
 	}
 	if (!p->sideIndices)
 	{
-	    compLogMessage (w->screen->display, "animation",
-			    CompLogLevelError, "Not enough memory");
+	    compLogMessage ("animation", CompLogLevelError,
+			    "Not enough memory");
 	    freePolygonObjects (pset);
 	    return FALSE;
 	}
@@ -349,8 +349,8 @@ fxAirplaneInit (CompWindow * w)
 	}
 	if (!p->effectParameters)
 	{
-	    compLogMessage (w->screen->display, "animation",
-			    CompLogLevelError, "Not enough memory");
+	    compLogMessage ("animation", CompLogLevelError,
+			    "Not enough memory");
 	    return FALSE;
 	}
 
