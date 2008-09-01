@@ -198,7 +198,7 @@ scalefilterRenderFilterText (CompScreen *s)
 				  fs->filterInfo->textWidth,
 				  fs->filterInfo->textHeight, 32))
 	{
-	    compLogMessage (d, "scalefilterinfo", CompLogLevelError,
+	    compLogMessage ("scalefilter", CompLogLevelError,
 			    "Bind Pixmap to Texture failure");
 	    XFreePixmap (d->display, fs->filterInfo->textPixmap);
 	    fs->filterInfo->textPixmap = None;
@@ -779,7 +779,7 @@ scalefilterInitDisplay (CompPlugin  *p,
 
     fd->textAvailable = checkPluginABI ("text", TEXT_ABIVERSION);
     if (!fd->textAvailable)
-	compLogMessage (d, "scalefilter", CompLogLevelWarn,
+	compLogMessage ("scalefilter", CompLogLevelWarn,
 			"No compatible text plugin found.");
 
     WRAP (fd, d, handleEvent, scalefilterHandleEvent);
