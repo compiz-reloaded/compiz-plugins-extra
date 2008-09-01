@@ -16,6 +16,10 @@ if NOTIFICATION_PLUGIN
 notificationxml = notification.xml.in
 endif
 
+if SCALEFILTER_PLUGIN
+scalefilterxml = scalefilter.xml.in
+endif
+
 if SHOWMOUSE_PLUGIN
 showmousexml = showmouse.xml.in
 endif
@@ -37,7 +41,6 @@ xml_in_files = 	             \
 	maximumize.xml.in    \
 	mblur.xml.in         \
 	reflex.xml.in        \
-	scalefilter.xml.in   \
 	shelf.xml.in         \
 	showdesktop.xml.in   \
 	splash.xml.in        \
@@ -48,6 +51,7 @@ xml_in_files = 	             \
 	$(cubeaddonxml)      \
 	$(groupxml)          \
 	$(notificationxml)   \
+	$(scalefilterxml)    \
 	$(showmousexml)      \
 	$(threedxml)
 
