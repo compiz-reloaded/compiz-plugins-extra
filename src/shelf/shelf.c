@@ -914,7 +914,7 @@ shelfInitDisplay (CompPlugin  *p,
 
     if (!d->shapeExtension)
     {
-	compLogMessage (d, "shelf", CompLogLevelError,
+	compLogMessage ("shelf", CompLogLevelError,
 			"No Shape extension found. Shelfing not possible.\n");
 	return FALSE;
     }
