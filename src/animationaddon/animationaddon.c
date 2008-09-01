@@ -506,6 +506,8 @@ static void animFiniDisplay(CompPlugin * p, CompDisplay * d)
 
     freeScreenPrivateIndex(d, ad->screenPrivateIndex);
 
+    compFiniDisplayOptions (d, ad->opt, ANIMADDON_DISPLAY_OPTION_NUM);
+
     free(ad);
 }
 
