@@ -2,14 +2,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
-#include <sys/time.h>
-
-#ifdef USE_LIBRSVG
-#include <cairo/cairo.h>
-#include <cairo/cairo-xlib.h>
-#include <librsvg/rsvg.h>
-#include <librsvg/rsvg-cairo.h>
-#endif
 
 #include <compiz-core.h>
 #include <compiz-animation.h>

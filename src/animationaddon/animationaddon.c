@@ -78,13 +78,6 @@
  *   after 45 deg. rotation)
  *
  */
-
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
-#include <limits.h>
-#include <GL/glu.h>
 #include "animationaddon.h"
 
 int animDisplayPrivateIndex;
