@@ -29,10 +29,6 @@ typedef struct _PolygonObject
 
     Box boundingBox;			// Bound. box to test intersection with clips
 
-    GLfloat *vertexTexCoords4Clips;
-    // Tex coords for each intersecting clip and for each vertex
-    // ordered as c1.v1.x, c1.v1.y, c1.v2.x, c1.v2.y, c2.v1.x, c2.v1.y, ...
-
     // Animation effect parameters
 
     Point3d centerPosStart;		// Starting position of center
