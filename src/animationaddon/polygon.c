@@ -1619,7 +1619,7 @@ polygonsRefresh (CompWindow * w, Bool animInitialized)
 {
     ANIMADDON_WINDOW (w);
 
-    if (aw->eng.polygonSet && !animInitialized)
+    if (aw && aw->eng.polygonSet && !animInitialized)
 	// to refresh polygon coords
 	freePolygonSet (aw);
 }
@@ -1629,7 +1629,7 @@ polygonsCleanup (CompWindow * w)
 {
     ANIMADDON_WINDOW (w);
 
-    if (aw->eng.polygonSet)
+    if (aw && aw->eng.polygonSet)
 	freePolygonSet(aw);
 }
 
