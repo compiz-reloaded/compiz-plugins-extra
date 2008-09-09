@@ -41,6 +41,51 @@
 	</subgroup>
 
 	<subgroup>
+	  <_short>Beam</_short>
+	  <option name="beam_size" type="float">
+	    <_short>Beam Width</_short>
+	    <_long>Beam width.</_long>
+	    <default>8</default>
+	    <min>0.1</min>
+	    <max>20</max>
+	    <precision>0.1</precision>
+	  </option>
+	  <option name="beam_spacing" type="int">
+	    <_short>Beam Spacing</_short>
+	    <_long>Spacing between beams.</_long>
+	    <default>5</default>
+	    <min>1</min>
+	    <max>20</max>
+	  </option>
+	  <option name="beam_color" type="color">
+	    <_short>Beam Color</_short>
+	    <_long>Beam color.</_long>
+	    <default>
+	      <red>0x7fff</red>
+	      <green>0x7fff</green>
+	      <blue>0x7fff</blue>
+	      <alpha>0xffff</alpha>
+	    </default>
+	  </option>
+	  <option name="beam_slowdown" type="float">
+	    <_short>Beam Slowdown</_short>
+	    <_long>Beam slowdown.</_long>
+	    <default>1</default>
+	    <min>0.1</min>
+	    <max>10</max>
+	    <precision>0.1</precision>
+	  </option>
+	  <option name="beam_life" type="float">
+	    <_short>Beam Life</_short>
+	    <_long>Beam life.</_long>
+	    <default>0.7</default>
+	    <min>0.1</min>
+	    <max>1</max>
+	    <precision>0.1</precision>
+	  </option>
+	</subgroup>
+
+	<subgroup>
 	  <_short>Burn</_short>
 	  <option name="fire_particles" type="int">
 	    <_short>Number Of Fire Particles</_short>
@@ -132,90 +177,10 @@
 	</subgroup>
 
 	<subgroup>
-	  <_short>Beam</_short>
-	  <option name="beam_size" type="float">
-	    <_short>Beam Width</_short>
-	    <_long>Beam width.</_long>
-	    <default>8</default>
-	    <min>0.1</min>
-	    <max>20</max>
-	    <precision>0.1</precision>
-	  </option>
-	  <option name="beam_spacing" type="int">
-	    <_short>Beam Spacing</_short>
-	    <_long>Spacing between beams.</_long>
-	    <default>5</default>
-	    <min>1</min>
-	    <max>20</max>
-	  </option>
-	  <option name="beam_color" type="color">
-	    <_short>Beam Color</_short>
-	    <_long>Beam color.</_long>
-	    <default>
-	      <red>0x7fff</red>
-	      <green>0x7fff</green>
-	      <blue>0x7fff</blue>
-	      <alpha>0xffff</alpha>
-	    </default>
-	  </option>
-	  <option name="beam_slowdown" type="float">
-	    <_short>Beam Slowdown</_short>
-	    <_long>Beam slowdown.</_long>
-	    <default>1</default>
-	    <min>0.1</min>
-	    <max>10</max>
-	    <precision>0.1</precision>
-	  </option>
-	  <option name="beam_life" type="float">
-	    <_short>Beam Life</_short>
-	    <_long>Beam life.</_long>
-	    <default>0.7</default>
-	    <min>0.1</min>
-	    <max>1</max>
-	    <precision>0.1</precision>
-	  </option>
-	</subgroup>
-
-	<subgroup>
 	  <_short>Domino</_short>
 	  <option name="domino_direction" type="int">
 	    <_short>Domino Piece Falling Direction</_short>
 	    <_long>Falling direction for Domino pieces.</_long>
-	    <default>5</default>
-	    <min>0</min>
-	    <max>5</max>
-	    <desc>
-	      <value>0</value>
-	      <_name>Down</_name>
-	    </desc>
-	    <desc>
-	      <value>1</value>
-	      <_name>Up</_name>
-	    </desc>
-	    <desc>
-	      <value>2</value>
-	      <_name>Left</_name>
-	    </desc>
-	    <desc>
-	      <value>3</value>
-	      <_name>Right</_name>
-	    </desc>
-	    <desc>
-	      <value>4</value>
-	      <_name>Random</_name>
-	    </desc>
-	    <desc>
-	      <value>5</value>
-	      <_name>Automatic</_name>
-	    </desc>
-	  </option>
-	</subgroup>
-
-	<subgroup>
-	  <_short>Razr</_short>
-	  <option name="razr_direction" type="int">
-	    <_short>Razr Fold Opening Direction</_short>
-	    <_long>Fold opening direction for pieces in Razr effect.</_long>
 	    <default>5</default>
 	    <min>0</min>
 	    <max>5</max>
@@ -345,6 +310,41 @@
 	    <min>0</min>
 	    <max>100</max>
 	    <precision>1</precision>
+	  </option>
+	</subgroup>
+
+	<subgroup>
+	  <_short>Razr</_short>
+	  <option name="razr_direction" type="int">
+	    <_short>Razr Fold Opening Direction</_short>
+	    <_long>Fold opening direction for pieces in Razr effect.</_long>
+	    <default>5</default>
+	    <min>0</min>
+	    <max>5</max>
+	    <desc>
+	      <value>0</value>
+	      <_name>Down</_name>
+	    </desc>
+	    <desc>
+	      <value>1</value>
+	      <_name>Up</_name>
+	    </desc>
+	    <desc>
+	      <value>2</value>
+	      <_name>Left</_name>
+	    </desc>
+	    <desc>
+	      <value>3</value>
+	      <_name>Right</_name>
+	    </desc>
+	    <desc>
+	      <value>4</value>
+	      <_name>Random</_name>
+	    </desc>
+	    <desc>
+	      <value>5</value>
+	      <_name>Automatic</_name>
+	    </desc>
 	  </option>
 	</subgroup>
 
