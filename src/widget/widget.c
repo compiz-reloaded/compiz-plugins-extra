@@ -161,7 +161,7 @@ widgetUpdateWidgetStatus (CompWindow *w)
 	break;
     default:
 	if (w->attrib.override_redirect ||
-	    (w->wmType & (CompWindowTypeDesktopMask | CompWindowTypeDockMask)))
+	    (w->wmType & CompWindowTypeDesktopMask))
 	{
 	    isWidget = FALSE;
 	}
