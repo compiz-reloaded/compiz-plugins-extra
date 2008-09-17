@@ -194,13 +194,16 @@ widgetUpdateWidgetPropertyState (CompWindow *w)
 				 0, 1L, FALSE, AnyPropertyType, &retType,
 				 &format, &nitems, &remain, &data);
 
-    if (result == Success && nitems && data && format == 32)
+    if (result == Success && data)
     {
-	unsigned long int *retData = (unsigned long int *) data;
-	if (*retData)
-	    ww->propertyState = PropertyWidget;
-	else
-	    ww->propertyState = PropertyNoWidget;
+	if (nitems && format == 32)
+	{
+	    unsigned long int *retData = (unsigned long int *) data;
+	    if (*retData)
+		ww->propertyState = PropertyWidget;
+	    else
+		ww->propertyState = PropertyNoWidget;
+	}
 
 	XFree (data);
     }
