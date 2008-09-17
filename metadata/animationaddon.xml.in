@@ -453,55 +453,56 @@
 	</option>
       </group> 
 
-      <extension plugin="animation">
-	<option>open_effects</option>
-	<option>open_random_effects</option>
-	<option>close_effects</option>
-	<option>close_random_effects</option>
-	<option>minimize_effects</option>
-	<option>minimize_random_effects</option>
-	<restriction>
-	  <value>animationaddon:Airplane</value>
-	  <_name>Airplane</_name>
-	</restriction>
-	<restriction>
-	  <value>animationaddon:Beam Up</value>
-	  <_name>Beam Up</_name>
-	</restriction>
-	<restriction>
-	  <value>animationaddon:Burn</value>
-	  <_name>Burn</_name>
-	</restriction>
-	<restriction>
-	  <value>animationaddon:Domino</value>
-	  <_name>Domino</_name>
-	</restriction>
-	<restriction>
-	  <value>animationaddon:Explode</value>
-	  <_name>Explode</_name>
-	</restriction>
-	<restriction>
-	  <value>animationaddon:Fold</value>
-	  <_name>Fold</_name>
-	</restriction>
-	<restriction>
-	  <value>animationaddon:Glide 3</value>
-	  <_name>Glide 3</_name>
-	</restriction>
-	<restriction>
-	  <value>animationaddon:Leaf Spread</value>
-	  <_name>Leaf Spread</_name>
-	</restriction>
-	<restriction>
-	  <value>animationaddon:Razr</value>
-	  <_name>Razr</_name>
-	</restriction>
-	<restriction>
-	  <value>animationaddon:Skewer</value>
-	  <_name>Skewer</_name>
-	</restriction>
-      </extension>
-      
     </screen>
+
+    <extension base_plugin="animation">
+      <base_option>open_effects</base_option>
+      <base_option>open_random_effects</base_option>
+      <base_option>close_effects</base_option>
+      <base_option>close_random_effects</base_option>
+      <base_option>minimize_effects</base_option>
+      <base_option>minimize_random_effects</base_option>
+      <restriction>
+	<value>animationaddon:Airplane</value>
+	<_name>Airplane</_name>
+      </restriction>
+      <restriction>
+	<value>animationaddon:Beam Up</value>
+	<_name>Beam Up</_name>
+      </restriction>
+      <restriction>
+	<value>animationaddon:Burn</value>
+	<_name>Burn</_name>
+      </restriction>
+      <restriction>
+	<value>animationaddon:Domino</value>
+	<_name>Domino</_name>
+      </restriction>
+      <restriction>
+	<value>animationaddon:Explode</value>
+	<_name>Explode</_name>
+      </restriction>
+      <restriction>
+	<value>animationaddon:Fold</value>
+	<_name>Fold</_name>
+      </restriction>
+      <restriction>
+	<value>animationaddon:Glide 3</value>
+	<_name>Glide 3</_name>
+      </restriction>
+      <restriction>
+	<value>animationaddon:Leaf Spread</value>
+	<_name>Leaf Spread</_name>
+      </restriction>
+      <restriction>
+	<value>animationaddon:Razr</value>
+	<_name>Razr</_name>
+      </restriction>
+      <restriction>
+	<value>animationaddon:Skewer</value>
+	<_name>Skewer</_name>
+      </restriction>
+    </extension>
+
   </plugin>
 </compiz>
