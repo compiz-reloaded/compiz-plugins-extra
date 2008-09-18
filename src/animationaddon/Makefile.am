@@ -5,6 +5,7 @@ libanimationaddon_la_LDFLAGS = $(PFLAGS)
 libanimationaddon_la_LIBADD = @COMPIZ_LIBS@ @COMPIZANIMATION_LIBS@
 libanimationaddon_la_SOURCES = airplane3d.c     \
 			       animationaddon.c \
+			       animationaddon.h \
 			       beamup.c         \
 			       burn.c           \
 			       domino.c         \
