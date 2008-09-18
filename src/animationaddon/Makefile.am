@@ -14,7 +14,8 @@ libanimationaddon_la_SOURCES = airplane3d.c     \
 			       leafspread.c     \
 			       particle.c       \
 			       polygon.c        \
-			       skewer.c
+			       skewer.c			\
+				   animation_tex.h
 endif
 
 INCLUDES =                                  \
@@ -27,8 +28,6 @@ INCLUDES =                                  \
 	-I$(top_srcdir)/include
 
 moduledir = $(plugindir)
-
-EXTRA_DIST = animation_tex.h
 
 if ANIMATIONADDON_PLUGIN
 module_LTLIBRARIES=libanimationaddon.la
