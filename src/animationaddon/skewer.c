@@ -31,7 +31,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA. 
  **/
 
-#include "compiz-animationaddon.h"
+#include "animationaddon.h"
 
 static void
 getDirection (int *dir, int *c, int direction)

@@ -78,7 +78,7 @@
  *   after 45 deg. rotation)
  *
  */
-#include "compiz-animationaddon.h"
+#include "animationaddon.h"
 
 int animDisplayPrivateIndex;
 int animAddonFunctionsPrivateIndex;

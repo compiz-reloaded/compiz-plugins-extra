@@ -29,7 +29,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "compiz-animationaddon.h"
+#include "animationaddon.h"
 
 // Divide the window in 8 polygons (6 quadrilaters and 2 triangles (all of them draw as quadrilaters))
 // Based on tessellateIntoRectangles and tessellateIntoHexagons. Improperly called tessellation.
