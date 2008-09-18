@@ -4,9 +4,9 @@ PFLAGS=-module -avoid-version -no-undefined
 if SCALEFILTER_PLUGIN
 libscalefilter_la_LDFLAGS = $(PFLAGS)
 libscalefilter_la_LIBADD = @COMPIZ_LIBS@ @SCALEFILTER_LIBS@
-libscalefilter_la_SOURCES = scalefilter_options.c \
-			    scalefilter_options.h \
-			    scalefilter.c
+nodist_libscalefilter_la_SOURCES = scalefilter_options.c \
+			    scalefilter_options.h
+dist_libscalefilter_la_SOURCES = scalefilter.c
 endif
 
 BUILT_SOURCES = $(nodist_libscalefilter_la_SOURCES)

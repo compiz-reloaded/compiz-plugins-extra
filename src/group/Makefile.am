@@ -3,9 +3,9 @@ PFLAGS=-module -avoid-version -no-undefined
 if GROUP_PLUGIN
 libgroup_la_LDFLAGS = $(PFLAGS)
 libgroup_la_LIBADD = @COMPIZ_LIBS@ @GROUP_LIBS@
-libgroup_la_SOURCES = group_options.c \
-		      group_options.h \
-		      cairo.c         \
+nodist_libgroup_la_SOURCES = group_options.c \
+		      group_options.h
+dist_libgroup_la_SOURCES = cairo.c \
 		      group.c         \
 		      init.c          \
 		      paint.c         \

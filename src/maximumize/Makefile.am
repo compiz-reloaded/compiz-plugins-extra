@@ -3,9 +3,9 @@ PFLAGS=-module -avoid-version -no-undefined
 
 libmaximumize_la_LDFLAGS = $(PFLAGS)
 libmaximumize_la_LIBADD = @COMPIZ_LIBS@
-libmaximumize_la_SOURCES = maximumize_options.c \
-			   maximumize_options.h \
-			   maximumize.c
+nodistlibmaximumize_la_SOURCES = maximumize_options.c \
+			   maximumize_options.h
+distlibmaximumize_la_SOURCES = maximumize.c
 
 BUILT_SOURCES = $(nodist_libmaximumize_la_SOURCES)
 
