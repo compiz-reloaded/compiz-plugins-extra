@@ -28,6 +28,8 @@ INCLUDES =                                  \
 
 moduledir = $(plugindir)
 
+EXTRA_DIST = animation_tex.h
+
 if ANIMATIONADDON_PLUGIN
 module_LTLIBRARIES=libanimationaddon.la
 endif
