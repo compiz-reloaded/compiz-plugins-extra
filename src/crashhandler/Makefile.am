@@ -3,7 +3,10 @@ PFLAGS=-module -avoid-version -no-undefined
 
 libcrashhandler_la_LDFLAGS = $(PFLAGS)
 libcrashhandler_la_LIBADD = @COMPIZ_LIBS@
-libcrashhandler_la_SOURCES = crashhandler_options.c crashhandler_options.h crashhandler.c
+nodist_libcrashhandler_la_SOURCES = crashhandler_options.c crashhandler_options.h
+dist_libcrashhandler_la_SOURCES = crashhandler.c
+
+BUILT_SOURCES = $(nodist_libcrashhandler_la_SOURCES)
 
 INCLUDES =                              \
 	@COMPIZ_CFLAGS@                  \
@@ -20,8 +23,8 @@ module_LTLIBRARIES = libcrashhandler.la
 
 CLEANFILES = *_options.c *_options.h
 
-%_options.h: ../../metadata/%.xml
+crashhandler_options.h: ../../metadata/crashhandler.xml.in
 		$(BCOP_BIN) --header $@ $<
 
-%_options.c: ../../metadata/%.xml %_options.h
+crashhandler_options.c: ../../metadata/crashhandler.xml.in crashhandler_options.h
 		$(BCOP_BIN) --source $@ $<

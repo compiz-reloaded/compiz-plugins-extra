@@ -16,6 +16,8 @@ libgroup_la_SOURCES = group_options.c \
 		      group_glow.h 
 endif
 
+BUILT_SOURCES = $(nodist_libgroup_la_SOURCES)
+
 INCLUDES =                              \
 	@COMPIZ_CFLAGS@                      \
  	@GROUP_CFLAGS@         \
@@ -33,8 +35,8 @@ endif
 
 CLEANFILES = *_options.c *_options.h
 
-%_options.h: ../../metadata/%.xml
+group_options.h: ../../metadata/group.xml.in
 		$(BCOP_BIN) --header $@ $<
 
-%_options.c: ../../metadata/%.xml %_options.h
+group_options.c: ../../metadata/group.xml.in group_options.h
 		$(BCOP_BIN) --source $@ $<		

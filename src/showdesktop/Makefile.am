@@ -3,7 +3,10 @@ PFLAGS=-module -avoid-version -no-undefined
 
 libshowdesktop_la_LDFLAGS = $(PFLAGS)
 libshowdesktop_la_LIBADD = @COMPIZ_LIBS@
-libshowdesktop_la_SOURCES = showdesktop_options.c showdesktop_options.h showdesktop.c
+nodist_libshowdesktop_la_SOURCES = showdesktop_options.c showdesktop_options.h
+dist_libshowdesktop_la_SOURCES = showdesktop.c
+
+BUILT_SOURCES = $(nodist_libshowdesktop_la_SOURCES)
 
 INCLUDES =                              \
 	@COMPIZ_CFLAGS@                  \
@@ -20,8 +23,8 @@ module_LTLIBRARIES = libshowdesktop.la
 
 CLEANFILES = *_options.c *_options.h
 
-%_options.h: ../../metadata/%.xml
+showdesktop_options.h: ../../metadata/showdesktop.xml.in
 		$(BCOP_BIN) --header $@ $<
 
-%_options.c: ../../metadata/%.xml %_options.h
+showdesktop_options.c: ../../metadata/showdesktop.xml.in showdesktop_options.h
 		$(BCOP_BIN) --source $@ $<

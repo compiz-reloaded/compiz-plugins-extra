@@ -3,7 +3,10 @@ PFLAGS=-module -avoid-version -no-undefined
 
 libwidget_la_LDFLAGS = $(PFLAGS)
 libwidget_la_LIBADD = @COMPIZ_LIBS@
-libwidget_la_SOURCES = widget_options.c widget_options.h widget.c
+nodist_libwidget_la_SOURCES = widget_options.c widget_options.h
+dist_libwidget_la_SOURCES = widget.c
+
+BUILT_SOURCES = $(nodist_libwidget_la_SOURCES)
 
 INCLUDES =                              \
 	@COMPIZ_CFLAGS@                  \
@@ -20,8 +23,8 @@ module_LTLIBRARIES = libwidget.la
 
 CLEANFILES = *_options.c *_options.h
 
-%_options.h: ../../metadata/%.xml
+widget_options.h: ../../metadata/widget.xml.in
 		$(BCOP_BIN) --header $@ $<
 
-%_options.c: ../../metadata/%.xml %_options.h
+widget_options.c: ../../metadata/widget.xml.in widget_options.h
 		$(BCOP_BIN) --source $@ $<

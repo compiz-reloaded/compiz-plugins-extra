@@ -3,7 +3,10 @@ PFLAGS=-module -avoid-version -no-undefined
 
 libwallpaper_la_LDFLAGS = $(PFLAGS)
 libwallpaper_la_LIBADD = @COMPIZ_LIBS@
-libwallpaper_la_SOURCES = wallpaper_options.c wallpaper_options.h wallpaper.c
+nodist_libwallpaper_la_SOURCES = wallpaper_options.c wallpaper_options.h
+dist_libwallpaper_la_SOURCES = wallpaper.c
+
+BUILT_SOURCES = $(nodist_libwallpaper_la_SOURCES)
 
 INCLUDES =                              \
 	@COMPIZ_CFLAGS@                  \
@@ -20,8 +23,8 @@ module_LTLIBRARIES = libwallpaper.la
 
 CLEANFILES = *_options.c *_options.h
 
-%_options.h: ../../metadata/%.xml
+wallpaper_options.h: ../../metadata/wallpaper.xml.in
 		$(BCOP_BIN) --header $@ $<
 
-%_options.c: ../../metadata/%.xml %_options.h
+wallpaper_options.c: ../../metadata/wallpaper.xml.in wallpaper_options.h
 		$(BCOP_BIN) --source $@ $<

@@ -3,7 +3,10 @@ PFLAGS=-module -avoid-version -no-undefined
 
 libsplash_la_LDFLAGS = $(PFLAGS)
 libsplash_la_LIBADD = @COMPIZ_LIBS@
-libsplash_la_SOURCES = splash_options.c splash_options.h splash.c
+nodist_libsplash_la_SOURCES = splash_options.c splash_options.h
+dist_libsplash_la_SOURCES = splash.c
+
+BUILT_SOURCES = $(nodist_libsplash_la_SOURCES)
 
 INCLUDES =                              \
 	@COMPIZ_CFLAGS@                  \
@@ -20,8 +23,8 @@ module_LTLIBRARIES = libsplash.la
 
 CLEANFILES = *_options.c *_options.h
 
-%_options.h: ../../metadata/%.xml
+splash_options.h: ../../metadata/splash.xml.in
 		$(BCOP_BIN) --header $@ $<
 
-%_options.c: ../../metadata/%.xml %_options.h
+splash_options.c: ../../metadata/splash.xml.in splash_options.h
 		$(BCOP_BIN) --source $@ $<

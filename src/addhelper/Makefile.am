@@ -3,7 +3,10 @@ PFLAGS=-module -avoid-version -no-undefined
 
 libaddhelper_la_LDFLAGS = $(PFLAGS)
 libaddhelper_la_LIBADD = @COMPIZ_LIBS@
-libaddhelper_la_SOURCES = addhelper_options.c addhelper_options.h addhelper.c
+nodist_libaddhelper_la_SOURCES = addhelper_options.c addhelper_options.h
+dist_libaddhelper_la_SOURCES = addhelper.c
+
+BUILT_SOURCES = $(nodist_libaddhelper_la_SOURCES)
 
 INCLUDES =                              \
 	@COMPIZ_CFLAGS@                  \
@@ -20,8 +23,8 @@ module_LTLIBRARIES = libaddhelper.la
 
 CLEANFILES = *_options.c *_options.h
 
-%_options.h: ../../metadata/%.xml
+addhelper_options.h: ../../metadata/addhelper.xml.in
 		$(BCOP_BIN) --header $@ $<
 
-%_options.c: ../../metadata/%.xml %_options.h
+addhelper_options.c: ../../metadata/addhelper.xml.in addhelper_options.h
 		$(BCOP_BIN) --source $@ $<

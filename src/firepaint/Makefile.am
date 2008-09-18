@@ -3,7 +3,10 @@ PFLAGS=-module -avoid-version -no-undefined
 
 libfirepaint_la_LDFLAGS = $(PFLAGS)
 libfirepaint_la_LIBADD = @COMPIZ_LIBS@
-libfirepaint_la_SOURCES = firepaint_options.c firepaint_options.h firepaint.c firepaint_tex.h
+nodist_libfirepaint_la_SOURCES = firepaint_options.c firepaint_options.h
+dist_libfirepaint_la_SOURCES = firepaint.c firepaint_tex.h
+
+BUILT_SOURCES = $(nodist_libfirepaint_la_SOURCES)
 
 INCLUDES =                              \
 	@COMPIZ_CFLAGS@                  \
@@ -20,8 +23,8 @@ module_LTLIBRARIES = libfirepaint.la
 
 CLEANFILES = *_options.c *_options.h
 
-%_options.h: ../../metadata/%.xml
+firepaint_options.h: ../../metadata/firepaint.xml.in
 		$(BCOP_BIN) --header $@ $<
 
-%_options.c: ../../metadata/%.xml %_options.h
+firepaint_options.c: ../../metadata/firepaint.xml.in firepaint_options.h
 		$(BCOP_BIN) --source $@ $<

@@ -7,6 +7,8 @@ libmaximumize_la_SOURCES = maximumize_options.c \
 			   maximumize_options.h \
 			   maximumize.c
 
+BUILT_SOURCES = $(nodist_libmaximumize_la_SOURCES)
+
 INCLUDES =                              \
 	@COMPIZ_CFLAGS@                  \
 	-DDATADIR='"$(compdatadir)"'        \
@@ -22,8 +24,8 @@ module_LTLIBRARIES = libmaximumize.la
 
 CLEANFILES = *_options.c *_options.h
 
-%_options.h: ../../metadata/%.xml
+maximumize_options.h: ../../metadata/maximumize.xml.in
 		$(BCOP_BIN) --header $@ $<
 
-%_options.c: ../../metadata/%.xml %_options.h
+maximumize_options.c: ../../metadata/maximumize.xml.in maximumize_options.h
 		$(BCOP_BIN) --source $@ $<

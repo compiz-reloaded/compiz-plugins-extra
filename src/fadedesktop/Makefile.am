@@ -3,7 +3,10 @@ PFLAGS=-module -avoid-version -no-undefined
 
 libfadedesktop_la_LDFLAGS = $(PFLAGS)
 libfadedesktop_la_LIBADD = @COMPIZ_LIBS@
-libfadedesktop_la_SOURCES = fadedesktop_options.c fadedesktop_options.h fadedesktop.c
+nodist_libfadedesktop_la_SOURCES = fadedesktop_options.c fadedesktop_options.h
+dist_libfadedesktop_la_SOURCES = fadedesktop.c
+
+BUILT_SOURCES = $(nodist_libfadedesktop_la_SOURCES)
 
 INCLUDES =                              \
 	@COMPIZ_CFLAGS@                  \
@@ -20,8 +23,8 @@ module_LTLIBRARIES = libfadedesktop.la
 
 CLEANFILES = *_options.c *_options.h
 
-%_options.h: ../../metadata/%.xml
+fadedesktop_options.h: ../../metadata/fadedesktop.xml.in
 		$(BCOP_BIN) --header $@ $<
 
-%_options.c: ../../metadata/%.xml %_options.h
+fadedesktop_options.c: ../../metadata/fadedesktop.xml.in fadedesktop_options.h
 		$(BCOP_BIN) --source $@ $<

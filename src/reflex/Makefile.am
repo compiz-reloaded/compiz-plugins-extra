@@ -3,7 +3,10 @@ PFLAGS=-module -avoid-version -no-undefined
 
 libreflex_la_LDFLAGS = $(PFLAGS)
 libreflex_la_LIBADD = @COMPIZ_LIBS@
-libreflex_la_SOURCES = reflex_options.c reflex_options.h reflex.c
+nodist_libreflex_la_SOURCES = reflex_options.c reflex_options.h
+dist_libreflex_la_SOURCES = reflex.c
+
+BUILT_SOURCES = $(nodist_libreflex_la_SOURCES)
 
 INCLUDES =                              \
 	@COMPIZ_CFLAGS@                  \
@@ -20,8 +23,8 @@ module_LTLIBRARIES = libreflex.la
 
 CLEANFILES = *_options.c *_options.h
 
-%_options.h: ../../metadata/%.xml
+reflex_options.h: ../../metadata/reflex.xml.in
 		$(BCOP_BIN) --header $@ $<
 
-%_options.c: ../../metadata/%.xml %_options.h
+reflex_options.c: ../../metadata/reflex.xml.in reflex_options.h
 		$(BCOP_BIN) --source $@ $<

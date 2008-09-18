@@ -4,8 +4,11 @@ PFLAGS=-module -avoid-version -no-undefined
 if SHOWMOUSE_PLUGIN
 libshowmouse_la_LDFLAGS = $(PFLAGS)
 libshowmouse_la_LIBADD = @COMPIZ_LIBS@ @COMPIZMOUSEPOLL_LIBS@
-libshowmouse_la_SOURCES = showmouse_options.c showmouse_options.h showmouse.c showmouse_tex.h
+nodist_libshowmouse_la_SOURCES = showmouse_options.c showmouse_options.h
+dist_libshowmouse_la_SOURCES = showmouse.c showmouse_tex.h
 endif
+
+BUILT_SOURCES = $(nodist_libshowmouse_la_SOURCES)
 
 INCLUDES =                              \
 	@COMPIZ_CFLAGS@                  \
@@ -24,8 +27,8 @@ endif
 
 CLEANFILES = *_options.c *_options.h
 
-%_options.h: ../../metadata/%.xml
+showmouse_options.h: ../../metadata/showmouse.xml.in
 		$(BCOP_BIN) --header $@ $<
 
-%_options.c: ../../metadata/%.xml %_options.h
+showmouse_options.c: ../../metadata/showmouse.xml.in showmouse_options.h
 		$(BCOP_BIN) --source $@ $<

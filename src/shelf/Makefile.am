@@ -3,7 +3,10 @@ PFLAGS=-module -avoid-version -no-undefined
 
 libshelf_la_LDFLAGS = $(PFLAGS)
 libshelf_la_LIBADD = @COMPIZ_LIBS@
-libshelf_la_SOURCES = shelf_options.c shelf_options.h shelf.c
+nodist_libshelf_la_SOURCES = shelf_options.c shelf_options.h
+dist_libshelf_la_SOURCES = shelf.c
+
+BUILT_SOURCES = $(nodist_libshelf_la_SOURCES)
 
 INCLUDES =                              \
 	@COMPIZ_CFLAGS@                  \
@@ -20,8 +23,8 @@ module_LTLIBRARIES = libshelf.la
 
 CLEANFILES = *_options.c *_options.h
 
-%_options.h: ../../metadata/%.xml
+shelf_options.h: ../../metadata/shelf.xml.in
 		$(BCOP_BIN) --header $@ $<
 
-%_options.c: ../../metadata/%.xml %_options.h
+shelf_options.c: ../../metadata/shelf.xml.in shelf_options.h
 		$(BCOP_BIN) --source $@ $<

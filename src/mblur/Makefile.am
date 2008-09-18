@@ -3,7 +3,10 @@ PFLAGS=-module -avoid-version -no-undefined
 
 libmblur_la_LDFLAGS = $(PFLAGS)
 libmblur_la_LIBADD = @COMPIZ_LIBS@
-libmblur_la_SOURCES = mblur_options.c mblur_options.h mblur.c
+nodist_libmblur_la_SOURCES = mblur_options.c mblur_options.h
+dist_libmblur_la_SOURCES = mblur.c
+
+BUILT_SOURCES = $(nodist_libmblur_la_SOURCES)
 
 INCLUDES =                              \
 	@COMPIZ_CFLAGS@                  \
@@ -20,8 +23,8 @@ module_LTLIBRARIES = libmblur.la
 
 CLEANFILES = *_options.c *_options.h
 
-%_options.h: ../../metadata/%.xml
+mblur_options.h: ../../metadata/mblur.xml.in
 		$(BCOP_BIN) --header $@ $<
 
-%_options.c: ../../metadata/%.xml %_options.h
+mblur_options.c: ../../metadata/mblur.xml.in mblur_options.h
 		$(BCOP_BIN) --source $@ $<

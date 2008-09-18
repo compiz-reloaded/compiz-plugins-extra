@@ -9,6 +9,8 @@ libscalefilter_la_SOURCES = scalefilter_options.c \
 			    scalefilter.c
 endif
 
+BUILT_SOURCES = $(nodist_libscalefilter_la_SOURCES)
+
 INCLUDES =                              \
 	@COMPIZ_CFLAGS@                  \
 	@SCALEFILTER_CFLAGS@                \
@@ -26,8 +28,8 @@ endif
 
 CLEANFILES = *_options.c *_options.h
 
-%_options.h: ../../metadata/%.xml
+scalefilter_options.h: ../../metadata/scalefilter.xml.in
 		$(BCOP_BIN) --header $@ $<
 
-%_options.c: ../../metadata/%.xml %_options.h
+scalefilter_options.c: ../../metadata/scalefilter.xml.in scalefilter_options.h
 		$(BCOP_BIN) --source $@ $<

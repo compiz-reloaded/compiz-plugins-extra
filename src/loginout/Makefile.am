@@ -3,7 +3,10 @@ PFLAGS=-module -avoid-version -no-undefined
 
 libloginout_la_LDFLAGS = $(PFLAGS)
 libloginout_la_LIBADD = @COMPIZ_LIBS@
-libloginout_la_SOURCES = loginout_options.c loginout_options.h loginout.c
+nodist_libloginout_la_SOURCES = loginout_options.c loginout_options.h
+dist_libloginout_la_SOURCES = loginout.c
+
+BUILT_SOURCES = $(nodist_libloginout_la_SOURCES)
 
 INCLUDES =                              \
 	@COMPIZ_CFLAGS@                  \
@@ -20,8 +23,8 @@ module_LTLIBRARIES = libloginout.la
 
 CLEANFILES = *_options.c *_options.h
 
-%_options.h: ../../metadata/%.xml
+loginout_options.h: ../../metadata/loginout.xml.in
 		$(BCOP_BIN) --header $@ $<
 
-%_options.c: ../../metadata/%.xml %_options.h
+loginout_options.c: ../../metadata/loginout.xml.in loginout_options.h
 		$(BCOP_BIN) --source $@ $<

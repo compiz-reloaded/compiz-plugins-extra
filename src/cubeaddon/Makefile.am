@@ -4,8 +4,11 @@ PFLAGS=-module -avoid-version -no-undefined
 if CUBEADDON_PLUGIN
 libcubeaddon_la_LDFLAGS = $(PFLAGS)
 libcubeaddon_la_LIBADD = @COMPIZ_LIBS@ @COMPIZCUBE_LIBS@
-libcubeaddon_la_SOURCES = cubeaddon_options.c cubeaddon_options.h cubeaddon.c
+nodist_libcubeaddon_la_SOURCES = cubeaddon_options.c cubeaddon_options.h
+dist_libcubeaddon_la_SOURCES = cubeaddon.c
 endif
+
+BUILT_SOURCES = $(nodist_libcubeaddon_la_SOURCES)
 
 INCLUDES =                              \
 	@COMPIZ_CFLAGS@                  \
@@ -24,8 +27,8 @@ endif
 
 CLEANFILES = *_options.c *_options.h
 
-%_options.h: ../../metadata/%.xml
+cubeaddon_options.h: ../../metadata/cubeaddon.xml.in
 		$(BCOP_BIN) --header $@ $<
 
-%_options.c: ../../metadata/%.xml %_options.h
+cubeaddon_options.c: ../../metadata/cubeaddon.xml.in cubeaddon_options.h
 		$(BCOP_BIN) --source $@ $<

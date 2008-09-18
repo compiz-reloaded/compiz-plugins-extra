@@ -3,7 +3,10 @@ PFLAGS=-module -avoid-version -no-undefined
 
 libgears_la_LDFLAGS = $(PFLAGS)
 libgears_la_LIBADD = @COMPIZ_LIBS@
-libgears_la_SOURCES = gears_options.c gears_options.h gears.c
+nodist_libgears_la_SOURCES = gears_options.c gears_options.h
+dist_libgears_la_SOURCES = gears.c
+
+BUILT_SOURCES = $(nodist_libgears_la_SOURCES)
 
 INCLUDES =                              \
 	@COMPIZ_CFLAGS@                  \
@@ -20,8 +23,8 @@ module_LTLIBRARIES = libgears.la
 
 CLEANFILES = *_options.c *_options.h
 
-%_options.h: ../../metadata/%.xml
+gears_options.h: ../../metadata/gears.xml.in
 		$(BCOP_BIN) --header $@ $<
 
-%_options.c: ../../metadata/%.xml %_options.h
+gears_options.c: ../../metadata/gears.xml.in gears_options.h
 		$(BCOP_BIN) --source $@ $<

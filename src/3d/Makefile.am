@@ -4,8 +4,11 @@ PFLAGS=-module -avoid-version -no-undefined
 if THREED_PLUGIN
 lib3d_la_LDFLAGS = $(PFLAGS)
 lib3d_la_LIBADD = @COMPIZ_LIBS@ @COMPIZCUBE_LIBS@
-lib3d_la_SOURCES = 3d_options.c 3d_options.h 3d.c
+nodist_lib3d_la_SOURCES = 3d_options.c 3d_options.h
+dist_lib3d_la_SOURCES = 3d.c
 endif
+
+BUILT_SOURCES = $(nodist_lib3d_la_SOURCES)
 
 INCLUDES =                              \
 	@COMPIZ_CFLAGS@                  \
@@ -24,8 +27,8 @@ endif
 
 CLEANFILES = *_options.c *_options.h
 
-%_options.h: ../../metadata/%.xml
+3d_options.h: ../../metadata/3d.xml.in
 		$(BCOP_BIN) --header $@ $<
 
-%_options.c: ../../metadata/%.xml %_options.h
+3d_options.c: ../../metadata/3d.xml.in 3d_options.h
 		$(BCOP_BIN) --source $@ $<
