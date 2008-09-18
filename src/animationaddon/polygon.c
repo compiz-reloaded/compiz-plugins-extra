@@ -35,7 +35,7 @@
  */
 
 #include <GL/glu.h>
-#include "animationaddon.h"
+#include "compiz-animationaddon.h"
 
 #define CLIP_LIST_INCREMENT 20
 #define MIN_WINDOW_GRID_SIZE 10
