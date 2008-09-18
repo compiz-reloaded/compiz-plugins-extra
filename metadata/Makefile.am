@@ -14,6 +14,7 @@ endif
 
 if NOTIFICATION_PLUGIN
 notificationxml = notification.xml.in
+else
 endif
 
 if SCALEFILTER_PLUGIN
@@ -76,8 +77,15 @@ install-data-local:
 endif
 endif
 
-EXTRA_DIST =		\
-	$(xml_in_files)
+EXTRA_DIST =				\
+	$(xml_in_files)			\
+	animationaddon.xml.in	\
+	cubeaddon.xml.in		\
+	group.xml.in			\
+	notification.xml.in		\
+	scalefilter.xml.in		\
+	showmouse.xml.in		\
+	3d.xml.in
 
 DISTCLEANFILES =	\
 	$(xml_files)    \
