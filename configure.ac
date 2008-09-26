@@ -127,7 +127,7 @@ PKG_CHECK_MODULES(GROUP, compiz-text cairo >= 1.0, [use_group=yes], [use_group=n
 AM_CONDITIONAL(GROUP_PLUGIN, test "x$use_group" = "xyes")
 
 PKG_CHECK_MODULES(SCALEFILTER, compiz-text compiz-scale, [use_scalefilter=yes], [use_scalefilter=no])
-AM_CONDITIONAL(SCALEFILTER_PLUGIN, text "x$use_scalefilter" = "xyes")
+AM_CONDITIONAL(SCALEFILTER_PLUGIN, test "x$use_scalefilter" = "xyes")
 
 PKG_CHECK_MODULES(COMPIZCUBE, compiz-cube, [have_compiz_cube=yes], [have_compiz_cube=no])
 AM_CONDITIONAL(CUBEADDON_PLUGIN, test "x$have_compiz_cube" = "xyes")
