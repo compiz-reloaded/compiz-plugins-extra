@@ -17,8 +17,18 @@
 				<_short>General</_short>
 				<option name="initiate" type="key">
 					<_short>Initiate</_short>
-				    <_long>Toggle the mouse pointer trail.</_long>
+					<_long>Toggle the mouse pointer trail.</_long>
 					<default>&lt;Super&gt;k</default>
+				</option>
+				<option name="initiate_button" type="button">
+					<_short>Initiate</_short>
+					<_long>Toggle the mouse pointer trail.</_long>
+					<default/>
+				</option>
+				<option name="initiate_edge" type="edge">
+					<_short>Initiate</_short>
+					<_long>Toggle the mouse pointer trail.</_long>
+					<default/>
 				</option>
 			</group>
 		</display>

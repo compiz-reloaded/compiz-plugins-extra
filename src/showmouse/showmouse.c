@@ -773,6 +773,10 @@ showmouseInitDisplay (CompPlugin  *p,
 
     showmouseSetInitiateInitiate (d, showmouseInitiate);
     showmouseSetInitiateTerminate (d, showmouseTerminate);
+    showmouseSetInitiateButtonInitiate (d, showmouseInitiate);
+    showmouseSetInitiateButtonTerminate (d, showmouseTerminate);
+    showmouseSetInitiateEdgeInitiate (d, showmouseInitiate);
+    showmouseSetInitiateEdgeTerminate (d, showmouseTerminate);
 
     //Record the display
     d->base.privates[displayPrivateIndex].ptr = sd;
