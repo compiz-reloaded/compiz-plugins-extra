@@ -70,6 +70,7 @@ typedef struct _WidgetScreen
     PreparePaintScreenProc preparePaintScreen;
     DonePaintScreenProc    donePaintScreen;
     PaintWindowProc        paintWindow;
+    FocusWindowProc        focusWindow;
 
     WidgetState state;
 
@@ -639,6 +640,29 @@ widgetPaintWindow (CompWindow              *w,
     return status;
 }
 
+static Bool
+widgetFocusWindow (CompWindow *w)
+{
+    CompScreen *s = w->screen;
+    Bool       status;
+
+    WIDGET_SCREEN (s);
+    WIDGET_WINDOW (w);
+
+    if (ws->state != StateOff && !ww->isWidget && !ww->parentWidget)
+    {
+	status = FALSE;
+    }
+    else
+    {
+	UNWRAP (ws, s, focusWindow);
+	status = (*s->focusWindow) (w);
+	WRAP (ws, s, focusWindow, widgetFocusWindow);
+    }
+
+    return status;
+}
+
 static void
 widgetPreparePaintScreen (CompScreen  *s,
 			  int         msSinceLastPaint)
@@ -800,6 +824,7 @@ widgetInitScreen (CompPlugin *p,
 
     s->base.privates[wd->screenPrivateIndex].ptr = ws;
 
+    WRAP (ws, s, focusWindow, widgetFocusWindow);
     WRAP (ws, s, paintWindow, widgetPaintWindow);
     WRAP (ws, s, preparePaintScreen, widgetPreparePaintScreen);
     WRAP (ws, s, donePaintScreen, widgetDonePaintScreen);
@@ -813,6 +838,7 @@ widgetFiniScreen (CompPlugin *p,
 {
     WIDGET_SCREEN (s);
 
+    UNWRAP (ws, s, focusWindow);
     UNWRAP (ws, s, paintWindow);
     UNWRAP (ws, s, preparePaintScreen);
     UNWRAP (ws, s, donePaintScreen);
