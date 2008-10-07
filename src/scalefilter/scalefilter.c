@@ -571,23 +571,18 @@ static void
 scalefilterHandleEvent (CompDisplay *d,
 	 		XEvent      *event)
 {
+    CompScreen *s;
+    int        grabIndex;
+
     FILTER_DISPLAY (d);
 
-    switch (event->type)
-    {
+    switch (event->type) {
     case KeyPress:
+	s = findScreenAtDisplay (d, event->xkey.root);
+	if (s)
 	{
-	    CompScreen *s;
-	    s = findScreenAtDisplay (d, event->xkey.root);
-	    if (s)
-	    {
-	        SCALE_SCREEN (s);
-		if (ss->grabIndex)
-		{
-		    XKeyEvent *keyEvent = (XKeyEvent *) event;
-		    scalefilterHandleKeyPress (s, keyEvent);
-		}
-	    }
+	    SCALE_SCREEN (s);
+	    grabIndex = ss->grabIndex;
 	}
 	break;
     case UnmapNotify:
@@ -603,6 +598,18 @@ scalefilterHandleEvent (CompDisplay *d,
     UNWRAP (fd, d, handleEvent);
     (*d->handleEvent) (d, event);
     WRAP (fd, d, handleEvent, scalefilterHandleEvent);
+
+    switch (event->type) {
+    case KeyPress:
+	if (s && grabIndex)
+	{
+	    SCALE_SCREEN (s);
+
+	    if (ss->grabIndex == grabIndex)
+		scalefilterHandleKeyPress (s, &event->xkey);
+	}
+	break;
+    }
 }
 
 static void
