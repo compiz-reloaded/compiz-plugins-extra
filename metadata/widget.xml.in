@@ -37,11 +37,6 @@
 					<_long>End widget mode when a non-widget window is clicked.</_long>
 					<default>true</default>
 				</option>
-				<option name="focus_widget_layer" type="bool">
-					<_short>Focus Widget Layer</_short>
-					<_long>Focus a window in the widget layer when activating the layer</_long>
-					<default>false</default>
-				</option>
 			</group>
 			<group>
 				<_short>Appearance</_short>

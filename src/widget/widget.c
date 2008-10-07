@@ -118,6 +118,7 @@ widgetUpdateTreeStatus (CompWindow *w)
     WidgetWindow *pww;
 
     WIDGET_SCREEN (w->screen);
+    WIDGET_WINDOW (w);
 
     /* first clear out every reference to our window */
     for (p = w->screen->windows; p; p = p->next)
@@ -126,6 +127,12 @@ widgetUpdateTreeStatus (CompWindow *w)
 	if (pww->parentWidget == w)
 	    pww->parentWidget = NULL;
     }
+
+    if (w->destroyed)
+	return;
+
+    if (!ww->isWidget)
+	return;
 
     for (p = w->screen->windows; p; p = p->next)
     {
@@ -161,15 +168,10 @@ widgetUpdateWidgetStatus (CompWindow *w)
 	isWidget = FALSE;
 	break;
     default:
-	if (w->attrib.override_redirect ||
-	    (w->wmType & CompWindowTypeDesktopMask))
-	{
+	if (!w->managed || (w->wmType & CompWindowTypeDesktopMask))
 	    isWidget = FALSE;
-	}
 	else
-	{
 	    isWidget = matchEval (widgetGetMatch (w->screen), w);
-	}
 	break;
     }
 
@@ -266,21 +268,18 @@ widgetSetWidgetLayerMapState (CompScreen *s,
 	widgetUpdateWidgetMapState (w, map);
     }
 
-    if (widgetGetFocusWidgetLayer (s))
+    if (map && highest)
     {
-	if (map && highest)
-	{
-	    if (!wd->lastActiveWindow)
-		wd->lastActiveWindow = s->display->activeWindow;
-	    moveInputFocusToWindow (highest);
-	}
-	else if (!map)
-	{
-	    w = findWindowAtDisplay (s->display, wd->lastActiveWindow);
-	    wd->lastActiveWindow = None;
-	    if (w)
-		moveInputFocusToWindow (w);
-	}
+	if (!wd->lastActiveWindow)
+	    wd->lastActiveWindow = s->display->activeWindow;
+	moveInputFocusToWindow (highest);
+    }
+    else if (!map)
+    {
+	w = findWindowAtDisplay (s->display, wd->lastActiveWindow);
+	wd->lastActiveWindow = None;
+	if (w)
+	    moveInputFocusToWindow (w);
     }
 }
 
@@ -402,9 +401,49 @@ widgetToggle (CompDisplay     *d,
 }
 
 static void
+widgetEndWidgetMode (CompScreen *s,
+		     CompWindow *closedWidget)
+{
+    CompOption o;
+
+    WIDGET_SCREEN (s);
+
+    if (ws->state != StateOn && ws->state != StateFadeIn)
+	return;
+
+    if (closedWidget)
+    {
+	CompWindow *w;
+	/* end widget mode if the closed widget was the last one */
+
+	WIDGET_WINDOW (closedWidget);
+	if (ww->isWidget)
+	{
+	    for (w = s->windows; w; w = w->next)
+	    {
+		WIDGET_WINDOW (w);
+		if (w == closedWidget)
+		    continue;
+		if (ww->isWidget)
+		    return;
+	    }
+	}
+    }
+
+    o.type    = CompOptionTypeInt;
+    o.name    = "root";
+    o.value.i = s->root;
+
+    widgetToggle (s->display, NULL, 0, &o, 1);
+}
+
+static void
 widgetHandleEvent (CompDisplay *d,
 		   XEvent      *event)
 {
+    CompScreen *s;
+    CompWindow *w;
+
     WIDGET_DISPLAY (d);
 
     UNWRAP (wd, d, handleEvent);
@@ -416,8 +455,6 @@ widgetHandleEvent (CompDisplay *d,
     case PropertyNotify:
 	if (event->xproperty.atom == wd->compizWidgetAtom)
 	{
-	    CompWindow *w;
-
 	    w = findWindowAtDisplay (d, event->xproperty.window);
 	    if (w)
 	    {
@@ -437,8 +474,6 @@ widgetHandleEvent (CompDisplay *d,
 	}
 	else if (event->xproperty.atom == d->wmClientLeaderAtom)
 	{
-	    CompWindow *w;
-
 	    w = findWindowAtDisplay (d, event->xproperty.window);
 	    if (w)
 	    {
@@ -452,51 +487,49 @@ widgetHandleEvent (CompDisplay *d,
 	}
 	break;
     case ButtonPress:
+	/* terminate widget mode if a non-widget window was clicked */
+	s = findScreenAtDisplay (d, event->xbutton.root);
+	if (s && widgetGetEndOnClick (s))
 	{
-	    CompScreen *s;
-
-	    /* terminate widget mode if a non-widget window
-	       was clicked */
-	    s = findScreenAtDisplay (d, event->xbutton.root);
-	    if (s && widgetGetEndOnClick (s))
+	    WIDGET_SCREEN (s);
+	    if (ws->state == StateOn)
 	    {
-		WIDGET_SCREEN (s);
-		if (ws->state == StateOn)
+		w = findWindowAtScreen (s, event->xbutton.window);
+		if (w && w->managed)
 		{
-		    CompWindow *w;
-		    w = findWindowAtScreen (s, event->xbutton.window);
-		    if (w && w->managed)
-		    {
-			WIDGET_WINDOW (w);
+		    WIDGET_WINDOW (w);
 
-			if (!ww->isWidget && !ww->parentWidget)
-			{
-			    CompOption o;
-
-			    o.type    = CompOptionTypeInt;
-			    o.name    = "root";
-			    o.value.i = s->root;
-
-			    widgetToggle (d, NULL, 0, &o, 1);
-			}
-		    }
+		    if (!ww->isWidget && !ww->parentWidget)
+			widgetEndWidgetMode (s, NULL);
 		}
 	    }
 	}
 	break;
     case MapNotify:
+	w = findWindowAtDisplay (d, event->xmap.window);
+	if (w)
 	{
-	    CompWindow *w;
+	    WIDGET_WINDOW (w);
+	    WIDGET_SCREEN (w->screen);
 
-	    w = findWindowAtDisplay (d, event->xmap.window);
-	    if (w)
-	    {
-		WIDGET_WINDOW (w);
-		WIDGET_SCREEN (w->screen);
-
-		if (ww->isWidget)
-		    widgetUpdateWidgetMapState (w, ws->state != StateOff);
-	    }
+	    if (ww->isWidget)
+		widgetUpdateWidgetMapState (w, ws->state != StateOff);
+	}
+	break;
+    case UnmapNotify:
+	w = findWindowAtDisplay (d, event->xunmap.window);
+	if (w)
+	{
+	    widgetUpdateTreeStatus (w);
+	    widgetEndWidgetMode (w->screen, w);
+	}
+	break;
+    case DestroyNotify:
+	w = findWindowAtDisplay (d, event->xdestroywindow.window);
+	if (w)
+	{
+	    widgetUpdateTreeStatus (w);
+	    widgetEndWidgetMode (w->screen, w);
 	}
 	break;
     }
