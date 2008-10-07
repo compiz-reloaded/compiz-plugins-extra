@@ -453,12 +453,88 @@ scalefilterHandleWindowRemove (CompDisplay *d,
 }
 
 static void
-scalefilterHandleKeyPress (CompScreen *s,
-			   XKeyEvent  *event)
+scalefilterDoRelayout (CompScreen *s)
+{
+    FILTER_SCREEN (s);
+
+    scalefilterRenderFilterText (s);
+
+    if (fs->filterInfo)
+	scalefilterUpdateFilter (s, &fs->filterInfo->match);
+
+    scalefilterRelayout (s);
+}
+
+static Bool
+scalefilterHandleSpecialKeyPress (CompScreen *s,
+				  XKeyEvent  *event,
+				  Bool       *drop)
+{
+    ScaleFilterInfo *info;
+    KeySym          ks;
+    Bool            retval = FALSE;
+    Bool            needRelayout = FALSE;
+
+    FILTER_SCREEN (s);
+
+    info = fs->filterInfo;
+    ks   = XKeycodeToKeysym (s->display->display, event->keycode, 0);
+
+    if (ks == XK_Escape)
+    {
+	/* Escape key - drop current filter or remove filter applied
+	   previously if currently not in input mode */
+	if (scalefilterRemoveFilter (s))
+	{
+	    needRelayout = TRUE;
+	    *drop        = TRUE;
+	}
+	retval = TRUE;
+    }
+    else if (ks == XK_Return)
+    {
+	if (info && info->filterStringLength > 0)
+	{
+	    SCALE_SCREEN (s);
+
+	    /* Return key - apply current filter persistently */
+
+	    matchFini (&ss->match);
+	    matchInit (&ss->match);
+	    matchCopy (&ss->match, &info->match);
+	    matchUpdate (s->display, &ss->match);
+
+	    ss->currentMatch = &ss->match;
+	    fs->matchApplied = TRUE;
+	    *drop            = TRUE;
+	    needRelayout     = TRUE;
+	    scalefilterFiniFilterInfo (s, TRUE);
+	}
+	retval = TRUE;
+    }
+    else if (ks == XK_BackSpace)
+    {
+	if (info && info->filterStringLength > 0)
+	{
+	    /* remove last character in string */
+	    info->filterString[--(info->filterStringLength)] = '\0';
+	    needRelayout = TRUE;
+	}
+	retval = TRUE;
+    }
+
+    if (needRelayout)
+	scalefilterDoRelayout (s);
+
+    return retval;
+}
+
+static void
+scalefilterHandleTextKeyPress (CompScreen *s,
+			       XKeyEvent  *event)
 {
     ScaleFilterInfo *info;
     Bool            needRelayout = FALSE;
-    Bool            dropKeyEvent = FALSE;
     int             count, timeout;
     char            buffer[10];
     wchar_t         wbuffer[10];
@@ -466,7 +542,6 @@ scalefilterHandleKeyPress (CompScreen *s,
 
     FILTER_DISPLAY (s->display);
     FILTER_SCREEN (s);
-    SCALE_SCREEN (s);
 
     info = fs->filterInfo;
     memset (buffer, 0, sizeof (buffer));
@@ -487,43 +562,7 @@ scalefilterHandleKeyPress (CompScreen *s,
 
     mbstowcs (wbuffer, buffer, 9);
 
-    if (ks == XK_Escape)
-    {
-	/* Escape key - drop current filter or remove filter applied
-	   previously if currently not in input mode */
-	if (scalefilterRemoveFilter (s))
-	{
-	    needRelayout = TRUE;
-	    dropKeyEvent = TRUE;
-	}
-    }
-    else if (ks == XK_Return)
-    {
-	if (info)
-	{
-	    /* Return key - apply current filter persistently */
-	    matchFini (&ss->match);
-	    matchInit (&ss->match);
-	    matchCopy (&ss->match, &info->match);
-	    matchUpdate (s->display, &ss->match);
-
-	    ss->currentMatch = &ss->match;
-	    fs->matchApplied = TRUE;
-	    dropKeyEvent = TRUE;
-	    needRelayout = TRUE;
-	    scalefilterFiniFilterInfo (s, TRUE);
-	}
-    }
-    else if (ks == XK_BackSpace)
-    {
-	if (info && info->filterStringLength > 0)
-	{
-	    /* remove last character in string */
-	    info->filterString[--(info->filterStringLength)] = '\0';
-	    needRelayout = TRUE;
-	}
-    }
-    else if (count > 0)
+    if (count > 0)
     {
 	if (!info)
 	{
@@ -551,20 +590,8 @@ scalefilterHandleKeyPress (CompScreen *s,
 	}
     }
 
-    /* set the event type invalid if we
-       don't want other plugins see it */
-    if (dropKeyEvent)
-	event->type = LASTEvent + 1;
-
     if (needRelayout)
-    {
-	scalefilterRenderFilterText (s);
-
-	if (fs->filterInfo)
-	    scalefilterUpdateFilter (s, &fs->filterInfo->match);
-
-	scalefilterRelayout (s);
-    }
+	scalefilterDoRelayout (s);
 }
 
 static void
@@ -573,6 +600,7 @@ scalefilterHandleEvent (CompDisplay *d,
 {
     CompScreen *s;
     int        grabIndex;
+    Bool       dropEvent = FALSE;
 
     FILTER_DISPLAY (d);
 
@@ -583,6 +611,14 @@ scalefilterHandleEvent (CompDisplay *d,
 	{
 	    SCALE_SCREEN (s);
 	    grabIndex = ss->grabIndex;
+	    if (grabIndex)
+		if (scalefilterHandleSpecialKeyPress (s, &event->xkey,
+						      &dropEvent))
+		{
+		    /* don't attempt to process text input later on
+		       if the input was a special key */
+		    grabIndex = 0;
+		}
 	}
 	break;
     case UnmapNotify:
@@ -595,18 +631,21 @@ scalefilterHandleEvent (CompDisplay *d,
 	break;
     }
 
-    UNWRAP (fd, d, handleEvent);
-    (*d->handleEvent) (d, event);
-    WRAP (fd, d, handleEvent, scalefilterHandleEvent);
+    if (!dropEvent)
+    {
+	UNWRAP (fd, d, handleEvent);
+	(*d->handleEvent) (d, event);
+	WRAP (fd, d, handleEvent, scalefilterHandleEvent);
+    }
 
     switch (event->type) {
     case KeyPress:
-	if (s && grabIndex)
+	if (s && grabIndex && !dropEvent)
 	{
 	    SCALE_SCREEN (s);
 
 	    if (ss->grabIndex == grabIndex)
-		scalefilterHandleKeyPress (s, &event->xkey);
+		scalefilterHandleTextKeyPress (s, &event->xkey);
 	}
 	break;
     }
