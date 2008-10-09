@@ -660,7 +660,6 @@ groupAddWindowToGroup (CompWindow     *w,
 	g->topTab      = NULL;
 	g->prevTopTab  = NULL;
 	g->nextTopTab  = NULL;
-	g->activateTab = NULL;
 
 	g->changeAnimationTime      = 0;
 	g->changeAnimationDirection = 0;
@@ -670,6 +669,8 @@ groupAddWindowToGroup (CompWindow     *w,
 	g->ungroupState = UngroupNone;
 
 	g->tabBar = NULL;
+
+	g->checkFocusAfterTabChange = FALSE;
 
 	g->grabWindow = None;
 	g->grabMask   = 0;
@@ -1386,98 +1387,86 @@ void
 groupHandleEvent (CompDisplay *d,
 		  XEvent      *event)
 {
+    CompWindow *w;
+    CompScreen *s;
+
     GROUP_DISPLAY (d);
 
     switch (event->type) {
     case MotionNotify:
-	{
-	    CompScreen *s;
-	    s = findScreenAtDisplay (d, event->xmotion.root);
-	    if (s)
-		groupHandleMotionEvent (s, pointerX, pointerY);
-	}
+	s = findScreenAtDisplay (d, event->xmotion.root);
+	if (s)
+	    groupHandleMotionEvent (s, pointerX, pointerY);
 	break;
 
     case ButtonPress:
-	{
-	    CompScreen *s;
-	    s = findScreenAtDisplay (d, event->xbutton.root);
-	    if (s)
-		groupHandleButtonPressEvent (s, event);
-	}
+	s = findScreenAtDisplay (d, event->xbutton.root);
+	if (s)
+	    groupHandleButtonPressEvent (s, event);
 	break;
 
     case ButtonRelease:
-	{
-	    CompScreen *s;
-	    s = findScreenAtDisplay (d, event->xbutton.root);
-	    if (s)
-		groupHandleButtonReleaseEvent (s, event);
-	}
+	s = findScreenAtDisplay (d, event->xbutton.root);
+	if (s)
+	    groupHandleButtonReleaseEvent (s, event);
 	break;
 
     case MapNotify:
+	w = findWindowAtDisplay (d, event->xmap.window);
+	if (w)
 	{
-	    CompWindow *cw, *w;
-	    w = findWindowAtDisplay (d, event->xmap.window);
-	    if (w)
+	    CompWindow *cw;
+	    for (cw = w->screen->windows; cw; cw = cw->next)
 	    {
-		for (cw = w->screen->windows; cw; cw = cw->next)
+		if (w->id == cw->frame)
 		{
-		    if (w->id == cw->frame)
-		    {
-			GROUP_WINDOW (cw);
-			if (gw->windowHideInfo)
-			    XUnmapWindow (cw->screen->display->display,
-					  cw->frame);
-		    }
+		    GROUP_WINDOW (cw);
+		    if (gw->windowHideInfo)
+			XUnmapWindow (cw->screen->display->display, cw->frame);
 		}
 	    }
 	}
 	break;
 
     case UnmapNotify:
+	w = findWindowAtDisplay (d, event->xunmap.window);
+	if (w)
 	{
-	    CompWindow *w;
-	    w = findWindowAtDisplay (d, event->xunmap.window);
-	    if (w)
+	    GROUP_WINDOW (w);
+
+	    if (w->pendingUnmaps)
 	    {
-		GROUP_WINDOW (w);
-
-		if (w->pendingUnmaps)
+		if (w->shaded)
 		{
-		    if (w->shaded)
-		    {
-			gw->windowState = WindowShaded;
+		    gw->windowState = WindowShaded;
 
-			if (gw->group && groupGetShadeAll (w->screen))
-			    groupShadeWindows (w, gw->group, TRUE);
-		    }
-		    else if (w->minimized)
-		    {
-			gw->windowState = WindowMinimized;
-
-			if (gw->group && groupGetMinimizeAll (w->screen))
-			    groupMinimizeWindows (w, gw->group, TRUE);
-		    }
+		    if (gw->group && groupGetShadeAll (w->screen))
+			groupShadeWindows (w, gw->group, TRUE);
 		}
-
-		if (gw->group)
+		else if (w->minimized)
 		{
-		    if (gw->group->tabBar && IS_TOP_TAB (w, gw->group))
+		    gw->windowState = WindowMinimized;
+
+		    if (gw->group && groupGetMinimizeAll (w->screen))
+			groupMinimizeWindows (w, gw->group, TRUE);
+		}
+	    }
+
+	    if (gw->group)
+	    {
+		if (gw->group->tabBar && IS_TOP_TAB (w, gw->group))
+		{
+		    /* on unmap of the top tab, hide the tab bar and the
+		       input prevention window */
+		    groupTabSetVisibility (gw->group, FALSE, PERMANENT);
+		}
+		if (!w->pendingUnmaps)
+		{
+		    /* close event */
+		    if (!(gw->animateState & IS_UNGROUPING))
 		    {
-			/* on unmap of the top tab, hide the tab bar and the
-			   input prevention window */
-			groupTabSetVisibility (gw->group, FALSE, PERMANENT);
-		    }
-		    if (!w->pendingUnmaps)
-		    {
-			/* close event */
-			if (!(gw->animateState & IS_UNGROUPING))
-			{
-			    groupDeleteGroupWindow (w);
-			    damageScreen (w->screen);
-			}
+			groupDeleteGroupWindow (w);
+			damageScreen (w->screen);
 		    }
 		}
 	    }
@@ -1485,7 +1474,22 @@ groupHandleEvent (CompDisplay *d,
 	break;
 
     case ClientMessage:
-	if (event->xclient.message_type == gd->resizeNotifyAtom)
+	if (event->xclient.message_type == d->winActiveAtom)
+	{
+	    w = findWindowAtDisplay (d, event->xclient.window);
+	    if (w)
+	    {
+		GROUP_WINDOW (w);
+
+		if (gw->group && gw->group->tabBar &&
+		    !IS_TOP_TAB (w, gw->group))
+		{
+		    gw->group->checkFocusAfterTabChange = TRUE;
+		    groupChangeTab (gw->slot, RotateUncertain);
+		}
+	    }
+	}
+	else if (event->xclient.message_type == gd->resizeNotifyAtom)
 	{
 	    CompWindow *w;
 	    w = findWindowAtDisplay (d, event->xclient.window);
@@ -1520,43 +1524,6 @@ groupHandleEvent (CompDisplay *d,
 		}
 	    }
 	}
-	else if (event->xclient.message_type == d->winActiveAtom)
-	{
-	    CompWindow *w;
-	    w = findWindowAtDisplay (d, event->xclient.window);
-	    if (w)
-	    {
-		GROUP_WINDOW (w);
-
-		if (gw->group && gw->group->tabBar && HAS_TOP_WIN (gw->group))
-		{
-		    CompWindow *tw = TOP_TAB (gw->group);
-
-		    if (w->id != tw->id)
-		    {
-			/* if a non top-tab has been activated, switch to the
-			   top-tab instead - but only if is visible */
-			if (tw->shaded)
-			{
-			    int newState;
-			    newState = tw->state & ~CompWindowStateShadedMask;
-			    changeWindowState (tw, newState);
-			    updateWindowAttributes (tw,
-						    CompStackingUpdateModeNone);
-			}
-			else if (tw->minimized)
-			    unminimizeWindow (tw);
-
-			if (!(tw->state & CompWindowStateHiddenMask))
-			{
-			    if (gw->group->changeState == NoTabChange)
-				gw->group->activateTab = gw->slot;
-			    sendWindowActivationRequest (tw->screen, tw->id);
-			}
-		    }
-		}
-	    }
-	}
 	break;
 
     default:
@@ -1585,22 +1552,7 @@ groupHandleEvent (CompDisplay *d,
 
     switch (event->type) {
     case PropertyNotify:
-	if (event->xproperty.atom == d->winActiveAtom)
-	{
-	    CompWindow *w;
-	    w = findWindowAtDisplay (d, d->activeWindow);
-	    if (w)
-	    {
-		GROUP_WINDOW (w);
-
-		if (gw->group && gw->group->activateTab)
-		{
-		    groupChangeTab (gw->group->activateTab, RotateUncertain);
-		    gw->group->activateTab = NULL;
-		}
-	    }
-	}
-	else if (event->xproperty.atom == d->wmNameAtom)
+	if (event->xproperty.atom == d->wmNameAtom)
 	{
 	    CompWindow *w;
 	    w = findWindowAtDisplay (d, event->xproperty.window);
@@ -2133,4 +2085,20 @@ groupWindowStateChangeNotify (CompWindow   *w,
     UNWRAP (gs, s, windowStateChangeNotify);
     (*s->windowStateChangeNotify) (w, lastState);
     WRAP (gs, s, windowStateChangeNotify, groupWindowStateChangeNotify);
+}
+
+void
+groupActivateWindow (CompWindow *w)
+{
+    CompScreen *s = w->screen;
+
+    GROUP_SCREEN (s);
+    GROUP_WINDOW (w);
+
+    if (gw->group && gw->group->tabBar && !IS_TOP_TAB (w, gw->group))
+	groupChangeTab (gw->slot, RotateUncertain);
+
+    UNWRAP (gs, s, activateWindow);
+    (*s->activateWindow) (w);
+    WRAP (gs, s, activateWindow, groupActivateWindow);
 }

@@ -698,7 +698,12 @@ groupHandleAnimation (GroupSelection *group)
 
 	group->changeState = TabChangeNewIn;
 
-	(*s->activateWindow) (top);
+	if (!group->checkFocusAfterTabChange ||
+	    allowWindowFocus (top, NO_FOCUS_MASK, s->x, s->y, 0))
+	{
+	    (*s->activateWindow) (top);
+	}
+	group->checkFocusAfterTabChange = FALSE;
     }
 
     if (group->changeState == TabChangeNewIn &&
@@ -1554,11 +1559,13 @@ groupChangeTab (GroupTabBarSlot             *topTab,
 {
     CompWindow     *w, *oldTopTab;
     GroupSelection *group;
+    CompScreen     *s;
 
     if (!topTab)
 	return TRUE;
 
     w = topTab->window;
+    s = w->screen;
 
     GROUP_WINDOW (w);
 
@@ -1614,7 +1621,7 @@ groupChangeTab (GroupTabBarSlot             *topTab,
 
 	    group->changeAnimationDirection *= -1;
 	    group->changeAnimationTime =
-		groupGetChangeAnimationTime (w->screen) * 500 -
+		groupGetChangeAnimationTime (s) * 500 -
 		group->changeAnimationTime;
 	    group->changeState = (group->changeState == TabChangeOldOut) ?
 		TabChangeNewIn : TabChangeOldOut;
@@ -1642,7 +1649,7 @@ groupChangeTab (GroupTabBarSlot             *topTab,
 	{
 	    int dx, dy;
 
-	    GROUP_SCREEN (w->screen);
+	    GROUP_SCREEN (s);
 
 	    dx = WIN_CENTER_X (oldTopTab) - WIN_CENTER_X (w);
 	    dy = WIN_CENTER_Y (oldTopTab) - WIN_CENTER_Y (w);
@@ -1658,8 +1665,8 @@ groupChangeTab (GroupTabBarSlot             *topTab,
 	    /* we use only the half time here -
 	       the second half will be PaintFadeOut */
 	    group->changeAnimationTime =
-		groupGetChangeAnimationTime (w->screen) * 500;
-	    groupTabChangeActivateEvent (w->screen, TRUE);
+		groupGetChangeAnimationTime (s) * 500;
+	    groupTabChangeActivateEvent (s, TRUE);
 	    group->changeState = TabChangeOldOut;
 	}
 	else
@@ -1669,7 +1676,13 @@ groupChangeTab (GroupTabBarSlot             *topTab,
 		group->prevTopTab = group->topTab;
 	    else
 		group->prevTopTab = NULL;
-	    (*w->screen->activateWindow) (w);
+
+	    if (!group->checkFocusAfterTabChange ||
+		allowWindowFocus (w, NO_FOCUS_MASK, s->x, s->y, 0))
+	    {
+		(*s->activateWindow) (w);
+	    }
+	    group->checkFocusAfterTabChange = FALSE;
 	}
     }
 

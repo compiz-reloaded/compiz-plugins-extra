@@ -341,7 +341,8 @@ struct _GroupSelection {
     ChangeTabAnimationDirection nextDirection;
     GroupTabBarSlot             *nextTopTab;
 
-    GroupTabBarSlot *activateTab;
+    /* check focus stealing prevention after changing tabs */
+    Bool checkFocusAfterTabChange;
 
     GroupTabBar *tabBar;
 
@@ -419,6 +420,7 @@ typedef struct _GroupScreen {
     WindowUngrabNotifyProc        windowUngrabNotify;
     DamageWindowRectProc          damageWindowRect;
     WindowStateChangeNotifyProc   windowStateChangeNotify;
+    ActivateWindowProc            activateWindow;
 
     GroupPendingMoves   *pendingMoves;
     GroupPendingGrabs   *pendingGrabs;
@@ -612,6 +614,8 @@ groupDamageWindowRect (CompWindow *w,
 		       Bool       initial,
 		       BoxPtr     rect);
 
+void
+groupActivateWindow (CompWindow *w);
 
 /*
  * cairo.c

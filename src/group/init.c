@@ -302,6 +302,7 @@ groupInitScreen (CompPlugin *p,
     WRAP (gs, s, windowUngrabNotify, groupWindowUngrabNotify);
     WRAP (gs, s, damageWindowRect, groupDamageWindowRect);
     WRAP (gs, s, windowStateChangeNotify, groupWindowStateChangeNotify);
+    WRAP (gs, s, activateWindow, groupActivateWindow);
 
     s->base.privates[gd->screenPrivateIndex].ptr = gs;
 
@@ -431,6 +432,7 @@ groupFiniScreen (CompPlugin *p,
     UNWRAP (gs, s, windowUngrabNotify);
     UNWRAP (gs, s, damageWindowRect);
     UNWRAP (gs, s, windowStateChangeNotify);
+    UNWRAP (gs, s, activateWindow);
 
     finiTexture (s, &gs->glowTexture);
     free (gs);
@@ -505,6 +507,11 @@ groupFiniWindow (CompPlugin *p,
 	groupSetWindowVisibility (w, TRUE);
 
     gw->readOnlyProperty = TRUE;
+
+    /* FIXME: this implicitly calls the wrapped function activateWindow
+       (via groupDeleteTabBarSlot -> groupUnhookTabBarSlot -> groupChangeTab)
+       --> better wrap into removeObject and call it for removeWindow
+       */
     if (gw->group)
 	groupDeleteGroupWindow (w);
 
