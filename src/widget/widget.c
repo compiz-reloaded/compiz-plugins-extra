@@ -156,7 +156,7 @@ widgetUpdateTreeStatus (CompWindow *w)
 static Bool
 widgetUpdateWidgetStatus (CompWindow *w)
 {
-    Bool isWidget, retval;
+    Bool isWidget, retval, managed;
 
     WIDGET_WINDOW (w);
 
@@ -168,7 +168,8 @@ widgetUpdateWidgetStatus (CompWindow *w)
 	isWidget = FALSE;
 	break;
     default:
-	if (!w->managed || (w->wmType & CompWindowTypeDesktopMask))
+	managed = w->managed || ww->oldManaged;
+	if (!managed || (w->wmType & CompWindowTypeDesktopMask))
 	    isWidget = FALSE;
 	else
 	    isWidget = matchEval (widgetGetMatch (w->screen), w);
@@ -512,6 +513,7 @@ widgetHandleEvent (CompDisplay *d,
 	    WIDGET_WINDOW (w);
 	    WIDGET_SCREEN (w->screen);
 
+	    widgetUpdateWidgetStatus (w);
 	    if (ww->isWidget)
 		widgetUpdateWidgetMapState (w, ws->state != StateOff);
 	}
@@ -544,7 +546,10 @@ widgetUpdateMatch (void *closure)
 
     if (widgetUpdateWidgetStatus (w))
     {
+	WIDGET_SCREEN (w->screen);
+
 	widgetUpdateTreeStatus (w);
+	widgetUpdateWidgetMapState (w, ws->state != StateOff);
 	(*w->screen->display->matchPropertyChanged) (w->screen->display, w);
     }
 
