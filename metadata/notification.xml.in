@@ -3,6 +3,7 @@
     <plugin name="notification">
 	<_short>Error Notifications</_short>
 	<_long>Display errors and other messages using libnotify.</_long>
+	<category>Utility</category>
 	<display>
 	    <option type="int" name="timeout">
 		<_short>Hide Timeout</_short>
