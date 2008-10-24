@@ -20,13 +20,13 @@ libanimationaddon_la_SOURCES = airplane3d.c     \
 endif
 
 INCLUDES =                                  \
+	-I$(top_srcdir)/include	            \
 	@COMPIZ_CFLAGS@                     \
 	@COMPIZANIMATION_CFLAGS@            \
 	-DDATADIR='"$(compdatadir)"'        \
 	-DLIBDIR='"$(libdir)"'              \
 	-DLOCALEDIR="\"@datadir@/locale\""  \
-	-DIMAGEDIR='"$(imagedir)"'          \
-	-I$(top_srcdir)/include
+	-DIMAGEDIR='"$(imagedir)"'
 
 moduledir = $(plugindir)
 
