@@ -171,13 +171,15 @@ setSDWindowHints (CompWindow *w,
 
     if (enterSDMode)
     {
-	sw->wasManaged = w->managed;
-	w->managed = FALSE;
-
 	sw->stateMask = state & CompWindowStateSkipPagerMask;
 	state |= CompWindowStateSkipPagerMask;
 	sw->notAllowedMask = CompWindowActionMoveMask |
 	                     CompWindowActionResizeMask;
+
+	changeWindowState (w, state);
+
+	sw->wasManaged = w->managed;
+	w->managed = FALSE;
     }
     else
     {
@@ -187,9 +189,9 @@ setSDWindowHints (CompWindow *w,
 	state |= (sw->stateMask & CompWindowStateSkipPagerMask);
 	sw->notAllowedMask = 0;
 	sw->stateMask = 0;
-    }
 
-    changeWindowState (w, state);
+	changeWindowState (w, state);
+    }
 }
 
 static void
