@@ -1,7 +1,7 @@
 #ifndef _COMPIZ_ANIMATIONADDON_H
 #define _COMPIZ_ANIMATIONADDON_H
 
-#define ANIMATIONADDON_ABIVERSION 20080824
+#define ANIMATIONADDON_ABIVERSION 20081023
 
 
 // Polygon tesselation type: Rectangular, Hexagonal
