@@ -835,7 +835,7 @@ tessellateIntoGlass (CompWindow * w,
 
     for (i = 0; i < spoke_num; i++)
     {
-	spoke[i].spoke_vertex = malloc (sizeof (spoke_vertex_t) * tier_num);
+	spoke[i].spoke_vertex = calloc (tier_num, sizeof (spoke_vertex_t));
     }
 
     spoke_range = 2 * M_PI / spoke_num;
@@ -1018,7 +1018,7 @@ tessellateIntoGlass (CompWindow * w,
 	if (pset->nPolygons > 0)
 	    freePolygonObjects (pset);
 
-	pset->nPolygons = spoke_num * (tier_num + 1);
+	pset->nPolygons = spoke_num * tier_num;
 
 	pset->polygons = calloc (pset->nPolygons, sizeof (PolygonObject));
 	if (!pset->polygons)
@@ -1038,7 +1038,7 @@ tessellateIntoGlass (CompWindow * w,
     PolygonObject *p = pset->polygons;
     int xc, yc;
 
-    for (yc = 0; yc <  spoke_num; yc++, p++) //spokes
+    for (yc = 0; yc <  spoke_num; yc++) //spokes
     {
 
 	for (xc = 0; xc < tier_num; xc++, p++) //tiers
@@ -1188,24 +1188,24 @@ tessellateIntoGlass (CompWindow * w,
 	    nor[4 * 3 + 2] = -1;
 
 	    // Determine bounding box (to test intersection with clips)
-	    p->boundingBox.x1 = p->centerPos.x - shards[xc][yc].pt3X ;
-	    p->boundingBox.y1 = p->centerPos.y - shards[xc][yc].pt3Y ;
-	    p->boundingBox.x2 = ceil (shards[xc][yc].pt1X + p->centerPos.x);
-	    p->boundingBox.y2 = ceil (shards[xc][yc].pt1X + p->centerPos.y);
+	    p->boundingBox.x1 = p->centerPos.x - shards[yc][xc].pt3X;
+	    p->boundingBox.y1 = p->centerPos.y - shards[yc][xc].pt3Y;
+	    p->boundingBox.x2 = ceil (shards[yc][xc].pt1X + p->centerPos.x);
+	    p->boundingBox.y2 = ceil (shards[yc][xc].pt1Y + p->centerPos.y);
 
 	    float dist[4] = {0}, longest_dist = 0;
-	    dist[0] = sqrt (powf ((shards[xc][yc].centerX - shards[xc][yc].pt0X), 2) +
-			    powf ((shards[xc][yc].centerY - shards[xc][yc].pt0Y), 2) +
-			    powf (thickness, 2));
-	    dist[1] = sqrt (powf ((shards[xc][yc].centerX - shards[xc][yc].pt1X), 2) +
-			    powf ((shards[xc][yc].centerY - shards[xc][yc].pt1Y), 2) +
-			    powf (thickness, 2));
-	    dist[2] = sqrt (powf ((shards[xc][yc].centerX - shards[xc][yc].pt2X), 2) +
-			    powf ((shards[xc][yc].centerY - shards[xc][yc].pt2Y), 2) +
-			    powf (thickness, 2));
-	    dist[3] = sqrt (powf ((shards[xc][yc].centerX - shards[xc][yc].pt3X), 2) +
-			    powf ((shards[xc][yc].centerY - shards[xc][yc].pt3Y), 2) +
-			    powf (thickness, 2));
+	    dist[0] = sqrt (powf ((shards[yc][xc].centerX - shards[yc][xc].pt0X), 2) +
+			    powf ((shards[yc][xc].centerY - shards[yc][xc].pt0Y), 2) +
+			    powf (thickness,2));
+	    dist[1] = sqrt (powf ((shards[yc][xc].centerX - shards[yc][xc].pt1X), 2) +
+			    powf ((shards[yc][xc].centerY - shards[yc][xc].pt1Y), 2) +
+			    powf (thickness,2));
+	    dist[2] = sqrt (powf ((shards[yc][xc].centerX - shards[yc][xc].pt2X), 2) +
+			    powf ((shards[yc][xc].centerY - shards[yc][xc].pt2Y), 2) +
+			    powf (thickness,2));
+	    dist[3] = sqrt (powf ((shards[yc][xc].centerX - shards[yc][xc].pt3X), 2) +
+			    powf ((shards[yc][xc].centerY - shards[yc][xc].pt3Y), 2) +
+			    powf (thickness,2));
 
 	    int k;
 	    for (k = 0; k < 4; k++)
@@ -1214,8 +1214,6 @@ tessellateIntoGlass (CompWindow * w,
 		    longest_dist = dist[k];
 	    }
 
-	    longest_dist *=3; //good measure
-	    longest_dist /=2;
 	    p->boundSphereRadius = longest_dist;
 	}
     }
