@@ -204,7 +204,8 @@ AnimAddonFunctions animAddonFunctions =
     .polygonsDeceleratingAnimStepPolygon= polygonsDeceleratingAnimStepPolygon,
     .freePolygonObjects			= freePolygonObjects,
     .tessellateIntoRectangles		= tessellateIntoRectangles,
-    .tessellateIntoHexagons		= tessellateIntoHexagons
+    .tessellateIntoHexagons		= tessellateIntoHexagons,
+    .tessellateIntoGlass                = tessellateIntoGlass
 };
 
 static const CompMetadataOptionInfo animAddonScreenOptionInfo[] = {
@@ -223,6 +224,8 @@ static const CompMetadataOptionInfo animAddonScreenOptionInfo[] = {
     { "explode_thickness", "float", "<min>0</min>", 0, 0 },
     { "explode_gridx", "int", "<min>1</min>", 0, 0 },
     { "explode_gridy", "int", "<min>1</min>", 0, 0 },
+    { "explode_tiers", "int", "<min>1</min>", 0, 0 },
+    { "explode_spokes", "int", "<min>1</min>", 0, 0 },
     { "explode_tessellation", "int", RESTOSTRING (0, LAST_POLYGON_TESS), 0, 0 },
     { "fire_particles", "int", "<min>0</min>", 0, 0 },
     { "fire_size", "float", "<min>0.1</min>", 0, 0 },

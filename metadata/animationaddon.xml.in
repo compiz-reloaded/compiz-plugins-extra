@@ -227,6 +227,20 @@
 	    <min>1</min>
 	    <max>200</max>
 	  </option>
+	  <option name="explode_spokes" type="int">
+	    <_short>Shatter Number of Spokes</_short>
+	    <_long>The exploding window with the shatter animation will be split into pieces radially from the center. Specify the number of radial spokes the animation will have.</_long>
+	    <default>2</default>
+	    <min>1</min>
+	    <max>100</max>
+	  </option>
+	  <option name="explode_tiers" type="int">
+	    <_short>Shatter Number of Tiers</_short>
+	    <_long>The exploding window will be split into pieces along concentric circles. Specify the number of concentric circles the shatter tessellation will have.</_long>
+	    <default>3</default>
+	    <min>1</min>
+	    <max>100</max>
+	  </option>
 	  <option name="explode_thickness" type="float">
 	    <_short>Thickness of Exploding Polygons</_short>
 	    <_long>Thickness of exploding window pieces (in pixels).</_long>
@@ -240,7 +254,7 @@
 	    <_long>Tessellation type for exploding window pieces.</_long>
 	    <default>0</default>
 	    <min>0</min>
-	    <max>1</max>
+	    <max>2</max>
 	    <desc>
 	      <value>0</value>
 	      <_name>Rectangular</_name>
@@ -249,6 +263,10 @@
 	      <value>1</value>
 	      <_name>Hexagonal</_name>
 	    </desc>
+	    <desc>
+	      <value>2</value>
+	      <_name>Glass</_name>
+	    </desc>	
 	  </option>
 	</subgroup>
 

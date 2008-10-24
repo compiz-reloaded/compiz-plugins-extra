@@ -83,6 +83,8 @@ typedef enum
     ANIMADDON_SCREEN_OPTION_EXPLODE_THICKNESS,
     ANIMADDON_SCREEN_OPTION_EXPLODE_GRIDSIZE_X,
     ANIMADDON_SCREEN_OPTION_EXPLODE_GRIDSIZE_Y,
+    ANIMADDON_SCREEN_OPTION_EXPLODE_TIERS,
+    ANIMADDON_SCREEN_OPTION_EXPLODE_SPOKES,
     ANIMADDON_SCREEN_OPTION_EXPLODE_TESS,
     ANIMADDON_SCREEN_OPTION_FIRE_PARTICLES,
     ANIMADDON_SCREEN_OPTION_FIRE_SIZE,
@@ -312,6 +314,12 @@ tessellateIntoHexagons (CompWindow * w,
 			int gridSizeX,
 			int gridSizeY,
 			float thickness);
+
+Bool
+tessellateIntoGlass (CompWindow * w, 
+		     int spoke_num,
+		     int tier_num,
+		     float thickness);
 
 void
 polygonsStoreClips (CompWindow * w,

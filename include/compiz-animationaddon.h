@@ -8,9 +8,10 @@
 typedef enum
 {
     PolygonTessRect = 0,
-    PolygonTessHex
+    PolygonTessHex,
+    PolygonTessGlass
 } PolygonTess;
-#define LAST_POLYGON_TESS 1
+#define LAST_POLYGON_TESS 2
 
 // This is intended to be a closed 3D piece of a window with convex polygon
 // faces and quad-strip sides. Since decoration texture is separate from
@@ -206,6 +207,7 @@ typedef struct _AnimAddonFunctions {
     void (*freePolygonObjects) (PolygonSet * pset);
     tessellateProc	tessellateIntoRectangles;
     tessellateProc	tessellateIntoHexagons;
+    tessellateProc	tessellateIntoGlass;
 } AnimAddonFunctions;
 
 typedef void (*AnimStepPolygonProc) (CompWindow *w,

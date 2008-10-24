@@ -61,6 +61,13 @@ fxExplodeInit (CompWindow * w)
 				    animGetF (w, ANIMADDON_SCREEN_OPTION_EXPLODE_THICKNESS)))
 	    return FALSE;
 	break;
+    case PolygonTessGlass:
+	if (!tessellateIntoGlass (w,
+				  animGetI (w, ANIMADDON_SCREEN_OPTION_EXPLODE_SPOKES),
+				  animGetI (w, ANIMADDON_SCREEN_OPTION_EXPLODE_TIERS),
+				  animGetF (w, ANIMADDON_SCREEN_OPTION_EXPLODE_THICKNESS)))
+	    return FALSE;
+        break;
     default:
 	return FALSE;
     }
