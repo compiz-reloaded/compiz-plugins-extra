@@ -43,12 +43,13 @@ typedef struct _maximumizeSettings
     Bool    shrink; // Shrink and grow can both be executed.
     Bool    grow;   // Shrink will run first.
 } MaxSet;
+
 /* Returns true if rectangles a and b intersect by at least 40 in both
  * directions
  */
 static Bool 
-maximumizeSubstantialOverlap(XRectangle a,
-			     XRectangle b)
+maximumizeSubstantialOverlap (XRectangle a,
+			      XRectangle b)
 {
     if (a.x + a.width <= b.x + 40) return False;
     if (b.x + b.width <= a.x + 40) return False;
@@ -118,7 +119,7 @@ maximumizeEmptyRegion (CompWindow *window,
 	    continue;
 	}
 
-	if (maximumizeGetIgnoreSticky(s->display) && 
+	if (maximumizeGetIgnoreSticky (s->display) && 
 	    (w->state & CompWindowStateStickyMask) &&
 	    !(w->wmType & CompWindowTypeDockMask))
 	    continue;
@@ -145,7 +146,7 @@ maximumizeEmptyRegion (CompWindow *window,
  */
 static Bool
 maximumizeBoxCompare (BOX a,
-			  BOX b)
+		      BOX b)
 {
     int areaA, areaB;
 
@@ -179,7 +180,7 @@ maximumizeExtendBox (CompWindow *w,
     {
 	if ((xFirst && counter == 0) || (!xFirst && counter == 1))
 	{
-	    if(mset.left) 
+	    if (mset.left) 
 	    {
 		while (CHECKREC) {
 		    tmp.x1--;
@@ -188,7 +189,7 @@ maximumizeExtendBox (CompWindow *w,
 		if (touch) tmp.x1++;
 	    }
 	    touch = FALSE;
-	    if(mset.right) {
+	    if (mset.right) {
 		while (CHECKREC) {
 		    tmp.x2++;
 		    touch = TRUE;
@@ -201,7 +202,7 @@ maximumizeExtendBox (CompWindow *w,
 
 	if ((xFirst && counter == 1) || (!xFirst && counter == 0))
 	{
-	    if(mset.down) {
+	    if (mset.down) {
 		while (CHECKREC) {
 		    tmp.y2++;
 		    touch = TRUE;
@@ -210,7 +211,7 @@ maximumizeExtendBox (CompWindow *w,
 	    }
 	    touch = FALSE;
 
-	    if(mset.up) {
+	    if (mset.up) {
 		while (CHECKREC) {
 		    tmp.y1--;
 		    touch = TRUE;
@@ -273,9 +274,9 @@ maximumizeFindRect (CompWindow *w,
 
 /* Calls out to compute the resize */
 static unsigned int
-maximumizeComputeResize(CompWindow     *w,
-			    XWindowChanges *xwc,
-			    MaxSet	   mset)
+maximumizeComputeResize (CompWindow     *w,
+			 XWindowChanges *xwc,
+			 MaxSet	   mset)
 {
     CompOutput   *output;
     Region       region;
@@ -335,13 +336,13 @@ maximumizeTrigger (CompDisplay     *d,
 	MaxSet	       mset;
 
 	s = w->screen;
-	if(otherScreenGrabExist (s, "maximumize", 0))
+	if (otherScreenGrabExist (s, "maximumize", 0))
 	   return FALSE;
 	/*
 	 * Grab the screen.
 	 */
 	grabIndex = pushScreenGrab (s, s->invisibleCursor, "maximumize");
-	if(!grabIndex)
+	if (!grabIndex)
 	    return FALSE;
 
 	mset.left = maximumizeGetMaximumizeLeft (w->screen->display);
@@ -367,8 +368,8 @@ maximumizeTrigger (CompDisplay     *d,
 	}
     }
     /* Release the screen grab */
-    if(grabIndex)
-	removeScreenGrab(s,grabIndex, NULL);
+    if (grabIndex)
+	removeScreenGrab (s,grabIndex, NULL);
 
     return TRUE;
 }
@@ -378,14 +379,14 @@ maximumizeTrigger (CompDisplay     *d,
  */
 static Bool
 maximumizeTriggerDirection (CompDisplay     *d,
-				CompAction      *action,
-				CompActionState state,
-				CompOption      *option,
-				Bool            left,
-				Bool            right,
-				Bool            up,
-				Bool            down,
-				int             nOption)
+			    CompAction      *action,
+			    CompActionState state,
+			    CompOption      *option,
+			    Bool            left,
+			    Bool            right,
+			    Bool            up,
+			    Bool            down,
+			    int             nOption)
 {
     Window     xid;
     CompWindow *w;
@@ -402,14 +403,14 @@ maximumizeTriggerDirection (CompDisplay     *d,
 	MaxSet	       mset;
 
 	s = w->screen;
-	if(otherScreenGrabExist (s, "maximumize", 0))
+	if (otherScreenGrabExist (s, "maximumize", 0))
 	    return FALSE;
 
 	/*
 	 * Grab the screen.
 	 */
 	grabIndex = pushScreenGrab (s, s->invisibleCursor, "maximumize");
-	if(!grabIndex)
+	if (!grabIndex)
 	    return FALSE;
 
 	mset.left = left;
@@ -435,8 +436,8 @@ maximumizeTriggerDirection (CompDisplay     *d,
 	}
     }
     /* Release the screen grab */
-    if(grabIndex)
-	removeScreenGrab(s,grabIndex, NULL);
+    if (grabIndex)
+	removeScreenGrab (s,grabIndex, NULL);
     return TRUE;
 }
 
@@ -445,10 +446,10 @@ maximumizeTriggerDirection (CompDisplay     *d,
  */
 static Bool
 maximumizeTriggerLeft (CompDisplay     *d,
-			   CompAction      *action,
-			   CompActionState state,
-			   CompOption      *option,
-			   int             nOption)
+		       CompAction      *action,
+		       CompActionState state,
+		       CompOption      *option,
+		       int             nOption)
 {
     return maximumizeTriggerDirection (d,action,state,option,TRUE, FALSE, FALSE, FALSE,nOption);
 
@@ -460,10 +461,10 @@ maximumizeTriggerLeft (CompDisplay     *d,
  */
 static Bool
 maximumizeTriggerRight (CompDisplay     *d,
-			    CompAction      *action,
-			    CompActionState state,
-			    CompOption      *option,
-			    int             nOption)
+			CompAction      *action,
+			CompActionState state,
+			CompOption      *option,
+			int             nOption)
 {
     return maximumizeTriggerDirection (d,action,state,option,FALSE, TRUE, FALSE, FALSE,nOption);
 }
@@ -474,10 +475,10 @@ maximumizeTriggerRight (CompDisplay     *d,
  */
 static Bool
 maximumizeTriggerUp (CompDisplay     *d,
-			 CompAction      *action,
-			 CompActionState state,
-			 CompOption      *option,
-			 int             nOption)
+		     CompAction      *action,
+		     CompActionState state,
+		     CompOption      *option,
+		     int             nOption)
 {
     return maximumizeTriggerDirection (d,action,state,option,FALSE, FALSE, TRUE, FALSE,nOption);
 
@@ -489,12 +490,12 @@ maximumizeTriggerUp (CompDisplay     *d,
  */
 static Bool
 maximumizeTriggerDown (CompDisplay     *d,
-			   CompAction      *action,
-			   CompActionState state,
-			   CompOption      *option,
-			   int             nOption)
+		       CompAction      *action,
+		       CompActionState state,
+		       CompOption      *option,
+		       int             nOption)
 {
-  
+
     return maximumizeTriggerDirection (d,action,state,option,FALSE, FALSE, FALSE, TRUE,nOption);
 
 }
@@ -505,25 +506,25 @@ maximumizeTriggerDown (CompDisplay     *d,
  */
 static Bool
 maximumizeTriggerHorizontally (CompDisplay     *d,
-				   CompAction      *action,
-				   CompActionState state,
-				   CompOption      *option,
-				   int             nOption)
+			       CompAction      *action,
+			       CompActionState state,
+			       CompOption      *option,
+			       int             nOption)
 {
     return maximumizeTriggerDirection (d,action,state,option,TRUE, TRUE, FALSE, FALSE,nOption);
 
 }
 
 /* 
-  * Maximumazing vertically.
+ * Maximumazing vertically.
  *
  */
 static Bool
 maximumizeTriggerVertically (CompDisplay     *d,
-				 CompAction      *action,
-				 CompActionState state,
-				 CompOption      *option,
-				 int             nOption)
+			     CompAction      *action,
+			     CompActionState state,
+			     CompOption      *option,
+			     int             nOption)
 {
     return maximumizeTriggerDirection (d,action,state,option,FALSE, FALSE, TRUE, TRUE,nOption);
 
@@ -535,10 +536,10 @@ maximumizeTriggerVertically (CompDisplay     *d,
  */
 static Bool
 maximumizeTriggerUpLeft (CompDisplay     *d,
-			     CompAction      *action,
-			     CompActionState state,
-			     CompOption      *option,
-			     int             nOption)
+			 CompAction      *action,
+			 CompActionState state,
+			 CompOption      *option,
+			 int             nOption)
 {
 
     return maximumizeTriggerDirection (d,action,state,option,TRUE, FALSE, TRUE, FALSE,nOption);
@@ -551,10 +552,10 @@ maximumizeTriggerUpLeft (CompDisplay     *d,
  */
 static Bool
 maximumizeTriggerUpRight (CompDisplay     *d,
-			      CompAction      *action,
-			      CompActionState state,
-			      CompOption      *option,
-			      int             nOption)
+			  CompAction      *action,
+			  CompActionState state,
+			  CompOption      *option,
+			  int             nOption)
 {
     return maximumizeTriggerDirection (d,action,state,option,FALSE, TRUE, TRUE, FALSE,nOption);
 
@@ -566,10 +567,10 @@ maximumizeTriggerUpRight (CompDisplay     *d,
  */
 static Bool
 maximumizeTriggerDownLeft (CompDisplay     *d,
-			       CompAction      *action,
-			       CompActionState state,
-			       CompOption      *option,
-			       int             nOption)
+			   CompAction      *action,
+			   CompActionState state,
+			   CompOption      *option,
+			   int             nOption)
 {
     return maximumizeTriggerDirection (d,action,state,option,TRUE, FALSE, FALSE, TRUE,nOption);
 }
@@ -581,10 +582,10 @@ maximumizeTriggerDownLeft (CompDisplay     *d,
 
 static Bool
 maximumizeTriggerDownRight (CompDisplay     *d,
-				CompAction      *action,
-				CompActionState state,
-				CompOption      *option,
-				int             nOption)
+			    CompAction      *action,
+			    CompActionState state,
+			    CompOption      *option,
+			    int             nOption)
 {
     return maximumizeTriggerDirection (d,action,state,option,FALSE, TRUE, FALSE, TRUE,nOption);
 }
@@ -593,7 +594,7 @@ maximumizeTriggerDownRight (CompDisplay     *d,
 /* Configuration, initialization, boring stuff. --------------------- */
 static Bool
 maximumizeInitDisplay (CompPlugin  *p,
-			   CompDisplay *d)
+		       CompDisplay *d)
 {
     if (!checkPluginABI ("core", CORE_ABIVERSION))
 	return FALSE;
@@ -615,7 +616,7 @@ maximumizeInitDisplay (CompPlugin  *p,
 
 static CompBool
 maximumizeInitObject (CompPlugin *p,
-			  CompObject *o)
+		      CompObject *o)
 {
     static InitPluginObjectProc dispTab[] = {
 	(InitPluginObjectProc) 0, /* InitCore */
@@ -629,7 +630,7 @@ maximumizeInitObject (CompPlugin *p,
 
 static void
 maximumizeFiniObject (CompPlugin *p,
-			  CompObject *o)
+		      CompObject *o)
 {
     static FiniPluginObjectProc dispTab[] = {
 	(FiniPluginObjectProc) 0, /* FiniCore */
