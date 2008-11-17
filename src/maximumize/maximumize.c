@@ -34,12 +34,21 @@
 #include <compiz-core.h>
 #include "maximumize_options.h"
 
+typedef struct _maximumizeSettings
+{
+    Bool    left;
+    Bool    right;
+    Bool    up;
+    Bool    down;
+    Bool    shrink; // Shrink and grow can both be executed.
+    Bool    grow;   // Shrink will run first.
+} MaxSet;
 /* Returns true if rectangles a and b intersect by at least 40 in both
  * directions
  */
 static Bool 
 maximumizeSubstantialOverlap(XRectangle a,
-				 XRectangle b)
+			     XRectangle b)
 {
     if (a.x + a.width <= b.x + 40) return False;
     if (b.x + b.width <= a.x + 40) return False;
@@ -55,7 +64,7 @@ maximumizeSubstantialOverlap(XRectangle a,
  */
 static Region
 maximumizeEmptyRegion (CompWindow *window,
-			   Region     region)
+		       Region     region)
 {
     CompScreen *s = window->screen;
     CompWindow *w;
@@ -153,13 +162,10 @@ maximumizeBoxCompare (BOX a,
  */
 static BOX
 maximumizeExtendBox (CompWindow *w,
-			 BOX        tmp,
-			 Region     r,
-			 Bool       xFirst,
-			 Bool       left,
-			 Bool       right,
-			 Bool       up,
-			 Bool       down)
+		     BOX        tmp,
+		     Region     r,
+		     Bool	xFirst,
+		     MaxSet     mset)
 {
     short int counter = 0;
     Bool      touch = FALSE;
@@ -173,7 +179,7 @@ maximumizeExtendBox (CompWindow *w,
     {
 	if ((xFirst && counter == 0) || (!xFirst && counter == 1))
 	{
-	    if(left) 
+	    if(mset.left) 
 	    {
 		while (CHECKREC) {
 		    tmp.x1--;
@@ -182,7 +188,7 @@ maximumizeExtendBox (CompWindow *w,
 		if (touch) tmp.x1++;
 	    }
 	    touch = FALSE;
-	    if(right) {
+	    if(mset.right) {
 		while (CHECKREC) {
 		    tmp.x2++;
 		    touch = TRUE;
@@ -195,7 +201,7 @@ maximumizeExtendBox (CompWindow *w,
 
 	if ((xFirst && counter == 1) || (!xFirst && counter == 0))
 	{
-	    if(down) {
+	    if(mset.down) {
 		while (CHECKREC) {
 		    tmp.y2++;
 		    touch = TRUE;
@@ -204,7 +210,7 @@ maximumizeExtendBox (CompWindow *w,
 	    }
 	    touch = FALSE;
 
-	    if(up) {
+	    if(mset.up) {
 		while (CHECKREC) {
 		    tmp.y1--;
 		    touch = TRUE;
@@ -225,11 +231,8 @@ maximumizeExtendBox (CompWindow *w,
  */
 static BOX
 maximumizeFindRect (CompWindow *w,
-			Region     r,
-			Bool       left,
-			Bool       right,
-			Bool       up,
-			Bool       down)
+		    Region     r,
+		    MaxSet     mset)
 {
     BOX windowBox, ansA, ansB, orig;
 
@@ -242,17 +245,21 @@ maximumizeFindRect (CompWindow *w,
 
     if (windowBox.x2 - windowBox.x1 > 80)
     {
-			if(left) windowBox.x1 += 40;
-			if(right)	windowBox.x2 -= 40;
+	if (mset.left)
+	    windowBox.x1 += 40;
+	if (mset.right)	
+	    windowBox.x2 -= 40;
     }
     if (windowBox.y2 - windowBox.y1 > 80)
     {
-			if(up) windowBox.y1 += 40;
-			if(down) windowBox.y2 -= 40;
+	if (mset.up) 
+	    windowBox.y1 += 40;
+	if (mset.down)
+	    windowBox.y2 -= 40;
     }
 
-    ansA = maximumizeExtendBox (w, windowBox, r, TRUE, left, right, up, down);
-    ansB = maximumizeExtendBox (w, windowBox, r, FALSE, left, right, up, down);
+    ansA = maximumizeExtendBox (w, windowBox, r, TRUE, mset);
+    ansB = maximumizeExtendBox (w, windowBox, r, FALSE, mset);
 
     if (maximumizeBoxCompare (orig, ansA) &&
 	maximumizeBoxCompare (orig, ansB))
@@ -268,10 +275,7 @@ maximumizeFindRect (CompWindow *w,
 static unsigned int
 maximumizeComputeResize(CompWindow     *w,
 			    XWindowChanges *xwc,
-			    Bool           left,
-			    Bool           right,
-			    Bool           up,
-			    Bool           down)
+			    MaxSet	   mset)
 {
     CompOutput   *output;
     Region       region;
@@ -283,7 +287,7 @@ maximumizeComputeResize(CompWindow     *w,
     if (!region)
 	return mask;
     
-    box = maximumizeFindRect (w, region, left, right, up, down);
+    box = maximumizeFindRect (w, region, mset);
     XDestroyRegion (region);
 
     if (box.x1 != w->serverX)
@@ -311,10 +315,10 @@ maximumizeComputeResize(CompWindow     *w,
  */
 static Bool
 maximumizeTrigger (CompDisplay     *d,
-		       CompAction      *action,
-		       CompActionState state,
-		       CompOption      *option,
-		       int             nOption)
+		   CompAction      *action,
+		   CompActionState state,
+		   CompOption      *option,
+		   int             nOption)
 {
     Window     xid;
     CompWindow *w;
@@ -325,6 +329,11 @@ maximumizeTrigger (CompDisplay     *d,
     w   = findWindowAtDisplay (d, xid);
     if (w)
     {
+	int            width, height;
+	unsigned int   mask;
+	XWindowChanges xwc;
+	MaxSet	       mset;
+
 	s = w->screen;
 	if(otherScreenGrabExist (s, "maximumize", 0))
 	   return FALSE;
@@ -335,17 +344,12 @@ maximumizeTrigger (CompDisplay     *d,
 	if(!grabIndex)
 	    return FALSE;
 
-	int            width, height;
-	unsigned int   mask;
-	XWindowChanges xwc;
-
-	Bool left, right, up, down;
-	left = maximumizeGetMaximumizeLeft (w->screen->display);
-	right = maximumizeGetMaximumizeRight (w->screen->display);
-	up = maximumizeGetMaximumizeUp (w->screen->display);
-	down = maximumizeGetMaximumizeDown (w->screen->display);
+	mset.left = maximumizeGetMaximumizeLeft (w->screen->display);
+	mset.right = maximumizeGetMaximumizeRight (w->screen->display);
+	mset.up = maximumizeGetMaximumizeUp (w->screen->display);
+	mset.down = maximumizeGetMaximumizeDown (w->screen->display);
     
-	mask = maximumizeComputeResize (w, &xwc, left, right, up, down);
+	mask = maximumizeComputeResize (w, &xwc, mset); 
 	if (mask)
 	{
 	    if (constrainNewWindowSize (w, xwc.width, xwc.height,
@@ -392,6 +396,11 @@ maximumizeTriggerDirection (CompDisplay     *d,
     w   = findWindowAtDisplay (d, xid);
     if (w)
     {
+	int            width, height;
+	unsigned int   mask;
+	XWindowChanges xwc;
+	MaxSet	       mset;
+
 	s = w->screen;
 	if(otherScreenGrabExist (s, "maximumize", 0))
 	    return FALSE;
@@ -403,11 +412,12 @@ maximumizeTriggerDirection (CompDisplay     *d,
 	if(!grabIndex)
 	    return FALSE;
 
-	int            width, height;
-	unsigned int   mask;
-	XWindowChanges xwc;
+	mset.left = left;
+	mset.right = right;
+	mset.up = up;
+	mset.down = down;
 
-	mask = maximumizeComputeResize (w, &xwc, left,right,up,down);
+	mask = maximumizeComputeResize (w, &xwc, mset); 
 	if (mask)
 	{
 	    if (constrainNewWindowSize (w, xwc.width, xwc.height,
