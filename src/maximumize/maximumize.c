@@ -85,7 +85,8 @@ maximumizeEmptyRegion (CompWindow *window,
 
     XUnionRegion (region, newRegion, newRegion);
 
-    if (maximumizeGetIgnoreOverlapping (s->display)) {
+    if (maximumizeGetIgnoreOverlapping (s->display)) 
+    {
 	windowRect.x = window->serverX - window->input.left;
 	windowRect.y = window->serverY - window->input.top;
 	windowRect.width  = window->serverWidth + window->input.right + 
@@ -252,6 +253,82 @@ maximumizeExtendBox (CompWindow   *w,
     return tmp;
 }
 
+/* These two functions set the width and height respectively, with gravity
+ * towards the center of the window. The will set the box-width to width
+ * as long as at least one of the sides can be modified.
+ */
+static void
+setBoxWidth (BOX          *box,
+	     const int    width,
+	     const MaxSet mset)
+{
+    int original = box->x2 - box->x1;
+    int increment;
+
+    if (!mset.left && !mset.right)
+	return ;
+
+    if (mset.left != mset.right)
+	increment = original - width;
+    else
+	increment = (original - width) / 2;
+
+    if (mset.left) 
+	box->x1 += increment;
+    if (mset.right)
+	box->x2 -= increment;
+}
+
+static void
+setBoxHeight (BOX	   *box,
+	      const int	   height,
+	      const MaxSet mset)
+{
+    int original = box->y2 - box->y1;
+    int increment;
+
+    if (!mset.down && !mset.up)
+	return ;
+
+    if (mset.up != mset.down)
+	increment = original - height;
+    else
+	increment = (original - height) / 2;
+
+    if (mset.up) 
+	box->y1 += increment;
+    if (mset.down)
+	box->y2 -= increment;
+}
+
+/* Reduce box size by setting width and height to 1/4th or the minimum size
+ * allowed, whichever is bigger.
+ */
+static BOX
+maximumizeMinimumize (CompWindow *w,
+		      BOX	 box,
+		      MaxSet	 mset)
+{
+    const int min_width = w->sizeHints.min_width;
+    const int min_height = w->sizeHints.min_height;
+    int width, height;
+
+    width = box.x2 - box.x1;
+    height = box.y2 - box.y1;
+
+    if (width/4 < min_width) 
+	setBoxWidth (&box, min_width, mset);
+    else 
+	setBoxWidth (&box, width/4, mset);
+
+    if (height/4 < min_height) 
+	setBoxHeight (&box, min_height, mset);
+    else 
+	setBoxHeight (&box, height/4, mset);
+
+    return box;
+}
+
 /* Create a box for resizing in the given region
  * Also shrinks the window box in case of minor overlaps.
  * FIXME: should be somewhat cleaner.
@@ -269,7 +346,14 @@ maximumizeFindRect (CompWindow *w,
     windowBox.y2 = w->serverY + w->serverHeight;
 
     orig = windowBox;
+    
+    if (mset.shrink)
+	windowBox = maximumizeMinimumize (w, windowBox, mset);
+    
+    if (!mset.grow)
+	return windowBox;
 
+    // FIXME: split out into a function and make it a proper setting
     if (windowBox.x2 - windowBox.x1 > 80)
     {
 	if (mset.left)
@@ -369,6 +453,9 @@ maximumizeTrigger (CompDisplay     *d,
 	mset.up = maximumizeGetMaximumizeUp (w->screen->display);
 	mset.down = maximumizeGetMaximumizeDown (w->screen->display);
     
+	mset.grow = TRUE;
+	mset.shrink = TRUE;
+
 	mask = maximumizeComputeResize (w, &xwc, mset); 
 	if (mask)
 	{
@@ -426,6 +513,8 @@ maximumizeTriggerDirection (CompDisplay     *d,
 	mset.right = right;
 	mset.up = up;
 	mset.down = down;
+	mset.grow = TRUE;
+
 
 	mask = maximumizeComputeResize (w, &xwc, mset); 
 	if (mask)
