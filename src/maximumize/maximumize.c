@@ -324,7 +324,6 @@ maximumizeTrigger (CompDisplay     *d,
     Window     xid;
     CompWindow *w;
     CompScreen *s;
-    int grabIndex = 0;   
 
     xid = getIntOptionNamed (option, nOption, "window", 0);
     w   = findWindowAtDisplay (d, xid);
@@ -336,14 +335,8 @@ maximumizeTrigger (CompDisplay     *d,
 	MaxSet	       mset;
 
 	s = w->screen;
-	if (otherScreenGrabExist (s, "maximumize", 0))
+	if (otherScreenGrabExist (s, 0))
 	   return FALSE;
-	/*
-	 * Grab the screen.
-	 */
-	grabIndex = pushScreenGrab (s, s->invisibleCursor, "maximumize");
-	if (!grabIndex)
-	    return FALSE;
 
 	mset.left = maximumizeGetMaximumizeLeft (w->screen->display);
 	mset.right = maximumizeGetMaximumizeRight (w->screen->display);
@@ -367,9 +360,6 @@ maximumizeTrigger (CompDisplay     *d,
 	    configureXWindow (w, mask, &xwc);
 	}
     }
-    /* Release the screen grab */
-    if (grabIndex)
-	removeScreenGrab (s,grabIndex, NULL);
 
     return TRUE;
 }
@@ -391,7 +381,6 @@ maximumizeTriggerDirection (CompDisplay     *d,
     Window     xid;
     CompWindow *w;
     CompScreen *s;
-    int grabIndex = 0;
 
     xid = getIntOptionNamed (option, nOption, "window", 0);
     w   = findWindowAtDisplay (d, xid);
@@ -403,15 +392,9 @@ maximumizeTriggerDirection (CompDisplay     *d,
 	MaxSet	       mset;
 
 	s = w->screen;
-	if (otherScreenGrabExist (s, "maximumize", 0))
+	if (otherScreenGrabExist (s, 0))
 	    return FALSE;
 
-	/*
-	 * Grab the screen.
-	 */
-	grabIndex = pushScreenGrab (s, s->invisibleCursor, "maximumize");
-	if (!grabIndex)
-	    return FALSE;
 
 	mset.left = left;
 	mset.right = right;
@@ -435,9 +418,6 @@ maximumizeTriggerDirection (CompDisplay     *d,
 	    configureXWindow (w, mask, &xwc);
 	}
     }
-    /* Release the screen grab */
-    if (grabIndex)
-	removeScreenGrab (s,grabIndex, NULL);
     return TRUE;
 }
 
