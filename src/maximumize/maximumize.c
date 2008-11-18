@@ -156,12 +156,8 @@ maximumizeBoxCompare (BOX a,
     return (areaA > areaB);
 }
 
-/* This ugly thing checks checks if the relevant rectangle is in the region
- * we are interested in. If it's not, that means we've overstepped our
- * boundaries, and are now overlapping. The algorithm underneath will detect
- * this, and "undo" the last change that caused the overlap.
- *
- * The macro has to care about decorations.
+/* If a window, with decorations, defined by tmp and w is still in free
+ * space, evaluate to true. 
  */
 #define CHECKREC \
 	XRectInRegion (r, tmp->x1 - w->input.left, tmp->y1 - w->input.top,\
@@ -169,63 +165,66 @@ maximumizeBoxCompare (BOX a,
 		       tmp->y2 - tmp->y1 + w->input.top + w->input.bottom)\
 	    == RectangleIn
 
-/* Grow a box in the left/right directions.  */
-static inline void
-growWidth (CompWindow	 *w, 
-	    BOX		 *tmp, 
-	    Region       r, 
-	    const MaxSet mset)
+
+/* Convenience macros to make the code more readable (hopefully) */
+#define REDUCE -1
+#define INCREASE 1
+
+/* While the rectangle has space, add inc to i. When it CHEKCREC fails (ie:
+ * we overstepped our boundaries), reduce i by inc; undo the last change.
+ * inc is either 1 or -1, but could easily be looped over for fun and
+ * profit. (Ie: start with -100, hit the wall, go with -20, then -1, etc.)
+ * 
+ * NOTE: We have to pass along tmp, r and w for CHECKREC. 
+ * FIXME:  
+ */
+static void
+growGeneric (CompWindow	     *w,
+	     BOX	     *tmp,
+	     Region	     r,
+	     short int       *i,
+	     const short int inc)
 {
     Bool touch = FALSE;
-
-    if (mset.left) 
+    while (CHECKREC) 
     {
-	while (CHECKREC) {
-	    tmp->x1--;
-	    touch = TRUE;
-	}
-	if (touch) 
-	    tmp->x1++;
+	*i += inc;
+	touch = TRUE;
     }
-
-    touch = FALSE;
-    if (mset.right) {
-	while (CHECKREC) {
-	    tmp->x2++;
-	    touch = TRUE;
-	}
-	if (touch) 
-	    tmp->x2--;
-    }
+    if (touch)
+	*i -= inc;
 }
 
-/* Grow box in the up/down direction */
+#undef CHECKREC
+
+/* Grow a box in the left/right directions as much as possible without
+ * overlapping other relevant windows.  */
+static inline void
+growWidth (CompWindow	*w, 
+	   BOX		*tmp, 
+	   Region       r, 
+	   const MaxSet mset)
+{
+    if (mset.left) 
+	growGeneric (w, tmp, r, &tmp->x1, REDUCE);
+
+    if (mset.right) 
+	growGeneric (w, tmp, r, &tmp->x2, INCREASE);
+}
+
+/* Grow box in the up/down direction as much as possible without
+ * overlapping other relevant windows. */
 static inline void
 growHeight (CompWindow   *w, 
-	     BOX	  *tmp, 
-	     Region	  r, 
-	     const MaxSet mset)
+	    BOX		 *tmp, 
+	    Region	 r, 
+	    const MaxSet mset)
 {
-    Bool touch = FALSE;
-
-    if (mset.down) {
-	while (CHECKREC) {
-	    tmp->y2++;
-	    touch = TRUE;
-	}
-	if (touch)
-	    tmp->y2--;
-    }
-
-    touch = FALSE;
-    if (mset.up) {
-	while (CHECKREC) {
-	    tmp->y1--;
-	    touch = TRUE;
-	}
-	if (touch) 
-	    tmp->y1++;
-    }
+    if (mset.down) 
+	growGeneric (w, tmp, r, &tmp->y2, INCREASE);
+    
+    if (mset.up)
+	growGeneric (w, tmp, r, &tmp->y1, REDUCE);
 }
 
 /* Extends the given box for Window w to fit as much space in region r.
@@ -252,8 +251,6 @@ maximumizeExtendBox (CompWindow   *w,
 
     return tmp;
 }
-
-#undef CHECKREC
 
 /* Create a box for resizing in the given region
  * Also shrinks the window box in case of minor overlaps.
