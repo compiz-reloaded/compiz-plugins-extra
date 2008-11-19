@@ -26,9 +26,6 @@
  * direction as possible without overlapping with other windows.
  *
  * Todo:
- *  - The algorithm moves one pixel at a time, it should be smarter.
- *  - Handle slight overlaps. 
- *  - Transform left,right,up,down booleans into:  int Direction
  */
 
 #include <compiz-core.h>
@@ -143,8 +140,7 @@ maximumizeEmptyRegion (CompWindow *window,
     return newRegion;
 }
 
-/* Returns true if box a has a larger area than box b.
- */
+/* Returns true if box a has a larger area than box b.  */
 static Bool
 maximumizeBoxCompare (BOX a,
 		      BOX b)
@@ -254,8 +250,8 @@ maximumizeExtendBox (CompWindow   *w,
 }
 
 /* These two functions set the width and height respectively, with gravity
- * towards the center of the window. The will set the box-width to width
- * as long as at least one of the sides can be modified.
+ * towards the center of the window. They will set the box-width to width
+ * as long as at least one of the sides can be modified. Same for height.
  */
 static void
 setBoxWidth (BOX          *box,
@@ -301,14 +297,13 @@ setBoxHeight (BOX	   *box,
 	box->y2 -= increment;
 }
 
-/* Make sure the window isn't maximized */
+/* Unmaximize the window if it's maximized */
 static void
 maximumizeUnmaximizeWindow (CompWindow *w)
 {
     int state = w->state;
     if (state & MAXIMIZE_STATE)
     {
-	/* Unmaximize */
 	state &= (w->state & ~MAXIMIZE_STATE);
 	changeWindowState (w, state);
     }
@@ -344,6 +339,31 @@ maximumizeMinimumize (CompWindow *w,
     return box;
 }
 
+/* Shrink the box by 80 pixels.
+ * FIXME: Should be configurable. Window is passed for future
+ * option-reading.
+ */
+static void
+maximumizeShrinkBox (CompWindow *w,
+		     MaxSet	mset,
+		     BOX        *box)
+{
+    if (box->x2 - box->x1 > 80)
+    {
+	if (mset.left)
+	    box->x1 += 40;
+	if (mset.right)	
+	    box->x2 -= 40;
+    }
+    if (box->y2 - box->y1 > 80)
+    {
+	if (mset.up) 
+	    box->y1 += 40;
+	if (mset.down)
+	    box->y2 -= 40;
+    }
+}
+
 /* Create a box for resizing in the given region
  * Also shrinks the window box in case of minor overlaps.
  * FIXME: should be somewhat cleaner.
@@ -368,21 +388,7 @@ maximumizeFindRect (CompWindow *w,
     if (!mset.grow)
 	return windowBox;
 
-    // FIXME: split out into a function and make it a proper setting
-    if (windowBox.x2 - windowBox.x1 > 80)
-    {
-	if (mset.left)
-	    windowBox.x1 += 40;
-	if (mset.right)	
-	    windowBox.x2 -= 40;
-    }
-    if (windowBox.y2 - windowBox.y1 > 80)
-    {
-	if (mset.up) 
-	    windowBox.y1 += 40;
-	if (mset.down)
-	    windowBox.y2 -= 40;
-    }
+    maximumizeShrinkBox (w, mset, &windowBox);
 
     ansA = maximumizeExtendBox (w, windowBox, r, TRUE, mset);
     ansB = maximumizeExtendBox (w, windowBox, r, FALSE, mset);
@@ -390,6 +396,7 @@ maximumizeFindRect (CompWindow *w,
     if (maximumizeBoxCompare (orig, ansA) &&
 	maximumizeBoxCompare (orig, ansB))
 	return orig;
+
     if (maximumizeBoxCompare (ansA, ansB))
 	return ansA;
     else
