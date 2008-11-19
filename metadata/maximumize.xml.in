@@ -17,92 +17,81 @@
       </option>
       <option name="maximumize_left" type="bool">
          <_short>Maximumize to left.</_short>
-	 <_long>Expands the window on the left direction.</_long>
+	 <_long>When maximumizing, allow the window to grow to the left.</_long>
          <default>true</default>
       </option>
       <option name="maximumize_right" type="bool">
          <_short>Maximumize to right.</_short>
-	 <_long>Expands the window on the right direction.</_long>
+	 <_long>When maximumizing, allow the window to grow to the right.</_long>
          <default>true</default>
       </option>
       <option name="maximumize_up" type="bool">
          <_short>Maximumize to up.</_short>
-	 <_long>Expands the window on the up direction.</_long>
+	 <_long>When maximumizing, allow the window to grow upwards.</_long>
          <default>true</default>
       </option>
       <option name="maximumize_down" type="bool">
          <_short>Maximumize to down.</_short>
-	 <_long>Expands the window on the down direction.</_long>
+	 <_long>When maximumizing, allow the window to grow downwards.</_long>
          <default>true</default>
       </option>
 
       <group>
         <_short>Bindings</_short>
         <option name="trigger_key" type="key">
-          <_short>Trigger maximumize</_short>
-          <_long>Trigger a resize of the window currently focused so it fits as
-	  much of the available screenspae as possible.</_long>
-          <default>&lt;Super&gt;&lt;Shift&gt;KP_Begin</default>
+          <_short>Maximumize</_short>
+          <_long>Trigger a resize of the window currently focused so it fits as much of the available screenspae as possible.</_long>
+          <default>&lt;Super&gt;M</default>
         </option>
 	<option name="trigger_left" type="key">
-          <_short>Trigger left maximumize</_short>
-          <_long>Trigger a resize of the window currently focused so it fits as
-	  much of the available screenspae as possible to the left.</_long>
-          <default>&lt;Super&gt;&lt;Shift&gt;KP_Left</default>
+          <_short>Left-only maximumize</_short>
+          <_long>Grow the window leftwards as much as possible.</_long>
+          <default></default>
         </option>
 	<option name="trigger_right" type="key">
-          <_short>Trigger right maximumize</_short>
-          <_long>Trigger a resize of the window currently focused so it fits as
-	  much of the available screenspae as possible to the right.</_long>
-          <default>&lt;Super&gt;&lt;Shift&gt;KP_Right</default>
+          <_short>Right-only maximumize</_short>
+          <_long>Grow the window rightwards as much as possible.</_long>
+          <default></default>
         </option>
 	<option name="trigger_up" type="key">
-          <_short>Trigger up maximumize</_short>
-          <_long>Trigger a resize of the window currently focused so it fits as
-	  much of the available screenspae as possible to up.</_long>
-          <default>&lt;Super&gt;&lt;Shift&gt;KP_Up</default>
+          <_short>Up-only maximumize</_short>
+          <_long>Grow the window upwards as much as possible.</_long>
+          <default></default>
         </option>
 	<option name="trigger_down" type="key">
-          <_short>Trigger down maximumize</_short>
-          <_long>Trigger a resize of the window currently focused so it fits as
-	  much of the available screenspae as possible to down.</_long>
-          <default>&lt;Super&gt;&lt;Shift&gt;KP_Down</default>
+          <_short>Down-only maximumize</_short>
+          <_long>Grow the window downwards as much as possible.</_long>
+          <default></default>
         </option>
 	<option name="trigger_horizontally" type="key">
-          <_short>Trigger maximumize horizontally</_short>
-          <_long>Trigger a resize of the window currently focused so it fits as
-	  much of the available screenspae as possible horizontally.</_long>
-          <default>&lt;Super&gt;&lt;Shift&gt;KP_Subtract</default>
+          <_short>Horizontal-only maximumize</_short>
+          <_long>Grow the window horizontally as much as possible.</_long>
+          <default></default>
         </option>
 	<option name="trigger_vertically" type="key">
-          <_short>Trigger maximumize vertically</_short>
-          <_long>Trigger a resize of the window currently focused so it fits as
-	  much of the available screenspae as possible vertically.</_long>
-          <default>&lt;Super&gt;&lt;Shift&gt;KP_Divide</default>
+          <_short>Vertical-only maximumize</_short>
+          <_long>Grow the window vertically as much as possible.</_long>
+          <default></default>
         </option>
 	<option name="trigger_up_left" type="key">
-          <_short>Trigger maximumize upper left corner</_short>
-          <_long>Trigger a resize of the window currently focused so it fits as
-	  much of the available screenspae as possible in the upper left direction.</_long>
-          <default>&lt;Super&gt;&lt;Shift&gt;KP_Home</default>
+          <_short>Top left maximumize</_short>
+          <_long>Grow upper left corner of a window as much as possible.</_long>
+          <default></default>
         </option>
 	<option name="trigger_up_right" type="key">
-          <_short>Trigger maximumize upper right corner</_short>
-          <_long>Trigger a resize of the window currently focused so it fits as
-	  much of the available screenspae as possible in the upper right direction.</_long>
-          <default>&lt;Super&gt;&lt;Shift&gt;KP_Page_Up</default>
+          <_short>Top right maximumize</_short>
+          <_long>Grow upper right corner of a window as much as possible.</_long>
+          <default></default>
         </option>
 	<option name="trigger_down_left" type="key">
-          <_short>Trigger maximumize bottom left corner</_short>
-          <_long>Trigger a resize of the window currently focused so it fits as
-	  much of the available screenspae as possible in the bottom left direction.</_long>
-          <default>&lt;Super&gt;&lt;Shift&gt;KP_End</default>
+          <_short>Lower left maximumize</_short>
+          <_long>Grow lower left corner of a window as much as possible.</_long>
+          <default></default>
         </option>
 	<option name="trigger_down_right" type="key">
-          <_short>Trigger maximumize bottom right corner</_short>
-          <_long>Trigger a resize of the window currently focused so it fits as
-	  much of the available screenspae as possible in the bottom right direction.</_long>
-          <default>&lt;Super&gt;&lt;Shift&gt;KP_Page_Down</default>
+          <_short>Lower right maximumize</_short>
+          <_long>Grow lower right corner of a window as much as possible.</_long>
+          <default></default>
         </option>
       </group>
     </display>
