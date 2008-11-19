@@ -301,6 +301,19 @@ setBoxHeight (BOX	   *box,
 	box->y2 -= increment;
 }
 
+/* Make sure the window isn't maximized */
+static void
+maximumizeUnmaximizeWindow (CompWindow *w)
+{
+    int state = w->state;
+    if (state & MAXIMIZE_STATE)
+    {
+	/* Unmaximize */
+	state &= (w->state & ~MAXIMIZE_STATE);
+	changeWindowState (w, state);
+    }
+}
+
 /* Reduce box size by setting width and height to 1/4th or the minimum size
  * allowed, whichever is bigger.
  */
@@ -312,6 +325,8 @@ maximumizeMinimumize (CompWindow *w,
     const int min_width = w->sizeHints.min_width;
     const int min_height = w->sizeHints.min_height;
     int width, height;
+
+    maximumizeUnmaximizeWindow (w);
 
     width = box.x2 - box.x1;
     height = box.y2 - box.y1;
@@ -429,7 +444,8 @@ maximumizeTrigger (CompDisplay     *d,
 		   CompAction      *action,
 		   CompActionState state,
 		   CompOption      *option,
-		   int             nOption)
+		   int             nOption,
+		   Bool            grow)
 {
     Window     xid;
     CompWindow *w;
@@ -453,7 +469,7 @@ maximumizeTrigger (CompDisplay     *d,
 	mset.up = maximumizeGetMaximumizeUp (w->screen->display);
 	mset.down = maximumizeGetMaximumizeDown (w->screen->display);
     
-	mset.grow = TRUE;
+	mset.grow = grow;
 	mset.shrink = TRUE;
 
 	mask = maximumizeComputeResize (w, &xwc, mset); 
@@ -478,18 +494,19 @@ maximumizeTrigger (CompDisplay     *d,
 }
 
 /* 
- * Maximumazing on specified direction.
+ * Maximizing on specified direction.
  */
 static Bool
 maximumizeTriggerDirection (CompDisplay     *d,
 			    CompAction      *action,
 			    CompActionState state,
 			    CompOption      *option,
+			    int             nOption,
 			    Bool            left,
 			    Bool            right,
 			    Bool            up,
 			    Bool            down,
-			    int             nOption)
+			    Bool            grow)
 {
     Window     xid;
     CompWindow *w;
@@ -513,7 +530,8 @@ maximumizeTriggerDirection (CompDisplay     *d,
 	mset.right = right;
 	mset.up = up;
 	mset.down = down;
-	mset.grow = TRUE;
+	mset.grow = grow;
+	mset.shrink = !grow;
 
 
 	mask = maximumizeComputeResize (w, &xwc, mset); 
@@ -537,154 +555,337 @@ maximumizeTriggerDirection (CompDisplay     *d,
 }
 
 /* 
- * Maximumazing to left region limit.
+ * Maximizing triggers 
+ */
+
+/* 
+ * Maximumize .
  */
 static Bool
-maximumizeTriggerLeft (CompDisplay     *d,
-		       CompAction      *action,
-		       CompActionState state,
-		       CompOption      *option,
-		       int             nOption)
+maximumizeTriggerMax (CompDisplay     *d,
+		      CompAction      *action,
+		      CompActionState state,
+		      CompOption      *option,
+		      int             nOption)
 {
-    return maximumizeTriggerDirection (d,action,state,option,TRUE, FALSE, FALSE, FALSE,nOption);
+    return maximumizeTrigger (d,action,state,option,nOption,TRUE);
 
 }
 
 /* 
- * Maximumazing to right region limit.
- *
+ * Maximizing to left region limit.
  */
 static Bool
-maximumizeTriggerRight (CompDisplay     *d,
-			CompAction      *action,
-			CompActionState state,
-			CompOption      *option,
-			int             nOption)
-{
-    return maximumizeTriggerDirection (d,action,state,option,FALSE, TRUE, FALSE, FALSE,nOption);
-}
-
-/* 
- * Maximumazing to upper region limit.
- *
- */
-static Bool
-maximumizeTriggerUp (CompDisplay     *d,
-		     CompAction      *action,
-		     CompActionState state,
-		     CompOption      *option,
-		     int             nOption)
-{
-    return maximumizeTriggerDirection (d,action,state,option,FALSE, FALSE, TRUE, FALSE,nOption);
-
-}
-
-/* 
- * Maximumazing to bottom region limit.
- *
- */
-static Bool
-maximumizeTriggerDown (CompDisplay     *d,
-		       CompAction      *action,
-		       CompActionState state,
-		       CompOption      *option,
-		       int             nOption)
-{
-
-    return maximumizeTriggerDirection (d,action,state,option,FALSE, FALSE, FALSE, TRUE,nOption);
-
-}
-
-/* 
- * Maximumazing horizontally.
- *
- */
-static Bool
-maximumizeTriggerHorizontally (CompDisplay     *d,
-			       CompAction      *action,
-			       CompActionState state,
-			       CompOption      *option,
-			       int             nOption)
-{
-    return maximumizeTriggerDirection (d,action,state,option,TRUE, TRUE, FALSE, FALSE,nOption);
-
-}
-
-/* 
- * Maximumazing vertically.
- *
- */
-static Bool
-maximumizeTriggerVertically (CompDisplay     *d,
-			     CompAction      *action,
-			     CompActionState state,
-			     CompOption      *option,
-			     int             nOption)
-{
-    return maximumizeTriggerDirection (d,action,state,option,FALSE, FALSE, TRUE, TRUE,nOption);
-
-}
-
-/* 
- * Maximumazing to upper left region limit.
- *
- */
-static Bool
-maximumizeTriggerUpLeft (CompDisplay     *d,
-			 CompAction      *action,
-			 CompActionState state,
-			 CompOption      *option,
-			 int             nOption)
-{
-
-    return maximumizeTriggerDirection (d,action,state,option,TRUE, FALSE, TRUE, FALSE,nOption);
-
-}
-
-/* 
- * Maximumazing to upper right region limit.
- *
- */
-static Bool
-maximumizeTriggerUpRight (CompDisplay     *d,
+maximumizeTriggerMaxLeft (CompDisplay     *d,
 			  CompAction      *action,
 			  CompActionState state,
 			  CompOption      *option,
 			  int             nOption)
 {
-    return maximumizeTriggerDirection (d,action,state,option,FALSE, TRUE, TRUE, FALSE,nOption);
+    return maximumizeTriggerDirection (d,action,state,option,nOption,TRUE, FALSE, FALSE, FALSE,TRUE);
 
 }
 
 /* 
- * Maximumazing to bottom left region limit.
+ * Maximizing to right region limit.
  *
  */
 static Bool
-maximumizeTriggerDownLeft (CompDisplay     *d,
+maximumizeTriggerMaxRight (CompDisplay     *d,
 			   CompAction      *action,
 			   CompActionState state,
 			   CompOption      *option,
 			   int             nOption)
 {
-    return maximumizeTriggerDirection (d,action,state,option,TRUE, FALSE, FALSE, TRUE,nOption);
+    return maximumizeTriggerDirection (d,action,state,option,nOption,FALSE, TRUE, FALSE, FALSE,TRUE);
 }
 
-/*
- * Maximumazing to bottom right region limit.
+/* 
+ * Maximizing to upper region limit.
  *
  */
-
 static Bool
-maximumizeTriggerDownRight (CompDisplay     *d,
+maximumizeTriggerMaxUp (CompDisplay     *d,
+			CompAction      *action,
+			CompActionState state,
+			CompOption      *option,
+			int             nOption)
+{
+    return maximumizeTriggerDirection (d,action,state,option,nOption,FALSE, FALSE, TRUE, FALSE,TRUE);
+
+}
+
+/* 
+ * Maximizing to bottom region limit.
+ *
+ */
+static Bool
+maximumizeTriggerMaxDown (CompDisplay     *d,
+			  CompAction      *action,
+			  CompActionState state,
+			  CompOption      *option,
+			  int             nOption)
+{
+
+    return maximumizeTriggerDirection (d,action,state,option,nOption,FALSE, FALSE, FALSE, TRUE,TRUE);
+
+}
+
+/* 
+ * Maximizing horizontally.
+ *
+ */
+static Bool
+maximumizeTriggerMaxHorizontally (CompDisplay     *d,
+				  CompAction      *action,
+				  CompActionState state,
+				  CompOption      *option,
+				  int             nOption)
+{
+    return maximumizeTriggerDirection (d,action,state,option,nOption,TRUE, TRUE, FALSE, FALSE,TRUE);
+
+}
+
+/* 
+ * Maximizing vertically.
+ *
+ */
+static Bool
+maximumizeTriggerMaxVertically (CompDisplay     *d,
+				CompAction      *action,
+				CompActionState state,
+				CompOption      *option,
+				int             nOption)
+{
+    return maximumizeTriggerDirection (d,action,state,option,nOption,FALSE, FALSE, TRUE, TRUE,TRUE);
+
+}
+
+/* 
+ * Maximizing to upper left region limit.
+ *
+ */
+static Bool
+maximumizeTriggerMaxUpLeft (CompDisplay     *d,
 			    CompAction      *action,
 			    CompActionState state,
 			    CompOption      *option,
 			    int             nOption)
 {
-    return maximumizeTriggerDirection (d,action,state,option,FALSE, TRUE, FALSE, TRUE,nOption);
+
+    return maximumizeTriggerDirection (d,action,state,option,nOption,TRUE, FALSE, TRUE, FALSE,TRUE);
+
 }
 
+/* 
+ * Maximizing to upper right region limit.
+ *
+ */
+static Bool
+maximumizeTriggerMaxUpRight (CompDisplay     *d,
+			     CompAction      *action,
+			     CompActionState state,
+			     CompOption      *option,
+			     int             nOption)
+{
+    return maximumizeTriggerDirection (d,action,state,option,nOption,FALSE, TRUE, TRUE, FALSE,TRUE);
+
+}
+
+/* 
+ * Maximizing to bottom left region limit.
+ *
+ */
+static Bool
+maximumizeTriggerMaxDownLeft (CompDisplay     *d,
+			      CompAction      *action,
+			      CompActionState state,
+			      CompOption      *option,
+			      int             nOption)
+{
+    return maximumizeTriggerDirection (d,action,state,option,nOption,TRUE, FALSE, FALSE, TRUE,TRUE);
+}
+
+/*
+ * Maximizing to bottom right region limit.
+ *
+ */
+
+static Bool
+maximumizeTriggerMaxDownRight (CompDisplay     *d,
+			       CompAction      *action,
+			       CompActionState state,
+			       CompOption      *option,
+			       int             nOption)
+{
+    return maximumizeTriggerDirection (d,action,state,option,nOption,FALSE, TRUE, FALSE, TRUE,TRUE);
+}
+
+/* 
+ * Minimizing triggers 
+ */
+
+
+/* 
+ * Minimumize .
+ */
+static Bool
+maximumizeTriggerMin (CompDisplay     *d,
+		      CompAction      *action,
+		      CompActionState state,
+		      CompOption      *option,
+		      int             nOption)
+{
+    return maximumizeTrigger (d,action,state,option,nOption,FALSE);
+
+}
+
+/* 
+ * Minimizing to left region limit.
+ */
+static Bool
+maximumizeTriggerMinLeft (CompDisplay     *d,
+			  CompAction      *action,
+			  CompActionState state,
+			  CompOption      *option,
+			  int             nOption)
+{
+    return maximumizeTriggerDirection (d,action,state,option,nOption,TRUE, FALSE, FALSE, FALSE,FALSE);
+
+}
+
+/* 
+ * Minimizing to right region limit.
+ *
+ */
+static Bool
+maximumizeTriggerMinRight (CompDisplay     *d,
+			   CompAction      *action,
+			   CompActionState state,
+			   CompOption      *option,
+			   int             nOption)
+{
+    return maximumizeTriggerDirection (d,action,state,option,nOption,FALSE, TRUE, FALSE, FALSE,FALSE);
+}
+
+/* 
+ * Minimizing to upper region limit.
+ *
+ */
+static Bool
+maximumizeTriggerMinUp (CompDisplay     *d,
+			CompAction      *action,
+			CompActionState state,
+			CompOption      *option,
+			int             nOption)
+{
+    return maximumizeTriggerDirection (d,action,state,option,nOption,FALSE, FALSE, TRUE, FALSE,FALSE);
+
+}
+
+/* 
+ * Minimizing to bottom region limit.
+ *
+ */
+static Bool
+maximumizeTriggerMinDown (CompDisplay     *d,
+			  CompAction      *action,
+			  CompActionState state,
+			  CompOption      *option,
+			  int             nOption)
+{
+    return maximumizeTriggerDirection (d,action,state,option,nOption,FALSE, FALSE, FALSE, TRUE,FALSE);
+
+}
+
+/* 
+ * Minimizing horizontally.
+ *
+ */
+static Bool
+maximumizeTriggerMinHorizontally (CompDisplay     *d,
+				  CompAction      *action,
+				  CompActionState state,
+				  CompOption      *option,
+				  int             nOption)
+{
+    return maximumizeTriggerDirection (d,action,state,option,nOption,TRUE, TRUE, FALSE, FALSE,FALSE);
+
+}
+
+/* 
+ * Minimizing vertically.
+ *
+ */
+static Bool
+maximumizeTriggerMinVertically (CompDisplay     *d,
+				CompAction      *action,
+				CompActionState state,
+				CompOption      *option,
+				int             nOption)
+{
+    return maximumizeTriggerDirection (d,action,state,option,nOption,FALSE, FALSE, TRUE, TRUE,FALSE);
+
+}
+
+/* 
+ * Minimizing to upper left region limit.
+ *
+ */
+static Bool
+maximumizeTriggerMinUpLeft (CompDisplay     *d,
+			    CompAction      *action,
+			    CompActionState state,
+			    CompOption      *option,
+			    int             nOption)
+{
+    return maximumizeTriggerDirection (d,action,state,option,nOption,TRUE, FALSE, TRUE, FALSE,FALSE);
+
+}
+
+/* 
+ * Minimizing to upper right region limit.
+ *
+ */
+static Bool
+maximumizeTriggerMinUpRight (CompDisplay     *d,
+			     CompAction      *action,
+			     CompActionState state,
+			     CompOption      *option,
+			     int             nOption)
+{
+    return maximumizeTriggerDirection (d,action,state,option,nOption,FALSE, TRUE, TRUE, FALSE,FALSE);
+
+}
+
+/* 
+ * Minimizing to bottom left region limit.
+ *
+ */
+static Bool
+maximumizeTriggerMinDownLeft (CompDisplay     *d,
+			      CompAction      *action,
+			      CompActionState state,
+			      CompOption      *option,
+			      int             nOption)
+{
+    return maximumizeTriggerDirection (d,action,state,option,nOption,TRUE, FALSE, FALSE, TRUE,FALSE);
+}
+
+/*
+ * Minimizing to bottom right region limit.
+ *
+ */
+
+static Bool
+maximumizeTriggerMinDownRight (CompDisplay     *d,
+			       CompAction      *action,
+			       CompActionState state,
+			       CompOption      *option,
+			       int             nOption)
+{
+    return maximumizeTriggerDirection (d,action,state,option,nOption,FALSE, TRUE, FALSE, TRUE,FALSE);
+}
 
 /* Configuration, initialization, boring stuff. --------------------- */
 static Bool
@@ -694,18 +895,31 @@ maximumizeInitDisplay (CompPlugin  *p,
     if (!checkPluginABI ("core", CORE_ABIVERSION))
 	return FALSE;
 
-    maximumizeSetTriggerKeyInitiate (d, maximumizeTrigger);
-    maximumizeSetTriggerLeftInitiate (d, maximumizeTriggerLeft);
-    maximumizeSetTriggerRightInitiate (d, maximumizeTriggerRight);
-    maximumizeSetTriggerUpInitiate (d, maximumizeTriggerUp);
-    maximumizeSetTriggerDownInitiate (d, maximumizeTriggerDown);
-    maximumizeSetTriggerHorizontallyInitiate (d, maximumizeTriggerHorizontally);
-    maximumizeSetTriggerVerticallyInitiate (d, maximumizeTriggerVertically);
-    maximumizeSetTriggerUpLeftInitiate (d, maximumizeTriggerUpLeft);
-    maximumizeSetTriggerUpRightInitiate (d, maximumizeTriggerUpRight);
-    maximumizeSetTriggerDownLeftInitiate (d, maximumizeTriggerDownLeft);
-    maximumizeSetTriggerDownRightInitiate (d, maximumizeTriggerDownRight);
+    /* Maximumize Bindings */
+    maximumizeSetTriggerMaxKeyInitiate (d, maximumizeTriggerMax);
+    maximumizeSetTriggerMaxLeftInitiate (d, maximumizeTriggerMaxLeft);
+    maximumizeSetTriggerMaxRightInitiate (d, maximumizeTriggerMaxRight);
+    maximumizeSetTriggerMaxUpInitiate (d, maximumizeTriggerMaxUp);
+    maximumizeSetTriggerMaxDownInitiate (d, maximumizeTriggerMaxDown);
+    maximumizeSetTriggerMaxHorizontallyInitiate (d, maximumizeTriggerMaxHorizontally);
+    maximumizeSetTriggerMaxVerticallyInitiate (d, maximumizeTriggerMaxVertically);
+    maximumizeSetTriggerMaxUpLeftInitiate (d, maximumizeTriggerMaxUpLeft);
+    maximumizeSetTriggerMaxUpRightInitiate (d, maximumizeTriggerMaxUpRight);
+    maximumizeSetTriggerMaxDownLeftInitiate (d, maximumizeTriggerMaxDownLeft);
+    maximumizeSetTriggerMaxDownRightInitiate (d, maximumizeTriggerMaxDownRight);
 
+    /* Minimumize Bindings */
+    maximumizeSetTriggerMinKeyInitiate (d, maximumizeTriggerMin);
+    maximumizeSetTriggerMinLeftInitiate (d, maximumizeTriggerMinLeft);
+    maximumizeSetTriggerMinRightInitiate (d, maximumizeTriggerMinRight);
+    maximumizeSetTriggerMinUpInitiate (d, maximumizeTriggerMinUp);
+    maximumizeSetTriggerMinDownInitiate (d, maximumizeTriggerMinDown);
+    maximumizeSetTriggerMinHorizontallyInitiate (d, maximumizeTriggerMinHorizontally);
+    maximumizeSetTriggerMinVerticallyInitiate (d, maximumizeTriggerMinVertically);
+    maximumizeSetTriggerMinUpLeftInitiate (d, maximumizeTriggerMinUpLeft);
+    maximumizeSetTriggerMinUpRightInitiate (d, maximumizeTriggerMinUpRight);
+    maximumizeSetTriggerMinDownLeftInitiate (d, maximumizeTriggerMinDownLeft);
+    maximumizeSetTriggerMinDownRightInitiate (d, maximumizeTriggerMinDownRight);
     return TRUE;
 }
 

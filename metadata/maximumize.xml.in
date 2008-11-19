@@ -38,61 +38,122 @@
 
       <group>
         <_short>Bindings</_short>
-        <option name="trigger_key" type="key">
-          <_short>Maximumize</_short>
-          <_long>Trigger a resize of the window currently focused so it fits as much of the available screenspae as possible.</_long>
-          <default>&lt;Super&gt;M</default>
-        </option>
-	<option name="trigger_left" type="key">
-          <_short>Left-only maximumize</_short>
-          <_long>Grow the window leftwards as much as possible.</_long>
-          <default></default>
-        </option>
-	<option name="trigger_right" type="key">
-          <_short>Right-only maximumize</_short>
-          <_long>Grow the window rightwards as much as possible.</_long>
-          <default></default>
-        </option>
-	<option name="trigger_up" type="key">
-          <_short>Up-only maximumize</_short>
-          <_long>Grow the window upwards as much as possible.</_long>
-          <default></default>
-        </option>
-	<option name="trigger_down" type="key">
-          <_short>Down-only maximumize</_short>
-          <_long>Grow the window downwards as much as possible.</_long>
-          <default></default>
-        </option>
-	<option name="trigger_horizontally" type="key">
-          <_short>Horizontal-only maximumize</_short>
-          <_long>Grow the window horizontally as much as possible.</_long>
-          <default></default>
-        </option>
-	<option name="trigger_vertically" type="key">
-          <_short>Vertical-only maximumize</_short>
-          <_long>Grow the window vertically as much as possible.</_long>
-          <default></default>
-        </option>
-	<option name="trigger_up_left" type="key">
-          <_short>Top left maximumize</_short>
-          <_long>Grow upper left corner of a window as much as possible.</_long>
-          <default></default>
-        </option>
-	<option name="trigger_up_right" type="key">
-          <_short>Top right maximumize</_short>
-          <_long>Grow upper right corner of a window as much as possible.</_long>
-          <default></default>
-        </option>
-	<option name="trigger_down_left" type="key">
-          <_short>Lower left maximumize</_short>
-          <_long>Grow lower left corner of a window as much as possible.</_long>
-          <default></default>
-        </option>
-	<option name="trigger_down_right" type="key">
-          <_short>Lower right maximumize</_short>
-          <_long>Grow lower right corner of a window as much as possible.</_long>
-          <default></default>
-        </option>
+	<subgroup>
+	  <_short>Maximumize Bindings</_short>
+	    <option name="trigger_max_key" type="key">
+	      <_short>Maximumize</_short>
+	      <_long>Trigger a resize of the window currently focused so it fits as much of the available screenspae as possible.</_long>
+	      <default>&lt;Super&gt;M</default>
+	    </option>
+	    <option name="trigger_max_left" type="key">
+	      <_short>Left-only maximumize</_short>
+	      <_long>Grow the window leftwards as much as possible.</_long>
+	      <default></default>
+	    </option>
+	    <option name="trigger_max_right" type="key">
+	      <_short>Right-only maximumize</_short>
+	      <_long>Grow the window rightwards as much as possible.</_long>
+	      <default></default>
+	    </option>
+	    <option name="trigger_max_up" type="key">
+	      <_short>Up-only maximumize</_short>
+	      <_long>Grow the window upwards as much as possible.</_long>
+	      <default></default>
+	    </option>
+	    <option name="trigger_max_down" type="key">
+	      <_short>Down-only maximumize</_short>
+	      <_long>Grow the window downwards as much as possible.</_long>
+	      <default></default>
+	    </option>
+	    <option name="trigger_max_horizontally" type="key">
+	      <_short>Horizontal-only maximumize</_short>
+	      <_long>Grow the window horizontally as much as possible.</_long>
+	      <default></default>
+	    </option>
+	    <option name="trigger_max_vertically" type="key">
+	      <_short>Vertical-only maximumize</_short>
+	      <_long>Grow the window vertically as much as possible.</_long>
+	      <default></default>
+	    </option>
+	    <option name="trigger_max_up_left" type="key">
+	      <_short>Top left maximumize</_short>
+	      <_long>Grow upper left corner of a window as much as possible.</_long>
+	      <default></default>
+	    </option>
+	    <option name="trigger_max_up_right" type="key">
+	      <_short>Top right maximumize</_short>
+	      <_long>Grow upper right corner of a window as much as possible.</_long>
+	      <default></default>
+	    </option>
+	    <option name="trigger_max_down_left" type="key">
+	      <_short>Lower left maximumize</_short>
+	      <_long>Grow lower left corner of a window as much as possible.</_long>
+	      <default></default>
+	    </option>
+	    <option name="trigger_max_down_right" type="key">
+	      <_short>Lower right maximumize</_short>
+	      <_long>Grow lower right corner of a window as much as possible.</_long>
+	      <default></default>
+	    </option>
+	</subgroup>
+	<subgroup>
+	  <_short>Minimumize Bindings</_short>
+	    <option name="trigger_min_key" type="key">
+	      <_short>Minimumize</_short>
+	      <_long>Trigger a resize of the window currently focused so it resizes to 1/4 size.</_long>
+	      <default>&lt;Super&gt;&lt;Shift&gt;M</default>
+	    </option>
+	    <option name="trigger_min_left" type="key">
+	      <_short>Left-only minimumize</_short>
+	      <_long>Shrink the window leftwards.</_long>
+	      <default></default>
+	    </option>
+	    <option name="trigger_min_right" type="key">
+	      <_short>Right-only minimumize</_short>
+	      <_long>Shrink the window rightwards.</_long>
+	      <default></default>
+	    </option>
+	    <option name="trigger_min_up" type="key">
+	      <_short>Up-only minimumize</_short>
+	      <_long>Shrink the window upwards.</_long>
+	      <default></default>
+	    </option>
+	    <option name="trigger_min_down" type="key">
+	      <_short>Down-only minimumize</_short>
+	      <_long>Shrink the window downwards.</_long>
+	      <default></default>
+	    </option>
+	    <option name="trigger_min_horizontally" type="key">
+	      <_short>Horizontal-only minimumize</_short>
+	      <_long>Shrink the window horizontally.</_long>
+	      <default></default>
+	    </option>
+	    <option name="trigger_min_vertically" type="key">
+	      <_short>Vertical-only minimumize</_short>
+	      <_long>Shrink the window vertically.</_long>
+	      <default></default>
+	    </option>
+	    <option name="trigger_min_up_left" type="key">
+	      <_short>Top left minimumize</_short>
+	      <_long>Shrink upper left corner of a the window.</_long>
+	      <default></default>
+	    </option>
+	    <option name="trigger_min_up_right" type="key">
+	      <_short>Top right minimumize</_short>
+	      <_long>Shrink upper right corner of a the window.</_long>
+	      <default></default>
+	    </option>
+	    <option name="trigger_min_down_left" type="key">
+	      <_short>Lower left minimumize</_short>
+	      <_long>Shrink lower left corner of a the window.</_long>
+	      <default></default>
+	    </option>
+	    <option name="trigger_min_down_right" type="key">
+	      <_short>Lower right minimumize</_short>
+	      <_long>Shrink lower right corner of a the window.</_long>
+	      <default></default>
+	    </option>
+	</subgroup>
       </group>
     </display>
   </plugin>
