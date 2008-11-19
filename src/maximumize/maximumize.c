@@ -339,31 +339,6 @@ maximumizeMinimumize (CompWindow *w,
     return box;
 }
 
-/* Shrink the box by 80 pixels.
- * FIXME: Should be configurable. Window is passed for future
- * option-reading.
- */
-static void
-maximumizeShrinkBox (CompWindow *w,
-		     MaxSet	mset,
-		     BOX        *box)
-{
-    if (box->x2 - box->x1 > 80)
-    {
-	if (mset.left)
-	    box->x1 += 40;
-	if (mset.right)	
-	    box->x2 -= 40;
-    }
-    if (box->y2 - box->y1 > 80)
-    {
-	if (mset.up) 
-	    box->y1 += 40;
-	if (mset.down)
-	    box->y2 -= 40;
-    }
-}
-
 /* Create a box for resizing in the given region
  * Also shrinks the window box in case of minor overlaps.
  * FIXME: should be somewhat cleaner.
@@ -387,8 +362,6 @@ maximumizeFindRect (CompWindow *w,
     
     if (!mset.grow)
 	return windowBox;
-
-    maximumizeShrinkBox (w, mset, &windowBox);
 
     ansA = maximumizeExtendBox (w, windowBox, r, TRUE, mset);
     ansB = maximumizeExtendBox (w, windowBox, r, FALSE, mset);
