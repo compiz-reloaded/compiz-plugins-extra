@@ -15,6 +15,11 @@
 	 <_long>Treat windows that are already overlapping with the current window as non-existant when calculating space to use for the maximumize window.</_long>
          <default>false</default>
       </option>
+      <option name="allow_shrink" type="bool">
+         <_short>Permit windows to shrink during maximumize</_short>
+	 <_long>This allows a window to change it's shape to fit in an area even when the new shape might be smaller than it's current size with regards to area</_long>
+         <default>true</default>
+      </option>
       <option name="maximumize_left" type="bool">
          <_short>Maximumize to left.</_short>
 	 <_long>When maximumizing, allow the window to grow to the left.</_long>

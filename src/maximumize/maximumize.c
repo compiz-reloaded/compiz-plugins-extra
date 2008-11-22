@@ -366,9 +366,20 @@ maximumizeFindRect (CompWindow *w,
     ansA = maximumizeExtendBox (w, windowBox, r, TRUE, mset);
     ansB = maximumizeExtendBox (w, windowBox, r, FALSE, mset);
 
-    if (maximumizeBoxCompare (orig, ansA) &&
-	maximumizeBoxCompare (orig, ansB))
-	return orig;
+    if (!maximumizeGetAllowShrink (w->screen->display)) 
+    {
+	if (maximumizeBoxCompare (orig, ansA) &&
+	    maximumizeBoxCompare (orig, ansB))
+	    return orig;
+    }
+    else
+    {
+	// Order is essential here. 
+	if (!maximumizeBoxCompare (ansA, windowBox) &&
+	    !maximumizeBoxCompare (ansB, windowBox))
+	    return orig;
+    }
+
 
     if (maximumizeBoxCompare (ansA, ansB))
 	return ansA;
