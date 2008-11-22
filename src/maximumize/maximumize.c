@@ -55,6 +55,17 @@ maximumizeSubstantialOverlap (XRectangle a,
     return True;
 }
 
+/* Set the rectangle to cover the window, including decoration. */
+static void
+maximumizeSetWindowBox (XRectangle *rect, 
+			CompWindow *w)
+{
+    rect->x = w->serverX - w->input.left;
+    rect->y = w->serverY - w->input.top;
+    rect->width  = w->serverWidth + w->input.right + w->input.left;
+    rect->height = w->serverHeight + w->input.top + w->input.bottom;
+}
+
 /* Generates a region containing free space (here the
  * active window counts as free space). The region argument
  * is the start-region (ie: the output dev).
@@ -83,14 +94,7 @@ maximumizeEmptyRegion (CompWindow *window,
     XUnionRegion (region, newRegion, newRegion);
 
     if (maximumizeGetIgnoreOverlapping (s->display)) 
-    {
-	windowRect.x = window->serverX - window->input.left;
-	windowRect.y = window->serverY - window->input.top;
-	windowRect.width  = window->serverWidth + window->input.right + 
-	    window->input.left;
-	windowRect.height = window->serverHeight + window->input.top +
-	    window->input.bottom;
-    }
+	maximumizeSetWindowBox (&windowRect, window);
 
     for (w = s->windows; w; w = w->next)
     {
@@ -122,11 +126,7 @@ maximumizeEmptyRegion (CompWindow *window,
 	    !(w->wmType & CompWindowTypeDockMask))
 	    continue;
 
-	tmpRect.x = w->serverX - w->input.left;
-	tmpRect.y = w->serverY - w->input.top;
-	tmpRect.width  = w->serverWidth + w->input.right + w->input.left;
-	tmpRect.height = w->serverHeight + w->input.top +
-	                 w->input.bottom;
+	maximumizeSetWindowBox (&tmpRect, w);
 
 	if (maximumizeGetIgnoreOverlapping (s->display) &&
 		maximumizeSubstantialOverlap (tmpRect, windowRect))
