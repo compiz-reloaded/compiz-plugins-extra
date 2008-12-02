@@ -102,7 +102,7 @@ isTrailfocusWindow (CompWindow *w)
     if (w->attrib.override_redirect)
 	return FALSE;
 
-    if (w->invisible || w->hidden || w->minimized || w->shaded)
+    if (!w->mapNum || w->hidden || w->minimized || w->shaded)
 	return FALSE;
 
     if (!matchEval (trailfocusGetWindowMatch (w->screen), w))
