@@ -539,9 +539,15 @@ scalefilterHandleTextKeyPress (CompScreen *s,
     char            buffer[10];
     wchar_t         wbuffer[10];
     KeySym          ks;
+    unsigned int    mods;
 
     FILTER_DISPLAY (s->display);
     FILTER_SCREEN (s);
+
+    /* ignore key presses with modifiers (except Shift) */
+    mods = event->state & ~s->display->ignoredModMask;
+    if (mods & ~ShiftMask)
+	return;
 
     info = fs->filterInfo;
     memset (buffer, 0, sizeof (buffer));
