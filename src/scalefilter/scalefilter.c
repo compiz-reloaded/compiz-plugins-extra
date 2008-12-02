@@ -533,6 +533,7 @@ static void
 scalefilterHandleTextKeyPress (CompScreen *s,
 			       XKeyEvent  *event)
 {
+    CompDisplay     *d = s->display;
     ScaleFilterInfo *info;
     Bool            needRelayout = FALSE;
     int             count, timeout;
@@ -541,11 +542,12 @@ scalefilterHandleTextKeyPress (CompScreen *s,
     KeySym          ks;
     unsigned int    mods;
 
-    FILTER_DISPLAY (s->display);
+    FILTER_DISPLAY (d);
     FILTER_SCREEN (s);
 
-    /* ignore key presses with modifiers (except Shift) */
-    mods = event->state & ~s->display->ignoredModMask;
+    /* ignore key presses with modifiers (except Shift and
+       ModeSwitch AKA AltGr) */
+    mods =  event->state & ~d->ignoredModMask & ~d->modMask[CompModModeSwitch];
     if (mods & ~ShiftMask)
 	return;
 
