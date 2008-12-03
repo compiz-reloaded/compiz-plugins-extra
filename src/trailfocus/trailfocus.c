@@ -434,7 +434,7 @@ trailfocusPaintWindow (CompWindow              *w,
 
 	wAttrib.opacity = MIN (attrib->opacity, tw->attribs.opacity);
 	wAttrib.brightness = MIN (attrib->brightness, tw->attribs.brightness);
-	wAttrib.saturation = MIN (attrib->saturation, tw->attribs.brightness);
+	wAttrib.saturation = MIN (attrib->saturation, tw->attribs.saturation);
 
 	UNWRAP (ts, w->screen, paintWindow);
 	status = (*w->screen->paintWindow) (w, &wAttrib, transform,
