@@ -29,6 +29,10 @@
 		<_short>Activate Demanding Attention Window</_short>
 		<_long>Activate next window which has the "demands attention" flag set.</_long>
 	    </option>
+	    <option name="to_next_output_key" type="key">
+		<_short>Move Window To Next Output</_short>
+		<_long>Move the selected window to the next output device.</_long>
+	    </option>
 	</display>
     </plugin>
 </compiz>

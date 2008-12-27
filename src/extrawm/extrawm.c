@@ -144,6 +144,110 @@ activateDemandsAttention (CompDisplay     *d,
 }
 
 static Bool
+sendToNextOutput (CompDisplay     *d,
+		  CompAction      *action,
+		  CompActionState state,
+		  CompOption      *option,
+		  int             nOption)
+{
+    CompWindow *w;
+    Window     xid;
+
+    xid = getIntOptionNamed (option, nOption, "window", 0);
+    w   = findWindowAtDisplay (d, xid);
+
+    if (w)
+    {
+	CompScreen *s = w->screen;
+	int        outputNum, currentNum;
+	CompOutput *currentOutput, *newOutput;
+	int        dx, dy;
+
+	currentNum = outputDeviceForWindow (w);
+	outputNum  = getIntOptionNamed (option, nOption, "output",
+					(currentNum + 1) % s->nOutputDev);
+
+	if (outputNum >= s->nOutputDev)
+	    return FALSE;
+
+	currentOutput = &s->outputDev[currentNum];
+	newOutput     = &s->outputDev[outputNum];
+
+	/* move by the distance of the output center points */
+	dx = (newOutput->region.extents.x1 + newOutput->width / 2) -
+	     (currentOutput->region.extents.x1 + currentOutput->width / 2);
+	dy = (newOutput->region.extents.y1 + newOutput->height / 2) -
+	     (currentOutput->region.extents.y1 + currentOutput->height / 2);
+
+	if (dx || dy)
+	{
+	    /* constrain to work area of new output and move */
+	    CompWindowExtents newExtents;
+	    XRectangle        *workArea = &newOutput->workArea;
+	    XWindowChanges    xwc;
+	    int               width, height;
+	    unsigned int      mask = 0;
+
+	    newExtents.left   = w->serverX + dx - w->input.left;
+	    newExtents.right  = w->serverX + dx +
+			        w->serverWidth + w->input.right;
+	    newExtents.top    = w->serverY + dy - w->input.top;
+	    newExtents.bottom = w->serverY + dy +
+				w->serverHeight + w->input.bottom;
+
+	    width  = newExtents.right - newExtents.left;
+	    height = newExtents.bottom - newExtents.top;
+
+	    if (newExtents.left < workArea->x)
+	    {
+		dx += workArea->x - newExtents.left;
+	    }
+	    else if (width <= workArea->width &&
+		     newExtents.right > workArea->x + workArea->width)
+	    {
+		dx += workArea->x + workArea->width - newExtents.right;
+	    }
+
+	    if (newExtents.top < workArea->y)
+	    {
+		dy += workArea->y - newExtents.top;
+	    }
+	    else if (height <= workArea->height &&
+		     newExtents.bottom > workArea->y + workArea->height)
+	    {
+		dy += workArea->y + workArea->width - newExtents.right;
+	    }
+
+	    if (dx)
+	    {
+		xwc.x = w->serverX + dx;
+		mask  |= CWX;
+	    }
+
+	    if (dy)
+	    {
+		xwc.y = w->serverY + dy;
+		mask  |= CWY;
+	    }
+
+	    if (mask)
+		configureXWindow (w, mask, &xwc);
+
+	    if (w->state & (MAXIMIZE_STATE | CompWindowStateFullscreenMask))
+		updateWindowAttributes (w, CompStackingUpdateModeNone);
+
+	    /* make sure the window keeps focus */
+	    if (d->activeWindow == w->id)
+		sendWindowActivationRequest (s, w->id);
+	}
+
+	return TRUE;
+    }
+
+    return FALSE;
+}
+
+static Bool
 activateWin (CompDisplay     *d,
 	     CompAction      *action,
 	     CompActionState state,
@@ -358,6 +462,7 @@ extraWMInitDisplay (CompPlugin  *p,
     extrawmSetToggleFullscreenKeyInitiate (d, toggleFullscreen);
     extrawmSetActivateInitiate (d, activateWin);
     extrawmSetActivateDemandsAttentionKeyInitiate (d, activateDemandsAttention);
+    extrawmSetToNextOutputKeyInitiate (d, sendToNextOutput);
 
     WRAP (ed, d, handleEvent, extraWMHandleEvent);
 
