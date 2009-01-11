@@ -640,11 +640,8 @@ void
 groupRenderWindowTitle (GroupSelection *group)
 {
     GroupCairoLayer *layer;
-    void            *data = NULL;
     int             width, height;
-    int             stride;
-    Bool            hasText = FALSE;
-    CompTextAttrib  textAttrib;
+    Pixmap          pixmap = None;
     CompScreen      *s = group->screen;
     CompDisplay     *d = s->display;
     GroupTabBar     *bar = group->tabBar;
@@ -662,36 +659,40 @@ groupRenderWindowTitle (GroupSelection *group)
     if (!layer)
 	return;
 
-    textAttrib.family = "Sans";
-    textAttrib.size = groupGetTabbarFontSize (s);
-    textAttrib.style = TEXT_STYLE_BOLD;
-    textAttrib.color[0] = groupGetTabbarFontColorRed (s);
-    textAttrib.color[1] = groupGetTabbarFontColorGreen (s);
-    textAttrib.color[2] = groupGetTabbarFontColorBlue (s);
-    textAttrib.color[3] = groupGetTabbarFontColorAlpha (s);
-    textAttrib.ellipsize = TRUE;
+    if (bar->textSlot && bar->textSlot->window && gd->textFunc)
+    {
+	CompTextData    *data;
+	CompTextAttrib  textAttrib;
 
-    textAttrib.maxWidth = width;
-    textAttrib.maxHeight = height;
-    textAttrib.screen = s;
-    textAttrib.renderMode = TextRenderWindowTitle;
+	textAttrib.family = "Sans";
+	textAttrib.size   = groupGetTabbarFontSize (s);
 
-    if (bar->textSlot && bar->textSlot->window)
-	textAttrib.data = (void*) bar->textSlot->window->id;
-    else
-	textAttrib.data = 0;
+	textAttrib.flags = CompTextFlagStyleBold | CompTextFlagEllipsized |
+	                   CompTextFlagNoAutoBinding;
 
-    if (gd->textAvailable)
-	hasText = (*d->fileToImage) (d, TEXT_ID, (const char*) &textAttrib,
-				     &width, &height, &stride, &data);
+	textAttrib.color[0] = groupGetTabbarFontColorRed (s);
+	textAttrib.color[1] = groupGetTabbarFontColorGreen (s);
+	textAttrib.color[2] = groupGetTabbarFontColorBlue (s);
+	textAttrib.color[3] = groupGetTabbarFontColorAlpha (s);
 
-    if (!hasText)
+	textAttrib.maxWidth = width;
+	textAttrib.maxHeight = height;
+
+	data = (gd->textFunc->renderWindowTitle) (s, bar->textSlot->window->id,
+						  FALSE, &textAttrib);
+	if (data)
+	{
+	    pixmap = data->pixmap;
+	    free (data);
+	}
+    }
+
+    if (!pixmap)
     {
 	/* getting the pixmap failed, so create an empty one */
-	Pixmap emptyPixmap;
-	emptyPixmap = XCreatePixmap (d->display, s->root, width, height, 32);
+	pixmap = XCreatePixmap (d->display, s->root, width, height, 32);
 
-	if (emptyPixmap)
+	if (pixmap)
 	{
 	    XGCValues gcv;
 	    GC        gc;
@@ -699,24 +700,18 @@ groupRenderWindowTitle (GroupSelection *group)
 	    gcv.foreground = 0x00000000;
 	    gcv.plane_mask = 0xffffffff;
 
-	    gc = XCreateGC (d->display, emptyPixmap,
-			    GCForeground, &gcv);
-
-	    XFillRectangle (d->display, emptyPixmap, gc,
-			    0, 0, width, height);
-
+	    gc = XCreateGC (d->display, pixmap, GCForeground, &gcv);
+	    XFillRectangle (d->display, pixmap, gc, 0, 0, width, height);
 	    XFreeGC (d->display, gc);
-
-	    data = (void*) emptyPixmap;
 	}
     }
 
     layer->texWidth = width;
     layer->texHeight = height;
 
-    if (data)
+    if (pixmap)
     {
-	layer->pixmap = (Pixmap) data;
+	layer->pixmap = pixmap;
 	bindPixmapToTexture (s, &layer->texture, layer->pixmap,
 			     layer->texWidth, layer->texHeight, 32);
     }

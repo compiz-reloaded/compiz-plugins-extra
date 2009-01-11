@@ -398,12 +398,13 @@ typedef struct _GroupDisplay {
     Atom groupWinPropertyAtom;
     Atom resizeNotifyAtom;
 
-    Bool textAvailable;
+    TextFunc *textFunc;
 } GroupDisplay;
 
 /*
  * GroupScreen structure
  */
+
 typedef struct _GroupScreen {
     int windowPrivateIndex;
 
@@ -813,7 +814,6 @@ groupResizeTabBarRegion (GroupSelection *group,
 
 void
 groupDamageTabBarRegion (GroupSelection *group);
-
 
 /*
  * paint.c

@@ -194,6 +194,7 @@ groupInitDisplay (CompPlugin  *p,
 		  CompDisplay *d)
 {
     GroupDisplay *gd;
+    int          index;
 
     if (!checkPluginABI ("core", CORE_ABIVERSION))
 	return FALSE;
@@ -209,11 +210,17 @@ groupInitDisplay (CompPlugin  *p,
 	return FALSE;
     }
 
-    gd->textAvailable = checkPluginABI ("text", TEXT_ABIVERSION);
-    if (!gd->textAvailable)
+    if (checkPluginABI ("text", TEXT_ABIVERSION) &&
+	getPluginDisplayIndex (d, "text", &index))
+    {
+	gd->textFunc = d->base.privates[index].ptr;
+    }
+    else
+    {
 	compLogMessage ("group", CompLogLevelWarn,
 			"No compatible text plugin loaded.");
-
+	gd->textFunc = NULL;
+    }
     gd->glowTextureProperties =
 	(GlowTextureProperties*) glowTextureProperties;
     gd->ignoreMode = FALSE;
