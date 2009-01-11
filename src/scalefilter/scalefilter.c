@@ -48,13 +48,9 @@ static int scaleDisplayPrivateIndex;
 typedef struct _ScaleFilterInfo {
     CompTimeoutHandle timeoutHandle;
 
-    Pixmap      textPixmap;
-    CompTexture textTexture;
+    CompTextData *textData;
 
     unsigned int outputDevice;
-
-    int textWidth;
-    int textHeight;
 
     CompMatch match;
     CompMatch *origMatch;
@@ -69,7 +65,7 @@ typedef struct _ScaleFilterDisplay {
     XIM xim;
     XIC xic;
 
-    Bool textAvailable;
+    TextFunc *textFunc;
 
     HandleEventProc       handleEvent;
     HandleCompizEventProc handleCompizEvent;
@@ -102,26 +98,22 @@ static void
 scalefilterFreeFilterText (CompScreen *s)
 {
     FILTER_SCREEN (s);
+    FILTER_DISPLAY (s->display);
 
     if (!fs->filterInfo)
 	return;
 
-    if (!fs->filterInfo->textPixmap)
+    if (!fs->filterInfo->textData)
 	return;
 
-    releasePixmapFromTexture (s, &fs->filterInfo->textTexture);
-    XFreePixmap (s->display->display, fs->filterInfo->textPixmap);
-    initTexture (s, &fs->filterInfo->textTexture);
-    fs->filterInfo->textPixmap = None;
+    (fd->textFunc->finiTextData) (s, fs->filterInfo->textData);
+    fs->filterInfo->textData = NULL;
 }
 
 static void
 scalefilterRenderFilterText (CompScreen *s)
 {
-    CompDisplay    *d = s->display;
-    CompTextAttrib tA;
-    int            stride;
-    void           *data;
+    CompTextAttrib attrib;
     int            x1, x2, y1, y2;
     int            width, height;
     REGION         reg;
@@ -142,15 +134,20 @@ scalefilterRenderFilterText (CompScreen *s)
     reg.numRects = 1;
 
     /* damage the old draw rectangle */
-    width  = fs->filterInfo->textWidth + (2 * scalefilterGetBorderSize (s));
-    height = fs->filterInfo->textHeight + (2 * scalefilterGetBorderSize (s));
+    if (fs->filterInfo->textData)
+    {
+	width  = fs->filterInfo->textData->width +
+	         (2 * scalefilterGetBorderSize (s));
+	height = fs->filterInfo->textData->height +
+	         (2 * scalefilterGetBorderSize (s));
 
-    reg.extents.x1 = x1 + ((x2 - x1) / 2) - (width / 2) - 1;
-    reg.extents.x2 = reg.extents.x1 + width + 1;
-    reg.extents.y1 = y1 + ((y2 - y1) / 2) - (height / 2) - 1;
-    reg.extents.y2 = reg.extents.y1 + height + 1;
+	reg.extents.x1 = x1 + ((x2 - x1) / 2) - (width / 2) - 1;
+	reg.extents.x2 = reg.extents.x1 + width + 1;
+	reg.extents.y1 = y1 + ((y2 - y1) / 2) - (height / 2) - 1;
+	reg.extents.y2 = reg.extents.y1 + height + 1;
 
-    damageScreenRegion (s, &reg);
+	damageScreenRegion (s, &reg);
+    }
 
     scalefilterFreeFilterText (s);
 
@@ -160,85 +157,61 @@ scalefilterRenderFilterText (CompScreen *s)
     if (fs->filterInfo->filterStringLength == 0)
 	return;
 
-    if (!fd->textAvailable)
+    if (!fd->textFunc)
 	return;
 
-    tA.maxWidth = x2 - x1;
-    tA.maxHeight = y2 - y1;
-    tA.screen = s;
-    tA.size = scalefilterGetFontSize (s);
-    tA.color[0] = scalefilterGetFontColorRed (s);
-    tA.color[1] = scalefilterGetFontColorGreen (s);
-    tA.color[2] = scalefilterGetFontColorBlue (s);
-    tA.color[3] = scalefilterGetFontColorAlpha (s);
-    tA.style = (scalefilterGetFontBold (s)) ?
-	       TEXT_STYLE_BOLD : TEXT_STYLE_NORMAL;
-    tA.style |= TEXT_STYLE_BACKGROUND;
-    tA.family = "Sans";
-    tA.ellipsize = TRUE;
-    tA.backgroundHMargin = scalefilterGetBorderSize (s);
-    tA.backgroundVMargin = scalefilterGetBorderSize (s);
-    tA.backgroundColor[0] = scalefilterGetBackColorRed (s);
-    tA.backgroundColor[1] = scalefilterGetBackColorGreen (s);
-    tA.backgroundColor[2] = scalefilterGetBackColorBlue (s);
-    tA.backgroundColor[3] = scalefilterGetBackColorAlpha (s);
+    attrib.maxWidth = x2 - x1;
+    attrib.maxHeight = y2 - y1;
+
+    attrib.family = "Sans";
+    attrib.size = scalefilterGetFontSize (s);
+    attrib.color[0] = scalefilterGetFontColorRed (s);
+    attrib.color[1] = scalefilterGetFontColorGreen (s);
+    attrib.color[2] = scalefilterGetFontColorBlue (s);
+    attrib.color[3] = scalefilterGetFontColorAlpha (s);
+
+    attrib.flags = CompTextFlagWithBackground | CompTextFlagEllipsized;
+    if (scalefilterGetFontBold (s))
+	attrib.flags |= CompTextFlagStyleBold;
+
+    attrib.bgHMargin = scalefilterGetBorderSize (s);
+    attrib.bgVMargin = scalefilterGetBorderSize (s);
+    attrib.bgColor[0] = scalefilterGetBackColorRed (s);
+    attrib.bgColor[1] = scalefilterGetBackColorGreen (s);
+    attrib.bgColor[2] = scalefilterGetBackColorBlue (s);
+    attrib.bgColor[3] = scalefilterGetBackColorAlpha (s);
 
     wcstombs (buffer, fs->filterInfo->filterString, MAX_FILTER_STRING_LEN);
-    tA.renderMode = TextRenderNormal;
-    tA.data = (void*)buffer;
 
-    if ((*d->fileToImage) (s->display, TEXT_ID, (char *)&tA,
-			   &fs->filterInfo->textWidth,
-			   &fs->filterInfo->textHeight,
-			   &stride, &data))
-    {
-	fs->filterInfo->textPixmap = (Pixmap)data;
-	if (!bindPixmapToTexture (s, &fs->filterInfo->textTexture,
-				  fs->filterInfo->textPixmap,
-				  fs->filterInfo->textWidth,
-				  fs->filterInfo->textHeight, 32))
-	{
-	    compLogMessage ("scalefilter", CompLogLevelError,
-			    "Bind Pixmap to Texture failure");
-	    XFreePixmap (d->display, fs->filterInfo->textPixmap);
-	    fs->filterInfo->textPixmap = None;
-	    return;
-	}
-    }
-    else
-    {
-	fs->filterInfo->textPixmap = None;
-	fs->filterInfo->textWidth = 0;
-	fs->filterInfo->textHeight = 0;
-    }
+    fs->filterInfo->textData = (fd->textFunc->renderText) (s, buffer, &attrib);
 
     /* damage the new draw rectangle */
-    width  = fs->filterInfo->textWidth;
-    height = fs->filterInfo->textHeight;
+    if (fs->filterInfo->textData)
+    {
+	width  = fs->filterInfo->textData->width;
+	height = fs->filterInfo->textData->height;
 
-    reg.extents.x1 = x1 + ((x2 - x1) / 2) - (width / 2) - 1;
-    reg.extents.x2 = reg.extents.x1 + width + 1;
-    reg.extents.y1 = y1 + ((y2 - y1) / 2) - (height / 2) - 1;
-    reg.extents.y2 = reg.extents.y1 + height + 1;
+	reg.extents.x1 = x1 + ((x2 - x1) / 2) - (width / 2) - 1;
+	reg.extents.x2 = reg.extents.x1 + width + 1;
+	reg.extents.y1 = y1 + ((y2 - y1) / 2) - (height / 2) - 1;
+	reg.extents.y2 = reg.extents.y1 + height + 1;
 
-    damageScreenRegion (s, &reg);
+	damageScreenRegion (s, &reg);
+    }
 }
 
 static void
 scalefilterDrawFilterText (CompScreen *s,
 			   CompOutput *output)
 {
+    int        ox1, ox2, oy1, oy2;
+    float      x, y, width, height;
+
+    FILTER_DISPLAY (s->display);
     FILTER_SCREEN (s);
 
-    GLboolean  wasBlend;
-    GLint      oldBlendSrc, oldBlendDst;
-    int        ox1, ox2, oy1, oy2;
-    float      width, height;
-    float      x, y;
-    CompMatrix *m;
-
-    width = fs->filterInfo->textWidth;
-    height = fs->filterInfo->textHeight;
+    width = fs->filterInfo->textData->width;
+    height = fs->filterInfo->textData->height;
 
     ox1 = output->region.extents.x1;
     ox2 = output->region.extents.x2;
@@ -248,41 +221,7 @@ scalefilterDrawFilterText (CompScreen *s,
     x = floor (ox1 + ((ox2 - ox1) / 2) - (width / 2));
     y = floor (oy1 + ((oy2 - oy1) / 2) + (height / 2));
 
-    wasBlend = glIsEnabled (GL_BLEND);
-    glGetIntegerv (GL_BLEND_SRC, &oldBlendSrc);
-    glGetIntegerv (GL_BLEND_DST, &oldBlendDst);
-
-    if (!wasBlend)
-	glEnable (GL_BLEND);
-
-    glBlendFunc (GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-
-    glTexEnvf (GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-    glColor4f (1.0, 1.0, 1.0, 1.0);
-
-    enableTexture (s, &fs->filterInfo->textTexture, COMP_TEXTURE_FILTER_GOOD);
-
-    m = &fs->filterInfo->textTexture.matrix;
-
-    glBegin (GL_QUADS);
-
-    glTexCoord2f (COMP_TEX_COORD_X (m, 0), COMP_TEX_COORD_Y (m ,0));
-    glVertex2f (x, y - height);
-    glTexCoord2f (COMP_TEX_COORD_X (m, 0), COMP_TEX_COORD_Y (m, height));
-    glVertex2f (x, y);
-    glTexCoord2f (COMP_TEX_COORD_X (m, width), COMP_TEX_COORD_Y (m, height));
-    glVertex2f (x + width, y);
-    glTexCoord2f (COMP_TEX_COORD_X (m, width), COMP_TEX_COORD_Y (m, 0));
-    glVertex2f (x + width, y - height);
-
-    glEnd ();
-
-    disableTexture (s, &fs->filterInfo->textTexture);
-    glColor4usv (defaultColor);
-
-    if (!wasBlend)
-	glDisable (GL_BLEND);
-    glBlendFunc (oldBlendSrc, oldBlendDst);
+    (fd->textFunc->drawText) (s, fs->filterInfo->textData, x, y, 1.0f);
 }
 
 static void
@@ -347,15 +286,11 @@ scalefilterInitFilterInfo (CompScreen *s)
     memset (info->filterString, 0, sizeof (info->filterString));
     info->filterStringLength = 0;
 
-    info->textPixmap = None;
-    info->textWidth  = 0;
-    info->textHeight = 0;
+    info->textData = NULL;
 
     info->timeoutHandle = 0;
 
     info->outputDevice = s->currentOutputDev;
-
-    initTexture (s, &info->textTexture);
 
     matchInit (&info->match);
     matchCopy (&info->match, &fs->scaleMatch);
@@ -721,7 +656,7 @@ scalefilterPaintOutput (CompScreen              *s,
     status = (*s->paintOutput) (s, sAttrib, transform, region, output, mask);
     WRAP (fs, s, paintOutput, scalefilterPaintOutput);
 
-    if (status && fs->filterInfo && fs->filterInfo->textPixmap)
+    if (status && fs->filterInfo && fs->filterInfo->textData)
     {
 	if (output->id == ~0 || output->id == fs->filterInfo->outputDevice)
 	{
@@ -797,6 +732,7 @@ scalefilterInitDisplay (CompPlugin  *p,
 			CompDisplay *d)
 {
     ScaleFilterDisplay *fd;
+    int                index;
 
     if (!checkPluginABI ("core", CORE_ABIVERSION))
 	return FALSE;
@@ -831,10 +767,17 @@ scalefilterInitDisplay (CompPlugin  *p,
     if (fd->xic)
 	setlocale (LC_CTYPE, "");
 
-    fd->textAvailable = checkPluginABI ("text", TEXT_ABIVERSION);
-    if (!fd->textAvailable)
+    if (checkPluginABI ("text", TEXT_ABIVERSION) &&
+	getPluginDisplayIndex (d, "text", &index))
+    {
+	fd->textFunc = d->base.privates[index].ptr;
+    }
+    else
+    {
 	compLogMessage ("scalefilter", CompLogLevelWarn,
 			"No compatible text plugin found.");
+	fd->textFunc = NULL;
+    }
 
     WRAP (fd, d, handleEvent, scalefilterHandleEvent);
     WRAP (fd, d, handleCompizEvent, scalefilterHandleCompizEvent);
