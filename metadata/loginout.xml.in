@@ -58,7 +58,7 @@
 				<option name="out_match" type="match">
 					<_short>Logout Window match</_short>
 					<_long>Logout Window Match</_long>
-					<default>(class=Ksmserver &amp; (role=logoutdialog | role=logouteffect)) | (class=Libssui-tool &amp; type=Dialog)</default>
+					<default>(iclass=ksmserver &amp; (role=logoutdialog | role=logouteffect)) | (class=Libssui-tool &amp; type=Dialog)</default>
 				</option>
 				<option name="out_time" type="float">
 					<_short>Fade In/Out Time</_short>
