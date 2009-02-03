@@ -38,6 +38,7 @@ xml_in_files = 	             \
 	fadedesktop.xml.in   \
 	firepaint.xml.in     \
 	gears.xml.in         \
+	grid.xml.in          \
 	loginout.xml.in      \
 	maximumize.xml.in    \
 	mblur.xml.in         \

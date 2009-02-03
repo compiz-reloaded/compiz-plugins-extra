@@ -10,6 +10,7 @@ SUBDIRS = 3d \
 	  fadedesktop \
 	  firepaint \
 	  gears \
+	  grid \
 	  group \
 	  maximumize \
 	  mblur \

@@ -189,6 +189,7 @@ src/extrawm/Makefile
 src/fadedesktop/Makefile
 src/firepaint/Makefile
 src/gears/Makefile
+src/grid/Makefile
 src/group/Makefile
 src/maximumize/Makefile
 src/mblur/Makefile
