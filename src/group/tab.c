@@ -682,7 +682,8 @@ groupHandleAnimation (GroupSelection *group)
 
     if (group->changeState == TabChangeOldOut)
     {
-	CompWindow *top = TOP_TAB (group);
+	CompWindow      *top = TOP_TAB (group);
+	Bool            activate;
 
 	/* recalc here is needed (for y value)! */
 	groupRecalcTabBarPos (group,
@@ -698,11 +699,17 @@ groupHandleAnimation (GroupSelection *group)
 
 	group->changeState = TabChangeNewIn;
 
-	if (!group->checkFocusAfterTabChange ||
-	    allowWindowFocus (top, NO_FOCUS_MASK, s->x, s->y, 0))
+	activate = !group->checkFocusAfterTabChange;
+	if (!activate)
 	{
-	    (*s->activateWindow) (top);
+	    CompFocusResult focus;
+	    focus    = allowWindowFocus (top, NO_FOCUS_MASK, s->x, s->y, 0);
+	    activate = focus == CompFocusAllowed;
 	}
+
+	if (activate)
+	    (*s->activateWindow) (top);
+
 	group->checkFocusAfterTabChange = FALSE;
     }
 
@@ -1671,17 +1678,26 @@ groupChangeTab (GroupTabBarSlot             *topTab,
 	}
 	else
 	{
+	    Bool activate;
+
 	    /* No window to do animation with. */
 	    if (HAS_TOP_WIN (group))
 		group->prevTopTab = group->topTab;
 	    else
 		group->prevTopTab = NULL;
 
-	    if (!group->checkFocusAfterTabChange ||
-		allowWindowFocus (w, NO_FOCUS_MASK, s->x, s->y, 0))
+	    activate = !group->checkFocusAfterTabChange;
+	    if (!activate)
 	    {
-		(*s->activateWindow) (w);
+		CompFocusResult focus;
+
+		focus    = allowWindowFocus (w, NO_FOCUS_MASK, s->x, s->y, 0);
+		activate = focus == CompFocusAllowed;
 	    }
+
+	    if (activate)
+		(*s->activateWindow) (w);
+
 	    group->checkFocusAfterTabChange = FALSE;
 	}
     }
