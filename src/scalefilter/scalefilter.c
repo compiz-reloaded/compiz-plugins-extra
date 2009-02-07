@@ -441,7 +441,9 @@ scalefilterHandleSpecialKeyPress (CompScreen *s,
 
 	    ss->currentMatch = &ss->match;
 	    fs->matchApplied = TRUE;
-	    *drop            = TRUE;
+	    /* let return pass (and thus end scale) if only
+	       one window is left */
+	    *drop            = ss->nWindows > 1;
 	    needRelayout     = TRUE;
 	    scalefilterFiniFilterInfo (s, TRUE);
 	}
