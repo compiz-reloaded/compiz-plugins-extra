@@ -1,4 +1,4 @@
-project (compiz-fusion-plugins-extra)
+project (compiz-plugins-extra)
 
 cmake_minimum_required (VERSION 2.4)
 
