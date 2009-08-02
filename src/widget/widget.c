@@ -729,8 +729,11 @@ widgetDonePaintScreen (CompScreen *s)
 	    damageScreen (s);
 	else
 	{
-	    removeScreenGrab (s, ws->grabIndex, NULL);
-	    ws->grabIndex = 0;
+	    if (ws->grabIndex)
+	    {
+		removeScreenGrab (s, ws->grabIndex, NULL);
+		ws->grabIndex = 0;
+	    }
 
 	    if (ws->state == StateFadeIn)
 		ws->state = StateOn;
