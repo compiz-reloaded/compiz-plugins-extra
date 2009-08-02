@@ -573,6 +573,8 @@ static Bool animInitWindow(CompPlugin * p, CompWindow * w)
 	return FALSE;
 
     aw->eng.polygonSet = NULL;
+    aw->eng.numPs = 0;
+    aw->eng.ps = NULL;
 
     w->base.privates[as->windowPrivateIndex].ptr = aw;
 
