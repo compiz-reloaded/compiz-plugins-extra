@@ -89,17 +89,11 @@ static Bool ensureLargerClipCapacity(PolygonSet * pset)
 	    // shrink back the new larger clips memory
 	    pset->clips = realloc
 		(newList, sizeof(Clip4Polygons) * pset->clipCapacity);
-	    if (!pset->clips)
-	    {
-		// free all related memory
-		free(newList);
-		pset->clips = 0;
-		free(pset->lastClipInGroup);
-		pset->lastClipInGroup = 0;
 
-		pset->nClips = 0;
-		pset->clipCapacity = 0;
-	    }
+	    // if that fails, just use the larger memory reallocated above
+	    if (!pset->clips)
+	    	pset->clips = newList;
+
 	    return FALSE;
 	}
 	// reset newly allocated part of this memory to 0
