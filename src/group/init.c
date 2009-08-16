@@ -343,7 +343,8 @@ groupInitScreen (CompPlugin *p,
     gs->pendingMoves    = NULL;
     gs->pendingGrabs    = NULL;
     gs->pendingUngrabs  = NULL;
-    gs->dequeueTimerSet = FALSE;
+
+    gs->dequeueTimeoutHandle = 0;
 
     gs->draggedSlot            = NULL;
     gs->dragged                = FALSE;
@@ -435,6 +436,9 @@ groupFiniScreen (CompPlugin *p,
 
     if (gs->showDelayTimeoutHandle)
 	compRemoveTimeout (gs->showDelayTimeoutHandle);
+
+    if (gs->dequeueTimeoutHandle)
+	compRemoveTimeout (gs->dequeueTimeoutHandle);
 
     if (gs->initialActionsTimeoutHandle)
 	compRemoveTimeout (gs->initialActionsTimeoutHandle);

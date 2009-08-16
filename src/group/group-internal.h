@@ -427,7 +427,7 @@ typedef struct _GroupScreen {
     GroupPendingMoves   *pendingMoves;
     GroupPendingGrabs   *pendingGrabs;
     GroupPendingUngrabs *pendingUngrabs;
-    Bool                dequeueTimerSet;
+    CompTimeoutHandle   dequeueTimeoutHandle;
 
     GroupSelection *groups;
     GroupSelection tmpSel;
