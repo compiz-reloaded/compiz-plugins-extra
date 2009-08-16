@@ -515,7 +515,10 @@ scalefilterHandleTextKeyPress (CompScreen *s,
 	    scalefilterInitFilterInfo (s);
 	}
 	else if (info->timeoutHandle)
+	{
 	    compRemoveTimeout (info->timeoutHandle);
+	    info->timeoutHandle = 0;
+	}
 
 	if (info)
 	{
