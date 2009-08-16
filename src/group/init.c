@@ -137,6 +137,10 @@ groupApplyInitialActions (void *closure)
     CompScreen *s = (CompScreen *) closure;
     CompWindow *w;
 
+    GROUP_SCREEN (s);
+
+    gs->initialActionsTimeoutHandle = 0;
+
     /* we need to do it from top to buttom of the stack to avoid problems
        with a reload of Compiz and tabbed static groups. (topTab will always
        be above the other windows in the group) */
@@ -153,8 +157,6 @@ groupApplyInitialActions (void *closure)
 	if (groupCheckWindowProperty (w, &id, &tabbed, color))
 	{
 	    GroupSelection *group;
-
-	    GROUP_SCREEN (s);
 
 	    for (group = gs->groups; group; group = group->next)
 		if (group->identifier == id)
@@ -354,7 +356,8 @@ groupInitScreen (CompPlugin *p,
 
     /* one-shot timeout for stuff that needs to be initialized after
        all screens and windows are initialized */
-    compAddTimeout (0, 0, groupApplyInitialActions, (void *) s);
+    gs->initialActionsTimeoutHandle =
+	compAddTimeout (0, 0, groupApplyInitialActions, (void *) s);
 
     initTexture (s, &gs->glowTexture);
 
@@ -409,6 +412,9 @@ groupFiniScreen (CompPlugin *p,
 		if (group->tabBar->region)
 		    XDestroyRegion (group->tabBar->region);
 
+		if (group->tabBar->timeoutHandle)
+		    compRemoveTimeout (group->tabBar->timeoutHandle);
+
 		free (group->tabBar);
 	    }
 
@@ -423,6 +429,15 @@ groupFiniScreen (CompPlugin *p,
 
     if (gs->grabIndex)
 	groupGrabScreen (s, ScreenGrabNone);
+
+    if (gs->dragHoverTimeoutHandle)
+	compRemoveTimeout (gs->dragHoverTimeoutHandle);
+
+    if (gs->showDelayTimeoutHandle)
+	compRemoveTimeout (gs->showDelayTimeoutHandle);
+
+    if (gs->initialActionsTimeoutHandle)
+	compRemoveTimeout (gs->initialActionsTimeoutHandle);
 
     freeWindowPrivateIndex (s, gs->windowPrivateIndex);
 

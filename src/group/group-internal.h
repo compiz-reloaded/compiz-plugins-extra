@@ -283,10 +283,11 @@ typedef struct _GroupTabBar {
     GroupAnimationType bgAnimation;
 
     PaintState state;
-    int        timeoutHandle;
     int        animationTime;
     Region     region;
     int        oldWidth;
+
+    CompTimeoutHandle timeoutHandle;
 
     /* For DnD animations */
     int   leftSpringX, rightSpringX;
@@ -450,6 +451,8 @@ typedef struct _GroupScreen {
     CompTimeoutHandle dragHoverTimeoutHandle;
     Bool              dragged;
     int               prevX, prevY; /* Buffer for mouse coordinates */
+
+    CompTimeoutHandle initialActionsTimeoutHandle;
 
     CompTexture glowTexture;
 } GroupScreen;
