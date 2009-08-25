@@ -453,6 +453,8 @@ gearsInitScreen (CompPlugin *p,
     glLightfv (GL_LIGHT1, GL_DIFFUSE, diffuseLight);
     glLightfv (GL_LIGHT1, GL_POSITION, pos);
 
+    gs->damage = FALSE;
+
     gs->contentRotation = 0.0;
 
     gs->gear1 = glGenLists (1);
