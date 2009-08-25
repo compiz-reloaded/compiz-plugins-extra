@@ -908,6 +908,7 @@ widgetInitWindow (CompPlugin *p,
     ww->propertyState = PropertyNotSet;
     ww->parentWidget = NULL;
     ww->wasUnmapped = FALSE;
+    ww->oldManaged = FALSE;
     ww->matchUpdateHandle = 0;
 
     w->base.privates[ws->windowPrivateIndex].ptr = ww;
