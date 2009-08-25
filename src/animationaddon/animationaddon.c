@@ -91,7 +91,7 @@ ExtensionPluginInfo animExtensionPluginInfo = {
     .nEffects		= NUM_EFFECTS,
     .effects		= animEffects,
 
-    .nEffectOptions	= ANIMADDON_SCREEN_OPTION_NUM,
+    .nEffectOptions	= ANIMADDON_SCREEN_OPTION_NUM - NUM_NONEFFECT_OPTIONS,
 
     .prePaintOutputFunc	= polygonsPrePaintOutput
 };
