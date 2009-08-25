@@ -202,6 +202,7 @@ shelfUnshapeInput (CompWindow *w)
 	XShapeCombineRectangles (dpy, w->id, ShapeInput, 0, 0,
 				 sw->info->inputRects, sw->info->nInputRects,
 				 ShapeSet, sw->info->inputRectOrdering);
+	free (sw->info->inputRects);
     }
     else
     {
@@ -217,6 +218,7 @@ shelfUnshapeInput (CompWindow *w)
 				     sw->info->frameNInputRects,
 				     ShapeSet,
 				     sw->info->frameInputRectOrdering);
+	    free (sw->info->frameInputRects);
 	}
 	else
 	{
