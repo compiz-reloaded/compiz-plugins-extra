@@ -648,7 +648,8 @@ showdesktopGetAllowedActionsForWindow (CompWindow   *w,
     WRAP (ss, s, getAllowedActionsForWindow,
 	  showdesktopGetAllowedActionsForWindow);
 
-    *clearActions |= sw->notAllowedMask;
+    if (sw)
+	*clearActions |= sw->notAllowedMask;
 }
 
 static void
@@ -884,6 +885,9 @@ showdesktopFiniWindow (CompPlugin *p,
     SD_WINDOW (w);
 
     free (sw);
+
+    SD_SCREEN (w->screen);
+    w->base.privates[ss->windowPrivateIndex].ptr = NULL;
 }
 
 static CompBool
