@@ -474,7 +474,7 @@ fireInitiate (CompDisplay     *d,
     {
 	FIRE_SCREEN (s);
 
-	if (otherScreenGrabExist (s, 0) )
+	if (otherScreenGrabExist (s, NULL) )
 	    return FALSE;
 
 	if (!fs->grabIndex)

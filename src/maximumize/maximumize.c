@@ -452,7 +452,7 @@ maximumizeTrigger (CompDisplay     *d,
 	MaxSet	       mset;
 
 	s = w->screen;
-	if (otherScreenGrabExist (s, 0))
+	if (otherScreenGrabExist (s, NULL))
 	   return FALSE;
 
 	mset.left = maximumizeGetMaximumizeLeft (w->screen->display);
@@ -513,7 +513,7 @@ maximumizeTriggerDirection (CompDisplay     *d,
 	MaxSet	       mset;
 
 	s = w->screen;
-	if (otherScreenGrabExist (s, 0))
+	if (otherScreenGrabExist (s, NULL))
 	    return FALSE;
 
 

@@ -951,7 +951,7 @@ groupUpdateTabBars (CompScreen *s,
 
     /* do nothing if the screen is grabbed, as the frame might be drawn
        transformed */
-    if (!otherScreenGrabExist (s, "group", "group-drag", 0))
+    if (!otherScreenGrabExist (s, "group", "group-drag", NULL))
     {
 	/* first check if the entered window is a frame */
 	for (w = s->windows; w; w = w->next)

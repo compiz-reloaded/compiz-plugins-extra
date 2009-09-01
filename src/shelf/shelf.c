@@ -566,7 +566,7 @@ handleButtonPress (CompWindow   *w,
 
     SHELF_SCREEN (s);
 
-    if (!otherScreenGrabExist (s, "shelf", 0))
+    if (!otherScreenGrabExist (s, "shelf", NULL))
     {
 	(*s->activateWindow) (w);
 	ss->grabbedWindow = w->id;

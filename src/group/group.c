@@ -1008,7 +1008,7 @@ groupHandleButtonPressEvent (CompScreen *s,
 			gs->prevX = xRoot;
 			gs->prevY = yRoot;
 
-			if (!otherScreenGrabExist(s, "group", "group-drag"))
+			if (!otherScreenGrabExist(s, "group", "group-drag", NULL))
 			    groupGrabScreen (s, ScreenGrabTabDrag);
 		    }
 		}
