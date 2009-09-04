@@ -418,16 +418,17 @@ widgetEndWidgetMode (CompScreen *s,
 	/* end widget mode if the closed widget was the last one */
 
 	WIDGET_WINDOW (closedWidget);
-	if (ww->isWidget)
+
+	if (!ww->isWidget)
+	    return;
+
+	for (w = s->windows; w; w = w->next)
 	{
-	    for (w = s->windows; w; w = w->next)
-	    {
-		WIDGET_WINDOW (w);
-		if (w == closedWidget)
-		    continue;
-		if (ww->isWidget)
-		    return;
-	    }
+	    WIDGET_WINDOW (w);
+	    if (w == closedWidget)
+		continue;
+	    if (ww->isWidget)
+		return;
 	}
     }
 
