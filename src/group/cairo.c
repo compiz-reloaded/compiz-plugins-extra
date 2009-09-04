@@ -683,6 +683,8 @@ groupRenderWindowTitle (GroupSelection *group)
 	if (data)
 	{
 	    pixmap = data->pixmap;
+	    width  = data->width;
+	    height = data->height;
 	    free (data);
 	}
     }
