@@ -319,8 +319,9 @@ notifyGetObjectOptions (CompPlugin *plugin,
 	(GetPluginObjectOptionsProc) notifyGetDisplayOptions
     };
 
+    *count = 0;
     RETURN_DISPATCH (object, dispTab, ARRAY_SIZE (dispTab),
-		     (void *) (*count = 0), (plugin, object, count));
+		     NULL, (plugin, object, count));
 }
 
 static CompBool
