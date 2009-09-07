@@ -555,8 +555,9 @@ showmousePreparePaintScreen (CompScreen *s,
 	glBindTexture(GL_TEXTURE_2D, 0);
     }
 
-    ss->rot = fmod (ss->rot + (((float)time / 1000.0) * 2 * M_PI *
-		    showmouseGetRotationSpeed (s)), 2 * M_PI);
+    if (ss->active)
+	ss->rot = fmod (ss->rot + (((float)time / 1000.0) * 2 * M_PI *
+			showmouseGetRotationSpeed (s)), 2 * M_PI);
 
     if (ss->ps && ss->ps->active)
     {
