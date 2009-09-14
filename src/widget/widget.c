@@ -418,7 +418,6 @@ widgetEndWidgetMode (CompScreen *s,
 	/* end widget mode if the closed widget was the last one */
 
 	WIDGET_WINDOW (closedWidget);
-
 	if (!ww->isWidget)
 	    return;
 
@@ -444,7 +443,18 @@ widgetHandleEvent (CompDisplay *d,
 		   XEvent      *event)
 {
     CompScreen *s;
-    CompWindow *w;
+    CompWindow *w = NULL;
+
+    switch (event->type)
+    {
+    case DestroyNotify:
+	/* We need to get the CompWindow * for event->xdestroywindow.window
+	   here because in the (*d->handleEvent) call below, that CompWindow's
+	   id will become 1, so findWindowAtDisplay won't be able to find the
+	   CompWindow after that. */
+	w = findWindowAtDisplay (d, event->xdestroywindow.window);
+	break;
+    }
 
     WIDGET_DISPLAY (d);
 
@@ -528,7 +538,6 @@ widgetHandleEvent (CompDisplay *d,
 	}
 	break;
     case DestroyNotify:
-	w = findWindowAtDisplay (d, event->xdestroywindow.window);
 	if (w)
 	{
 	    widgetUpdateTreeStatus (w);
