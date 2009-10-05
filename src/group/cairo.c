@@ -71,6 +71,9 @@ void
 groupDestroyCairoLayer (CompScreen      *s,
 			GroupCairoLayer *layer)
 {
+    if (!layer)
+	return;
+
     if (layer->cairo)
 	cairo_destroy (layer->cairo);
 
@@ -683,7 +686,7 @@ groupRenderWindowTitle (GroupSelection *group)
 	if (data)
 	{
 	    pixmap = data->pixmap;
-	    width  = data->width;
+	    width = data->width;
 	    height = data->height;
 	    free (data);
 	}
