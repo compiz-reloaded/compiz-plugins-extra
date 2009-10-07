@@ -587,6 +587,25 @@ static void animFiniWindow(CompPlugin * p, CompWindow * w)
 {
     ANIMADDON_WINDOW (w);
 
+    // We need to interrupt and clean up the animation currently being played
+    // by animationaddon for this window (if any)
+    if (aw->com->animRemainingTime > 0 &&
+	(aw->com->curAnimEffect == AnimEffectAirplane ||
+	 aw->com->curAnimEffect == AnimEffectBeamUp ||
+	 aw->com->curAnimEffect == AnimEffectBurn ||
+	 aw->com->curAnimEffect == AnimEffectDomino ||
+	 aw->com->curAnimEffect == AnimEffectExplode ||
+	 aw->com->curAnimEffect == AnimEffectFold ||
+	 aw->com->curAnimEffect == AnimEffectGlide3 ||
+	 aw->com->curAnimEffect == AnimEffectLeafSpread ||
+	 aw->com->curAnimEffect == AnimEffectRazr ||
+	 aw->com->curAnimEffect == AnimEffectSkewer))
+    {
+	ANIMADDON_DISPLAY (w->screen->display);
+
+	ad->animBaseFunctions->postAnimationCleanup (w);
+    }
+
     free(aw);
 }
 
