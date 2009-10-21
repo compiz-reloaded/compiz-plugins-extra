@@ -2093,8 +2093,13 @@ polygonsPrePaintOutput (CompScreen *s, CompOutput *output)
     CompWindow *w;
     for (w = s->windows; w; w = w->next)
     {
+	if (w->destroyed)
+	    continue;
+
 	ANIMADDON_WINDOW (w);
-	if (aw->com->animRemainingTime > 0 &&
+
+	if (aw && aw->com &&
+	    aw->com->animRemainingTime > 0 &&
 	    aw->eng.polygonSet &&
 	    aw->eng.polygonSet->doDepthTest)
 	{

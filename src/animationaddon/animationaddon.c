@@ -585,6 +585,7 @@ static Bool animInitWindow(CompPlugin * p, CompWindow * w)
 
 static void animFiniWindow(CompPlugin * p, CompWindow * w)
 {
+    ANIMADDON_SCREEN (w->screen);
     ANIMADDON_WINDOW (w);
 
     // We need to interrupt and clean up the animation currently being played
@@ -607,6 +608,7 @@ static void animFiniWindow(CompPlugin * p, CompWindow * w)
     }
 
     free(aw);
+    w->base.privates[as->windowPrivateIndex].ptr = NULL;
 }
 
 static CompBool
