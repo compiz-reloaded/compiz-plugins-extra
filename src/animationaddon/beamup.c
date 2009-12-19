@@ -49,43 +49,26 @@ fxBeamUpInit (CompWindow * w)
 
     if (!aw->eng.numPs)
     {
-	aw->eng.ps = calloc(2, sizeof(ParticleSystem));
+	aw->eng.ps = calloc(1, sizeof(ParticleSystem));
 	if (!aw->eng.ps)
 	{
 	    ad->animBaseFunctions->postAnimationCleanup (w);
 	    return FALSE;
 	}
 
-	aw->eng.numPs = 2;
+	aw->eng.numPs = 1;
     }
 
     int particles = WIN_W(w);
 
-    initParticles(particles / 10, &aw->eng.ps[0]);
-    initParticles(particles, &aw->eng.ps[1]);
-    aw->eng.ps[1].slowdown = animGetF (w, ANIMADDON_SCREEN_OPTION_BEAMUP_SLOWDOWN);
-    aw->eng.ps[1].darken = 0.5;
-    aw->eng.ps[1].blendMode = GL_ONE;
-
-    aw->eng.ps[0].slowdown =
-	animGetF (w, ANIMADDON_SCREEN_OPTION_BEAMUP_SLOWDOWN) / 2.0;
-    aw->eng.ps[0].darken = 0.0;
-    aw->eng.ps[0].blendMode = GL_ONE_MINUS_SRC_ALPHA;
+    initParticles(particles, &aw->eng.ps[0]);
+    aw->eng.ps[0].slowdown = animGetF (w, ANIMADDON_SCREEN_OPTION_BEAMUP_SLOWDOWN);
+    aw->eng.ps[0].darken = 0.5;
+    aw->eng.ps[0].blendMode = GL_ONE;
 
     if (!aw->eng.ps[0].tex)
 	glGenTextures(1, &aw->eng.ps[0].tex);
     glBindTexture(GL_TEXTURE_2D, aw->eng.ps[0].tex);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 32, 32, 0,
-		 GL_RGBA, GL_UNSIGNED_BYTE, fireTex);
-    glBindTexture(GL_TEXTURE_2D, 0);
-
-    if (!aw->eng.ps[1].tex)
-	glGenTextures(1, &aw->eng.ps[1].tex);
-    glBindTexture(GL_TEXTURE_2D, aw->eng.ps[1].tex);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -229,7 +212,7 @@ fxBeamUpAnimStep (CompWindow *w, float time)
 
     if (aw->com->animRemainingTime > 0 && aw->eng.numPs)
     {
-	fxBeamUpGenNewBeam(w, &aw->eng.ps[1], 
+	fxBeamUpGenNewBeam(w, &aw->eng.ps[0],
 			   WIN_X(w), WIN_Y(w) + (WIN_H(w) / 2), WIN_W(w),
 			   creating ?
 			   (1 - new / 2) * WIN_H(w) : 
@@ -238,7 +221,7 @@ fxBeamUpAnimStep (CompWindow *w, float time)
 
     }
     if (aw->com->animRemainingTime <= 0 && aw->eng.numPs
-	&& (aw->eng.ps[0].active || aw->eng.ps[1].active))
+	&& aw->eng.ps[0].active)
 	aw->com->animRemainingTime = 0.001f;
 
     if (!aw->eng.numPs || !aw->eng.ps)
@@ -254,19 +237,16 @@ fxBeamUpAnimStep (CompWindow *w, float time)
 	return;
     }
 
-    aw->eng.ps[0].x = WIN_X(w);
-    aw->eng.ps[0].y = WIN_Y(w);
-
     if (aw->com->animRemainingTime > 0)
     {
-	int nParticles = aw->eng.ps[1].numParticles;
-	Particle *part = aw->eng.ps[1].particles;
+	int nParticles = aw->eng.ps[0].numParticles;
+	Particle *part = aw->eng.ps[0].particles;
 	int i;
 	for (i = 0; i < nParticles; i++, part++)
 	    part->xg = (part->x < part->xo) ? 1.0 : -1.0;
     }
-    aw->eng.ps[1].x = WIN_X(w);
-    aw->eng.ps[1].y = WIN_Y(w);
+    aw->eng.ps[0].x = WIN_X(w);
+    aw->eng.ps[0].y = WIN_Y(w);
 }
 
 void
