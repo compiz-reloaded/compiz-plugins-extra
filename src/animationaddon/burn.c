@@ -134,6 +134,10 @@ fxBurnGenNewFire(CompWindow * w,
     float partw = animGetF (w, ANIMADDON_SCREEN_OPTION_FIRE_SIZE);
     float parth = partw * 1.5;
 
+    // Limit max number of new particles created simultaneously
+    if (max_new > ps->numParticles / 5)
+	max_new = ps->numParticles / 5;
+
     Particle *part = ps->particles;
     int i;
     for (i = 0; i < ps->numParticles && max_new > 0; i++, part++)
@@ -225,6 +229,10 @@ fxBurnGenNewSmoke(CompWindow * w,
 
     float partSize = animGetF (w, ANIMADDON_SCREEN_OPTION_FIRE_SIZE) * size * 5;
     float sizeNeg = -size;
+
+    // Limit max number of new particles created simultaneously
+    if (max_new > ps->numParticles)
+	max_new = ps->numParticles;
 
     Particle *part = ps->particles;
     int i;

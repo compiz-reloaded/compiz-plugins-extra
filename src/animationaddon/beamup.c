@@ -112,6 +112,10 @@ fxBeamUpGenNewBeam(CompWindow * w,
 
     float partw = 2.5 * animGetF (w, ANIMADDON_SCREEN_OPTION_BEAMUP_SIZE);
 
+    // Limit max number of new particles created simultaneously
+    if (max_new > ps->numParticles)
+	max_new = ps->numParticles;
+
     Particle *part = ps->particles;
     int i;
     for (i = 0; i < ps->numParticles && max_new > 0; i++, part++)
