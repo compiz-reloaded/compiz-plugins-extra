@@ -239,11 +239,13 @@ popWindow (CompDisplay *d,
 
     /* find window from the stacking order next to the last window
        in the stack to fill the empty space */
-    for (i = winMax - 1; i >= 0; i--)
+    for (w = NULL, i = winMax - 1; i >= 0; i--)
 	if (ts->win[i])
+	{
+	    w = findWindowAtDisplay (d, ts->win[i]);
 	    break;
+	}
 
-    w = findWindowAtDisplay (d, ts->win[i]);
     if (w)
     {
 	CompWindow *cw;

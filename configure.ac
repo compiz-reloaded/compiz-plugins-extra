@@ -136,7 +136,7 @@ AM_CONDITIONAL(THREED_PLUGIN, test "x$have_compiz_cube" = "xyes")
 PKG_CHECK_MODULES(COMPIZMOUSEPOLL, compiz-mousepoll, [have_compiz_mousepoll=yes], [have_compiz_mousepoll=no])
 AM_CONDITIONAL(SHOWMOUSE_PLUGIN, test "x$have_compiz_mousepoll" = "xyes")
 
-PKG_CHECK_MODULES(LIBNOTIFY, libnotify, [have_libnotify=yes], [have_libnotify=no])
+PKG_CHECK_MODULES(LIBNOTIFY, libnotify gtk+-2.0, [have_libnotify=yes], [have_libnotify=no])
 AM_CONDITIONAL(NOTIFICATION_PLUGIN, test "x$have_libnotify" = "xyes")
 if test "$have_libnotify" = yes; then
   AC_DEFINE(USE_NOTIFICATION, 1, [Build notification plugin])
