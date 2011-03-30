@@ -104,7 +104,7 @@ notifyLogMessage (const char   *component,
     n = notify_notification_new (logLevel,
                                  message,
                                  iconUri
-#if !defined (HAVE_LIBNOTIFY_0_6)
+#if !defined (HAVE_LIBNOTIFY_0_6_1)
                                  , NULL
 #endif
                                  );

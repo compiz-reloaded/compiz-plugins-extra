@@ -140,9 +140,9 @@ PKG_CHECK_MODULES(LIBNOTIFY, libnotify gtk+-2.0, [have_libnotify=yes], [have_lib
 AM_CONDITIONAL(NOTIFICATION_PLUGIN, test "x$have_libnotify" = "xyes")
 if test "$have_libnotify" = yes; then
   AC_DEFINE(USE_NOTIFICATION, 1, [Build notification plugin])
-  PKG_CHECK_EXISTS(libnotify >= 0.6, [have_libnotify_0_6=yes], [have_libnotify_0_6=no])
-  if test "$have_libnotify_0_6" = yes; then
-    AC_DEFINE(HAVE_LIBNOTIFY_0_6, 1, [libnotify >= 0.6 present])
+  PKG_CHECK_EXISTS(libnotify >= 0.6.1, [have_libnotify_0_6_1=yes], [have_libnotify_0_6_1=no])
+  if test "$have_libnotify_0_6_1" = yes; then
+    AC_DEFINE(HAVE_LIBNOTIFY_0_6_1, 1, [libnotify >= 0.6.1 present])
   fi
 fi
 
