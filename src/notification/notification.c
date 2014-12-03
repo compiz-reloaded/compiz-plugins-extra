@@ -27,6 +27,8 @@
 #include <unistd.h>
 #include <compiz-core.h>
 
+#include "config.h"
+
 #define NOTIFY_DISPLAY_OPTION_TIMEOUT   0
 #define NOTIFY_DISPLAY_OPTION_MAX_LEVEL 1
 #define NOTIFY_DISPLAY_OPTION_NUM       2
