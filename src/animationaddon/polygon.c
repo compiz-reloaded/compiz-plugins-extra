@@ -1886,7 +1886,7 @@ polygonsDeceleratingAnimStepPolygon (CompWindow *w,
     p->rotAngle = moveProgress * p->finalRotAng + p->rotAngleStart;
 }
 
-static inline AnimStepPolygonProc
+extern inline AnimStepPolygonProc
 getAnimStepPolygonFunc (AnimAddonWindow *aw)
 {
     void *extraProp = aw->com->curAnimEffect->properties.extraProperties;
