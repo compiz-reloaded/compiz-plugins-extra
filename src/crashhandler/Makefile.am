@@ -8,7 +8,7 @@ dist_libcrashhandler_la_SOURCES = crashhandler.c
 
 BUILT_SOURCES = $(nodist_libcrashhandler_la_SOURCES)
 
-INCLUDES =                              \
+AM_CPPFLAGS =                              \
 	@COMPIZ_CFLAGS@                  \
 	-DDATADIR='"$(compdatadir)"'        \
 	-DLIBDIR='"$(libdir)"'              \

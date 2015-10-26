@@ -6,7 +6,7 @@ libnotification_la_LIBADD = @COMPIZ_LIBS@ @LIBNOTIFY_LIBS@
 libnotification_la_SOURCES = notification.c
 endif
 
-INCLUDES =                              \
+AM_CPPFLAGS =                              \
 	@COMPIZ_CFLAGS@                      \
  	@LIBNOTIFY_CFLAGS@         \
 	-DDATADIR='"$(compdatadir)"'        \

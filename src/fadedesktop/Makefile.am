@@ -8,7 +8,7 @@ dist_libfadedesktop_la_SOURCES = fadedesktop.c
 
 BUILT_SOURCES = $(nodist_libfadedesktop_la_SOURCES)
 
-INCLUDES =                              \
+AM_CPPFLAGS =                              \
 	@COMPIZ_CFLAGS@                  \
 	-DDATADIR='"$(compdatadir)"'        \
 	-DLIBDIR='"$(libdir)"'              \

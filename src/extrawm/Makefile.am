@@ -8,7 +8,7 @@ dist_libextrawm_la_SOURCES = extrawm.c
 
 BUILT_SOURCES = $(nodist_libextrawm_la_SOURCES)
 
-INCLUDES =                              \
+AM_CPPFLAGS =                              \
 	@COMPIZ_CFLAGS@                  \
 	-DDATADIR='"$(compdatadir)"'        \
 	-DLIBDIR='"$(libdir)"'              \

@@ -19,7 +19,7 @@ libanimationaddon_la_SOURCES = airplane3d.c     \
 				   animation_tex.h
 endif
 
-INCLUDES =                                  \
+AM_CPPFLAGS =                                  \
 	-I$(top_srcdir)/include	            \
 	@COMPIZ_CFLAGS@                     \
 	@COMPIZANIMATION_CFLAGS@            \

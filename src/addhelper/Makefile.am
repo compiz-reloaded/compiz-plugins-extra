@@ -8,7 +8,7 @@ dist_libaddhelper_la_SOURCES = addhelper.c
 
 BUILT_SOURCES = $(nodist_libaddhelper_la_SOURCES)
 
-INCLUDES =                              \
+AM_CPPFLAGS =                              \
 	@COMPIZ_CFLAGS@                  \
 	-DDATADIR='"$(compdatadir)"'        \
 	-DLIBDIR='"$(libdir)"'              \

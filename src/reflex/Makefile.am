@@ -8,7 +8,7 @@ dist_libreflex_la_SOURCES = reflex.c
 
 BUILT_SOURCES = $(nodist_libreflex_la_SOURCES)
 
-INCLUDES =                              \
+AM_CPPFLAGS =                              \
 	@COMPIZ_CFLAGS@                  \
 	-DDATADIR='"$(compdatadir)"'        \
 	-DLIBDIR='"$(libdir)"'              \

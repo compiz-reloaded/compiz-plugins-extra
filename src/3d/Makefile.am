@@ -10,7 +10,7 @@ endif
 
 BUILT_SOURCES = $(nodist_lib3d_la_SOURCES)
 
-INCLUDES =                              \
+AM_CPPFLAGS =                              \
 	@COMPIZ_CFLAGS@                  \
 	@COMPIZCUBE_CFLAGS@              \
 	-DDATADIR='"$(compdatadir)"'        \

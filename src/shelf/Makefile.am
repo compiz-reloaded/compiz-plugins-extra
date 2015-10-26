@@ -8,7 +8,7 @@ dist_libshelf_la_SOURCES = shelf.c
 
 BUILT_SOURCES = $(nodist_libshelf_la_SOURCES)
 
-INCLUDES =                              \
+AM_CPPFLAGS =                              \
 	@COMPIZ_CFLAGS@                  \
 	-DDATADIR='"$(compdatadir)"'        \
 	-DLIBDIR='"$(libdir)"'              \

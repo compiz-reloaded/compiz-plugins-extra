@@ -18,7 +18,7 @@ endif
 
 BUILT_SOURCES = $(nodist_libgroup_la_SOURCES)
 
-INCLUDES =                              \
+AM_CPPFLAGS =                              \
 	@COMPIZ_CFLAGS@                      \
  	@GROUP_CFLAGS@         \
 	-DDATADIR='"$(compdatadir)"'        \

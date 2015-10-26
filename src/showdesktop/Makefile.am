@@ -8,7 +8,7 @@ dist_libshowdesktop_la_SOURCES = showdesktop.c
 
 BUILT_SOURCES = $(nodist_libshowdesktop_la_SOURCES)
 
-INCLUDES =                              \
+AM_CPPFLAGS =                              \
 	@COMPIZ_CFLAGS@                  \
 	-DDATADIR='"$(compdatadir)"'        \
 	-DLIBDIR='"$(libdir)"'              \

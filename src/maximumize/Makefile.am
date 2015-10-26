@@ -9,7 +9,7 @@ dist_libmaximumize_la_SOURCES = maximumize.c
 
 BUILT_SOURCES = $(nodist_libmaximumize_la_SOURCES)
 
-INCLUDES =                              \
+AM_CPPFLAGS =                              \
 	@COMPIZ_CFLAGS@                  \
 	-DDATADIR='"$(compdatadir)"'        \
 	-DLIBDIR='"$(libdir)"'              \

@@ -8,7 +8,7 @@ dist_libmblur_la_SOURCES = mblur.c
 
 BUILT_SOURCES = $(nodist_libmblur_la_SOURCES)
 
-INCLUDES =                              \
+AM_CPPFLAGS =                              \
 	@COMPIZ_CFLAGS@                  \
 	-DDATADIR='"$(compdatadir)"'        \
 	-DLIBDIR='"$(libdir)"'              \

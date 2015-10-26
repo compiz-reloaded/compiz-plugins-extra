@@ -10,7 +10,7 @@ endif
 
 BUILT_SOURCES = $(nodist_libshowmouse_la_SOURCES)
 
-INCLUDES =                              \
+AM_CPPFLAGS =                              \
 	@COMPIZ_CFLAGS@                  \
 	@COMPIZMOUSEPOLL_CFLAGS@            \
 	-DDATADIR='"$(compdatadir)"'        \
