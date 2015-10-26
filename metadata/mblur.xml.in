@@ -12,7 +12,7 @@
           <option name="initiate_key" type="key">
             <_short>Toggle Motion Blur</_short>
             <_long>Toggle motion Blur effect.</_long>
-            <default>&lt;Control&gt;F12</default>
+            <default>&lt;Primary&gt;F12</default>
           </option>
         </subgroup>
       </group>
