@@ -31,6 +31,7 @@
 
 #include <X11/Xlib.h>
 #include <X11/keysymdef.h>
+#include <X11/XKBlib.h>
 
 #include <compiz-core.h>
 #include <compiz-scale.h>
@@ -413,7 +414,7 @@ scalefilterHandleSpecialKeyPress (CompScreen *s,
     FILTER_SCREEN (s);
 
     info = fs->filterInfo;
-    ks   = XKeycodeToKeysym (s->display->display, event->keycode, 0);
+    ks   = XkbKeycodeToKeysym (s->display->display, event->keycode, 1, 0);
 
     if (ks == XK_Escape)
     {
