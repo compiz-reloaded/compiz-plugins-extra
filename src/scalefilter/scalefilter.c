@@ -164,7 +164,7 @@ scalefilterRenderFilterText (CompScreen *s)
     attrib.maxWidth = x2 - x1;
     attrib.maxHeight = y2 - y1;
 
-    attrib.family = "Sans";
+    attrib.family = scalefilterGetFontFamily(s);
     attrib.size = scalefilterGetFontSize (s);
     attrib.color[0] = scalefilterGetFontColorRed (s);
     attrib.color[1] = scalefilterGetFontColorGreen (s);
@@ -717,6 +717,7 @@ scalefilterScreenOptionChanged (CompScreen               *s,
 {
     switch (num)
     {
+	case ScalefilterScreenOptionFontFamily:
 	case ScalefilterScreenOptionFontBold:
 	case ScalefilterScreenOptionFontSize:
 	case ScalefilterScreenOptionFontColor:
@@ -833,6 +834,7 @@ scalefilterInitScreen (CompPlugin *p,
     WRAP (fs, ss, setScaledPaintAttributes,
 	  scalefilterSetScaledPaintAttributes);
 
+    scalefilterSetFontFamilyNotify (s, scalefilterScreenOptionChanged);
     scalefilterSetFontBoldNotify (s, scalefilterScreenOptionChanged);
     scalefilterSetFontSizeNotify (s, scalefilterScreenOptionChanged);
     scalefilterSetFontColorNotify (s, scalefilterScreenOptionChanged);

@@ -667,7 +667,7 @@ groupRenderWindowTitle (GroupSelection *group)
 	CompTextData    *data;
 	CompTextAttrib  textAttrib;
 
-	textAttrib.family = "Sans";
+	textAttrib.family = groupGetTabbarFontFamily(s);
 	textAttrib.size   = groupGetTabbarFontSize (s);
 
 	textAttrib.flags = CompTextFlagStyleBold | CompTextFlagEllipsized |

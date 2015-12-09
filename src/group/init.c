@@ -55,6 +55,7 @@ groupScreenOptionChanged (CompScreen         *s,
 		if (group->tabBar)
 		    groupRenderTabBarBackground (group);
 	    break;
+	case GroupScreenOptionTabbarFontFamily:
 	case GroupScreenOptionTabbarFontSize:
 	case GroupScreenOptionTabbarFontColor:
 	    for (group = gs->groups; group; group = group->next)
@@ -318,6 +319,7 @@ groupInitScreen (CompPlugin *p,
     groupSetTabHighlightColorNotify (s, groupScreenOptionChanged);
     groupSetTabBaseColorNotify (s, groupScreenOptionChanged);
     groupSetTabBorderColorNotify (s, groupScreenOptionChanged);
+    groupSetTabbarFontFamilyNotify (s, groupScreenOptionChanged);
     groupSetTabbarFontSizeNotify (s, groupScreenOptionChanged);
     groupSetTabbarFontColorNotify (s, groupScreenOptionChanged);
     groupSetGlowNotify (s, groupScreenOptionChanged);

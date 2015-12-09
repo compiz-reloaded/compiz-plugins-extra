@@ -386,6 +386,11 @@
         </subgroup>
         <subgroup>
           <_short>Window Title Font</_short>
+			<option name="tabbar_font_family" type="string">
+				<_short>Font family</_short>
+				<_long>Name of the font to display title in the tab bar</_long>
+				<default>Sans</default>
+			</option>
           <option name="tabbar_font_size" type="int">
             <_short>Font Size</_short>
             <_long>The size of the window title font in the tab bar</_long>
