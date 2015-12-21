@@ -39,6 +39,7 @@
 		<option name="font_family" type="string">
 			<_short>Font family</_short>
 			<_long>Name of the font to display title.</_long>
+			<hints>family;</hints>
 			<default>Sans</default>
 		</option>
 		<option name="font_bold" type="bool">
