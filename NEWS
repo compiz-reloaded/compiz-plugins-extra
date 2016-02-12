@@ -1,5 +1,9 @@
-Release 0.8.12
-==================================================================
+Release 0.8.12 (2016-02-12 Sorokin Alexei <sor.alexei@meowr.ru>)
+================================================================
+COMPIZ-RELOADED
+
+Add font family configuration in Group/Tab (Tabbar font), and
+Scale title filter plugins.
 
 Release 0.8.9 (2015-11-06 Wolfgang Ulbrich <chat-to-me@raveit.de>)
 ==================================================================
