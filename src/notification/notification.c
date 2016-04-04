@@ -106,6 +106,9 @@ notifyLogMessage (const char   *component,
     n = notify_notification_new (logLevel,
                                  message,
                                  iconUri
+#ifndef HAVE_LIBNOTIFY_0_7_0
+                                 , NULL
+#endif
                                  );
 
     notify_notification_set_timeout (n, nd->timeout);
