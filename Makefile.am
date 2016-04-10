@@ -7,7 +7,6 @@ EXTRA_DIST =			   \
 	COPYING			    \
 	NEWS			    \
 	README.md		    \
-	VERSION			    \
 	autogen.sh		    \
 	compiz-animationaddon.pc.in \
 	intltool-extract.in	    \
