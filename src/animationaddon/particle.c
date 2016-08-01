@@ -335,6 +335,9 @@ particlesCleanup (CompWindow * w)
 {
     ANIMADDON_WINDOW (w);
 
+	if (!aw)
+		return;
+
     if (aw->eng.numPs)
     {
 	int i = 0;
