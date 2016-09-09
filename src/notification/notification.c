@@ -116,9 +116,9 @@ notifyLogMessage (const char   *component,
     switch (level)
     {
     case CompLogLevelFatal:
-    case CompLogLevelError:
 	notify_notification_set_urgency (n, NOTIFY_URGENCY_CRITICAL);
 	break;
+    case CompLogLevelError:
     case CompLogLevelWarn:
 	notify_notification_set_urgency (n, NOTIFY_URGENCY_NORMAL);
 	break;
