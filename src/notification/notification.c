@@ -73,7 +73,7 @@ notifyLogMessage (const char   *component,
 		  const char   *message)
 {
     NotifyNotification *n;
-    char               *logLevel, iconFile[256], *iconUri, *homeDir;
+    char               *logLevel, header[256], iconFile[256], *iconUri, *homeDir;
     int                maxLevel;
 
     NOTIFY_CORE (&core);
@@ -107,8 +107,9 @@ notifyLogMessage (const char   *component,
     sprintf (iconUri, "file://%s", iconFile);
 
     logLevel = (char *) logLevelToString (level);
+    snprintf(header, 256, "Compiz %s", logLevel);
 
-    n = notify_notification_new (logLevel,
+    n = notify_notification_new (header,
                                  message,
                                  iconUri
 #ifndef HAVE_LIBNOTIFY_0_7_0
