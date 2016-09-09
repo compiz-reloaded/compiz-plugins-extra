@@ -93,7 +93,12 @@ notifyLogMessage (const char   *component,
     if (!homeDir)
 	return;
 
-    snprintf (iconFile, 256, "%s/%s/%s", homeDir, IMAGE_DIR, "compiz.png");
+    snprintf (iconFile, 256, "%s/%s/%s", homeDir, IMAGE_DIR, "compiz_icon.png");
+
+    if (access(iconFile, F_OK) == -1) {
+		snprintf (iconFile, 256, "%s/%s", IMAGEDIR, "compiz_icon.png");
+		printf("iconFile = %s\n", iconFile);
+	}
 
     iconUri = malloc (sizeof (char) * strlen (iconFile) + 8);
     if (!iconUri)
