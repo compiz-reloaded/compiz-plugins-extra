@@ -614,7 +614,7 @@ cubeaddonPaintCap (CompScreen		   *s,
     Bool              wasCulled = glIsEnabled (GL_CULL_FACE);
     float             cInv = (top) ? 1.0: -1.0;
     CubeCap           *cap;
-    Bool              cScale, cAspect;
+    Bool              cAspect;
 
     CUBE_SCREEN (s);
     CUBEADDON_SCREEN (s);
@@ -630,13 +630,11 @@ cubeaddonPaintCap (CompScreen		   *s,
     if (top)
     {
 	cap     = &cas->topCap;
-	cScale  = cubeaddonGetTopScale (s);
 	cAspect = cubeaddonGetTopAspect (s);
     }
     else
     {
 	cap     = &cas->bottomCap;
-	cScale  = cubeaddonGetBottomScale (s);
 	cAspect = cubeaddonGetBottomAspect (s);
     }
 
@@ -1538,6 +1536,8 @@ cubeaddonPaintTransformedOutput (CompScreen              *s,
 	    else if (cubeaddonGetDeformation (s) == DeformationSphere) 
 		deform = (sqrt (0.5 + (cs->distance * cs->distance)) -
 			  cs->distance) * -cas->deform;
+		else
+	        deform = 1.0;
 
 	    if (cas->deform > 0.0)
 	        cas->zTrans = deform;
