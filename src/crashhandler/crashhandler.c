@@ -55,7 +55,7 @@ crash_handler (int sig)
 		 programName, getpid (), crashhandlerGetDirectory (cDisplay),
 		 getpid (), crashhandlerGetDirectory (cDisplay), getpid () );
 
-	system (cmd);
+	if (system (cmd));
 
 	if (crashhandlerGetStartWm (cDisplay) )
 	{
