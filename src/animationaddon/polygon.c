@@ -832,7 +832,6 @@ tessellateIntoGlass (CompWindow * w,
     int spoke_num = 4 * spoke_multiplier;
     int winLimitsX, winLimitsY, winLimitsW, winLimitsH;
     float centerX, centerY;
-    float  spoke_range;
     float top_bottom_length, left_right_length;
 
     spoke_t spoke[spoke_num];
@@ -842,8 +841,6 @@ tessellateIntoGlass (CompWindow * w,
     {
 	spoke[i].spoke_vertex = calloc (tier_num, sizeof (spoke_vertex_t));
     }
-
-    spoke_range = 2 * M_PI / spoke_num;
 
     if (pset->includeShadows)
     {
@@ -1534,24 +1531,10 @@ polygonsDrawCustomGeometry (CompWindow * w)
 
     // Determine where we are called from in paint.c's drawWindowTexture
     // to find out how we should change the opacity
-    GLint prevActiveTexture = GL_TEXTURE0_ARB;
     Bool saturationFull = TRUE;
 
     if (w->screen->canDoSaturated && aw->com->curPaintAttrib.saturation != COLOR)
-    {
-	saturationFull = FALSE;
-	if (w->screen->canDoSlightlySaturated &&
-	    aw->com->curPaintAttrib.saturation > 0)
-	{
-	    if (aw->com->curPaintAttrib.opacity < OPAQUE ||
-		aw->com->curPaintAttrib.brightness != BRIGHT)
-		prevActiveTexture = GL_TEXTURE3_ARB;
-	    else
-		prevActiveTexture = GL_TEXTURE2_ARB;
-	}
-	else
-	    prevActiveTexture = GL_TEXTURE1_ARB;
-    }
+	    saturationFull = FALSE;
 
     float opacity = aw->com->curPaintAttrib.opacity / 65535.0;
 
