@@ -222,7 +222,6 @@ tdPaintWindowWithDepth (CompWindow              *w,
 			Region                  region,
 			unsigned int            mask)
 {
-    Bool           wasCulled;
     Bool           status;
     int            wx, wy, ww, wh;
     int            bevel, cull, cullInv, temp;
@@ -233,8 +232,6 @@ tdPaintWindowWithDepth (CompWindow              *w,
     TD_SCREEN (s);
     TD_WINDOW (w);
     CUBE_SCREEN (s);
-
-    wasCulled = glIsEnabled (GL_CULL_FACE);
 
     wx = w->attrib.x - w->input.left;
     wy = w->attrib.y - w->input.top;
