@@ -653,6 +653,8 @@ shelfHandleEvent (CompDisplay *d,
     CompWindow *w, *oldPrev, *oldNext;
     CompScreen *s;
 
+    w = oldPrev = oldNext = NULL;
+
     SHELF_DISPLAY (d);
 
     switch (event->type)
