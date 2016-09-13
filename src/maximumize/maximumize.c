@@ -28,6 +28,7 @@
  * Todo:
  */
 
+#include <string.h>
 #include <compiz-core.h>
 #include "maximumize_options.h"
 
@@ -92,6 +93,8 @@ maximumizeEmptyRegion (CompWindow *window,
     }
 
     XUnionRegion (region, newRegion, newRegion);
+
+    memset(&windowRect, 0, sizeof (XRectangle));
 
     if (maximumizeGetIgnoreOverlapping (s->display)) 
 	maximumizeSetWindowBox (&windowRect, window);
