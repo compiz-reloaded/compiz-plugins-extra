@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2008 Stephen Kennedy <suasol@gmail.com>
  * Copyright (c) 2010 Scott Moreau <oreaus@gmail.com>
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
@@ -18,7 +18,7 @@
  *
  * Plugin to act like winsplit revolution (http://www.winsplit-revolution.com/)
  * use <Control><Alt>NUMPAD_KEY to move and tile your windows.
- * 
+ *
  * Press the tiling keys several times to cycle through some tiling options.
  */
 
@@ -664,7 +664,7 @@ glPaintRectangle (CompScreen		  *s,
 	       ((float) gridGetOutlineColorBlue (s->display) / 65535.0f) * alpha,
 	       alpha);
 
-    glLineWidth (2.0);
+    glLineWidth ((float) gridGetOutlineThickness (s->display));
     glBegin (GL_LINE_LOOP);
 
     /* set outline rect smaller to avoid damage issues */
