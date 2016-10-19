@@ -522,6 +522,13 @@
 		    <default>350</default>
 		    <min>0</min>
 		</option>
+                <option name="outline_thickness" type="float">
+                    <_short>Outline Thickness</_short>
+                    <_long>Outline Thickness</_long>
+                    <default>2</default>
+                    <min>1</min>
+                    <max>8</max>
+                </option>
 		<option name="outline_color" type="color">
 		    <_short>Outline Color</_short>
 		    <_long>Color of the resize indicator outline</_long>

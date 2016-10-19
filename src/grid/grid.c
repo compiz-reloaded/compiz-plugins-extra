@@ -664,15 +664,15 @@ glPaintRectangle (CompScreen		  *s,
 	       ((float) gridGetOutlineColorBlue (s->display) / 65535.0f) * alpha,
 	       alpha);
 
-    glLineWidth (2.0);
+    glLineWidth (gridGetOutlineThickness (s->display));
     glBegin (GL_LINE_LOOP);
 
     /* set outline rect smaller to avoid damage issues */
     /* TODO: maybe get a better way of doing this */
-    glVertex2i (rect.x1 + 1, rect.y1 + 1);
-    glVertex2i (rect.x2 - 1, rect.y1 + 1);
-    glVertex2i (rect.x2 - 1, rect.y2 - 1);
-    glVertex2i (rect.x1 + 1, rect.y2 - 1);
+    glVertex2i (rect.x1 + (gridGetOutlineThickness (s->display) * 0.5), rect.y1 + (gridGetOutlineThickness (s->display) * 0.5));
+    glVertex2i (rect.x2 - (gridGetOutlineThickness (s->display) * 0.5), rect.y1 + (gridGetOutlineThickness (s->display) * 0.5));
+    glVertex2i (rect.x2 - (gridGetOutlineThickness (s->display) * 0.5), rect.y2 - (gridGetOutlineThickness (s->display) * 0.5));
+    glVertex2i (rect.x1 + (gridGetOutlineThickness (s->display) * 0.5), rect.y2 - (gridGetOutlineThickness (s->display) * 0.5));
     glEnd ();
 
     /* clean up */
