@@ -51,14 +51,14 @@
 		    <_short>Font Size</_short>
 		    <_long>Font size for window title display</_long>
 		    <min>6</min>
-		    <max>48</max>
+		    <max>144</max>
 		    <default>24</default>
 		</option>
 		<option name="border_size" type="int">
 		    <_short>Title Border Size</_short>
 		    <_long>Size of the border around the window title</_long>
 		    <min>1</min>
-		    <max>20</max>
+		    <max>60</max>
 		    <default>5</default>
 		</option>
 		<option name="font_color" type="color">
