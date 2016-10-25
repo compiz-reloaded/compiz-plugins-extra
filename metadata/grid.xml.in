@@ -525,9 +525,10 @@
                 <option name="outline_thickness" type="float">
                     <_short>Outline Thickness</_short>
                     <_long>Outline Thickness</_long>
-                    <default>2</default>
-                    <min>1</min>
-                    <max>8</max>
+                    <default>2.0</default>
+                    <min>1.0</min>
+                    <max>8.0</max>
+                    <precision>1.0</precision>
                 </option>
 		<option name="outline_color" type="color">
 		    <_short>Outline Color</_short>
