@@ -670,10 +670,11 @@ glPaintRectangle (CompScreen		  *s,
 
     /* set outline rect smaller to avoid damage issues */
     /* TODO: maybe get a better way of doing this */
-    glVertex2f (rect.x1 + (thickness * 0.5), rect.y1 + (thickness * 0.5));
-    glVertex2f (rect.x2 - (thickness * 0.5), rect.y1 + (thickness * 0.5));
-    glVertex2f (rect.x2 - (thickness * 0.5), rect.y2 - (thickness * 0.5));
-    glVertex2f (rect.x1 + (thickness * 0.5), rect.y2 - (thickness * 0.5));
+    int half_thickness = thickness * 0.5;
+    glVertex2f (rect.x1 + half_thickness, rect.y1 + half_thickness);
+    glVertex2f (rect.x2 - half_thickness, rect.y1 + half_thickness);
+    glVertex2f (rect.x2 - half_thickness, rect.y2 - half_thickness);
+    glVertex2f (rect.x1 + half_thickness, rect.y2 - half_thickness);
     glEnd ();
 
     /* clean up */
