@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <compiz>
     <plugin name="firepaint" useBcop="true">
 	<_short>Paint fire on the screen</_short>
