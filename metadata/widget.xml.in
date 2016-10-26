@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <compiz>
 	<plugin name="widget" useBcop="true">
 		<_short>Widget Layer</_short>
