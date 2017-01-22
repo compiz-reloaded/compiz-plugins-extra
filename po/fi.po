@@ -938,7 +938,7 @@ msgid "Window resize action"
 msgstr "Ikkunan otsikon kirjaisin"
 
 #, fuzzy
-msgid "Upper Left Corner"
+msgid "Top Left Corner"
 msgstr "Viistota kulmat"
 
 #, fuzzy
@@ -988,7 +988,7 @@ msgid "Action to be performed when window is dropped on the top edge"
 msgstr ""
 
 #, fuzzy
-msgid "Upper Right Corner"
+msgid "Top Right Corner"
 msgstr "Viistota vasen yläkulma"
 
 #, fuzzy

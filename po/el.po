@@ -946,7 +946,7 @@ msgid "Window resize action"
 msgstr "Γραμματοσειρά Τίτλου Παραθύρου"
 
 #, fuzzy
-msgid "Upper Left Corner"
+msgid "Top Left Corner"
 msgstr "Στρογγύλεμα Γωνίων"
 
 #, fuzzy
@@ -996,7 +996,7 @@ msgid "Action to be performed when window is dropped on the top edge"
 msgstr ""
 
 #, fuzzy
-msgid "Upper Right Corner"
+msgid "Top Right Corner"
 msgstr "Στρογγύλεμα της πάνω δεξιάς γωνίας"
 
 #, fuzzy

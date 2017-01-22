@@ -948,7 +948,7 @@ msgid "Window resize action"
 msgstr "વિન્ડો શીર્ષક ફોન્ટ"
 
 #, fuzzy
-msgid "Upper Left Corner"
+msgid "Top Left Corner"
 msgstr "કોણ ખૂણાઓ"
 
 #, fuzzy
@@ -998,7 +998,7 @@ msgid "Action to be performed when window is dropped on the top edge"
 msgstr ""
 
 #, fuzzy
-msgid "Upper Right Corner"
+msgid "Top Right Corner"
 msgstr "કોણવાળો ટોચે જમણો ખૂણો"
 
 #, fuzzy

@@ -1014,7 +1014,7 @@ msgid "Window resize action"
 msgstr "Шрифт за_головка окна:"
 
 #, fuzzy
-msgid "Upper Left Corner"
+msgid "Top Left Corner"
 msgstr "Скос углов"
 
 #, fuzzy
@@ -1064,7 +1064,7 @@ msgid "Action to be performed when window is dropped on the top edge"
 msgstr ""
 
 #, fuzzy
-msgid "Upper Right Corner"
+msgid "Top Right Corner"
 msgstr "Скос верхнего правого угла"
 
 #, fuzzy
