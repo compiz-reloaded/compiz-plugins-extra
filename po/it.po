@@ -1022,7 +1022,7 @@ msgid "Window resize action"
 msgstr "Carattere titolo della finestra"
 
 #, fuzzy
-msgid "Upper Left Corner"
+msgid "Top Left Corner"
 msgstr "Smussa gli angoli"
 
 #, fuzzy
@@ -1072,7 +1072,7 @@ msgid "Action to be performed when window is dropped on the top edge"
 msgstr ""
 
 #, fuzzy
-msgid "Upper Right Corner"
+msgid "Top Right Corner"
 msgstr "Smussa l'angolo in alto a destra"
 
 #, fuzzy

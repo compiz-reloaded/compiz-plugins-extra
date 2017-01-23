@@ -943,7 +943,7 @@ msgid "Window resize action"
 msgstr "Pencere Başlığı Yazı Tipi"
 
 #, fuzzy
-msgid "Upper Left Corner"
+msgid "Top Left Corner"
 msgstr "Köşelere Eğim Ver"
 
 #, fuzzy
@@ -993,7 +993,7 @@ msgid "Action to be performed when window is dropped on the top edge"
 msgstr ""
 
 #, fuzzy
-msgid "Upper Right Corner"
+msgid "Top Right Corner"
 msgstr "Sağ üst köşe eğimi"
 
 #, fuzzy

@@ -913,7 +913,7 @@ msgid "Window resize action"
 msgstr "窗口标题字体"
 
 #, fuzzy
-msgid "Upper Left Corner"
+msgid "Top Left Corner"
 msgstr "圆滑边角"
 
 #, fuzzy
@@ -963,7 +963,7 @@ msgid "Action to be performed when window is dropped on the top edge"
 msgstr ""
 
 #, fuzzy
-msgid "Upper Right Corner"
+msgid "Top Right Corner"
 msgstr "圆滑右顶角"
 
 #, fuzzy

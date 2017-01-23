@@ -968,7 +968,7 @@ msgstr "Venster titel lettertype"
 
 # Babelfish geeft "schuine rand" als vertaling voor "Bevel". Dit lijkt me geen geschikte vertaling. - mahler
 #, fuzzy
-msgid "Upper Left Corner"
+msgid "Top Left Corner"
 msgstr "Afschuining hoeken"
 
 #, fuzzy
@@ -1018,7 +1018,7 @@ msgid "Action to be performed when window is dropped on the top edge"
 msgstr ""
 
 #, fuzzy
-msgid "Upper Right Corner"
+msgid "Top Right Corner"
 msgstr "Afschuining hoek rechtsboven"
 
 #, fuzzy
