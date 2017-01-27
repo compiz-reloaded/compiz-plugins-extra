@@ -69,7 +69,7 @@
 		    <_short>Resize Actions</_short>
 		    <_long>Window resize action</_long>
 		    <option name="top_left_corner_action" type="int">
-			<_short>Top Left Corner</_short>
+			<_short>Upper Left Corner</_short>
 			<_long>Action to be performed when window is dropped on the top left corner</_long>
 			<default>7</default>
 			<min>0</min>
@@ -171,7 +171,7 @@
 			</desc>
 		    </option>
 		    <option name="top_right_corner_action" type="int">
-			<_short>Top Right Corner</_short>
+			<_short>Upper Right Corner</_short>
 			<_long>Action to be performed when window is dropped on the top right corner</_long>
 			<default>9</default>
 			<min>0</min>

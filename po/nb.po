@@ -952,7 +952,7 @@ msgid "Window resize action"
 msgstr "Skrifttype for vindustittel"
 
 #, fuzzy
-msgid "Top Left Corner"
+msgid "Upper Left Corner"
 msgstr "Skråstill hjørner"
 
 #, fuzzy
@@ -1002,7 +1002,7 @@ msgid "Action to be performed when window is dropped on the top edge"
 msgstr ""
 
 #, fuzzy
-msgid "Top Right Corner"
+msgid "Upper Right Corner"
 msgstr "Skråstill øverst, høyre hjørne"
 
 #, fuzzy
