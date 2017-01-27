@@ -935,10 +935,6 @@ msgid "Window resize action"
 msgstr "Ablak címsorának betűtípusa"
 
 #, fuzzy
-msgid "Upper Left Corner"
-msgstr "Sarkok lekerekítése"
-
-#, fuzzy
 msgid "Action to be performed when window is dropped on the top left corner"
 msgstr "Ablak áthelyezése a bal felső sarokba"
 
@@ -983,10 +979,6 @@ msgstr "Élek"
 
 msgid "Action to be performed when window is dropped on the top edge"
 msgstr ""
-
-#, fuzzy
-msgid "Upper Right Corner"
-msgstr "Jobb felső sarok lekerekítése"
 
 #, fuzzy
 msgid "Action to be performed when window is dropped on the top right corner"

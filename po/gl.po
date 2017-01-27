@@ -941,10 +941,6 @@ msgid "Window resize action"
 msgstr "Fonte do Título da Fiestra"
 
 #, fuzzy
-msgid "Upper Left Corner"
-msgstr "Bisel das esquinas"
-
-#, fuzzy
 msgid "Action to be performed when window is dropped on the top left corner"
 msgstr "Mover xanela para o canto superior esquerdo"
 
@@ -989,10 +985,6 @@ msgstr "Marxes"
 
 msgid "Action to be performed when window is dropped on the top edge"
 msgstr ""
-
-#, fuzzy
-msgid "Upper Right Corner"
-msgstr "Bisel da esquina superior dereita"
 
 #, fuzzy
 msgid "Action to be performed when window is dropped on the top right corner"

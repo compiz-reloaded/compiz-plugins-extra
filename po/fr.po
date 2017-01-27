@@ -962,10 +962,6 @@ msgid "Window resize action"
 msgstr "Police du titre de la fenêtre"
 
 #, fuzzy
-msgid "Upper Left Corner"
-msgstr "Biseauter les coins"
-
-#, fuzzy
 msgid "Action to be performed when window is dropped on the top left corner"
 msgstr "Déplacer la fenêtre vers le coin supérieur gauche"
 
@@ -1010,10 +1006,6 @@ msgstr "Bords"
 
 msgid "Action to be performed when window is dropped on the top edge"
 msgstr ""
-
-#, fuzzy
-msgid "Upper Right Corner"
-msgstr "Biseauter le coin supérieur droit"
 
 #, fuzzy
 msgid "Action to be performed when window is dropped on the top right corner"

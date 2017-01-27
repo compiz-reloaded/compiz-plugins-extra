@@ -927,10 +927,6 @@ msgid "Window resize action"
 msgstr "גופן כותרת חלון"
 
 #, fuzzy
-msgid "Upper Left Corner"
-msgstr "החלקת פינות"
-
-#, fuzzy
 msgid "Action to be performed when window is dropped on the top left corner"
 msgstr "הזז חלון אל הפינה השמאלית העליונה"
 
@@ -975,10 +971,6 @@ msgstr "גבולות"
 
 msgid "Action to be performed when window is dropped on the top edge"
 msgstr ""
-
-#, fuzzy
-msgid "Upper Right Corner"
-msgstr "החלקת הפינה הימנית העליונה"
 
 #, fuzzy
 msgid "Action to be performed when window is dropped on the top right corner"

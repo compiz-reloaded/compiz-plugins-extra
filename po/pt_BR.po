@@ -968,10 +968,6 @@ msgid "Window resize action"
 msgstr "Fonte do Título da Janela"
 
 #, fuzzy
-msgid "Upper Left Corner"
-msgstr "Chanfrar nos cantos"
-
-#, fuzzy
 msgid "Action to be performed when window is dropped on the top left corner"
 msgstr "Mover a janela para o canto superior esquerdo"
 
@@ -1016,10 +1012,6 @@ msgstr "Margens"
 
 msgid "Action to be performed when window is dropped on the top edge"
 msgstr ""
-
-#, fuzzy
-msgid "Upper Right Corner"
-msgstr "Chanfrar no canto superior direito"
 
 #, fuzzy
 msgid "Action to be performed when window is dropped on the top right corner"

@@ -947,10 +947,6 @@ msgid "Window resize action"
 msgstr "विंडो शीर्षक फ़ॉन्ट"
 
 #, fuzzy
-msgid "Upper Left Corner"
-msgstr "बेभेल कोना"
-
-#, fuzzy
 msgid "Action to be performed when window is dropped on the top left corner"
 msgstr "ऊपर बायाँ कोने में विंडो खिसकाएं"
 
@@ -995,10 +991,6 @@ msgstr "किनारा"
 
 msgid "Action to be performed when window is dropped on the top edge"
 msgstr ""
-
-#, fuzzy
-msgid "Upper Right Corner"
-msgstr "बेभेल ऊपर दायाँ कोना"
 
 #, fuzzy
 msgid "Action to be performed when window is dropped on the top right corner"

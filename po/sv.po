@@ -940,10 +940,6 @@ msgid "Window resize action"
 msgstr "Typsnitt på fönstertitel"
 
 #, fuzzy
-msgid "Upper Left Corner"
-msgstr "Runda hörn"
-
-#, fuzzy
 msgid "Action to be performed when window is dropped on the top left corner"
 msgstr "Flytta fönster till det övre vänstra hörnet"
 
@@ -988,10 +984,6 @@ msgstr "Kanter"
 
 msgid "Action to be performed when window is dropped on the top edge"
 msgstr ""
-
-#, fuzzy
-msgid "Upper Right Corner"
-msgstr "Runda det övre högra hörnet"
 
 #, fuzzy
 msgid "Action to be performed when window is dropped on the top right corner"

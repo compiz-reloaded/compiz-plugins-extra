@@ -940,10 +940,6 @@ msgid "Window resize action"
 msgstr "Czcionka tytułu okna"
 
 #, fuzzy
-msgid "Upper Left Corner"
-msgstr "Zetnij narożniki"
-
-#, fuzzy
 msgid "Action to be performed when window is dropped on the top left corner"
 msgstr "Przenieś okno do lewego górnego rogu"
 
@@ -988,10 +984,6 @@ msgstr "Krawędzie"
 
 msgid "Action to be performed when window is dropped on the top edge"
 msgstr ""
-
-#, fuzzy
-msgid "Upper Right Corner"
-msgstr "Zetnij prawy górny narożnik"
 
 #, fuzzy
 msgid "Action to be performed when window is dropped on the top right corner"
