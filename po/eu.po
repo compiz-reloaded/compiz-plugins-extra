@@ -935,10 +935,6 @@ msgid "Window resize action"
 msgstr "Leiho tituluko letra-mota"
 
 #, fuzzy
-msgid "Upper Left Corner"
-msgstr "Ertz konikoak"
-
-#, fuzzy
 msgid "Action to be performed when window is dropped on the top left corner"
 msgstr "Mugitu leihoa goiko ezkerreko izkinara"
 
@@ -981,10 +977,6 @@ msgstr ""
 
 msgid "Action to be performed when window is dropped on the top edge"
 msgstr ""
-
-#, fuzzy
-msgid "Upper Right Corner"
-msgstr "Goiko eskuin ertza konikotu"
 
 #, fuzzy
 msgid "Action to be performed when window is dropped on the top right corner"

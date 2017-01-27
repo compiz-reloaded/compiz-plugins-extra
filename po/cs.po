@@ -908,10 +908,6 @@ msgid "Window resize action"
 msgstr "Písmo titulku okna"
 
 #, fuzzy
-msgid "Upper Left Corner"
-msgstr "Zakulacené rohy"
-
-#, fuzzy
 msgid "Action to be performed when window is dropped on the top left corner"
 msgstr "Přesunout okno do levého horního rohu"
 
@@ -956,10 +952,6 @@ msgstr "Okraje"
 
 msgid "Action to be performed when window is dropped on the top edge"
 msgstr ""
-
-#, fuzzy
-msgid "Upper Right Corner"
-msgstr "Zakulatit horní pravý roh"
 
 #, fuzzy
 msgid "Action to be performed when window is dropped on the top right corner"

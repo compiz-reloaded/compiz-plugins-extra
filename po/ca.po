@@ -910,9 +910,6 @@ msgstr "Reflexió"
 msgid "Window resize action"
 msgstr "Direcció de la neu"
 
-msgid "Upper Left Corner"
-msgstr ""
-
 #, fuzzy
 msgid "Action to be performed when window is dropped on the top left corner"
 msgstr "Mou la finestra a la cantonada superior de l'esquerra"
@@ -957,9 +954,6 @@ msgid "Top Edge"
 msgstr "Vores"
 
 msgid "Action to be performed when window is dropped on the top edge"
-msgstr ""
-
-msgid "Upper Right Corner"
 msgstr ""
 
 #, fuzzy

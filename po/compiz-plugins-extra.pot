@@ -892,9 +892,6 @@ msgstr ""
 msgid "Window resize action"
 msgstr ""
 
-msgid "Upper Left Corner"
-msgstr ""
-
 msgid "Action to be performed when window is dropped on the top left corner"
 msgstr ""
 
@@ -929,9 +926,6 @@ msgid "Top Edge"
 msgstr ""
 
 msgid "Action to be performed when window is dropped on the top edge"
-msgstr ""
-
-msgid "Upper Right Corner"
 msgstr ""
 
 msgid "Action to be performed when window is dropped on the top right corner"

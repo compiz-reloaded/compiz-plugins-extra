@@ -997,10 +997,6 @@ msgid "Window resize action"
 msgstr "Fenstertitel-Schrift"
 
 #, fuzzy
-msgid "Upper Left Corner"
-msgstr "Ecken abrunden"
-
-#, fuzzy
 msgid "Action to be performed when window is dropped on the top left corner"
 msgstr "Fenster zur oberen linken Bildschirmecke bewegen"
 
@@ -1044,10 +1040,6 @@ msgstr ""
 
 msgid "Action to be performed when window is dropped on the top edge"
 msgstr ""
-
-#, fuzzy
-msgid "Upper Right Corner"
-msgstr "Ecke oben rechts abrunden"
 
 #, fuzzy
 msgid "Action to be performed when window is dropped on the top right corner"

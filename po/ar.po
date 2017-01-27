@@ -925,10 +925,6 @@ msgstr "التحريك"
 msgid "Window resize action"
 msgstr "مسافة النافذة"
 
-#, fuzzy
-msgid "Upper Left Corner"
-msgstr "ميول الزوايا"
-
 msgid "Action to be performed when window is dropped on the top left corner"
 msgstr ""
 
@@ -970,10 +966,6 @@ msgstr ""
 
 msgid "Action to be performed when window is dropped on the top edge"
 msgstr ""
-
-#, fuzzy
-msgid "Upper Right Corner"
-msgstr "ميل الزاوية العليا اليمنى"
 
 msgid "Action to be performed when window is dropped on the top right corner"
 msgstr ""

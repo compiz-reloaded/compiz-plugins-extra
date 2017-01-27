@@ -926,10 +926,6 @@ msgid "Window resize action"
 msgstr "ウィンドウのタイトルフォント"
 
 #, fuzzy
-msgid "Upper Left Corner"
-msgstr "角の面取り"
-
-#, fuzzy
 msgid "Action to be performed when window is dropped on the top left corner"
 msgstr "ウィンドウを左上隅へ移動"
 
@@ -974,10 +970,6 @@ msgstr "エッジ"
 
 msgid "Action to be performed when window is dropped on the top edge"
 msgstr ""
-
-#, fuzzy
-msgid "Upper Right Corner"
-msgstr "右上の角の面取り"
 
 #, fuzzy
 msgid "Action to be performed when window is dropped on the top right corner"

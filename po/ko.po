@@ -922,10 +922,6 @@ msgid "Window resize action"
 msgstr "창 제목 글꼴"
 
 #, fuzzy
-msgid "Upper Left Corner"
-msgstr "모서리를 둥글게 자름"
-
-#, fuzzy
 msgid "Action to be performed when window is dropped on the top left corner"
 msgstr "창을 좌측 상단으로 이동"
 
@@ -970,10 +966,6 @@ msgstr "가장자리"
 
 msgid "Action to be performed when window is dropped on the top edge"
 msgstr ""
-
-#, fuzzy
-msgid "Upper Right Corner"
-msgstr "오른쪽 상단을 둥글게 자름"
 
 #, fuzzy
 msgid "Action to be performed when window is dropped on the top right corner"

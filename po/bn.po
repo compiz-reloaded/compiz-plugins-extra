@@ -918,10 +918,6 @@ msgstr "অ্যানিমেশন"
 msgid "Window resize action"
 msgstr "উইন্ডোর ব্যবধান"
 
-#, fuzzy
-msgid "Upper Left Corner"
-msgstr "কোণাগুলি উচু কর"
-
 msgid "Action to be performed when window is dropped on the top left corner"
 msgstr ""
 
@@ -962,10 +958,6 @@ msgstr ""
 
 msgid "Action to be performed when window is dropped on the top edge"
 msgstr ""
-
-#, fuzzy
-msgid "Upper Right Corner"
-msgstr "ওপরের ডানদিকের কোণা উচু কর"
 
 msgid "Action to be performed when window is dropped on the top right corner"
 msgstr ""
