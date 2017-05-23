@@ -303,28 +303,28 @@
             <_long>The size of the window thumbs in the task bar</_long>
             <default>96</default>
             <min>16</min>
-            <max>256</max>
+            <max>768</max>
           </option>
           <option name="thumb_space" type="int">
             <_short>Space</_short>
             <_long>The space between the thumbs</_long>
             <default>5</default>
             <min>1</min>
-            <max>20</max>
+            <max>60</max>
           </option>
           <option name="border_radius" type="int">
             <_short>Border Radius</_short>
             <_long>The radius for the tab bar edges</_long>
             <default>10</default>
             <min>1</min>
-            <max>20</max>
+            <max>60</max>
           </option>
           <option name="border_width" type="int">
             <_short>Border Width</_short>
             <_long>The width of the tab bar outline</_long>
             <default>1</default>
             <min>1</min>
-            <max>5</max>
+            <max>15</max>
           </option>
           <option name="tab_base_color" type="color">
             <_short>Tab Base Color</_short>
@@ -397,7 +397,7 @@
             <_long>The size of the window title font in the tab bar</_long>
             <default>12</default>
             <min>6</min>
-            <max>24</max>
+            <max>72</max>
           </option>
           <option name="tabbar_font_color" type="color">
             <_short>Font Color</_short>
@@ -469,7 +469,7 @@
           <_long>The size of the grouped window glow</_long>
           <default>64</default>
           <min>1</min>
-          <max>300</max>
+          <max>900</max>
         </option>
         <option name="glow_type" type="int">
           <_short>Glow Type</_short>
