@@ -13,8 +13,8 @@
       <group>
         <_short>Bindings</_short>
         <option name="toggle_key" type="key">
-          <_short>Toggle AddHelper</_short>
-          <_long>Use this to enable/disable AddHelper on the fly.</_long>
+          <_short>Toggle ADD Helper</_short>
+          <_long>Use this to enable/disable ADD Helper on the fly.</_long>
           <default>&lt;Super&gt;p</default>
         </option>
       </group>
@@ -22,7 +22,7 @@
         <_short>Misc. Options</_short>
         <option name="window_types" type="match">
           <_short>Window Types</_short>
-          <_long>Window types that should be Opacified.</_long>
+          <_long>Window types that should be affected.</_long>
           <default>Toolbar | Utility | Dialog | ModalDialog | Fullscreen | Normal</default>
         </option>
 	<option name="ononinit" type="bool">
