@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<compiz>
+    <plugin name="vidcap" useBcop="true">
+	<_short>Vidcap</_short>
+	<_long>Screen Recorder</_long>
+	<category>Utility</category>
+		<display>
+			<option name="toggle_record" type="key">
+				<_short>Start / Stop</_short>
+				<_long>Start and stop recording</_long>
+				<default>&lt;Super&gt;v</default>
+			</option>
+			<option name="directory" type="string">
+				<_short>Directory</_short>
+				<_long>Directory to store videos</_long>
+				<default>/tmp</default>
+				<hints>directory;</hints>
+			</option>
+			<option name="command" type="string">
+				<_short>Command</_short>
+				<_long>Command to be used for encoding video. Use a dash (-) for the input file and %f.ext for the output file</_long>
+				<default>avconv -i - %f.mp4</default>
+			</option>
+			<option name="draw_indicator" type="bool">
+				<_short>Draw Status Indicator</_short>
+				<_long>Draw color coded status dot</_long>
+				<default>true</default>
+			</option>
+		</display>
+    </plugin>
+</compiz>

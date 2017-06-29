@@ -79,6 +79,8 @@ AC_SUBST(imagedir)
 metadatadir=$datadir/compiz
 AC_SUBST(metadatadir)
 
+pluginiconsdir=$datadir/compiz/icons
+
 
 dnl ============================================================
 dnl Check for the pkg-config path.
@@ -152,6 +154,7 @@ AM_CONDITIONAL(ANIMATIONADDON_PLUGIN, test "x$have_compiz_animation" = "xyes")
 AC_OUTPUT([
 compiz-animationaddon.pc
 Makefile
+icons/Makefile
 images/Makefile
 include/Makefile
 metadata/Makefile
@@ -181,6 +184,7 @@ src/trailfocus/Makefile
 src/widget/Makefile
 src/showmouse/Makefile
 src/loginout/Makefile
+src/vidcap/Makefile
 src/wallpaper/Makefile
 po/Makefile.in
 ])

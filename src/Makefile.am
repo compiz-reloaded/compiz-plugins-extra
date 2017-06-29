@@ -24,4 +24,5 @@ SUBDIRS = 3d \
 	  widget \
 	  showmouse \
 	  loginout \
+	  vidcap \
 	  wallpaper

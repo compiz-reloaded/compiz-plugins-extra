@@ -48,6 +48,7 @@ xml_in_files = 	             \
 	splash.xml.in        \
 	trailfocus.xml.in    \
 	widget.xml.in        \
+	vidcap.xml.in        \
 	wallpaper.xml.in     \
 	$(animationaddonxml) \
 	$(cubeaddonxml)      \
