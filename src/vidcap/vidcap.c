@@ -293,7 +293,7 @@ vidcapPaintScreen (CompScreen   *screen,
 		uint32_t y2;
 	};
 	uint32_t delta, prev, *d, *s, *p, next, *outbuf, *pixel_data;
-	int i, j, k, width, height, run, stride, y_orig, size;
+	int i, j, k, ret, width, height, run, stride, y_orig, size;
 	struct iovec v[2];
 
     VIDCAP_SCREEN (screen);
@@ -316,11 +316,21 @@ vidcapPaintScreen (CompScreen   *screen,
 		header.nrects = screen->nOutputDev;
 
 		v[0].iov_base = &header;
-		v[0].iov_len = sizeof header;
+		v[0].iov_len = sizeof (header);
 		v[1].iov_base = b;
 		v[1].iov_len = screen->nOutputDev * sizeof (struct box);
 
-		writev (vd->fd, v, 2);
+		ret = writev (vd->fd, v, 2);
+
+		if (ret != (v[0].iov_len + v[1].iov_len)) {
+			compLogMessage("vidcap", CompLogLevelError,
+									"Could not write to %s", WCAPFILE);
+			close(vd->fd);
+			vd->recording = FALSE;
+			free(vd->frame);
+			free(b);
+			return;
+		}
 
 		stride = screen->width;
 
@@ -364,9 +374,19 @@ vidcapPaintScreen (CompScreen   *screen,
 
 			p = output_run(p, prev, run);
 
-			write(vd->fd, outbuf, (p - outbuf) * 4);
+			ret = write(vd->fd, outbuf, (p - outbuf) * 4);
 
 			free(pixel_data);
+
+			if (ret != (p - outbuf) * 4) {
+				compLogMessage("vidcap", CompLogLevelError,
+										"Could not write to %s", WCAPFILE);
+				close(vd->fd);
+				vd->recording = FALSE;
+				free(vd->frame);
+				free(b);
+				return;
+			}
 		}
 	}
 
@@ -556,8 +576,7 @@ write_file(int fd)
 	frame_time = 1000 * denom / num;
 	while (has_frame) {
 		output_yuv_frame(decoder, f);
-		if ((i % 5) == 0)
-		{
+		if ((i % 5) == 0) {
 			printf(" .");
 			fflush (stdout);
 		}
@@ -699,9 +718,9 @@ vidcapToggle(CompDisplay     *d,
 {
 	VIDCAP_DISPLAY (d);
 	struct wcap_header header;
+	int ret;
 
-	if (vd->thread_running)
-	{
+	if (vd->thread_running) {
 		vd->recording = FALSE;
 		compLogMessage("vidcap", CompLogLevelInfo, "Processing, please wait");
 		return TRUE;
@@ -709,12 +728,10 @@ vidcapToggle(CompDisplay     *d,
 
 	vd->recording = !vd->recording;
 
-	if (vd->recording)
-	{
+	if (vd->recording) {
 		compLogMessage("vidcap", CompLogLevelInfo, "Recording started");
 		vd->frame = malloc (d->screens->width * d->screens->height * 4);
-		if (!vd->frame)
-		{
+		if (!vd->frame) {
 			vd->recording = FALSE;
 			return TRUE;
 		}
@@ -728,13 +745,19 @@ vidcapToggle(CompDisplay     *d,
 
 		vd->fd = open(WCAPFILE, O_WRONLY | O_CREAT | O_TRUNC | O_CLOEXEC, 0644);
 
-		write(vd->fd, &header, sizeof header);
+		ret = write(vd->fd, &header, sizeof (header));
 
 		vd->dot_timer = 0;
 		vd->done = FALSE;
-	}
-	else
-	{
+
+		if (ret != sizeof (header)) {
+			compLogMessage("vidcap", CompLogLevelError,
+									"Could not write to %s", WCAPFILE);
+			vd->recording = FALSE;
+			free(vd->frame);
+			return TRUE;
+		}
+	} else {
 		free (vd->frame);
 		close (vd->fd);
 		vd->dot_timer = 0;
