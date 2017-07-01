@@ -388,6 +388,8 @@ vidcapPaintScreen (CompScreen   *screen,
 				return;
 			}
 		}
+
+		free(b);
 	}
 
 	if (vidcapGetDrawIndicator (screen->display) &&
