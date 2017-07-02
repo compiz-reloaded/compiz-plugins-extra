@@ -234,6 +234,7 @@ static void
 vidcapPreparePaintScreen (CompScreen *s, int ms)
 {
 	int delay_ms;
+
 	VIDCAP_SCREEN (s);
 	VIDCAP_DISPLAY (s->display);
 
@@ -268,7 +269,7 @@ vidcapDonePaintScreen (CompScreen *s)
 
 	if (vidcapGetDrawIndicator (s->display) &&
 		(vd->recording || vd->thread_running || vd->done))
-		damageScreen (s);
+		damageScreen(s);
 
 	UNWRAP (vs, s, donePaintScreen);
 	(*s->donePaintScreen) (s); 
@@ -306,8 +307,8 @@ vidcapPaintScreen (CompScreen   *screen,
 	int i, j, k, ret, width, height, run, stride, y_orig, size;
 	struct iovec v[2];
 
-    VIDCAP_SCREEN (screen);
-    VIDCAP_DISPLAY (screen->display);
+	VIDCAP_SCREEN (screen);
+	VIDCAP_DISPLAY (screen->display);
 
 	UNWRAP (vs, screen, paintScreen);
 	(*screen->paintScreen) (screen, outputs, numOutput, mask); 
@@ -335,7 +336,7 @@ vidcapPaintScreen (CompScreen   *screen,
 		v[1].iov_base = b;
 		v[1].iov_len = screen->nOutputDev * sizeof (struct box);
 
-		ret = writev (vd->fd, v, 2);
+		ret = writev(vd->fd, v, 2);
 
 		if (ret != (v[0].iov_len + v[1].iov_len)) {
 			compLogMessage("vidcap", CompLogLevelError,
@@ -575,11 +576,11 @@ write_file(int fd)
 
 	compLogMessage("vidcap", CompLogLevelInfo, "Decoding");
 
-	size = asprintf (&header, "YUV4MPEG2 C420jpeg W%d H%d F%d:%d Ip A0:0\n",
+	size = asprintf(&header, "YUV4MPEG2 C420jpeg W%d H%d F%d:%d Ip A0:0\n",
 							decoder->width, decoder->height, num, denom);
 	f = fdopen(fd, "w");
 	fwrite(header, 1, size, f);
-	free (header);
+	free(header);
 
 	i = 0;
 	has_frame = wcap_decoder_get_frame(decoder);
@@ -627,7 +628,7 @@ thread_func(void *data)
 
 	if (stat(vidcapGetDirectory (d), &st) == 0 && S_ISDIR(st.st_mode) &&
 			access(vidcapGetDirectory (d), W_OK) == 0) {
-		directory = strdup (vidcapGetDirectory (d));
+		directory = strdup(vidcapGetDirectory (d));
 	} else {
 		compLogMessage("vidcap", CompLogLevelWarn,
 			"Could not stat '%s' or not a writable directory, "
@@ -636,7 +637,7 @@ thread_func(void *data)
 		directory = strdup ("/tmp");
 	}
 
-	tmpcmd = strdup (vidcapGetCommand (d));
+	tmpcmd = strdup(vidcapGetCommand (d));
 	found = 0;
 
 	for (i = 0; i < strlen(tmpcmd); i++) {
@@ -653,7 +654,7 @@ thread_func(void *data)
 	free(tmpcmd);
 
 	if (!found)
-		strcpy (ext, "mp4");
+		strcpy(ext, "mp4");
 
 	i = 0;
 	sprintf(filename, "vidcap-%02d.%s", i, ext);
@@ -671,19 +672,19 @@ thread_func(void *data)
 			i++;
 			sprintf(filename, "vidcap-%02d.%s", i, ext);
 		} else {
-			closedir (dir);
+			closedir(dir);
 			break;
 		}
-		closedir (dir);
+		closedir(dir);
 	}
-	if (asprintf (&fullpath, "%s/%s", directory, filename) <= 0)
+	if (asprintf(&fullpath, "%s/%s", directory, filename) <= 0)
 		fullpath = strdup ("/tmp/vidcap.mp4");
 
 	tmpcmd = strdup(vidcapGetCommand (d));
 	ret = found = 0;
 
-	for (i = 0; i < strlen (tmpcmd); i++) {
-		if (!strncmp (&tmpcmd[i], "%f.", 3)) {
+	for (i = 0; i < strlen(tmpcmd); i++) {
+		if (!strncmp(&tmpcmd[i], "%f.", 3)) {
 			found = 1;
 			for (j = i + 3; strncmp(&tmpcmd[j], " ", 1) &&
 							strncmp(&tmpcmd[j], "\0", 1); j++);
@@ -706,10 +707,10 @@ thread_func(void *data)
 	remove(RAWFILE);
 	remove(WCAPFILE);
 
-	free (tmpcmd);
-	free (command);
-	free (fullpath);
-	free (directory);
+	free(tmpcmd);
+	free(command);
+	free(fullpath);
+	free(directory);
 
 	VIDCAP_DISPLAY (d);
 
@@ -769,8 +770,8 @@ vidcapToggle(CompDisplay     *d,
 			return TRUE;
 		}
 	} else {
-		free (vd->frame);
-		close (vd->fd);
+		free(vd->frame);
+		close(vd->fd);
 		vd->dot_timer = 0;
 		vd->thread_running = TRUE;
 		pthread_create(&vd->thread, NULL, thread_func, d);
@@ -820,7 +821,7 @@ vidcapFiniDisplay(CompPlugin *p,
 
 	freeScreenPrivateIndex(d, vd->screenPrivateIndex);
 
-	free (vd);
+	free(vd);
 }
 
 static Bool
@@ -849,13 +850,13 @@ static void
 vidcapFiniScreen(CompPlugin *p,
 					CompScreen *s)
 {
-    VIDCAP_SCREEN (s);
+	VIDCAP_SCREEN (s);
 
-    UNWRAP (vs, s, preparePaintScreen);
-    UNWRAP (vs, s, donePaintScreen);
-    UNWRAP (vs, s, paintScreen);
+	UNWRAP (vs, s, preparePaintScreen);
+	UNWRAP (vs, s, donePaintScreen);
+	UNWRAP (vs, s, paintScreen);
 
-    free (vs);
+	free(vs);
 }
 
 
@@ -904,17 +905,17 @@ vidcapFini(CompPlugin *p)
 
 static CompPluginVTable vidcapVTable=
 {
-    "vidcap",
-    0,
-    vidcapInit,
-    vidcapFini,
-    vidcapInitObject,
-    vidcapFiniObject,
-    0,
-    0
+	"vidcap",
+	0,
+	vidcapInit,
+	vidcapFini,
+	vidcapInitObject,
+	vidcapFiniObject,
+	0,
+	0
 };
 
 CompPluginVTable* getCompPluginInfo (void)
 {
-    return &vidcapVTable;
+	return &vidcapVTable;
 }
