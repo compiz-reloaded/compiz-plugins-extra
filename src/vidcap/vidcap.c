@@ -700,7 +700,7 @@ thread_func(void *data)
 		ret = asprintf(&command, "cat %s | avconv -i - %s", RAWFILE, fullpath);
 
 	if (ret > 0)
-		system(command);
+		ret = system(command);
 
 	compLogMessage("vidcap", CompLogLevelInfo, "Created: %s\n", fullpath);
 
