@@ -277,6 +277,16 @@ vidcapDonePaintScreen (CompScreen *s)
 }
 
 static void
+vidcap_stop_recording(CompScreen *s)
+{
+	VIDCAP_DISPLAY (s->display);
+
+	vd->recording = FALSE;
+	close(vd->fd);
+	free(vd->frame);
+}
+
+static void
 vidcapPaintScreen (CompScreen   *screen,
 					CompOutput   *outputs,
 					int          numOutput,
@@ -305,6 +315,11 @@ vidcapPaintScreen (CompScreen   *screen,
 
 	if (vd->recording) {
 		struct box *b = malloc (screen->nOutputDev * sizeof (struct box));
+		if (!b) {
+			vidcap_stop_recording(screen);
+			return;
+		}
+
 		for (i = 0; i < screen->nOutputDev; i++) {
 			b[i].x1 = outputs[i].region.extents.x1;
 			b[i].y1 = outputs[i].region.extents.y1;
@@ -325,9 +340,7 @@ vidcapPaintScreen (CompScreen   *screen,
 		if (ret != (v[0].iov_len + v[1].iov_len)) {
 			compLogMessage("vidcap", CompLogLevelError,
 									"Could not write to %s", WCAPFILE);
-			close(vd->fd);
-			vd->recording = FALSE;
-			free(vd->frame);
+			vidcap_stop_recording(screen);
 			free(b);
 			return;
 		}
@@ -379,9 +392,7 @@ vidcapPaintScreen (CompScreen   *screen,
 			if (ret != (p - pixel_data) * 4) {
 				compLogMessage("vidcap", CompLogLevelError,
 										"Could not write to %s", WCAPFILE);
-				close(vd->fd);
-				vd->recording = FALSE;
-				free(vd->frame);
+				vidcap_stop_recording(screen);
 				free(b);
 				return;
 			}
