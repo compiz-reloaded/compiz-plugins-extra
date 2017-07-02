@@ -292,7 +292,7 @@ vidcapPaintScreen (CompScreen   *screen,
 		uint32_t x2;
 		uint32_t y2;
 	};
-	uint32_t delta, prev, *d, *s, *p, next, *outbuf, *pixel_data;
+	uint32_t delta, prev, *d, *s, *p, next, *pixel_data;
 	int i, j, k, ret, width, height, run, stride, y_orig, size;
 	struct iovec v[2];
 
@@ -344,14 +344,12 @@ vidcapPaintScreen (CompScreen   *screen,
 			if (!pixel_data)
 				return;
 
-			outbuf = pixel_data;
-
 			y_orig = screen->height - b[i].y2;
 
 			glReadPixels(b[i].x1, y_orig, width, height,
 					GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid *) pixel_data);
 
-			p = outbuf;
+			p = pixel_data;
 			run = prev = 0;
 			for (j = 0; j < height; j++) {
 				s = pixel_data + width * j;
@@ -374,11 +372,11 @@ vidcapPaintScreen (CompScreen   *screen,
 
 			p = output_run(p, prev, run);
 
-			ret = write(vd->fd, outbuf, (p - outbuf) * 4);
+			ret = write(vd->fd, pixel_data, (p - pixel_data) * 4);
 
 			free(pixel_data);
 
-			if (ret != (p - outbuf) * 4) {
+			if (ret != (p - pixel_data) * 4) {
 				compLogMessage("vidcap", CompLogLevelError,
 										"Could not write to %s", WCAPFILE);
 				close(vd->fd);
