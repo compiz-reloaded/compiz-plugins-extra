@@ -647,7 +647,7 @@ thread_func(void *data)
 							strncmp(&tmpcmd[j], "\0", 1); j++);
 			j = j - (i + 3);
 			strncpy(ext, &tmpcmd[i + 3], j);
-			strncpy(&ext[j+1], "\0", 1);
+			strncpy(&ext[j], "\0", 1);
 			break;
 		}
 	}
