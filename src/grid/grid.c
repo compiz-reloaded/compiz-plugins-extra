@@ -353,7 +353,8 @@ gridCommonWindow (CompWindow *cw,
 		desiredState = CompWindowStateMaximizedVertMask;
 		valueMask = CWX | CWWidth;
 	    }
-	    else if (where == GridTop || where == GridBottom)
+	    else if ((where == GridTop || where == GridBottom) &&
+				! (cw->state & CompWindowStateMaximizedHorzMask))
 	    {
 		desiredState = CompWindowStateMaximizedHorzMask;
 		valueMask = CWY | CWHeight;
