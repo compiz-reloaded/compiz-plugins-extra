@@ -579,6 +579,7 @@ createFakeDesktopWindow (CompScreen *s)
 {
 	Display              *dpy = s->display->display;
 	XSizeHints           xsh;
+	XClassHint           xch;
 	XWMHints             xwmh;
 	XSetWindowAttributes attr;
 	Visual               *visual;
@@ -617,6 +618,12 @@ createFakeDesktopWindow (CompScreen *s)
 	XChangeProperty (dpy, ws->fakeDesktop, s->display->winTypeAtom,
 			XA_ATOM, 32, PropModeReplace,
 			(unsigned char *) &s->display->winTypeDesktopAtom, 1);
+
+	xch.res_name = xch.res_class = strdup("Compiz-Wallpaper");
+
+	XSetClassHint (dpy, ws->fakeDesktop, &xch);
+
+	free (xch.res_name);
 
 	region = XFixesCreateRegion (dpy, NULL, 0);
 
