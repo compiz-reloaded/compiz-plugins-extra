@@ -494,6 +494,10 @@ gridHandleEvent (CompDisplay *d,
 			if (where == GridMaximize)
 			    where=GridCenter;
 
+			/* Do not show animation for GridUnknown (no action) */
+			if (where == GridUnknown)
+				return;
+
 			getTargetRect (gs->w, where);
 
 			gs->anim.duration = gridGetAnimationDuration (d);
