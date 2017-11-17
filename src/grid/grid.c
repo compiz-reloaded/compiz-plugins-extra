@@ -127,6 +127,7 @@ typedef struct _GridScreen
     XRectangle     currentRect;
     GridProps      props;
     CompWindow *w;
+    int lastOutput;
     Bool drawing;
     Animation anim;
     Bool animating;
@@ -442,96 +443,105 @@ gridHandleEvent (CompDisplay *d,
     GridType     where;
     GRID_DISPLAY (d);
 
-    if (event->type == MotionNotify)
-    {
+    if (event->type != MotionNotify)
+		goto out;
+
 	CompScreen *s;
 	s = findScreenAtDisplay (d, event->xmotion.root);
-	if (s)
+
+	if (!s)
+		goto out;
+
+    GRID_SCREEN (s);
+
+    if (!gs->grabIsMove)
+		goto out;
+
+	int o = outputDeviceForWindow (gs->w);
+	BOX extents = s->outputDev[o].region.extents;
+
+	Bool top = (pointerY < extents.y1 + gridGetTopEdgeThreshold(d) &&
+				pointerY > extents.y1 - gridGetBottomEdgeThreshold(d));
+	Bool bottom = (pointerY > (extents.y2 - gridGetBottomEdgeThreshold(d)) &&
+					pointerY < (extents.y2 + gridGetTopEdgeThreshold(d)));
+	Bool left = (pointerX < extents.x1 + gridGetLeftEdgeThreshold(d) &&
+				pointerX > extents.x1 - gridGetRightEdgeThreshold(d));
+	Bool right = (pointerX > (extents.x2 - gridGetRightEdgeThreshold(d)) &&
+				 pointerX < (extents.x2 + gridGetLeftEdgeThreshold(d)));
+
+	/* detect corners first */
+	if (top)
 	{
-	    GRID_SCREEN (s);
-	    if (gs->grabIsMove)
-	    {
-		/* detect corners first */
-		/* Bottom Left */
-		if (pointerY > (s->height - gridGetBottomEdgeThreshold(d)) &&
-		    pointerX < gridGetLeftEdgeThreshold(d))
-		    gs->edge = BottomLeft;
-		/* Bottom Right */
-		else if (pointerY > (s->height - gridGetBottomEdgeThreshold(d)) &&
-			 pointerX > (s->width - gridGetRightEdgeThreshold(d)))
-		    gs->edge = BottomRight;
-		/* Top Left */
-		else if (pointerY < gridGetTopEdgeThreshold(d) && pointerX < gridGetLeftEdgeThreshold(d))
-		    gs->edge = TopLeft;
-		/* Top Right */
-		else if (pointerY < gridGetTopEdgeThreshold(d) &&
-			 pointerX > (s->width - gridGetRightEdgeThreshold(d)))
-		    gs->edge = TopRight;
-		/* Left */
-		else if (pointerX < gridGetLeftEdgeThreshold(d))
-		    gs->edge = Left;
-		/* Right */
-		else if (pointerX > (s->width - gridGetRightEdgeThreshold(d)))
-		    gs->edge = Right;
-		/* Top */
-		else if (pointerY < gridGetTopEdgeThreshold(d))
-		    gs->edge = Top;
-		/* Bottom */
-		else if (pointerY > (s->height - gridGetBottomEdgeThreshold(d)))
-		    gs->edge = Bottom;
-		/* No Edge */
+		if (left)
+			gs->edge = TopLeft;
+		else if (right)
+			gs->edge = TopRight;
 		else
-		    gs->edge = NoEdge;
+			gs->edge = Top;
+	} else
+	if (bottom)
+	{
+		if (left)
+			gs->edge = BottomLeft;
+		else if (right)
+			gs->edge = BottomRight;
+		else
+			gs->edge = Bottom;
+	} else
+	if (left)
+		gs->edge = Left;
+	else if (right)
+		gs->edge = Right;
+	else
+		gs->edge = NoEdge;
 
-		/* detect edge region change */
-		if (gs->lastEdge != gs->edge)
+	/* detect edge region change */
+	if (gs->lastEdge != gs->edge || o != gs->lastOutput)
+	{
+		if (gs->edge != NoEdge)
 		{
-		    if (gs->edge != NoEdge)
-		    {
-			where = edgeToGridType(d, gs->edge);
+		where = edgeToGridType(d, gs->edge);
 
-			/* treat Maximize visual indicator same as GridCenter */
-			if (where == GridMaximize)
-			    where=GridCenter;
+		/* treat Maximize visual indicator same as GridCenter */
+		if (where == GridMaximize)
+			where=GridCenter;
 
-			/* Do not show animation for GridUnknown (no action) */
-			if (where == GridUnknown)
-				return;
+		/* Do not show animation for GridUnknown (no action) */
+		if (where == GridUnknown)
+			return;
 
-			getTargetRect (gs->w, where);
+		getTargetRect (gs->w, where);
 
-			gs->anim.duration = gridGetAnimationDuration (d);
-			gs->anim.timer = gs->anim.duration;
-			gs->anim.opacity = 0.0f;
-			gs->anim.progress = 0.0f;
-			gs->anim.currentRect.x = gs->w->serverX;
-			gs->anim.currentRect.y = gs->w->serverY;
-			gs->anim.currentRect.width = gs->w->serverWidth;
-			gs->anim.currentRect.height = gs->w->serverHeight;
-			gs->anim.targetRect = gs->desiredSlot;
-			gs->anim.fromRect.x = gs->w->serverX - gs->w->input.left;
-			gs->anim.fromRect.y = gs->w->serverY - gs->w->input.top;
-			gs->anim.fromRect.width = gs->w->serverWidth +
-						  gs->w->input.left +
-						  gs->w->input.right +
-						  gs->w->serverBorderWidth * 2;
-			gs->anim.fromRect.height = gs->w->serverHeight +
-						   gs->w->input.top +
-						   gs->w->input.bottom +
-						   gs->w->serverBorderWidth * 2;
-			gs->animating = TRUE;
-			gs->anim.fadingOut = FALSE;
-		    }
-		    else
-			gs->anim.fadingOut = TRUE;
-
-		    gs->lastEdge = gs->edge;
+		gs->anim.duration = gridGetAnimationDuration (d);
+		gs->anim.timer = gs->anim.duration;
+		gs->anim.opacity = 0.0f;
+		gs->anim.progress = 0.0f;
+		gs->anim.currentRect.x = gs->w->serverX;
+		gs->anim.currentRect.y = gs->w->serverY;
+		gs->anim.currentRect.width = gs->w->serverWidth;
+		gs->anim.currentRect.height = gs->w->serverHeight;
+		gs->anim.targetRect = gs->desiredSlot;
+		gs->anim.fromRect.x = gs->w->serverX - gs->w->input.left;
+		gs->anim.fromRect.y = gs->w->serverY - gs->w->input.top;
+		gs->anim.fromRect.width = gs->w->serverWidth +
+					  gs->w->input.left +
+					  gs->w->input.right +
+					  gs->w->serverBorderWidth * 2;
+		gs->anim.fromRect.height = gs->w->serverHeight +
+					   gs->w->input.top +
+					   gs->w->input.bottom +
+					   gs->w->serverBorderWidth * 2;
+		gs->animating = TRUE;
+		gs->anim.fadingOut = FALSE;
 		}
+		else
+		gs->anim.fadingOut = TRUE;
 
-	    }
+		gs->lastEdge = gs->edge;
 	}
-    }
+	gs->lastOutput = o;
 
+out:
     UNWRAP (gd, d, handleEvent);
     (*d->handleEvent) (d, event);
     WRAP (gd, d, handleEvent, gridHandleEvent);
@@ -552,6 +562,7 @@ gridWindowGrabNotify (CompWindow   *w,
     {
 	gs->grabIsMove = TRUE;
 	gs->w = w;
+	gs->lastOutput = outputDeviceForWindow (w);
     }
 
     UNWRAP (gs, s, windowGrabNotify);
