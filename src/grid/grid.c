@@ -161,18 +161,17 @@ constrainSize (CompWindow *w,
 	       XRectangle *slot,
 	       XRectangle *rect)
 {
-    XRectangle workarea;
+    GRID_SCREEN (w->screen);
     XRectangle r;
     int        cw, ch;
 
-    getWorkareaForOutput (w->screen, outputDeviceForWindow (w), &workarea);
     slotToRect (w, slot, &r);
 
     if (constrainNewWindowSize (w, r.width, r.height, &cw, &ch))
     {
 	/* constrained size may put window offscreen, adjust for that case */
-	int dx = r.x + cw - workarea.width - workarea.x + w->input.right;
-	int dy = r.y + ch - workarea.height - workarea.y + w->input.bottom;
+	int dx = r.x + cw - gs->workarea.width - gs->workarea.x + w->input.right;
+	int dy = r.y + ch - gs->workarea.height - gs->workarea.y + w->input.bottom;
 
 	if ( dx > 0 )
 	    r.x -= dx;
@@ -189,7 +188,8 @@ constrainSize (CompWindow *w,
 
 static void
 getTargetRect (CompWindow *cw,
-	       GridType	  where)
+	       GridType	  where,
+	       Bool setWorkarea)
 {
     GRID_SCREEN (cw->screen);
 
@@ -198,7 +198,8 @@ getTargetRect (CompWindow *cw,
     DEBUG_PRINT ((gridOut, "\nPressed KP_%i\n", where));
 
     /* get current available area */
-    getWorkareaForOutput (cw->screen, outputDeviceForWindow(cw), &gs->workarea);
+    if (setWorkarea)
+		getWorkareaForOutput (cw->screen, outputDeviceForWindow(cw), &gs->workarea);
     DEBUG_RECT (workarea);
 
     /* Convention:
@@ -265,7 +266,7 @@ gridCommonWindow (CompWindow *cw,
 	    unsigned int valueMask = 0;
 	    int desiredState = 0;
 
-	    getTargetRect (cw, where);
+	    getTargetRect (cw, where, TRUE);
 
 	    XWindowChanges xwc;
 
@@ -457,8 +458,12 @@ gridHandleEvent (CompDisplay *d,
     if (!gs->grabIsMove)
 		goto out;
 
-	int o = outputDeviceForWindow (gs->w);
+	int o = gridGetOutputSelectMousePointer(d) ?
+			outputDeviceForPoint (s, pointerX, pointerY) :
+			outputDeviceForWindow (gs->w);
 	BOX extents = s->outputDev[o].region.extents;
+	if (gridGetOutputSelectMousePointer(d))
+		getWorkareaForOutput (s, o, &gs->workarea);
 
 	Bool top = (pointerY < extents.y1 + gridGetTopEdgeThreshold(d) &&
 				pointerY > extents.y1 - gridGetBottomEdgeThreshold(d));
@@ -510,7 +515,7 @@ gridHandleEvent (CompDisplay *d,
 		if (where == GridUnknown)
 			return;
 
-		getTargetRect (gs->w, where);
+		getTargetRect (gs->w, where, !gridGetOutputSelectMousePointer(d));
 
 		gs->anim.duration = gridGetAnimationDuration (d);
 		gs->anim.timer = gs->anim.duration;

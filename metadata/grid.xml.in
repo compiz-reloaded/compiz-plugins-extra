@@ -64,7 +64,7 @@
 		</option>
 	    </group>
 	    <group>
-		<_short>Corners / Edges</_short>
+		<_short>Behavior</_short>
 		<subgroup>
 		    <_short>Resize Actions</_short>
 		    <_long>Window resize action</_long>
@@ -508,6 +508,12 @@
 			<max>500</max>
 		    </option>
 		</subgroup>
+		<option name="output_select_mouse_pointer" type="bool">
+		    <_short>Select output with mouse pointer</_short>
+		    <_long>In the case of multiple outputs, chooses the output containing the mouse pointer.
+			If this option is not checked, the output is choosen based on the center of the window.</_long>
+		    <default>true</default>
+		</option>
 	    </group>
 	    <group>
 		<_short>Appearance</_short>
