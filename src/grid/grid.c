@@ -249,7 +249,8 @@ static void sendMaximizationRequest (CompWindow *w)
 
 static void
 gridCommonWindow (CompWindow *cw,
-                  GridType   where)
+                  GridType   where,
+                  Bool setWorkarea)
 {
     GRID_SCREEN (cw->screen);
 
@@ -266,7 +267,7 @@ gridCommonWindow (CompWindow *cw,
 	    unsigned int valueMask = 0;
 	    int desiredState = 0;
 
-	    getTargetRect (cw, where, TRUE);
+	    getTargetRect (cw, where, setWorkarea);
 
 	    XWindowChanges xwc;
 
@@ -391,7 +392,7 @@ gridCommon (CompDisplay	    *d,
     xid = getIntOptionNamed (option, nOption, "window", 0);
     cw  = findWindowAtDisplay (d, xid);
 
-    gridCommonWindow(cw, where);
+    gridCommonWindow(cw, where, TRUE);
 
     return TRUE;
 }
@@ -589,7 +590,7 @@ gridWindowUngrabNotify (CompWindow *w)
 
 	if (gs->edge != NoEdge)
 	{
-	    gridCommonWindow (w, edgeToGridType(d, gs->edge));
+	    gridCommonWindow (w, edgeToGridType(d, gs->edge), FALSE);
 	    gs->anim.fadingOut = TRUE;
 	}
     }
