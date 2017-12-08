@@ -262,10 +262,10 @@ wallpaperAddFilesFromDirectories (CompScreen *s, CompListValue ***new_options,
 	if (!*new_options)
 		return;
 
-	for (i = 0; i < 5; i++)
+	for (i = 0; i < NUM_LIST_OPTIONS; i++)
 		(*new_options)[i] = calloc(0, sizeof (CompListValue));
 
-	for (i = 0, n = 0; i < *nElements; i++)
+	for (i = 0, n = 0; i < NUM_LIST_OPTIONS; i++)
 	{
 		if (options[i]->type == CompOptionTypeString)
 		{
