@@ -731,7 +731,11 @@ thread_func(void *data)
 	if (ret > 0)
 		ret = system(command);
 
-	compLogMessage("vidcap", CompLogLevelInfo, "Created: %s\n", fullpath);
+	if (access(fullpath, F_OK) != -1)
+		compLogMessage("vidcap", CompLogLevelInfo, "Created: %s\n", fullpath);
+	else
+		compLogMessage("vidcap", CompLogLevelWarn,
+					"There was a problem creating the video file\n");
 
 	free(tmpcmd);
 	free(command);
