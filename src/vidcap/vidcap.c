@@ -285,6 +285,7 @@ vidcap_stop_recording(CompScreen *s)
 	vd->recording = FALSE;
 	close(vd->fd);
 	free(vd->frame);
+	remove(WCAPFILE);
 }
 
 static void
@@ -546,11 +547,11 @@ convert_to_yv12(struct wcap_decoder *decoder, unsigned char *out)
 	}
 }
 
-static void
+static int
 output_yuv_frame(struct wcap_decoder *decoder, FILE *f)
 {
 	unsigned char *out;
-	int size;
+	int size, ret;
 
 	size = decoder->width * decoder->height * 3 / 2;
 
@@ -558,12 +559,17 @@ output_yuv_frame(struct wcap_decoder *decoder, FILE *f)
 
 	convert_to_yv12(decoder, out);
 
-	fwrite("FRAME\n", 1, 6, f);
-	fwrite(out, 1, size, f);
+	ret = fwrite("FRAME\n", 1, 6, f);
+
+	if (ret == 6)
+		ret = fwrite(out, 1, size, f);
+
 	free (out);
+
+	return (ret == size);
 }
 
-static void
+static int
 write_file(int fd)
 {
 	struct wcap_decoder *decoder = wcap_decoder_create(WCAPFILE);
@@ -572,22 +578,34 @@ write_file(int fd)
 	uint32_t msecs, frame_time;
 	FILE *f;
 	char *header;
-	int size;
+	int size, ret;
 
 	compLogMessage("vidcap", CompLogLevelInfo, "Decoding");
 
 	size = asprintf(&header, "YUV4MPEG2 C420jpeg W%d H%d F%d:%d Ip A0:0\n",
 							decoder->width, decoder->height, num, denom);
 	f = fdopen(fd, "w");
-	fwrite(header, 1, size, f);
+	ret = fwrite(header, 1, size, f);
 	free(header);
+
+	if (ret != size) {
+		compLogMessage("vidcap", CompLogLevelError,
+			"Failed to write header to '%s'", RAWFILE);
+		fclose(f);
+		return -1;
+	}
 
 	i = 0;
 	has_frame = wcap_decoder_get_frame(decoder);
 	msecs = decoder->msecs;
 	frame_time = 1000 * denom / num;
 	while (has_frame) {
-		output_yuv_frame(decoder, f);
+		if (!output_yuv_frame(decoder, f)) {
+			compLogMessage("vidcap", CompLogLevelError,
+				"Failed to write frame to '%s'", RAWFILE);
+			fclose(f);
+			return -1;
+		}
 		if ((i % 5) == 0) {
 			printf(" .");
 			fflush (stdout);
@@ -606,6 +624,8 @@ write_file(int fd)
 		decoder->width, decoder->height, i);
 
 	wcap_decoder_destroy(decoder);
+
+	return 0;
 }
 
 static void *
@@ -622,9 +642,18 @@ thread_func(void *data)
 
 	fd = open(RAWFILE, O_WRONLY | O_CREAT | O_TRUNC | O_CLOEXEC | O_LARGEFILE, 0644);
 
-	write_file(fd);
+	if (!fd) {
+		compLogMessage("vidcap", CompLogLevelError,
+			"Could not open '%s' for writing", RAWFILE);
+		goto out;
+	}
+
+	ret = write_file(fd);
 
 	close(fd);
+
+	if (ret < 0)
+		goto out;
 
 	if (stat(vidcapGetDirectory (d), &st) == 0 && S_ISDIR(st.st_mode) &&
 			access(vidcapGetDirectory (d), W_OK) == 0) {
@@ -704,13 +733,13 @@ thread_func(void *data)
 
 	compLogMessage("vidcap", CompLogLevelInfo, "Created: %s\n", fullpath);
 
-	remove(RAWFILE);
-	remove(WCAPFILE);
-
 	free(tmpcmd);
 	free(command);
 	free(fullpath);
 	free(directory);
+out:
+	remove(RAWFILE);
+	remove(WCAPFILE);
 
 	VIDCAP_DISPLAY (d);
 
@@ -757,6 +786,14 @@ vidcapToggle(CompDisplay     *d,
 
 		vd->fd = open(WCAPFILE, O_WRONLY | O_CREAT | O_TRUNC | O_CLOEXEC | O_LARGEFILE, 0644);
 
+		if (!vd->fd) {
+			compLogMessage("vidcap", CompLogLevelError,
+									"Could not open %s for writing", WCAPFILE);
+			vd->recording = FALSE;
+			free(vd->frame);
+			return TRUE;
+		}
+
 		ret = write(vd->fd, &header, sizeof (header));
 
 		vd->dot_timer = 0;
@@ -767,6 +804,8 @@ vidcapToggle(CompDisplay     *d,
 									"Could not write to %s", WCAPFILE);
 			vd->recording = FALSE;
 			free(vd->frame);
+			close(vd->fd);
+			remove(WCAPFILE);
 			return TRUE;
 		}
 	} else {
