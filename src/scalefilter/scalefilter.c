@@ -414,7 +414,7 @@ scalefilterHandleSpecialKeyPress (CompScreen *s,
     FILTER_SCREEN (s);
 
     info = fs->filterInfo;
-    ks   = XkbKeycodeToKeysym (s->display->display, event->keycode, 1, 0);
+    ks   = XkbKeycodeToKeysym (s->display->display, event->keycode, 0, 0);
 
     if (ks == XK_Escape)
     {
