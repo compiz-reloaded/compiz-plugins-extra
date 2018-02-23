@@ -343,10 +343,10 @@ gridCommonWindow (CompWindow *cw,
 		DEBUG_RECT (gs->desiredRect);
 	    }
 
-	    xwc.x = gs->desiredRect.x;
-	    xwc.y = gs->desiredRect.y;
-	    xwc.width  = gs->desiredRect.width;
-	    xwc.height = gs->desiredRect.height;
+	    xwc.x = gs->desiredRect.x - cw->clientFrame.left;
+	    xwc.y = gs->desiredRect.y - cw->clientFrame.top;
+	    xwc.width  = gs->desiredRect.width + cw->clientFrame.left + cw->clientFrame.right;
+	    xwc.height = gs->desiredRect.height + cw->clientFrame.top + cw->clientFrame.bottom;
 
 	    if (cw->mapNum)
 		sendSyncRequest (cw);
