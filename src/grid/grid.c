@@ -342,8 +342,9 @@ gridCommonWindow (CompWindow *cw,
 		constrainSize (cw, &gs->desiredSlot, &gs->desiredRect);
 		DEBUG_RECT (gs->desiredRect);
 	    }
-		/*tiled left or right: this worked without any changes here */
-        /*These are a special case with CSD apps due to GTK behavior */
+        /*tiled left or right: this worked without any changes here
+         *These are a special case with CSD apps due to GTK behavior
+         */
 	    if (where == GridLeft || where == GridRight){
 	        xwc.x = gs->desiredRect.x;
 	        xwc.y = gs->desiredRect.y;
@@ -351,7 +352,6 @@ gridCommonWindow (CompWindow *cw,
 	        xwc.height = gs->desiredRect.height;
             }
         /*Quarter-tiled, top-tiled, or bottom tiled */
-		/*FIXME: in the top and bottom tiled cases width set here is NOT applied */
         else{
 	        xwc.x = gs->desiredRect.x - cw->clientFrame.left;
 	        xwc.y = gs->desiredRect.y - cw->clientFrame.top;
@@ -369,9 +369,18 @@ gridCommonWindow (CompWindow *cw,
 	    }
 	    else if ((where == GridTop || where == GridBottom) &&
 				! (cw->state & CompWindowStateMaximizedHorzMask))
-	    {
-		desiredState = CompWindowStateMaximizedHorzMask;
-		valueMask = CWY | CWHeight;
+	        {
+             /*FIXME: CSD windows must be declared horizontally maximized to save geometry
+              *but on snapping back a gapped "almost max" width can get saved
+              *unless user snaps window back very fast or moves it repeatedly)
+              */
+             desiredState = CompWindowStateMaximizedHorzMask;
+		    if (cw->clientFrame.top == 0)
+                /*Really horizontally maximize SSD windows */
+		        valueMask = CWY | CWHeight;
+            else
+                /* Handle CSD window horix max same as quarter tiled to avoid gaps */
+                valueMask = CWX | CWY | CWWidth | CWHeight;
 	    }
 	    else
 	    {
