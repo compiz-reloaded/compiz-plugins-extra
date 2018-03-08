@@ -342,22 +342,11 @@ gridCommonWindow (CompWindow *cw,
 		constrainSize (cw, &gs->desiredSlot, &gs->desiredRect);
 		DEBUG_RECT (gs->desiredRect);
 	    }
-		/*tiled left or right: this worked without any changes here */
-        /*These are a special case with CSD apps due to GTK behavior */
-	    if (where == GridLeft || where == GridRight){
-	        xwc.x = gs->desiredRect.x;
-	        xwc.y = gs->desiredRect.y;
-	        xwc.width  = gs->desiredRect.width;
-	        xwc.height = gs->desiredRect.height;
-            }
-        /*Quarter-tiled, top-tiled, or bottom tiled */
-		/*FIXME: in the top and bottom tiled cases width set here is NOT applied */
-        else{
-	        xwc.x = gs->desiredRect.x - cw->clientFrame.left;
-	        xwc.y = gs->desiredRect.y - cw->clientFrame.top;
-	        xwc.width  = gs->desiredRect.width + cw->clientFrame.left + cw->clientFrame.right;
-	        xwc.height = gs->desiredRect.height + cw->clientFrame.top + cw->clientFrame.bottom;
-            }
+
+	    xwc.x = gs->desiredRect.x - cw->clientFrame.left;
+	    xwc.y = gs->desiredRect.y - cw->clientFrame.top;
+	    xwc.width  = gs->desiredRect.width + cw->clientFrame.left + cw->clientFrame.right;
+	    xwc.height = gs->desiredRect.height + cw->clientFrame.top + cw->clientFrame.bottom;
 
 	    if (cw->mapNum)
 		sendSyncRequest (cw);
