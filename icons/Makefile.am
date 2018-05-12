@@ -1,3 +1,3 @@
 iconsdir = $(pluginiconsdir)
-icons_DATA =	       \
-	plugin-vidcap.svg
+icons_DATA =              \
+  plugin-vidcap.svg
