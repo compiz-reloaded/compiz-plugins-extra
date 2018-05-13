@@ -82,7 +82,6 @@ AC_SUBST(metadatadir)
 pluginiconsdir=$datadir/compiz/icons
 AC_SUBST(pluginiconsdir)
 
-
 dnl ============================================================
 dnl Check for the pkg-config path.
 if test x"$PKG_CONFIG_PATH" = x; then
