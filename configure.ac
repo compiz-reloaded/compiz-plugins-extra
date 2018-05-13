@@ -80,7 +80,7 @@ metadatadir=$datadir/compiz
 AC_SUBST(metadatadir)
 
 pluginiconsdir=$datadir/compiz/icons
-
+AC_SUBST(pluginiconsdir)
 
 dnl ============================================================
 dnl Check for the pkg-config path.
