@@ -5,7 +5,7 @@
  * crashhandler.c
  *
  * Copyright : (C) 2006 by Dennis Kasprzyk
- * E-mail    : onestone@beryl-project.org
+ * E-mail    : onestone@compiz.org
  *
  *
  * This program is free software; you can redistribute it and/or
@@ -37,12 +37,11 @@ crash_handler (int sig)
     if (sig == SIGSEGV || sig == SIGFPE || sig == SIGILL || sig == SIGABRT)
     {
 	static int count = 0;
+	/* backtrace */
+	char cmd[1024];
 
 	if (++count > 1)
 	    exit (1);
-
-	// backtrace
-	char cmd[1024];
 
 	snprintf (cmd, 1024, 
 		  "echo -e \"set prompt\nthread apply all bt full\n"
@@ -84,7 +83,7 @@ crashhandlerDisplayOptionChanged (CompDisplay                *d,
     case CrashhandlerDisplayOptionEnabled:
 	if (crashhandlerGetEnabled (d) )
 	{
-	    // enable crash handler
+	    /* enable crash handler */
 	    signal (SIGSEGV, crash_handler);
 	    signal (SIGFPE, crash_handler);
 	    signal (SIGILL, crash_handler);
@@ -92,7 +91,7 @@ crashhandlerDisplayOptionChanged (CompDisplay                *d,
 	}
 	else
 	{
-	    // disable crash handler
+	    /* disable crash handler */
 	    signal (SIGSEGV, SIG_DFL);
 	    signal (SIGFPE, SIG_DFL);
 	    signal (SIGILL, SIG_DFL);
@@ -117,13 +116,13 @@ crashhandlerInitDisplay (CompPlugin  *p,
 
     if (crashhandlerGetEnabled (d) )
     {
-	// segmentation fault
+	/* segmentation fault */
 	signal (SIGSEGV, crash_handler);
-	// floating point exception
+	/* floating point exception */
 	signal (SIGFPE, crash_handler);
-	// illegal instruction
+	/* illegal instruction */
 	signal (SIGILL, crash_handler);
-	// abort
+	/* abort */
 	signal (SIGABRT, crash_handler);
     }
 
