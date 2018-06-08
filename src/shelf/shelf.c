@@ -15,7 +15,7 @@
  *
  * Author(s): 
  * Kristian Lyngstøl <kristian@bohemians.org>
- * Danny Baumann <maniac@opencompositing.org>
+ * Danny Baumann <dannybaumann@web.de>
  *
  * Description:
  *

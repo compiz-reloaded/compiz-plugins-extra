@@ -4,8 +4,8 @@
  *
  * fadedesktop.c
  *
- * Copyright (c) 2006 Robert Carr <racarr@beryl-project.org>
- * 		         2007 Danny Baumann <maniac@beryl-project.org>
+ * Copyright (c) 2006 Robert Carr <racarr@canonical.com>
+ * 		         2007 Danny Baumann <dannybaumann@web.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License

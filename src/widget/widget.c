@@ -5,7 +5,7 @@
  * widget.c
  *
  * Copyright : (C) 2007 by Danny Baumann
- * E-mail    : maniac@opencompositing.org
+ * E-mail    : dannybaumann@web.de
  *
  * Idea based on widget.c:
  * Copyright : (C) 2006 Quinn Storm

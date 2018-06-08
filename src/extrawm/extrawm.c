@@ -1,7 +1,7 @@
 /*
  * extrawm.c
  * Compiz extra WM actions plugins
- * Copyright: (C) 2007 Danny Baumann <maniac@beryl-project.org>
+ * Copyright: (C) 2007 Danny Baumann <dannybaumann@web.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License

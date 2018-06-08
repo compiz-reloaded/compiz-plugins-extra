@@ -1,8 +1,8 @@
 /**
  * Beryl Trailfocus - take three
  *
- * Copyright (c) 2006 Kristian Lyngstøl <kristian@beryl-project.org>
- * Ported to Compiz and BCOP usage by Danny Baumann <maniac@beryl-project.org>
+ * Copyright (c) 2006 Kristian Lyngstøl <kristian@bohemians.org>
+ * Ported to Compiz and BCOP usage by Danny Baumann <dannybaumann@web.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,7 +17,7 @@
  * This version is completly rewritten from scratch with opacify as a 
  * basic template. The original trailfocus was written by: 
  * François Ingelrest <Athropos@gmail.com> and rewritten by:
- * Dennis Kasprzyk <onestone@beryl-project.org>
+ * Dennis Kasprzyk <onestone@compiz.org>
  * 
  *
  * Trailfocus modifies the opacity, brightness and saturation on a window 

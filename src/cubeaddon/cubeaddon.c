@@ -4,7 +4,7 @@
  * cubeaddon.c
  *
  * Copyright : (C) 2008 by Dennis Kasprzyk
- * E-mail    : onestone@opencompositing.org
+ * E-mail    : onestone@compiz.org
  *
  * includes code from cubecaps.c
  *

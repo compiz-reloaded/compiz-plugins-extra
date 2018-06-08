@@ -7,7 +7,7 @@
  * Copyright : (C) 2006-2007 by Patrick Niklaus, Roi Cohen, Danny Baumann
  * Authors: Patrick Niklaus <patrick.niklaus@googlemail.com>
  *          Roi Cohen       <roico.beryl@gmail.com>
- *          Danny Baumann   <maniac@opencompositing.org>
+ *          Danny Baumann   <dannybaumann@web.de>
  *
  *
  * This program is free software; you can redistribute it and/or

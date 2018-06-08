@@ -18,8 +18,8 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * Authors:
- *   - Diogo Ferreira (playerX) <diogo@beryl-project.org>
- *   - Danny Baumann <maniac@beryl-project.org>
+ *   - Diogo Ferreira (playerX) <diogo@underdev.org>
+ *   - Danny Baumann <dannybaumann@web.de>
  *
  *
  * Copyright (c) 2007 Diogo "playerX" Ferreira

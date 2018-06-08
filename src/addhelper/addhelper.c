@@ -1,8 +1,8 @@
 /**
  * Compiz ADD Helper. Makes it easier to concentrate.
  *
- * Copyright (c) 2007 Kristian Lyngstøl <kristian@beryl-project.org>
- * Ported and highly modified by Patrick Niklaus <marex@beryl-project.org>
+ * Copyright (c) 2007 Kristian Lyngstøl <kristian@bohemians.org>
+ * Ported and highly modified by Patrick Niklaus <patrick.niklaus@student.kit.edu>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License

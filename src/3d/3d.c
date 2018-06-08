@@ -7,9 +7,9 @@
  * Copyright : (C) 2006 by Roi Cohen
  * E-mail    : roico12@gmail.com
  *
- * Modified by : Dennis Kasprzyk <onestone@opencompositing.org>
- *               Danny Baumann <maniac@opencompositing.org>
- *               Robert Carr <racarr@beryl-project.org>
+ * Modified by : Dennis Kasprzyk <onestone@compiz.org>
+ *               Danny Baumann <dannybaumann@web.de>
+ *               Robert Carr <racarr@canonical.com>
  *               Diogo Ferreira <diogo@underdev.org>
  *		 Kevin Lange <klange@ogunderground.com>
  *

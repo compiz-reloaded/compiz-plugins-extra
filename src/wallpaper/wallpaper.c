@@ -5,10 +5,10 @@
  *
  * Copyright (c) 2017 Scott Moreau <oreaus@gmail.com>
  *
- * Copyright (c) 2008 Dennis Kasprzyk <onestone@opencompositing.org>
+ * Copyright (c) 2008 Dennis Kasprzyk <onestone@compiz.org>
  *
  * Rewrite of wallpaper.c
- * Copyright (c) 2007 Robert Carr <racarr@opencompositing.org>
+ * Copyright (c) 2007 Robert Carr <racarr@canonical.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License

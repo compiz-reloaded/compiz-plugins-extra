@@ -5,7 +5,7 @@
  * scalefilter.c
  *
  * Copyright : (C) 2007 by Danny Baumann
- * E-mail    : maniac@opencompositing.org
+ * E-mail    : dannybaumann@web.de
  *
  * Copyright : (C) 2006 Diogo Ferreira
  * E-mail    : diogo@underdev.org
