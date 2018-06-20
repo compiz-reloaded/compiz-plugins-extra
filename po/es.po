@@ -6300,10 +6300,6 @@ msgstr "Segundo color de gradiente"
 #~ msgstr "Reflejo del cubo"
 
 #, fuzzy
-#~ msgid "Directory"
-#~ msgstr "Dirección del pliegue"
-
-#, fuzzy
 #~ msgid "Initiate screencasting"
 #~ msgstr "Iniciar dibujo del fuego"
 
