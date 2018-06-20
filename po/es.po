@@ -456,6 +456,36 @@ msgstr "Salida a la pantalla"
 msgid "Enable"
 msgstr "Habilitar"
 
+msgid "Vidcap"
+msgstr ""
+
+msgid "Screen Recorder"
+msgstr "Grabador de pantalla"
+
+msgid "Start / Stop"
+msgstr ""
+
+msgid "Start and stop recording"
+msgstr "Comience y pare la grabación"
+
+msgid "Directory"
+msgstr "Directorio"
+
+msgid "Directory to store videos"
+msgstr "Directorio para almacenar videos"
+
+msgid "Command"
+msgstr "comando"
+
+msgid "Command to be used for encoding video. Use a dash (-) for the input file and %f.ext for the output file"
+msgstr "Comando que se utilizará para codificar video. Utilice un guion (-) para el archivo de entrada y% f.ext para el archivo de salida"
+
+msgid "Draw Status Indicator"
+msgstr "Dibujar indicador de estado"
+
+msgid "Draw color coded status dot"
+msgstr "Dibujar un punto de estado con código de color"
+
 msgid "Display FPS on screen"
 msgstr "Mostrar la cantidad de cuadros por segundo en la pantalla"
 
