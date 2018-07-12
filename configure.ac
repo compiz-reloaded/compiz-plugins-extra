@@ -151,6 +151,8 @@ fi
 PKG_CHECK_MODULES(COMPIZANIMATION, compiz-animation, [have_compiz_animation=yes], [have_compiz_animation=no])
 AM_CONDITIONAL(ANIMATIONADDON_PLUGIN, test "x$have_compiz_animation" = "xyes")
 
+AC_PATH_PROG(UPDATE_ICON_CACHE, gtk-update-icon-cache)
+
 AC_OUTPUT([
 compiz-animationaddon.pc
 Makefile
