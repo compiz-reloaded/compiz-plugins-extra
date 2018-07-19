@@ -609,7 +609,7 @@ showmousePaintOutput (CompScreen              *s,
 		      unsigned int            mask)
 {
     Bool           status;
-    CompTransform  sTransform;
+    CompTransform  sTransform = *transform;
 
     SHOWMOUSE_SCREEN (s);
 
@@ -619,8 +619,6 @@ showmousePaintOutput (CompScreen              *s,
 
     if (!ss->ps || !ss->ps->active)
 	return status;
-
-    matrixGetIdentity (&sTransform);
 
     transformToScreenSpace (s, output, -DEFAULT_Z_CAMERA, &sTransform);
 
