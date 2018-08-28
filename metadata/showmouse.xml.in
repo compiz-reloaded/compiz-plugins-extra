@@ -8,6 +8,9 @@
 			<relation type="after">
 				<plugin>cube</plugin>
 			</relation>
+			<relation type="before">
+				<plugin>ezoom</plugin>
+			</relation>
 			<requirement>
 				<plugin>mousepoll</plugin>
 			</requirement>
