@@ -37,7 +37,42 @@
 		</display>
 		<screen>
 			<group>
+				<_short>General</_short>
+				<option name="particles" type="bool">
+					<_short>Particles</_short>
+					<_long>Enable particles.</_long>
+					<default>true</default>
+				</option>
+				<option name="crosshair" type="bool">
+					<_short>Crosshair</_short>
+					<_long>Enable crosshair.</_long>
+					<default>false</default>
+				</option>
+			</group>
+			<group>
 				<_short>Particle Options</_short>
+				<option name="rotation_speed" type="float">
+					<_short>Rotation speed</_short>
+					<_long>Rotation speed.</_long>
+					<default>0.5</default>
+					<min>0.1</min>
+					<max>10.0</max>
+					<precision>0.1</precision>
+				</option>
+				<option name="radius" type="int">
+					<_short>Radius</_short>
+					<_long>Ring radius</_long>
+					<default>100</default>
+					<min>10</min>
+					<max>1000</max>
+				</option>
+				<option name="emiters" type="int">
+					<_short>Emiters</_short>
+					<_long>Number of particle emiters.</_long>
+					<default>3</default>
+					<min>1</min>
+					<max>10</max>
+				</option>
 				<option name="num_particles" type="int">
 					<_short>Number Of Particles</_short>
 					<_long>Number of particles.</_long>
@@ -97,30 +132,34 @@
 					<_long>Have random colors for the particles</_long>
 					<default>false</default>
 				</option>
-			    </group>
-			    <group>
-				<_short>General</_short>
-				<option name="rotation_speed" type="float">
-					<_short>Rotation speed</_short>
-					<_long>Rotation speed.</_long>
-					<default>0.5</default>
-					<min>0.1</min>
-					<max>10.0</max>
-					<precision>0.1</precision>
-				</option>
-				<option name="radius" type="int">
-					<_short>Radius</_short>
-					<_long>Ring radius</_long>
-					<default>100</default>
-					<min>10</min>
-					<max>1000</max>
-				</option>
-				<option name="emiters" type="int">
-					<_short>Emiters</_short>
-					<_long>Number of particle emiters.</_long>
-					<default>3</default>
+			</group>
+			<group>
+				<_short>Crosshair Options</_short>
+				<option name="guide_thickness" type="int">
+					<_short>Crosshair thickness</_short>
+					<_long>How thick mouse crosshair should be, in pixels.</_long>
+					<default>12</default>
 					<min>1</min>
-					<max>10</max>
+					<max>100</max><!-- search for "XML" in showmouse.c -->
+					<precision>1</precision>
+				</option>
+				<option name="guide_empty_radius" type="int">
+					<_short>Crosshair empty radius</_short>
+					<_long>Radius of the disk around the cursor which is not covered by crosshair.</_long>
+					<default>20</default>
+					<min>0</min>
+					<max>200</max>
+					<precision>1</precision>
+				</option>
+				<option name="guide_color" type="color">
+					<_short>Crosshair Color</_short>
+					<_long>Crosshair color.</_long>
+					<default>
+						<red>0xffff</red>
+						<green>0x0</green>
+						<blue>0x0</blue>
+						<alpha>0x9999</alpha>
+					</default>
 				</option>
 			</group>
 		</screen>

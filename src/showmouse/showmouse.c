@@ -7,6 +7,10 @@
  * Copyright : (C) 2008 by Dennis Kasprzyk
  * E-mail    : onestone@compiz.org
  *
+ * Copyright (C) 2016 by Hypra
+ * E-mail    contact@hypra.fr
+ * Added mouse guides.
+ *
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -145,6 +149,65 @@ initParticles (int numParticles, ParticleSystem * ps)
     int i;
     for (i = 0; i < numParticles; i++, part++)
 	part->life = 0.0f;
+}
+
+static void
+drawRect (double x1, double y1, double x2, double y2,
+          unsigned short *color)
+{
+    glColor4usv(color);
+    glBegin(GL_QUADS);
+    glVertex3f(x1, y1, 0);
+    glVertex3f(x1, y2, 0);
+    glVertex3f(x2, y2, 0);
+    glVertex3f(x2, y1, 0);
+    glEnd();
+}
+
+static void
+drawCrosshair (CompScreen * s)
+{
+    SHOWMOUSE_SCREEN(s);
+    REGION reg;
+    unsigned short *color = showmouseGetGuideColor (s);
+    float x = ss->posX;
+    float y = ss->posY;
+    float thickness = showmouseGetGuideThickness (s);
+    float r = showmouseGetGuideEmptyRadius (s);
+
+    // If the thickness is zero we don't have to draw, but we should
+    // still mark the region where the guides should be as damaged --
+    // this is useful when thickness has just been changed.
+
+    if (thickness > 0)
+    {
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable (GL_BLEND);
+	drawRect (x-thickness/2, 0, x+thickness/2, y - r, color);
+	drawRect (x-thickness/2, y + r, x+thickness/2, s->height, color);
+	drawRect (0, y-thickness/2, x - r, y+thickness/2, color);
+	drawRect (x + r, y-thickness/2, s->width, y+thickness/2, color);
+	glDisable (GL_BLEND);
+    }
+
+    // This has to be manually synchronized with the maximum value in
+    // showmouse.xml.in.  The code generated from the XML file keeps
+    // the value private.
+    thickness = 100;
+    reg.rects = &reg.extents;
+    reg.numRects = reg.size = 1;
+
+    reg.extents.x1 = 0;
+    reg.extents.x2 = s->width;
+    reg.extents.y1 = y - thickness / 2 - 1;
+    reg.extents.y2 = reg.extents.y1 + thickness + 1;
+    damageScreenRegion (s, &reg);
+
+    reg.extents.x1 = x - thickness / 2 - 1;
+    reg.extents.x2 = reg.extents.x1 + thickness + 1;
+    reg.extents.y1 = 0;
+    reg.extents.y2 = s->height;
+    damageScreenRegion (s, &reg);
 }
 
 static void
@@ -560,12 +623,12 @@ showmousePreparePaintScreen (CompScreen *s,
 			showmouseGetRotationSpeed (s)), 2 * M_PI);
 
     if (ss->ps && ss->ps->active)
-    {
 	updateParticles (ss->ps, time);
-	damageRegion (s);
-    }
 
-    if (ss->ps && ss->active)
+    if (ss->active || (ss->ps && ss->ps->active))
+	damageRegion (s);
+
+    if (ss->ps && ss->active && showmouseGetParticles (s))
 	genNewParticles (s, ss->ps, time);
 
     UNWRAP (ss, s, preparePaintScreen);
@@ -617,7 +680,7 @@ showmousePaintOutput (CompScreen              *s,
     status = (*s->paintOutput) (s, sa, transform, region, output, mask);
     WRAP (ss, s, paintOutput, showmousePaintOutput);
 
-    if (!ss->ps || !ss->ps->active)
+    if (!ss->active && (!ss->ps || !ss->ps->active))
 	return status;
 
     transformToScreenSpace (s, output, -DEFAULT_Z_CAMERA, &sTransform);
@@ -625,7 +688,11 @@ showmousePaintOutput (CompScreen              *s,
     glPushMatrix ();
     glLoadMatrixf (sTransform.m);
 
-    drawParticles (s, ss->ps);
+    if (ss->active && showmouseGetCrosshair (s))
+	drawCrosshair (s);
+
+    if (showmouseGetParticles (s))
+	drawParticles (s, ss->ps);
 
     glPopMatrix();
 
@@ -730,7 +797,7 @@ showmouseFiniScreen (CompPlugin *p,
     if (ss->pollHandle)
 	(*sd->mpFunc->removePositionPolling) (s, ss->pollHandle);
 
-    if (ss->ps && ss->ps->active)
+    if (ss->active || (ss->ps && ss->ps->active))
 	damageScreen (s);
 
     //Free the pointer
