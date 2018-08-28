@@ -1994,10 +1994,10 @@ msgstr "Rayon"
 msgid "Ring radius"
 msgstr "Rayon de l'anneau"
 
-msgid "Emiters"
+msgid "Emitters"
 msgstr "Émetteurs"
 
-msgid "Number of particle emiters."
+msgid "Number of particle emitters."
 msgstr "Nombre d'émetteurs de particules."
 
 msgid "Login/Logout"

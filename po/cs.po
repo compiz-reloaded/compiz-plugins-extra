@@ -1872,10 +1872,10 @@ msgstr "Poloměr"
 msgid "Ring radius"
 msgstr "Poloměr kruhu"
 
-msgid "Emiters"
+msgid "Emitters"
 msgstr ""
 
-msgid "Number of particle emiters."
+msgid "Number of particle emitters."
 msgstr "Počet zdrojů částic"
 
 msgid "Login/Logout"

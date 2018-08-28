@@ -1956,10 +1956,10 @@ msgstr "Säde"
 msgid "Ring radius"
 msgstr ""
 
-msgid "Emiters"
+msgid "Emitters"
 msgstr "Lähettimet"
 
-msgid "Number of particle emiters."
+msgid "Number of particle emitters."
 msgstr "Partikkelien lähettimien lukumäärä."
 
 msgid "Login/Logout"

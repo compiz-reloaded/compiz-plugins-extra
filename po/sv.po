@@ -1961,11 +1961,11 @@ msgstr "Radie"
 msgid "Ring radius"
 msgstr "Ringradie"
 
-msgid "Emiters"
+msgid "Emitters"
 msgstr ""
 
 #, fuzzy
-msgid "Number of particle emiters."
+msgid "Number of particle emitters."
 msgstr "Antal partiklar"
 
 msgid "Login/Logout"

@@ -1980,11 +1980,11 @@ msgstr "किनारा त्रिज्या"
 msgid "Ring radius"
 msgstr "किनारा त्रिज्या"
 
-msgid "Emiters"
+msgid "Emitters"
 msgstr ""
 
 #, fuzzy
-msgid "Number of particle emiters."
+msgid "Number of particle emitters."
 msgstr "कण की संख्या"
 
 msgid "Login/Logout"

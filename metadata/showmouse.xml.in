@@ -66,9 +66,9 @@
 					<min>10</min>
 					<max>1000</max>
 				</option>
-				<option name="emiters" type="int">
-					<_short>Emiters</_short>
-					<_long>Number of particle emiters.</_long>
+				<option name="emitters" type="int">
+					<_short>Emitters</_short>
+					<_long>Number of particle emitters.</_long>
 					<default>3</default>
 					<min>1</min>
 					<max>10</max>

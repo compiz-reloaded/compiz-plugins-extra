@@ -2070,11 +2070,11 @@ msgstr "Rahmenradius"
 msgid "Ring radius"
 msgstr "Rahmenradius"
 
-msgid "Emiters"
+msgid "Emitters"
 msgstr ""
 
 #, fuzzy
-msgid "Number of particle emiters."
+msgid "Number of particle emitters."
 msgstr "Anzahl der Partikel"
 
 msgid "Login/Logout"

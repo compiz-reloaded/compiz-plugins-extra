@@ -2134,11 +2134,11 @@ msgstr "Радиус размытия"
 msgid "Ring radius"
 msgstr "Радиус размытия"
 
-msgid "Emiters"
+msgid "Emitters"
 msgstr ""
 
 #, fuzzy
-msgid "Number of particle emiters."
+msgid "Number of particle emitters."
 msgstr "<b>Число страниц</b>"
 
 msgid "Login/Logout"

@@ -1982,10 +1982,10 @@ msgstr "Ακτίνα"
 msgid "Ring radius"
 msgstr "Ακτίνα δαχτυλιδιού"
 
-msgid "Emiters"
+msgid "Emitters"
 msgstr "Ακτινοβολητές"
 
-msgid "Number of particle emiters."
+msgid "Number of particle emitters."
 msgstr "Αριθμός ακτινοβολητών κομματιών"
 
 msgid "Login/Logout"

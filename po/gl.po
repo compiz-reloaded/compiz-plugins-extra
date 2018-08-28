@@ -1974,10 +1974,10 @@ msgstr "Radio"
 msgid "Ring radius"
 msgstr "Raio Atómico"
 
-msgid "Emiters"
+msgid "Emitters"
 msgstr "Emisores"
 
-msgid "Number of particle emiters."
+msgid "Number of particle emitters."
 msgstr "Número de emisores de partículas."
 
 msgid "Login/Logout"

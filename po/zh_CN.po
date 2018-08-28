@@ -1893,10 +1893,10 @@ msgstr "半径"
 msgid "Ring radius"
 msgstr "环形半径"
 
-msgid "Emiters"
+msgid "Emitters"
 msgstr "射线"
 
-msgid "Number of particle emiters."
+msgid "Number of particle emitters."
 msgstr "粒子射线的条数。"
 
 msgid "Login/Logout"

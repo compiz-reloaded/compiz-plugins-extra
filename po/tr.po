@@ -1948,11 +1948,11 @@ msgstr "Yarıçap Kenarlığı"
 msgid "Ring radius"
 msgstr "Çember Pencereleri"
 
-msgid "Emiters"
+msgid "Emitters"
 msgstr ""
 
 #, fuzzy
-msgid "Number of particle emiters."
+msgid "Number of particle emitters."
 msgstr "Parçacık sayısı"
 
 msgid "Login/Logout"

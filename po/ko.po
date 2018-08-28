@@ -1923,10 +1923,10 @@ msgstr "반경"
 msgid "Ring radius"
 msgstr "링 반경"
 
-msgid "Emiters"
+msgid "Emitters"
 msgstr "방사되는 불꽃 수"
 
-msgid "Number of particle emiters."
+msgid "Number of particle emitters."
 msgstr "방사되는 입자의 수"
 
 msgid "Login/Logout"

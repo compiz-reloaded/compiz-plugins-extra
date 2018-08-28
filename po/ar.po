@@ -1899,11 +1899,11 @@ msgstr ""
 msgid "Ring radius"
 msgstr ""
 
-msgid "Emiters"
+msgid "Emitters"
 msgstr ""
 
 #, fuzzy
-msgid "Number of particle emiters."
+msgid "Number of particle emitters."
 msgstr "عدد أجزاﺀ النار."
 
 msgid "Login/Logout"

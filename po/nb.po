@@ -1971,10 +1971,10 @@ msgstr "Radius"
 msgid "Ring radius"
 msgstr "Ringradius"
 
-msgid "Emiters"
+msgid "Emitters"
 msgstr "Utsendere"
 
-msgid "Number of particle emiters."
+msgid "Number of particle emitters."
 msgstr "Antall partikkelutsendere"
 
 msgid "Login/Logout"

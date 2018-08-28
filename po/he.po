@@ -1928,10 +1928,10 @@ msgstr "רדיוס"
 msgid "Ring radius"
 msgstr "קוטר טבעת"
 
-msgid "Emiters"
+msgid "Emitters"
 msgstr "משגרים"
 
-msgid "Number of particle emiters."
+msgid "Number of particle emitters."
 msgstr "מספר משגרי חלקיקים."
 
 msgid "Login/Logout"

@@ -1909,10 +1909,10 @@ msgstr "Radi"
 msgid "Ring radius"
 msgstr "Radi de l'anell"
 
-msgid "Emiters"
+msgid "Emitters"
 msgstr "Emissors"
 
-msgid "Number of particle emiters."
+msgid "Number of particle emitters."
 msgstr "El nombre d'emissors de partícules."
 
 msgid "Login/Logout"

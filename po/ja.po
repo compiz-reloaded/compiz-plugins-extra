@@ -1942,10 +1942,10 @@ msgstr "半径"
 msgid "Ring radius"
 msgstr "リングの半径"
 
-msgid "Emiters"
+msgid "Emitters"
 msgstr "放出体"
 
-msgid "Number of particle emiters."
+msgid "Number of particle emitters."
 msgstr "粒子放出体の数"
 
 msgid "Login/Logout"

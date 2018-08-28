@@ -2034,11 +2034,11 @@ msgstr "Raio da borda"
 msgid "Ring radius"
 msgstr "Raio da borda"
 
-msgid "Emiters"
+msgid "Emitters"
 msgstr ""
 
 #, fuzzy
-msgid "Number of particle emiters."
+msgid "Number of particle emitters."
 msgstr "Número de partículas"
 
 msgid "Login/Logout"

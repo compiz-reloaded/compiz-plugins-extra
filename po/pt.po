@@ -1979,10 +1979,10 @@ msgstr "Raio"
 msgid "Ring radius"
 msgstr "Raio do anel"
 
-msgid "Emiters"
+msgid "Emitters"
 msgstr "Emissores"
 
-msgid "Number of particle emiters."
+msgid "Number of particle emitters."
 msgstr "Número de emissores de partículas."
 
 msgid "Login/Logout"

@@ -1912,11 +1912,11 @@ msgstr "Radius"
 msgid "Ring radius"
 msgstr "Ring radius"
 
-msgid "Emiters"
-msgstr "Emiters"
+msgid "Emitters"
+msgstr "Emitters"
 
-msgid "Number of particle emiters."
-msgstr "Number of particle emiters."
+msgid "Number of particle emitters."
+msgstr "Number of particle emitters."
 
 msgid "Login/Logout"
 msgstr "Login/Logout"

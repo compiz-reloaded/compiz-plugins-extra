@@ -1960,10 +1960,10 @@ msgstr "Sugár"
 msgid "Ring radius"
 msgstr "Élek sugara"
 
-msgid "Emiters"
+msgid "Emitters"
 msgstr "Sugárzók"
 
-msgid "Number of particle emiters."
+msgid "Number of particle emitters."
 msgstr "Részecskesugárzók száma."
 
 msgid "Login/Logout"

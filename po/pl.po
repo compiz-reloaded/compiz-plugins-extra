@@ -1988,10 +1988,10 @@ msgstr "Promień"
 msgid "Ring radius"
 msgstr "Kąt pierścienia"
 
-msgid "Emiters"
+msgid "Emitters"
 msgstr "Emitery"
 
-msgid "Number of particle emiters."
+msgid "Number of particle emitters."
 msgstr "Ilość emiterów cząsteczek"
 
 msgid "Login/Logout"

@@ -2024,11 +2024,11 @@ msgstr "Rand radius"
 msgid "Ring radius"
 msgstr "Rand radius"
 
-msgid "Emiters"
+msgid "Emitters"
 msgstr ""
 
 #, fuzzy
-msgid "Number of particle emiters."
+msgid "Number of particle emitters."
 msgstr "Aantal particles"
 
 msgid "Login/Logout"

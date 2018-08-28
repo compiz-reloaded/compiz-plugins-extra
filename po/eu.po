@@ -1921,10 +1921,10 @@ msgstr "Erradioa"
 msgid "Ring radius"
 msgstr ""
 
-msgid "Emiters"
+msgid "Emitters"
 msgstr ""
 
-msgid "Number of particle emiters."
+msgid "Number of particle emitters."
 msgstr "Jaurtitako partikulen kopurua."
 
 msgid "Login/Logout"

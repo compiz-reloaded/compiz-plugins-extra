@@ -1990,11 +1990,11 @@ msgstr "બાજુ ત્રિજ્યા"
 msgid "Ring radius"
 msgstr "બાજુ ત્રિજ્યા"
 
-msgid "Emiters"
+msgid "Emitters"
 msgstr ""
 
 #, fuzzy
-msgid "Number of particle emiters."
+msgid "Number of particle emitters."
 msgstr "કણોની સંખ્યા"
 
 msgid "Login/Logout"
