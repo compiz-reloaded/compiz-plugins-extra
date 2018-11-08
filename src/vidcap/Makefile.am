@@ -4,7 +4,7 @@ PFLAGS=-module -avoid-version -no-undefined
 libvidcap_la_LDFLAGS = $(PFLAGS)
 libvidcap_la_LIBADD = @COMPIZ_LIBS@
 nodist_libvidcap_la_SOURCES = vidcap_options.c vidcap_options.h
-dist_libvidcap_la_SOURCES = vidcap.c
+dist_libvidcap_la_SOURCES = vidcap.c wcap-decode.h
 
 BUILT_SOURCES = $(nodist_libvidcap_la_SOURCES)
 
