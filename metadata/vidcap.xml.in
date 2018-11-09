@@ -19,7 +19,7 @@
 			<option name="command" type="string">
 				<_short>Command</_short>
 				<_long>Command to be used for encoding video. Use a dash (-) for the input file and %f.ext for the output file</_long>
-				<default>avconv -i - %f.mp4</default>
+				<default>ffmpeg -i - %f.mp4</default>
 			</option>
 			<option name="draw_indicator" type="bool">
 				<_short>Draw Status Indicator</_short>
