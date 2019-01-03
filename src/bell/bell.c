@@ -112,8 +112,7 @@ bellInitDisplay (CompPlugin  *p,
 					  "org.compiz.plugin.Bell",
 					  CA_PROP_WINDOW_X11_DISPLAY,
 					  DisplayString (d->display),
-					  NULL)) < 0 ||
-	(error = ca_context_open (bd->canberraContext)) < 0)
+					  NULL)) < 0)
     {
         compLogMessage ("bell", CompLogLevelWarn, "couldn't initialize canberra: %s",
                         ca_strerror (error));
