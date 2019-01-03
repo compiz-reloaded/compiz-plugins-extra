@@ -50,6 +50,10 @@ BellDisplay;
 #define BELL_DISPLAY(d) \
     BellDisplay *bd = GET_BELL_DISPLAY(d);
 
+#ifndef CLAMP
+#   define CLAMP(v, min, max) (((v) > (max)) ? (max) : (((v) < (min)) ? (min) : (v)))
+#endif
+
 
 static Bool
 bell (CompDisplay     *d,
@@ -82,6 +86,24 @@ bell (CompDisplay     *d,
 	ca_proplist_setf (p, CA_PROP_WINDOW_Y, "%d", w->attrib.y);
 	ca_proplist_setf (p, CA_PROP_WINDOW_WIDTH, "%d", w->attrib.width);
 	ca_proplist_setf (p, CA_PROP_WINDOW_HEIGHT, "%d", w->attrib.height);
+
+	if (bellGetSpatialSounds (d))
+	{
+	    int x, y;
+
+	    x = w->attrib.x + w->attrib.width / 2;
+	    x = CLAMP (x, 0, w->screen->width);
+	    y = w->attrib.y + w->attrib.height / 2;
+	    y = CLAMP (y, 0, w->screen->height);
+	    /* The convoluted format is to avoid locale-specific floating
+	     * point formatting.  Taken from libcanberra-gtk. */
+	    ca_proplist_setf (p, CA_PROP_WINDOW_HPOS, "%d.%03d",
+			      (int) (x / (w->screen->width - 1)),
+			      (int) (x * 1000.0 / (w->screen->width - 1)) % 1000);
+	    ca_proplist_setf (p, CA_PROP_WINDOW_VPOS, "%d.%03d",
+			      (int) (y / (w->screen->height - 1)),
+			      (int) (y * 1000.0 / (w->screen->height - 1)) % 1000);
+	}
     }
 
     compLogMessage ("bell", CompLogLevelDebug, "playing bell");

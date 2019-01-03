@@ -17,6 +17,11 @@
 				<_long>Play sound on system bell</_long>
 				<default>true</default>
 			</option>
+			<option name="spatial_sounds" type="bool">
+				<_short>Spatial Sounds</_short>
+				<_long>Whether to spatially locate sounds or not. If enabled, sounds coming from the left of the sceen will be heard mostly on the left channel, the ones coming from the right on the right channel and so on.</_long>
+				<default>true</default>
+			</option>
 		</display>
 	</plugin>
 </compiz>
