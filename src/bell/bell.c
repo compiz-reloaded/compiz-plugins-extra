@@ -23,7 +23,9 @@
  *
  **/
 
+#include <string.h>
 #include <canberra.h>
+#include <xsettings-client.h>
 
 #include <compiz-core.h>
 #include "bell_options.h"
@@ -34,6 +36,12 @@ static int displayPrivateIndex;
 typedef struct _BellDisplay
 {
     ca_context *canberraContext;
+    /* In theory we could like to have an XSettings client on each
+     * screen, but in practice most managers only bother setting up
+     * on the default screen, so we do the same for the sake of
+     * simplicity */
+    XSettingsClient *xsettings_client;
+    HandleEventProc handleEvent;
 }
 BellDisplay;
 
@@ -89,6 +97,53 @@ bell (CompDisplay     *d,
     return FALSE;
 }
 
+static void
+xsettings_notify (const char       *name,
+		  XSettingsAction   action,
+		  XSettingsSetting *setting,
+		  void             *cb_data)
+{
+    BellDisplay *bd = cb_data;
+
+    if (setting &&
+	strcmp (setting->name, "Net/SoundThemeName") == 0 &&
+	setting->type == XSETTINGS_TYPE_STRING)
+    {
+	compLogMessage ("bell", CompLogLevelDebug, "XSettings notify: %s=%s",
+			name, setting->data.v_string);
+
+	ca_context_change_props (bd->canberraContext,
+				 CA_PROP_CANBERRA_XDG_THEME_NAME,
+				 setting->data.v_string,
+				 NULL);
+    }
+    else if (setting &&
+	     strcmp (setting->name, "Net/EnableEventSounds") == 0 &&
+	     setting->type == XSETTINGS_TYPE_INT)
+    {
+	compLogMessage ("bell", CompLogLevelDebug, "XSettings notify: %s=%d",
+			name, setting->data.v_int);
+
+	ca_context_change_props (bd->canberraContext,
+				 CA_PROP_CANBERRA_ENABLE,
+				 setting->data.v_int ? "1" : "0",
+				 NULL);
+    }
+}
+
+static void
+bellHandleEvent (CompDisplay *d,
+		 XEvent      *event)
+{
+    BELL_DISPLAY (d);
+
+    xsettings_client_process_event (bd->xsettings_client, event);
+
+    UNWRAP (bd, d, handleEvent);
+    (*d->handleEvent) (d, event);
+    WRAP (bd, d, handleEvent, bellHandleEvent);
+}
+
 static Bool
 bellInitDisplay (CompPlugin  *p,
 		 CompDisplay *d)
@@ -122,9 +177,23 @@ bellInitDisplay (CompPlugin  *p,
 	return FALSE;
     }
 
+    bd->xsettings_client = xsettings_client_new (d->display,
+						 DefaultScreen(d->display),
+						 xsettings_notify,
+						 NULL, bd);
+    if (!bd->xsettings_client)
+    {
+	compLogMessage ("bell", CompLogLevelWarn, "couldn't allocate xsettings client");
+	ca_context_destroy (bd->canberraContext);
+	free (bd);
+	return FALSE;
+    }
+
     bellSetBellInitiate (d, bell);
 
     d->base.privates[displayPrivateIndex].ptr = bd;
+
+    WRAP (bd, d, handleEvent, bellHandleEvent);
 
     return TRUE;
 }
@@ -134,6 +203,8 @@ bellFiniDisplay (CompPlugin  *p,
 		 CompDisplay *d)
 {
     BELL_DISPLAY (d);
+
+    UNWRAP (bd, d, handleEvent);
 
     ca_context_destroy (bd->canberraContext);
     free (bd);

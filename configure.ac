@@ -121,7 +121,7 @@ AC_SUBST(GL_CFLAGS)
 AC_SUBST(GL_LIBS)
 
 
-PKG_CHECK_MODULES([BELL], [libcanberra], [bell_plugin=yes], [bell_plugin=no])
+PKG_CHECK_MODULES([BELL], [libcanberra libxsettings-client], [bell_plugin=yes], [bell_plugin=no])
 AM_CONDITIONAL([BELL_PLUGIN], [test "x$bell_plugin" = "xyes"])
 
 PKG_CHECK_MODULES(GROUP, compiz-text cairo >= 1.0, [use_group=yes], [use_group=no])
