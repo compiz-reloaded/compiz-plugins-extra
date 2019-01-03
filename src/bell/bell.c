@@ -97,7 +97,7 @@ bellInitDisplay (CompPlugin  *p,
 					  CA_PROP_APPLICATION_NAME,
 					  "Compiz bell plugin",
 					  CA_PROP_APPLICATION_ID,
-					  "org.freedesktop.compiz.Bell",
+					  "org.compiz.plugin.Bell",
 					  CA_PROP_WINDOW_X11_DISPLAY,
 					  DisplayString (d->display),
 					  NULL)) < 0 ||
