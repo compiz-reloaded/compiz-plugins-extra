@@ -5,10 +5,11 @@
  * bell.c
  *
  * Copyright (c) 2011 Emily Strickland <emily@zubon.org>
- * Copyright (c) 2018 Colomban Wendling <cwendling@hypra.fr>
+ * Copyright (c) 2019 Colomban Wendling <cwendling@hypra.fr>
  *
  * Authors:
  * Emily Strickland <emily@zubon.org>
+ * Colomban Wendling <cwendling@hypra.fr>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -49,29 +50,40 @@ bell (CompDisplay     *d,
       CompOption      *option,
       int             nOption)
 {
+    int r;
+    CompWindow *w;
+    ca_proplist *p;
     BELL_DISPLAY (d);
-    int error;
 
-    if ((error = ca_context_change_props (bd->canberraContext,
-					  CA_PROP_WINDOW_X11_DISPLAY,
-					  DisplayString (d->display),
-					  /*
-					  CA_PROP_WINDOW_X11_SCREEN,
-					  CA_PROP_WINDOW_ID,
-					  ...*/
-					  NULL)) < 0)
+    if (ca_proplist_create (&p) < 0)
+	return FALSE;
+
+    ca_proplist_sets (p, CA_PROP_EVENT_ID, "bell-window-system");
+    ca_proplist_sets (p, CA_PROP_EVENT_DESCRIPTION, "Bell event");
+    ca_proplist_sets (p, CA_PROP_CANBERRA_CACHE_CONTROL, "permanent");
+
+    w = findWindowAtDisplay (d, d->activeWindow);
+    if (w)
     {
-	compLogMessage ("bell", CompLogLevelWarn, "couldn't update properties - %s",
-			ca_strerror (error));
+	ca_proplist_setf (p, CA_PROP_WINDOW_X11_SCREEN, "%d", w->screen->screenNum);
+	ca_proplist_setf (p, CA_PROP_WINDOW_X11_XID, "%ld", w->id);
+	ca_proplist_sets (p, CA_PROP_APPLICATION_NAME, w->resName);
+	ca_proplist_setf (p, CA_PROP_WINDOW_DESKTOP, "%u", w->desktop);
+
+	ca_proplist_setf (p, CA_PROP_WINDOW_X, "%d", w->attrib.x);
+	ca_proplist_setf (p, CA_PROP_WINDOW_Y, "%d", w->attrib.y);
+	ca_proplist_setf (p, CA_PROP_WINDOW_WIDTH, "%d", w->attrib.width);
+	ca_proplist_setf (p, CA_PROP_WINDOW_HEIGHT, "%d", w->attrib.height);
     }
-    if ((error = ca_context_play (bd->canberraContext, 0,
-				  CA_PROP_EVENT_ID, "bell",
-				  CA_PROP_CANBERRA_CACHE_CONTROL, "permanent",
-				  NULL)) < 0)
+
+    compLogMessage ("bell", CompLogLevelDebug, "playing bell");
+    if ((r = ca_context_play_full (bd->canberraContext, 1, p, NULL, NULL)) < 0)
     {
-	compLogMessage ("bell", CompLogLevelWarn, "couldn't play bell - %s",
-			ca_strerror (error));
+	compLogMessage ("bell", CompLogLevelWarn, "couldn't play bell: %s",
+			ca_strerror (r));
     }
+
+    ca_proplist_destroy (p);
 
     /* Allow other plugins to handle bell event */
     return FALSE;
@@ -103,7 +115,7 @@ bellInitDisplay (CompPlugin  *p,
 					  NULL)) < 0 ||
 	(error = ca_context_open (bd->canberraContext)) < 0)
     {
-        compLogMessage ("bell", CompLogLevelWarn, "couldn't initialize canberra - %s",
+        compLogMessage ("bell", CompLogLevelWarn, "couldn't initialize canberra: %s",
                         ca_strerror (error));
 	if (bd->canberraContext)
 	    ca_context_destroy (bd->canberraContext);
