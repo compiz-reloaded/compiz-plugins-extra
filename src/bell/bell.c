@@ -98,11 +98,24 @@ bell (CompDisplay     *d,
 	    /* The convoluted format is to avoid locale-specific floating
 	     * point formatting.  Taken from libcanberra-gtk. */
 	    ca_proplist_setf (p, CA_PROP_WINDOW_HPOS, "%d.%03d",
-			      (int) (x / (w->screen->width - 1)),
-			      (int) (x * 1000.0 / (w->screen->width - 1)) % 1000);
+			      (int) (x / w->screen->width),
+			      (int) (x * 1000.0 / w->screen->width) % 1000);
 	    ca_proplist_setf (p, CA_PROP_WINDOW_VPOS, "%d.%03d",
-			      (int) (y / (w->screen->height - 1)),
-			      (int) (y * 1000.0 / (w->screen->height - 1)) % 1000);
+			      (int) (y / w->screen->height),
+			      (int) (y * 1000.0 / w->screen->height) % 1000);
+
+	    compLogMessage ("bell", CompLogLevelDebug,
+			    "spatial: screen geometry: %dx%d%+d%+d",
+			    w->screen->width, w->screen->height,
+			    w->screen->x, w->screen->y);
+	    compLogMessage ("bell", CompLogLevelDebug,
+			    "spatial: window geometry: %dx%d%+d%+d (%d.%03d,%d.%03d)",
+			    w->attrib.width, w->attrib.height,
+			    w->attrib.x, w->attrib.y,
+			    (int) (x / w->screen->width),
+			    (int) (x * 1000.0 / w->screen->width) % 1000,
+			    (int) (y / w->screen->height),
+			    (int) (y * 1000.0 / w->screen->height) % 1000);
 	}
     }
 
