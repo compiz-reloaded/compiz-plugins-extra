@@ -121,6 +121,9 @@ AC_SUBST(GL_CFLAGS)
 AC_SUBST(GL_LIBS)
 
 
+PKG_CHECK_MODULES([BELL], [libcanberra libxsettings-client], [bell_plugin=yes], [bell_plugin=no])
+AM_CONDITIONAL([BELL_PLUGIN], [test "x$bell_plugin" = "xyes"])
+
 PKG_CHECK_MODULES(GROUP, compiz-text cairo >= 1.0, [use_group=yes], [use_group=no])
 AM_CONDITIONAL(GROUP_PLUGIN, test "x$use_group" = "xyes")
 
@@ -164,6 +167,7 @@ src/Makefile
 src/3d/Makefile
 src/addhelper/Makefile
 src/animationaddon/Makefile
+src/bell/Makefile
 src/bench/Makefile
 src/bicubic/Makefile
 src/crashhandler/Makefile

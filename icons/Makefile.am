@@ -3,6 +3,7 @@ icons_DATA =				\
 	plugin-3d.svg			\
 	plugin-addhelper.svg		\
 	plugin-animationaddon.svg	\
+	plugin-bell.svg			\
 	plugin-bench.svg		\
 	plugin-bicubic.svg		\
 	plugin-crashhandler.svg		\

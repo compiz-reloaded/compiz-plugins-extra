@@ -2,6 +2,7 @@
 SUBDIRS = 3d \
 	  addhelper \
 	  animationaddon \
+	  bell \
 	  bench \
 	  bicubic \
 	  crashhandler \

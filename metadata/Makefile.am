@@ -8,6 +8,10 @@ if CUBEADDON_PLUGIN
 cubeaddonxml = cubeaddon.xml.in
 endif
 
+if BELL_PLUGIN
+bellxml = bell.xml.in
+endif
+
 if GROUP_PLUGIN
 groupxml = group.xml.in
 endif
@@ -52,6 +56,7 @@ xml_in_files = 	             \
 	wallpaper.xml.in     \
 	$(animationaddonxml) \
 	$(cubeaddonxml)      \
+	$(bellxml)           \
 	$(groupxml)          \
 	$(notificationxml)   \
 	$(scalefilterxml)    \
@@ -67,6 +72,7 @@ EXTRA_DIST =				\
 	$(xml_in_files)			\
 	animationaddon.xml.in	\
 	cubeaddon.xml.in		\
+	bell.xml.in			\
 	group.xml.in			\
 	notification.xml.in		\
 	scalefilter.xml.in		\
