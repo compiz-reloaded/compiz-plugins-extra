@@ -263,7 +263,7 @@ wallpaperAddFilesFromDirectories (CompScreen *s, CompListValue ***new_options,
 		return;
 
 	for (i = 0; i < NUM_LIST_OPTIONS; i++)
-		(*new_options)[i] = calloc(0, sizeof (CompListValue));
+		(*new_options)[i] = calloc(1, sizeof (CompListValue));
 
 	for (i = 0, n = 0; i < NUM_LIST_OPTIONS; i++)
 	{
