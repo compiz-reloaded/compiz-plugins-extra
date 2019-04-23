@@ -30,6 +30,13 @@
 #include <compiz-core.h>
 #include <compiz-mousepoll.h>
 
+#include <X11/Xatom.h>
+#include <X11/extensions/Xfixes.h>
+#include <X11/extensions/Xrender.h>
+#include <X11/extensions/shape.h>
+
+#include <cairo/cairo-xlib.h>
+
 #include "showmouse_options.h"
 #include "showmouse_tex.h"
 
@@ -102,6 +109,8 @@ typedef struct _ShowmouseDisplay
     int  screenPrivateIndex;
 
     MousePollFunc *mpFunc;
+
+    HandleEventProc handleEvent;
 }
 ShowmouseDisplay;
 
@@ -115,6 +124,18 @@ typedef struct _ShowmouseScreen
     ParticleSystem *ps;
 
     float rot;
+
+    struct
+    {
+	/* offset of our window relative to the root, in order to avoid
+	 * offset between crosshairs and actual mouse in case our
+	 * window didn't get placed at 0,0 */
+	int xOffset;
+	int yOffset;
+
+	Window window;
+	cairo_surface_t *surface;
+    } overlay;
 
     PositionPollingHandle pollHandle;
 	
@@ -149,65 +170,6 @@ initParticles (int numParticles, ParticleSystem * ps)
     int i;
     for (i = 0; i < numParticles; i++, part++)
 	part->life = 0.0f;
-}
-
-static void
-drawRect (double x1, double y1, double x2, double y2,
-          unsigned short *color)
-{
-    glColor4usv(color);
-    glBegin(GL_QUADS);
-    glVertex3f(x1, y1, 0);
-    glVertex3f(x1, y2, 0);
-    glVertex3f(x2, y2, 0);
-    glVertex3f(x2, y1, 0);
-    glEnd();
-}
-
-static void
-drawCrosshair (CompScreen * s)
-{
-    SHOWMOUSE_SCREEN(s);
-    REGION reg;
-    unsigned short *color = showmouseGetGuideColor (s);
-    float x = ss->posX;
-    float y = ss->posY;
-    float thickness = showmouseGetGuideThickness (s);
-    float r = showmouseGetGuideEmptyRadius (s);
-
-    // If the thickness is zero we don't have to draw, but we should
-    // still mark the region where the guides should be as damaged --
-    // this is useful when thickness has just been changed.
-
-    if (thickness > 0)
-    {
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable (GL_BLEND);
-	drawRect (x-thickness/2, 0, x+thickness/2, y - r, color);
-	drawRect (x-thickness/2, y + r, x+thickness/2, s->height, color);
-	drawRect (0, y-thickness/2, x - r, y+thickness/2, color);
-	drawRect (x + r, y-thickness/2, s->width, y+thickness/2, color);
-	glDisable (GL_BLEND);
-    }
-
-    // This has to be manually synchronized with the maximum value in
-    // showmouse.xml.in.  The code generated from the XML file keeps
-    // the value private.
-    thickness = 100;
-    reg.rects = &reg.extents;
-    reg.numRects = reg.size = 1;
-
-    reg.extents.x1 = 0;
-    reg.extents.x2 = s->width;
-    reg.extents.y1 = y - thickness / 2 - 1;
-    reg.extents.y2 = reg.extents.y1 + thickness + 1;
-    damageScreenRegion (s, &reg);
-
-    reg.extents.x1 = x - thickness / 2 - 1;
-    reg.extents.x2 = reg.extents.x1 + thickness + 1;
-    reg.extents.y1 = 0;
-    reg.extents.y2 = s->height;
-    damageScreenRegion (s, &reg);
 }
 
 static void
@@ -520,6 +482,292 @@ genNewParticles(CompScreen     *s,
 }
 
 
+/* copied from Wallpaper plugin */
+static Visual *
+findArgbVisual (Display *dpy,
+		int     screen)
+{
+    XVisualInfo         temp;
+    int                 nvi;
+
+    temp.screen  = screen;
+    temp.depth   = 32;
+    temp.class   = TrueColor;
+
+    XVisualInfo *xvi = XGetVisualInfo (dpy,
+				       VisualScreenMask |
+				       VisualDepthMask  |
+				       VisualClassMask,
+				       &temp,
+				       &nvi);
+    if (!xvi)
+	return 0;
+
+    Visual            *visual = 0;
+    XRenderPictFormat *format;
+
+    for (int i = 0; i < nvi; ++i)
+    {
+	format = XRenderFindVisualFormat (dpy, xvi[i].visual);
+
+	if (format->type == PictTypeDirect && format->direct.alphaMask)
+	{
+	    visual = xvi[i].visual;
+	    break;
+	}
+    }
+
+    XFree (xvi);
+
+    return visual;
+}
+
+/*
+ * Shapes the crosshairs on the cairo context.  This can be used for
+ * painting, clipping or anything else that requires a Cairo shape.
+ */
+static void
+shapeCrosshair (CompScreen *s,
+		cairo_t *cr,
+		const int posX,
+		const int posY)
+{
+    SHOWMOUSE_SCREEN (s);
+    int thickness = showmouseGetGuideThickness (s);
+    int empty_radius = showmouseGetGuideEmptyRadius (s);
+    int x = posX - ss->overlay.xOffset;
+    int y = posY - ss->overlay.yOffset;
+
+    cairo_rectangle (cr,
+		     0,
+		     y - thickness / 2,
+		     x - empty_radius,
+		     thickness);
+    cairo_rectangle (cr,
+		     x + empty_radius,
+		     y - thickness / 2,
+		     s->width - x - empty_radius,
+		     thickness);
+    cairo_rectangle (cr,
+		     x - thickness / 2,
+		     0,
+		     thickness,
+		     y - empty_radius);
+    cairo_rectangle (cr,
+		     x - thickness / 2,
+		     y + empty_radius,
+		     thickness,
+		     s->height - y - empty_radius);
+}
+
+static void
+paintCrosshair (CompScreen *s,
+		cairo_t *cr,
+		const int newPosX,
+		const int newPosY)
+{
+    SHOWMOUSE_SCREEN (s);
+    unsigned short *color = showmouseGetGuideColor (s);
+
+    shapeCrosshair (s, cr, ss->posX, ss->posY);
+    cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
+    cairo_fill (cr);
+
+    shapeCrosshair (s, cr, newPosX, newPosY);
+    cairo_set_source_rgba (cr,
+			   color[0] / 65535.0,
+			   color[1] / 65535.0,
+			   color[2] / 65535.0,
+			   color[3] / 65535.0);
+    cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
+    cairo_fill (cr);
+}
+
+static void
+clearOverlayWindow (CompScreen *s)
+{
+    SHOWMOUSE_SCREEN (s);
+    cairo_t *cr = cairo_create (ss->overlay.surface);
+
+    cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
+    cairo_paint (cr);
+    paintCrosshair (s, cr, ss->posX, ss->posY);
+    cairo_destroy (cr);
+}
+
+static void
+showOverlayWindow (CompScreen *s)
+{
+    SHOWMOUSE_SCREEN (s);
+
+    if (!ss->overlay.window)
+    {
+	Display		    *dpy = s->display->display;
+	XSizeHints	     xsh;
+	XWMHints	     xwmh;
+	XClassHint           xch;
+	Atom		     state[] = {
+	    s->display->winStateAboveAtom,
+	    s->display->winStateStickyAtom,
+	    s->display->winStateSkipTaskbarAtom,
+	    s->display->winStateSkipPagerAtom,
+	};
+	XSetWindowAttributes attr;
+	Visual		    *visual;
+	XserverRegion	     region;
+
+	visual = findArgbVisual (dpy, s->screenNum);
+	if (!visual)
+	    return;
+
+	xsh.flags       = PSize | PPosition | PWinGravity;
+	xsh.width       = s->width;
+	xsh.height      = s->height;
+	xsh.win_gravity = StaticGravity;
+
+	xwmh.flags = InputHint;
+	xwmh.input = 0;
+
+	xch.res_name  = (char *)"compiz";
+	xch.res_class = (char *)"mouselocalizer-window";
+
+	attr.background_pixel = 0;
+	attr.border_pixel     = 0;
+	attr.colormap	      = XCreateColormap (dpy, s->root,
+						 visual, AllocNone);
+	attr.override_redirect = TRUE;
+
+	ss->overlay.window =
+	    XCreateWindow (dpy, s->root,
+			   0, 0,
+			   (unsigned) xsh.width, (unsigned) xsh.height, 0,
+			   32, InputOutput, visual,
+			   CWBackPixel | CWBorderPixel | CWColormap | CWOverrideRedirect, &attr);
+
+	XSelectInput (dpy, ss->overlay.window, ExposureMask | StructureNotifyMask);
+
+	XSetWMProperties (dpy, ss->overlay.window, NULL, NULL,
+			  programArgv, programArgc,
+			  &xsh, &xwmh, &xch);
+
+	XChangeProperty (dpy, ss->overlay.window,
+			 s->display->winStateAtom,
+			 XA_ATOM, 32, PropModeReplace,
+			 (unsigned char *) state,
+			 sizeof state / sizeof *state);
+
+	XChangeProperty (dpy, ss->overlay.window,
+			 s->display->winTypeAtom,
+			 XA_ATOM, 32, PropModeReplace,
+			 (unsigned char *) &s->display->winTypeUtilAtom, 1);
+
+	setWindowProp (s->display, ss->overlay.window,
+		       s->display->winDesktopAtom, 0xffffffff);
+
+	/* make the window an output-only window by having no shape for input */
+	region = XFixesCreateRegion (dpy, NULL, 0);
+	XFixesSetWindowShapeRegion (dpy, ss->overlay.window, ShapeBounding, 0, 0, None);
+	XFixesSetWindowShapeRegion (dpy, ss->overlay.window, ShapeInput, 0, 0, region);
+	XFixesDestroyRegion (dpy, region);
+
+	ss->overlay.surface = cairo_xlib_surface_create (dpy,
+							 ss->overlay.window, visual,
+							 xsh.width, xsh.height);
+    }
+
+    XMapWindow (s->display->display, ss->overlay.window);
+}
+
+static void
+hideOverlayWindow (CompScreen *s)
+{
+    SHOWMOUSE_SCREEN (s);
+
+    if (ss->overlay.window)
+	XUnmapWindow (s->display->display, ss->overlay.window);
+}
+
+static CompScreen *
+findScreenForXWindow (CompDisplay *d,
+		      Window xid)
+{
+    XWindowAttributes attr;
+
+    /* FIXME: isn't there a cheaper way to find the CompScreen? */
+    if (XGetWindowAttributes (d->display, xid, &attr))
+	return findScreenAtDisplay (d, attr.root);
+
+    return NULL;
+}
+
+static void
+showmouseHandleEvent (CompDisplay *d,
+		      XEvent *event)
+{
+    CompScreen *s;
+    SHOWMOUSE_DISPLAY (d);
+
+    UNWRAP (sd, d, handleEvent);
+    (*d->handleEvent) (d, event);
+    WRAP (sd, d, handleEvent, showmouseHandleEvent);
+
+    switch (event->type)
+    {
+    case Expose:
+	s = findScreenForXWindow (d, event->xexpose.window);
+	if (s)
+	{
+	    SHOWMOUSE_SCREEN (s);
+
+	    if (ss->active && showmouseGetCrosshair (s) &&
+		event->xexpose.window == ss->overlay.window)
+	    {
+		cairo_t *cr = cairo_create (ss->overlay.surface);
+
+		cairo_rectangle (cr, event->xexpose.x, event->xexpose.y,
+				 event->xexpose.width, event->xexpose.height);
+		cairo_clip (cr);
+		paintCrosshair (s, cr, ss->posX, ss->posY);
+		cairo_destroy (cr);
+	    }
+	}
+	break;
+
+    case ConfigureNotify:
+	s = findScreenForXWindow (d, event->xconfigure.window);
+	if (s)
+	{
+	    SHOWMOUSE_SCREEN (s);
+
+	    if (event->xconfigure.window == ss->overlay.window)
+	    {
+		ss->overlay.xOffset = event->xconfigure.x;
+		ss->overlay.yOffset = event->xconfigure.y;
+	    }
+	}
+	break;
+
+    case MapNotify:
+	s = findScreenForXWindow (d, event->xmap.window);
+	if (s)
+	{
+	    SHOWMOUSE_SCREEN (s);
+
+	    if (event->xmap.window == ss->overlay.window)
+	    {
+		XWindowAttributes attr;
+
+		XGetWindowAttributes (event->xmap.display, event->xmap.window, &attr);
+		ss->overlay.xOffset = attr.x;
+		ss->overlay.yOffset = attr.y;
+	    }
+	    else if (ss->overlay.window)
+		XRaiseWindow (s->display->display, ss->overlay.window);
+	}
+	break;
+    }
+}
+
 static void
 damageRegion (CompScreen *s)
 {
@@ -572,6 +820,14 @@ positionUpdate (CompScreen *s,
 {
     SHOWMOUSE_SCREEN (s);
 
+    if (showmouseGetCrosshair (s))
+    {
+	cairo_t *cr = cairo_create (ss->overlay.surface);
+
+	paintCrosshair (s, cr, x, y);
+	cairo_destroy (cr);
+    }
+
     ss->posX = x;
     ss->posY = y;
 }
@@ -590,7 +846,7 @@ showmousePreparePaintScreen (CompScreen *s,
 	ss->pollHandle = (*sd->mpFunc->addPositionPolling) (s, positionUpdate);
     }
 
-    if (ss->active && !ss->ps)
+    if (ss->active && !ss->ps && showmouseGetParticles (s))
     {
 	ss->ps = calloc(1, sizeof(ParticleSystem));
 	if (!ss->ps)
@@ -618,14 +874,14 @@ showmousePreparePaintScreen (CompScreen *s,
 	glBindTexture(GL_TEXTURE_2D, 0);
     }
 
-    if (ss->active)
+    if (ss->active && showmouseGetParticles (s))
 	ss->rot = fmod (ss->rot + (((float)time / 1000.0) * 2 * M_PI *
 			showmouseGetRotationSpeed (s)), 2 * M_PI);
 
     if (ss->ps && ss->ps->active)
 	updateParticles (ss->ps, time);
 
-    if (ss->active || (ss->ps && ss->ps->active))
+    if (ss->ps && ss->ps->active)
 	damageRegion (s);
 
     if (ss->ps && ss->active && showmouseGetParticles (s))
@@ -642,7 +898,7 @@ showmouseDonePaintScreen (CompScreen *s)
     SHOWMOUSE_SCREEN (s);
     SHOWMOUSE_DISPLAY (s->display);
 
-    if (ss->active || (ss->ps && ss->ps->active))
+    if (ss->ps && ss->ps->active)
 	damageRegion (s);
 
     if (!ss->active && ss->pollHandle)
@@ -680,16 +936,13 @@ showmousePaintOutput (CompScreen              *s,
     status = (*s->paintOutput) (s, sa, transform, region, output, mask);
     WRAP (ss, s, paintOutput, showmousePaintOutput);
 
-    if (!ss->active && (!ss->ps || !ss->ps->active))
+    if (!ss->ps || !ss->ps->active)
 	return status;
 
     transformToScreenSpace (s, output, -DEFAULT_Z_CAMERA, &sTransform);
 
     glPushMatrix ();
     glLoadMatrixf (sTransform.m);
-
-    if (ss->active && showmouseGetCrosshair (s))
-	drawCrosshair (s);
 
     if (showmouseGetParticles (s))
 	drawParticles (s, ss->ps);
@@ -721,6 +974,8 @@ showmouseTerminate (CompDisplay     *d,
 	ss->active = FALSE;
 	damageRegion (s);
 
+	hideOverlayWindow (s);
+
 	return TRUE;
     }
     return FALSE;
@@ -748,9 +1003,35 @@ showmouseInitiate (CompDisplay     *d,
 
 	ss->active = TRUE;
 
+	if (showmouseGetCrosshair (s))
+	{
+	    /* we need a valid initial mouse position right away,
+	     * possibly before next Compiz paint, so retrieve it */
+	    if (!ss->pollHandle)
+	    {
+		SHOWMOUSE_DISPLAY (d);
+
+		(*sd->mpFunc->getCurrentPosition) (s, &ss->posX, &ss->posY);
+	    }
+
+	    showOverlayWindow (s);
+	    /* in case we re-show, we don't always get an EXPOSE event,
+	     * so force an initial redraw */
+	    clearOverlayWindow (s);
+	}
+
 	return TRUE;
     }
     return FALSE;
+}
+
+static void
+guideOptionNotify (CompScreen            *s,
+		   CompOption            *option,
+		   ShowmouseScreenOptions num)
+{
+    if (showmouseGetCrosshair (s))
+	clearOverlayWindow (s);
 }
 
 
@@ -778,6 +1059,10 @@ showmouseInitScreen (CompPlugin *p,
     ss->ps  = NULL;
     ss->rot = 0;
 
+    showmouseSetGuideThicknessNotify (s, guideOptionNotify);
+    showmouseSetGuideEmptyRadiusNotify (s, guideOptionNotify);
+    showmouseSetGuideColorNotify (s, guideOptionNotify);
+
     return TRUE;
 }
 
@@ -799,6 +1084,11 @@ showmouseFiniScreen (CompPlugin *p,
 
     if (ss->active || (ss->ps && ss->ps->active))
 	damageScreen (s);
+
+    if (ss->overlay.window)
+	XDestroyWindow (s->display->display, ss->overlay.window);
+    if (ss->overlay.surface)
+	cairo_surface_destroy (ss->overlay.surface);
 
     //Free the pointer
     free (ss);
@@ -846,6 +1136,9 @@ showmouseInitDisplay (CompPlugin  *p,
 
     //Record the display
     d->base.privates[displayPrivateIndex].ptr = sd;
+
+    WRAP (sd, d, handleEvent, showmouseHandleEvent);
+
     return TRUE;
 }
 
@@ -854,6 +1147,9 @@ showmouseFiniDisplay (CompPlugin  *p,
 		      CompDisplay *d)
 {
     SHOWMOUSE_DISPLAY (d);
+
+    UNWRAP (sd, d, handleEvent);
+
     //Free the private index
     freeScreenPrivateIndex (d, sd->screenPrivateIndex);
     //Free the pointer
