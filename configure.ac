@@ -134,8 +134,8 @@ PKG_CHECK_MODULES(COMPIZCUBE, compiz-cube, [have_compiz_cube=yes], [have_compiz_
 AM_CONDITIONAL(CUBEADDON_PLUGIN, test "x$have_compiz_cube" = "xyes")
 AM_CONDITIONAL(THREED_PLUGIN, test "x$have_compiz_cube" = "xyes")
 
-PKG_CHECK_MODULES(COMPIZMOUSEPOLL, compiz-mousepoll, [have_compiz_mousepoll=yes], [have_compiz_mousepoll=no])
-AM_CONDITIONAL(SHOWMOUSE_PLUGIN, test "x$have_compiz_mousepoll" = "xyes")
+PKG_CHECK_MODULES(SHOWMOUSE, compiz-mousepoll cairo-xlib cairo xrender, [use_showmouse=yes], [use_showmouse=no])
+AM_CONDITIONAL(SHOWMOUSE_PLUGIN, test "x$use_showmouse" = "xyes")
 
 PKG_CHECK_EXISTS(libnotify > 0.6.0, [have_libnotify_0_7_0=yes], [have_libnotify_0_7_0=no])
 if test "$have_libnotify_0_7_0" = yes; then

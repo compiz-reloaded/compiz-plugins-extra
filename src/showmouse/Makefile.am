@@ -3,7 +3,7 @@ PFLAGS=-module -avoid-version -no-undefined
 
 if SHOWMOUSE_PLUGIN
 libshowmouse_la_LDFLAGS = $(PFLAGS)
-libshowmouse_la_LIBADD = @COMPIZ_LIBS@ @COMPIZMOUSEPOLL_LIBS@
+libshowmouse_la_LIBADD = @COMPIZ_LIBS@ @SHOWMOUSE_LIBS@
 nodist_libshowmouse_la_SOURCES = showmouse_options.c showmouse_options.h
 dist_libshowmouse_la_SOURCES = showmouse.c showmouse_tex.h
 endif
@@ -12,7 +12,7 @@ BUILT_SOURCES = $(nodist_libshowmouse_la_SOURCES)
 
 AM_CPPFLAGS =                              \
 	@COMPIZ_CFLAGS@                  \
-	@COMPIZMOUSEPOLL_CFLAGS@            \
+	@SHOWMOUSE_CFLAGS@                  \
 	-DDATADIR='"$(compdatadir)"'        \
 	-DLIBDIR='"$(libdir)"'              \
 	-DLOCALEDIR="\"@datadir@/locale\""  \
