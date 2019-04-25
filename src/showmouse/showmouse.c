@@ -675,7 +675,20 @@ showOverlayWindow (CompScreen *s)
 							 xsh.width, xsh.height);
     }
 
+    /* we need a valid initial mouse position right away, possibly
+     * before next Compiz paint, so retrieve it */
+    if (!ss->pollHandle)
+    {
+	SHOWMOUSE_DISPLAY (s->display);
+
+	(*sd->mpFunc->getCurrentPosition) (s, &ss->posX, &ss->posY);
+    }
+
     XMapWindow (s->display->display, ss->overlay.window);
+
+    /* in case we re-show, we don't always get an EXPOSE event, so
+     * force an initial redraw */
+    clearOverlayWindow (s);
 }
 
 static void
@@ -1004,21 +1017,7 @@ showmouseInitiate (CompDisplay     *d,
 	ss->active = TRUE;
 
 	if (showmouseGetCrosshair (s))
-	{
-	    /* we need a valid initial mouse position right away,
-	     * possibly before next Compiz paint, so retrieve it */
-	    if (!ss->pollHandle)
-	    {
-		SHOWMOUSE_DISPLAY (d);
-
-		(*sd->mpFunc->getCurrentPosition) (s, &ss->posX, &ss->posY);
-	    }
-
 	    showOverlayWindow (s);
-	    /* in case we re-show, we don't always get an EXPOSE event,
-	     * so force an initial redraw */
-	    clearOverlayWindow (s);
-	}
 
 	return TRUE;
     }
@@ -1030,8 +1029,24 @@ guideOptionNotify (CompScreen            *s,
 		   CompOption            *option,
 		   ShowmouseScreenOptions num)
 {
-    if (showmouseGetCrosshair (s))
-	clearOverlayWindow (s);
+    switch (num)
+    {
+    case ShowmouseScreenOptionCrosshair:
+    {
+	SHOWMOUSE_SCREEN (s);
+
+	if (ss->active && showmouseGetCrosshair (s))
+	    showOverlayWindow (s);
+	else
+	    hideOverlayWindow (s);
+	break;
+    }
+
+    default:
+	if (showmouseGetCrosshair (s))
+	    clearOverlayWindow (s);
+	break;
+    }
 }
 
 
@@ -1059,6 +1074,7 @@ showmouseInitScreen (CompPlugin *p,
     ss->ps  = NULL;
     ss->rot = 0;
 
+    showmouseSetCrosshairNotify (s, guideOptionNotify);
     showmouseSetGuideThicknessNotify (s, guideOptionNotify);
     showmouseSetGuideEmptyRadiusNotify (s, guideOptionNotify);
     showmouseSetGuideColorNotify (s, guideOptionNotify);
