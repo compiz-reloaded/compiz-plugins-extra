@@ -920,7 +920,8 @@ showmouseDonePaintScreen (CompScreen *s)
 	ss->pollHandle = 0;
     }
 
-    if (!ss->active && ss->ps && !ss->ps->active)
+    if ((!ss->active || !showmouseGetParticles (s)) &&
+	ss->ps && !ss->ps->active)
     {
 	finiParticles (ss->ps);
 	free (ss->ps);
@@ -957,8 +958,7 @@ showmousePaintOutput (CompScreen              *s,
     glPushMatrix ();
     glLoadMatrixf (sTransform.m);
 
-    if (showmouseGetParticles (s))
-	drawParticles (s, ss->ps);
+    drawParticles (s, ss->ps);
 
     glPopMatrix();
 
