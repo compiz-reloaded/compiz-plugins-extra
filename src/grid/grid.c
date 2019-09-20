@@ -348,27 +348,31 @@ gridCommonWindow (CompWindow *cw,
 	    xwc.width  = gs->desiredRect.width + cw->clientFrame.left + cw->clientFrame.right;
 	    xwc.height = gs->desiredRect.height + cw->clientFrame.top + cw->clientFrame.bottom;
 
-	    if (cw->mapNum)
-		sendSyncRequest (cw);
-
 	    if (where == GridRight || where == GridLeft)
 	    {
 		desiredState = CompWindowStateMaximizedVertMask;
-		valueMask = CWX | CWWidth;
+		valueMask = CWX;
 	    }
-	    else if ((where == GridTop || where == GridBottom) &&
-				! (cw->state & CompWindowStateMaximizedHorzMask))
+	    else if (where == GridTop || where == GridBottom) 
 	    {
 		desiredState = CompWindowStateMaximizedHorzMask;
-		valueMask = CWY | CWHeight;
+		valueMask = CWY;
 	    }
 	    else
 	    {
 		desiredState = 0;
-		valueMask = CWX | CWY | CWWidth | CWHeight;
-	    }
+		valueMask = CWX | CWY;
+            }
 
-	   if (cw->state != desiredState)
+            if (xwc.width != cw->serverWidth)
+                valueMask |= CWWidth;
+            if (xwc.height != cw->serverHeight)
+                valueMask |= CWHeight;
+
+            if (cw->mapNum && (valueMask & (CWWidth | CWHeight))) 
+                sendSyncRequest (cw);
+
+	    if (cw->state != desiredState)
 		maximizeWindow (cw, desiredState);
 
 	    /* TODO: animate move+resize */
