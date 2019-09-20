@@ -200,7 +200,7 @@ getTargetRect (CompWindow *cw,
     /* get current available area */
     if (setWorkarea)
 		getWorkareaForOutput (cw->screen, outputDeviceForWindow(cw), &gs->workarea);
-    DEBUG_RECT (workarea);
+    DEBUG_RECT (gs->workarea);
 
     /* Convention:
      * xxxSlot include decorations (it's the screen area occupied)
@@ -215,7 +215,7 @@ getTargetRect (CompWindow *cw,
     gs->desiredSlot.x = gs->workarea.x + gs->props.gravityRight *
 	                (gs->workarea.width / gs->props.numCellsX);
     gs->desiredSlot.width = gs->workarea.width / gs->props.numCellsX;
-    DEBUG_RECT (desiredSlot);
+    DEBUG_RECT (gs->desiredSlot);
 
     /* Adjust for constraints and decorations */
     constrainSize (cw, &gs->desiredSlot, &gs->desiredRect);
@@ -278,7 +278,7 @@ gridCommonWindow (CompWindow *cw,
 	    gs->currentRect.y = cw->serverY;
 	    gs->currentRect.width  = cw->serverWidth;
 	    gs->currentRect.height = cw->serverHeight;
-	    DEBUG_RECT (currentRect);
+	    DEBUG_RECT (gs->currentRect);
 
 	    if ((gs->desiredRect.y == gs->currentRect.y &&
 		gs->desiredRect.height == gs->currentRect.height) &&
@@ -340,7 +340,7 @@ gridCommonWindow (CompWindow *cw,
 		    }
 		}
 		constrainSize (cw, &gs->desiredSlot, &gs->desiredRect);
-		DEBUG_RECT (gs->desiredRect);
+	        DEBUG_RECT (gs->desiredRect);
 	    }
 
 	    xwc.x = gs->desiredRect.x - cw->clientFrame.left;
@@ -348,27 +348,31 @@ gridCommonWindow (CompWindow *cw,
 	    xwc.width  = gs->desiredRect.width + cw->clientFrame.left + cw->clientFrame.right;
 	    xwc.height = gs->desiredRect.height + cw->clientFrame.top + cw->clientFrame.bottom;
 
-	    if (cw->mapNum)
-		sendSyncRequest (cw);
-
 	    if (where == GridRight || where == GridLeft)
 	    {
 		desiredState = CompWindowStateMaximizedVertMask;
-		valueMask = CWX | CWWidth;
+		valueMask = CWX;
 	    }
-	    else if ((where == GridTop || where == GridBottom) &&
-				! (cw->state & CompWindowStateMaximizedHorzMask))
+	    else if (where == GridTop || where == GridBottom) 
 	    {
 		desiredState = CompWindowStateMaximizedHorzMask;
-		valueMask = CWY | CWHeight;
+		valueMask = CWY;
 	    }
 	    else
 	    {
 		desiredState = 0;
-		valueMask = CWX | CWY | CWWidth | CWHeight;
-	    }
+		valueMask = CWX | CWY;
+            }
 
-	   if (cw->state != desiredState)
+            if (xwc.width != cw->serverWidth)
+                valueMask |= CWWidth;
+            if (xwc.height != cw->serverHeight)
+                valueMask |= CWHeight;
+
+            if (cw->mapNum && (valueMask & (CWWidth | CWHeight))) 
+                sendSyncRequest (cw);
+
+	    if (cw->state != desiredState)
 		maximizeWindow (cw, desiredState);
 
 	    /* TODO: animate move+resize */
