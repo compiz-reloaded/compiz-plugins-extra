@@ -280,9 +280,9 @@ gridCommonWindow (CompWindow *cw,
 	    gs->currentRect.height = cw->serverHeight;
 	    DEBUG_RECT (gs->currentRect);
 
-	    if ((gs->desiredRect.y == gs->currentRect.y &&
-		gs->desiredRect.height == gs->currentRect.height) &&
-		gridGetCycleSizes(cw->screen->display))
+	    if ((gs->desiredRect.y == gs->currentRect.y + cw->clientFrame.top &&
+			gs->desiredRect.height == gs->currentRect.height - (cw->clientFrame.top + cw->clientFrame.bottom)) &&
+			gridGetCycleSizes(cw->screen->display))
 	    {
 		int slotWidth33 = gs->workarea.width / 3;
 		int slotWidth66 = gs->workarea.width - slotWidth33;
@@ -291,8 +291,9 @@ gridCommonWindow (CompWindow *cw,
 
 		if (gs->props.numCellsX == 2) /* keys (1, 4, 7, 3, 6, 9) */
 		{
-		    if (gs->currentRect.width == gs->desiredRect.width &&
-			gs->currentRect.x == gs->desiredRect.x)
+		    if (gs->currentRect.width == gs->desiredRect.width +
+		        cw->clientFrame.left + cw->clientFrame.right &&
+			    gs->currentRect.x == gs->desiredRect.x - cw->clientFrame.left)
 		    {
 			gs->desiredSlot.width = slotWidth66;
 			gs->desiredSlot.x = gs->workarea.x +
@@ -321,8 +322,9 @@ gridCommonWindow (CompWindow *cw,
 			DEBUG_RECT (slot66);
 			DEBUG_RECT (rect66);
 
-			if (gs->currentRect.width == rect66.width &&
-			    gs->currentRect.x == rect66.x)
+			if (gs->currentRect.width == (rect66.width +
+			    cw->clientFrame.left + cw->clientFrame.right) &&
+			    gs->currentRect.x == rect66.x - cw->clientFrame.left)
 			{
 			    gs->desiredSlot.width = slotWidth33;
 			    gs->desiredSlot.x = gs->workarea.x +
@@ -332,8 +334,9 @@ gridCommonWindow (CompWindow *cw,
 		}
 		else /* keys (2, 5, 8) */
 		{
-		    if (gs->currentRect.width == gs->desiredRect.width &&
-			gs->currentRect.x == gs->desiredRect.x)
+		    if (gs->currentRect.width == (gs->desiredRect.width +
+			    cw->clientFrame.left + cw->clientFrame.right) &&
+			    gs->currentRect.x == gs->desiredRect.x - cw->clientFrame.left)
 		    {
 			gs->desiredSlot.width = slotWidth33;
 			gs->desiredSlot.x = gs->workarea.x + slotWidth33;
@@ -343,6 +346,9 @@ gridCommonWindow (CompWindow *cw,
 	        DEBUG_RECT (gs->desiredRect);
 	    }
 
+	    /*Note that ClientFrame extents must also be computed in the "if"
+	     *blocks for cycling through window sizes or the checks fail
+	     */
 	    xwc.x = gs->desiredRect.x - cw->clientFrame.left;
 	    xwc.y = gs->desiredRect.y - cw->clientFrame.top;
 	    xwc.width  = gs->desiredRect.width + cw->clientFrame.left + cw->clientFrame.right;
