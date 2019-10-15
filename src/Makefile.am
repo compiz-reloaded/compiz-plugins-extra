@@ -13,6 +13,7 @@ SUBDIRS = 3d \
 	  gears \
 	  grid \
 	  group \
+	  highlightcontent \
 	  maximumize \
 	  mblur \
 	  notification \

@@ -29,6 +29,10 @@ if SHOWMOUSE_PLUGIN
 showmousexml = showmouse.xml.in
 endif
 
+if HIGHLIGHTCONTENT_PLUGIN
+highlightcontentxml = highlightcontent.xml.in
+endif
+
 if THREED_PLUGIN
 threedxml = 3d.xml.in
 endif
@@ -61,6 +65,7 @@ xml_in_files = 	             \
 	$(notificationxml)   \
 	$(scalefilterxml)    \
 	$(showmousexml)      \
+	$(highlightcontentxml)      \
 	$(threedxml)
 
 xml_files    = $(xml_in_files:.xml.in=.xml)
@@ -77,6 +82,7 @@ EXTRA_DIST =				\
 	notification.xml.in		\
 	scalefilter.xml.in		\
 	showmouse.xml.in		\
+	Highlightcontent.xml.in		\
 	3d.xml.in
 
 DISTCLEANFILES =	\
