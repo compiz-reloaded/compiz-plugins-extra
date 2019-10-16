@@ -9,9 +9,9 @@ msgstr ""
 "Project-Id-Version: compiz-plugins-extra\n"
 "Report-Msgid-Bugs-To: https://gitlab.com/compiz/compiz-plugins-"
 "extra/issues\n"
-"POT-Creation-Date: 2017-01-12 18:19+0300\n"
-"PO-Revision-Date: 2009-06-24 17:59+0200\n"
-"Last-Translator: Alvin Meimoun <alvin.meimoun@laposte.net>\n"
+"POT-Creation-Date: 2019-10-16 16:46+0200\n"
+"PO-Revision-Date: 2019-10-16 18:39+0200\n"
+"Last-Translator: Colomban Wendling <cwendling@hypra.fr>\n"
 "Language-Team: French <fr@li.org>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -32,10 +32,10 @@ msgstr ""
 msgid "Bindings"
 msgstr "Raccourcis"
 
-msgid "Toggle AddHelper"
+msgid "Toggle ADD Helper"
 msgstr "Activer l'aide à la concentration"
 
-msgid "Use this to enable/disable AddHelper on the fly."
+msgid "Use this to enable/disable ADD Helper on the fly."
 msgstr ""
 "Utilisez ce raccourci pour activer/désactiver l'aide à la concentration à la "
 "volée."
@@ -46,18 +46,14 @@ msgstr "Options Diverses"
 msgid "Window Types"
 msgstr "Types de fenêtres"
 
-msgid "Window types that should be Opacified."
-msgstr "Types de fenêtres devant être opacifiées."
+msgid "Window types that should be affected."
+msgstr "Types de fenêtres devant être affectées."
 
-# Faut-il traduire ADD Helper par aide à la concentration ?
-#, fuzzy
 msgid "Enable ADD Helper on start"
-msgstr "Activer \"Aide à la concentration\" au démarrage"
+msgstr "Activer l'aide à la concentration au démarrage"
 
-# Faut-il traduire ADD helper?
-#, fuzzy
 msgid "Enables ADD helper when it is first loaded."
-msgstr "Active \"Aide à la concentration\" au premier chargement"
+msgstr "Active l'aide à la concentration au premier chargement"
 
 msgid "Brightness"
 msgstr "Luminosité"
@@ -410,6 +406,27 @@ msgstr "Rayonnement"
 
 msgid "Leaf Spread"
 msgstr "Envergure de la feuille"
+
+msgid "Audible Bell"
+msgstr "Cloche sonore"
+
+msgid "Plays an audible sound for the system bell"
+msgstr "Joue un son lors de la cloche système"
+
+msgid "Play sound on system bell"
+msgstr "Joue un son lors de la cloche système"
+
+msgid "Spatial Sounds"
+msgstr "Sons spatialisés"
+
+msgid ""
+"Whether to spatially locate sounds or not. If enabled, sounds coming from "
+"the left of the sceen will be heard mostly on the left channel, the ones "
+"coming from the right on the right channel and so on."
+msgstr ""
+"Définit si les sons doivent être localisés dans l'espace ou non. Si activé, "
+"les sons venant du côté gauche de l'écran seront principalement audibles "
+"dans le canal de gauche, et ceux venant de la droit dans le canal de droite."
 
 msgid "Benchmark"
 msgstr "Repère"
@@ -950,8 +967,8 @@ msgid ""
 "multiple times in a row."
 msgstr ""
 
-msgid "Corners / Edges"
-msgstr ""
+msgid "Behavior"
+msgstr "Comportement"
 
 #, fuzzy
 msgid "Resize Actions"
@@ -960,6 +977,10 @@ msgstr "Réflexion"
 #, fuzzy
 msgid "Window resize action"
 msgstr "Police du titre de la fenêtre"
+
+#, fuzzy
+msgid "Top Left Corner"
+msgstr "Aux coins"
 
 #, fuzzy
 msgid "Action to be performed when window is dropped on the top left corner"
@@ -988,10 +1009,6 @@ msgstr "Plein Écran"
 #, fuzzy
 msgid "Right Half"
 msgstr "Droite"
-
-#, fuzzy
-msgid "Top Left Corner"
-msgstr "Aux coins"
 
 msgid "Top Half"
 msgstr ""
@@ -1063,6 +1080,16 @@ msgid "Maximum number of pixels from the Bottom edge a window can be dropped"
 msgstr ""
 "Nombre de pixels entre le bord inférieur de l'écran et celui de la fenêtre"
 
+#, fuzzy
+msgid "Select output with mouse pointer"
+msgstr "Mettre le pointeur à l'échelle"
+
+msgid ""
+"In the case of multiple outputs, chooses the output containing the mouse "
+"pointer. If this option is not checked, the output is choosen based on the "
+"center of the window."
+msgstr ""
+
 msgid "Draw Indicator"
 msgstr ""
 
@@ -1077,6 +1104,10 @@ msgstr "Durée de l'animation"
 #, fuzzy
 msgid "Preview animation duration (in ms)."
 msgstr "Durée de l'animation"
+
+#, fuzzy
+msgid "Outline Thickness"
+msgstr "Épaisseur"
 
 msgid "Outline Color"
 msgstr "Couleur du bord extérieur"
@@ -1931,8 +1962,38 @@ msgstr "Augmente la visibilité du pointeur"
 msgid "Toggle the mouse pointer trail."
 msgstr "Basculer la traînée du pointeur"
 
+msgid "Particles"
+msgstr "Particules"
+
+msgid "Enable particles."
+msgstr "Activer les particules."
+
+msgid "Crosshair"
+msgstr "Croix"
+
+msgid "Enable crosshair."
+msgstr "Activer la croix."
+
 msgid "Particle Options"
 msgstr "Options des particules"
+
+msgid "Rotation speed"
+msgstr "Vitesse de rotation"
+
+msgid "Rotation speed."
+msgstr "Vitesse de rotation."
+
+msgid "Radius"
+msgstr "Rayon"
+
+msgid "Ring radius"
+msgstr "Rayon de l'anneau"
+
+msgid "Emitters"
+msgstr "Émetteurs"
+
+msgid "Number of particle emitters."
+msgstr "Nombre d'émetteurs de particules."
 
 msgid "Number Of Particles"
 msgstr "Nombre de particules"
@@ -1982,23 +2043,28 @@ msgstr "Particules multicolore"
 msgid "Have random colors for the particles"
 msgstr "Utiliser des couleurs aléatoires pour les particules"
 
-msgid "Rotation speed"
-msgstr "Vitesse de rotation"
+msgid "Crosshair Options"
+msgstr "Options de la croix"
 
-msgid "Rotation speed."
-msgstr "Vitesse de rotation."
+msgid "Crosshair thickness"
+msgstr "Épaisseur de la croix"
 
-msgid "Radius"
-msgstr "Rayon"
+msgid "How thick mouse crosshair should be, in pixels."
+msgstr "Épaisseur des branches de la croix en pixels."
 
-msgid "Ring radius"
-msgstr "Rayon de l'anneau"
+msgid "Crosshair empty radius"
+msgstr "Rayon vide au centre de la croix"
 
-msgid "Emitters"
-msgstr "Émetteurs"
+msgid "Radius of the disk around the cursor which is not covered by crosshair."
+msgstr ""
+"Rayon du disque autour du curseur qui ne sera pas couvert par les branches "
+"de la croix."
 
-msgid "Number of particle emitters."
-msgstr "Nombre d'émetteurs de particules."
+msgid "Crosshair Color"
+msgstr "Couleur de la croix"
+
+msgid "Crosshair color."
+msgstr "Couleur de la croix."
 
 msgid "Login/Logout"
 msgstr "Connection/déconnection"
@@ -2452,11 +2518,90 @@ msgstr "Biseauter en bas à droite"
 msgid "Bevel bottom right corner"
 msgstr "Biseauter le coin inférieur droit"
 
+msgid "Vidcap"
+msgstr ""
+
+msgid "Screen Recorder"
+msgstr "Capture d'écran vidéo"
+
+msgid "Start / Stop"
+msgstr "Démarrer / Arrêter"
+
+msgid "Start and stop recording"
+msgstr "Démarrer et arrêter la capture"
+
+msgid "Directory"
+msgstr "Répertoire"
+
+msgid "Directory to store videos"
+msgstr "Répertoire où enregistrer les vidéos"
+
+msgid "Command"
+msgstr "Commande"
+
+#, no-c-format
+msgid ""
+"Command to be used for encoding video. Use a dash (-) for the input file and "
+"%f.ext for the output file"
+msgstr ""
+"Commande à utiliser pour l'enregistrement vidéo.  Utilisez un tiret (-) pour "
+"le fichier d'entrée et %f.ext pour le fichier de sortie."
+
+msgid "Draw Status Indicator"
+msgstr "Dessiner l'indicateur de statut"
+
+msgid "Draw color coded status dot"
+msgstr "Afficher le statut comme un point coloré"
+
 msgid "Wallpaper"
 msgstr "Fond d'écran"
 
 msgid "Draw the desktop wallpaper"
 msgstr "Dessiner l'arrière-plan du bureau"
+
+msgid "Recursive directory search"
+msgstr ""
+
+msgid "Search in all sub-directories."
+msgstr ""
+
+msgid "Cycle"
+msgstr ""
+
+msgid "Automatically cycle through wallpapers."
+msgstr ""
+
+#, fuzzy
+msgid "Cycle timeout"
+msgstr "Délai d'apparition"
+
+msgid "Time before cycling to next wallpaper (in minutes)."
+msgstr ""
+
+#, fuzzy
+msgid "Fade time"
+msgstr "Temps de fondu"
+
+#, fuzzy
+msgid "Fade transition time (in seconds)."
+msgstr "Durée du fondu d'entrée/sortie en secondes."
+
+#, fuzzy
+msgid "Randomize"
+msgstr "Aléatoire"
+
+#, fuzzy
+msgid "Randomly order wallpapers."
+msgstr "Particules multicolore"
+
+#, fuzzy
+msgid "Hide other desktop background windows"
+msgstr "Cacher toutes les fenêtres qui ne sont pas sur le bureau"
+
+msgid ""
+"Don't draw desktop backgrounds rendered by other applications. Mouse and "
+"keyboard input works as if the background were drawn."
+msgstr ""
 
 msgid "Backgrounds"
 msgstr "Arrière-plan"
@@ -3736,9 +3881,6 @@ msgstr "Seconde couleur du gradient."
 #~ msgid "Restrain the mouse to the zoom area"
 #~ msgstr "Restraindre le pointeur à la zone du zoom"
 
-#~ msgid "Scale the mouse pointer"
-#~ msgstr "Mettre le pointeur à l'échelle"
-
 #~ msgid "Specific Zoom"
 #~ msgstr "Zoom spécifique"
 
@@ -4766,9 +4908,6 @@ msgstr "Seconde couleur du gradient."
 #~ "Cacher toutes les fenêtres qui ne sont pas sur le bureau pendant la "
 #~ "sélection"
 
-#~ msgid "Hide non Desktop windows"
-#~ msgstr "Cacher toutes les fenêtres qui ne sont pas sur le bureau"
-
 #~ msgid "Initiate (All Workspaces)"
 #~ msgstr "Lancer (tous les bureaux)"
 
@@ -4886,9 +5025,6 @@ msgstr "Seconde couleur du gradient."
 
 #~ msgid "Meta"
 #~ msgstr "Méta"
-
-#~ msgid "Screen edges"
-#~ msgstr "Bords de l'écran"
 
 #~ msgid "Shift"
 #~ msgstr "Shift"
@@ -5011,9 +5147,6 @@ msgstr "Seconde couleur du gradient."
 #~ msgstr ""
 #~ "Taux d'opacité (en pourcentage) pour les fenêtres du sélecteur qui ne "
 #~ "sont pas sélectionnées"
-
-#~ msgid "Behavior"
-#~ msgstr "Comportement"
 
 #~ msgid "Darken background when showing the stack"
 #~ msgstr "Assombrissement de l'arrière-plan durant l'affichage du sélecteur"
@@ -5233,14 +5366,8 @@ msgstr "Seconde couleur du gradient."
 #~ msgid "Text"
 #~ msgstr "Texte"
 
-#~ msgid "Enable Titles"
-#~ msgstr "Activer les titres"
-
 #~ msgid "Fade In/Out Duration"
 #~ msgstr "Durée du fondu d'entrée/sortie"
-
-#~ msgid "Fade In/Out Duration in seconds."
-#~ msgstr "Durée du fondu d'entrée/sortie en secondes."
 
 #~ msgid "Generate Mipmaps"
 #~ msgstr "Générer des mipmaps"
@@ -6059,9 +6186,6 @@ msgstr "Seconde couleur du gradient."
 #~ msgid "Toggle prompt visible."
 #~ msgstr "Basculer en ligne de Cde"
 
-#~ msgid "Directory"
-#~ msgstr "Répertoire"
-
 #~ msgid "Initiate screencasting"
 #~ msgstr "Démarrer une capture vidéo"
 
@@ -6079,9 +6203,6 @@ msgstr "Seconde couleur du gradient."
 
 #~ msgid "Dolphin size."
 #~ msgstr "Taille des dauphins."
-
-#~ msgid "Enable colors"
-#~ msgstr "Activer les couleurs"
 
 #~ msgid "Fish size"
 #~ msgstr "Taille des poissons"
