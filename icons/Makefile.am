@@ -14,6 +14,7 @@ icons_DATA =				\
 	plugin-gears.svg		\
 	plugin-grid.svg			\
 	plugin-group.svg		\
+	plugin-highlightcontent.svg	\
 	plugin-loginout.svg		\
 	plugin-maximumize.svg		\
 	plugin-mblur.svg		\
