@@ -343,6 +343,10 @@ moveSpeechHL (CompScreen *s, int x, int y, int w, int h)
 	cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
 	cairo_destroy (cr);
     }
+
+    if (ss->speechTimeoutHandle)
+	compRemoveTimeout(ss->speechTimeoutHandle);
+
     ss->speechTimeoutHandle = compAddTimeout (5000,
 						5000,
 						eraseSpeechHLCB,
