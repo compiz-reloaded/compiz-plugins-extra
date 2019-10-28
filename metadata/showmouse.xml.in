@@ -33,6 +33,11 @@
 					<_long>Toggle the mouse pointer trail.</_long>
 					<default/>
 				</option>
+				<option name="activate_at_startup" type="bool">
+					<_short>Enable on startup</_short>
+					<_long>Enables this plugin when it is loaded.</_long>
+					<default>false</default>
+				</option>
 			</group>
 		</display>
 		<screen>
