@@ -2,7 +2,7 @@
 <compiz>
 	<plugin useBcop="true" name="highlightcontent">
 		<_short>Highlight Content</_short>
-		<_long>Highlight some content on the screen like the currently spoken word</_long>
+		<_long>Listens for screen reader events and renders highlight for the currently spoken word.</_long>
 		<category>Accessibility</category>
 		<deps>
 			<relation type="after">
