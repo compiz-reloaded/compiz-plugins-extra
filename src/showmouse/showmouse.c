@@ -994,6 +994,17 @@ showmouseTerminate (CompDisplay     *d,
     return FALSE;
 }
 
+static void
+start_us (CompScreen *s)
+{
+    SHOWMOUSE_SCREEN (s);
+
+    ss->active = TRUE;
+
+    if (showmouseGetCrosshair (s))
+	showOverlayWindow (s);
+}
+
 static Bool
 showmouseInitiate (CompDisplay     *d,
 		   CompAction      *action,
@@ -1014,14 +1025,28 @@ showmouseInitiate (CompDisplay     *d,
 	if (ss->active)
 	    return showmouseTerminate (d, action, state, option, nOption);
 
-	ss->active = TRUE;
-
-	if (showmouseGetCrosshair (s))
-	    showOverlayWindow (s);
+	start_us (s);
 
 	return TRUE;
     }
     return FALSE;
+}
+
+/* Change notify for bcop */
+static void
+activateatstartupNotify (CompDisplay             *d,
+                         CompOption              *opt,
+                         ShowmouseDisplayOptions num)
+{
+    CompScreen *s;
+
+    if (showmouseGetActivateAtStartup(d)) {
+        for (s = d->screens; s; s = s->next) {
+	    SHOWMOUSE_SCREEN (s);
+	    if (!ss->active)
+		start_us (s);
+	}
+    }
 }
 
 static void
@@ -1149,6 +1174,8 @@ showmouseInitDisplay (CompPlugin  *p,
     showmouseSetInitiateButtonTerminate (d, showmouseTerminate);
     showmouseSetInitiateEdgeInitiate (d, showmouseInitiate);
     showmouseSetInitiateEdgeTerminate (d, showmouseTerminate);
+
+    showmouseSetActivateAtStartupNotify (d, activateatstartupNotify);
 
     //Record the display
     d->base.privates[displayPrivateIndex].ptr = sd;
