@@ -11,6 +11,7 @@ metadata/firepaint.xml.in
 metadata/gears.xml.in
 metadata/grid.xml.in
 metadata/group.xml.in
+metadata/highlightcontent.xml.in
 metadata/mblur.xml.in
 metadata/reflex.xml.in
 metadata/scalefilter.xml.in

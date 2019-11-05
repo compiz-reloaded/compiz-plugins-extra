@@ -137,6 +137,9 @@ AM_CONDITIONAL(THREED_PLUGIN, test "x$have_compiz_cube" = "xyes")
 PKG_CHECK_MODULES(SHOWMOUSE, compiz-mousepoll cairo-xlib cairo xrender, [use_showmouse=yes], [use_showmouse=no])
 AM_CONDITIONAL(SHOWMOUSE_PLUGIN, test "x$use_showmouse" = "xyes")
 
+PKG_CHECK_MODULES(HIGHLIGHTCONTENT, compiz-focuspoll cairo-xlib cairo xrender, [use_highlightcontent=yes], [use_highlightcontent=no])
+AM_CONDITIONAL(HIGHLIGHTCONTENT_PLUGIN, test "x$use_highlightcontent" = "xyes")
+
 PKG_CHECK_EXISTS(libnotify > 0.6.0, [have_libnotify_0_7_0=yes], [have_libnotify_0_7_0=no])
 if test "$have_libnotify_0_7_0" = yes; then
   PKG_CHECK_MODULES(LIBNOTIFY, libnotify, [have_libnotify=yes], [have_libnotify=no])
@@ -178,6 +181,7 @@ src/firepaint/Makefile
 src/gears/Makefile
 src/grid/Makefile
 src/group/Makefile
+src/highlightcontent/Makefile
 src/maximumize/Makefile
 src/mblur/Makefile
 src/notification/Makefile

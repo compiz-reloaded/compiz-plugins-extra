@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<compiz>
+	<plugin useBcop="true" name="highlightcontent">
+		<_short>Highlight Content</_short>
+		<_long>Listens for screen reader events and renders highlight for the currently spoken word.</_long>
+		<category>Accessibility</category>
+		<deps>
+			<relation type="after">
+				<plugin>cube</plugin>
+			</relation>
+			<relation type="before">
+				<plugin>ezoom</plugin>
+			</relation>
+			<requirement>
+				<plugin>focuspoll</plugin>
+			</requirement>
+		</deps>
+		<display>
+			<group>
+				<_short>General</_short>
+				<option type="key" name="initiate">
+					<_short>Initiate</_short>
+					<_long>Toggle Highlight of Content.</_long>
+					<default>&lt;Super&gt;h</default>
+				</option>
+				<option type="button" name="initiate_button">
+					<_short>Initiate</_short>
+					<_long>Toggle Highlight of Content.</_long>
+					<default/>
+				</option>
+				<option type="edge" name="initiate_edge">
+					<_short>Initiate</_short>
+					<_long>Toggle Highlight of Content.</_long>
+					<default/>
+				</option>
+				<option name="ononinit" type="bool">
+					<_short>Enable on startup</_short>
+					<_long>Enables this plugin when it is loaded.</_long>
+					<default>false</default>
+				</option>
+			</group>
+		</display>
+		<screen>
+			<group>
+				<_short>General</_short>
+				<option type="bool" name="speech">
+					<_short>Highlight Speech synthesis</_short>
+					<_long>Highlight Speech synthesis' current word.</_long>
+					<default>true</default>
+				</option>
+			</group>
+			<group>
+				<_short>Speech Options</_short>
+				<option type="int" name="speech_thickness">
+					<_short>Rectangle Border Thickness</_short>
+					<_long>How thick the border of the rectangle should be, in pixels.</_long>
+					<default>2</default>
+					<min>0</min>
+					<max>100</max>
+					<precision>1</precision>
+				</option>
+				<option type="color" name="speech_color">
+					<_short>Rectangle Color</_short>
+					<_long>Color of the borders of the rectangle.</_long>
+					<default>
+						<red>0xffff</red>
+						<green>0x0</green>
+						<blue>0x0</blue>
+						<alpha>0x9999</alpha>
+					</default>
+				</option>
+				<option type="bool" name="speech_hollow">
+					<_short>Show only border of rectangle</_short>
+					<_long>Whether we draw a filled rectangle or just its border.</_long>
+					<default>true</default>
+				</option>
+			</group>
+		</screen>
+	</plugin>
+</compiz>
