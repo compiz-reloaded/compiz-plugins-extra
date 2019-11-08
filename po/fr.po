@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: compiz-plugins-extra\n"
 "Report-Msgid-Bugs-To: https://gitlab.com/compiz/compiz-plugins-extra/issues\n"
-"POT-Creation-Date: 2019-10-30 15:04+0100\n"
+"POT-Creation-Date: 2019-11-07 14:25+0100\n"
 "PO-Revision-Date: 2019-10-16 18:39+0200\n"
 "Last-Translator: Colomban Wendling <cwendling@hypra.fr>\n"
 "Language-Team: French <fr@li.org>\n"
@@ -1582,6 +1582,52 @@ msgstr "Lueur rectangulaire"
 
 msgid "Glow ring"
 msgstr "Lueur arrondie"
+
+msgid "Highlight Content"
+msgstr "Surbrillance de contenu"
+
+msgid ""
+"Listens for screen reader events and renders highlight for the currently "
+"spoken word."
+msgstr ""
+"Écoute les événements du lecteur d'écran et affiche une surbrillance autour "
+"du mot actuel."
+
+msgid "Toggle Highlight of Content."
+msgstr "Basculer la subrillance de contenu"
+
+msgid "Enable on startup"
+msgstr "Activer au démarrage"
+
+msgid "Enables this plugin when it is loaded."
+msgstr "Active le greffon dès son chargement."
+
+msgid "Highlight Speech synthesis"
+msgstr "Mettre la synthèse vocale en surbrillance"
+
+msgid "Highlight Speech synthesis' current word."
+msgstr "Mettre en surbrillance le mot actuel de la synthèse vocale."
+
+msgid "Speech Options"
+msgstr "Options vocales"
+
+msgid "Rectangle Border Thickness"
+msgstr "Épaisseur de la bordure du rectangle"
+
+msgid "How thick the border of the rectangle should be, in pixels."
+msgstr "Épaisseur de la bordure du rectangle, en pixels."
+
+msgid "Rectangle Color"
+msgstr "Couleur du rectangle"
+
+msgid "Color of the borders of the rectangle."
+msgstr "Couleur de la burdure du rectangle."
+
+msgid "Show only border of rectangle"
+msgstr "N'afficher que la bordure du rectangle"
+
+msgid "Whether we draw a filled rectangle or just its border."
+msgstr "Détermine si l'on affiche un rectangle plein ou juste sa bordure"
 
 msgid "Motion blur"
 msgstr "Flou cinétique"
@@ -5224,9 +5270,6 @@ msgstr "Seconde couleur du gradient."
 #~ msgid "Highlight Border Inlay Color"
 #~ msgstr "Couleur de surbrillance de la profondeur de la bordure"
 
-#~ msgid "Highlight Mode"
-#~ msgstr "Mode de surbrillance"
-
 #~ msgid "Icon"
 #~ msgstr "Icône"
 
@@ -5331,9 +5374,6 @@ msgstr "Seconde couleur du gradient."
 
 #~ msgid "Selected Window Highlight"
 #~ msgstr "Surbrillance de fenêtre sélectionnée"
-
-#~ msgid "Show Rectangle"
-#~ msgstr "Afficher le Rectangle"
 
 #~ msgid "Show icon next to thumbnail"
 #~ msgstr "Afficher l'icône suivante dans la miniature"
