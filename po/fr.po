@@ -2007,12 +2007,6 @@ msgstr "Augmente la visibilité du pointeur"
 msgid "Toggle the mouse pointer trail."
 msgstr "Basculer la traînée du pointeur"
 
-msgid "Enable on startup"
-msgstr "Activer au démarrage"
-
-msgid "Enables this plugin when it is loaded."
-msgstr "Activer ce greffon dès son chargement."
-
 msgid "Particles"
 msgstr "Particules"
 
