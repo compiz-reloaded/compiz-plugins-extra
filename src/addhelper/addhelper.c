@@ -60,7 +60,10 @@ typedef struct _AddHelperScreen
 {
     int windowPrivateIndex;
 
-    PaintWindowProc paintWindow;
+    PaintWindowProc	  paintWindow;
+    DrawWindowTextureProc drawWindowTexture;
+
+    int contrastFunction;
 } AddHelperScreen;
 
 typedef struct _AddHelperWindow
@@ -108,6 +111,64 @@ walkWindows (CompDisplay *d)
     }
 }
 
+static int
+getAddhelperFragmentFunction (CompScreen  *s,
+			      CompTexture *texture)
+{
+    CompFunctionData *data;
+    int              target;
+    char             instruction[50];
+
+    ADD_SCREEN (s);
+
+    if (as->contrastFunction)
+	return as->contrastFunction;
+
+    if (texture->target == GL_TEXTURE_2D)
+	target = COMP_FETCH_TARGET_2D;
+    else
+	target = COMP_FETCH_TARGET_RECT;
+
+    data = createFunctionData ();
+    if (data)
+    {
+	Bool ok = TRUE;
+	int  handle = 0;
+
+	ok &= addTempHeaderOpToFunctionData (data, "addh" );
+
+	ok &= addFetchOpToFunctionData (data, "output", NULL, target);
+
+	ok &= addDataOpToFunctionData (data, "RCP addh.a, output.a;");
+	ok &= addDataOpToFunctionData (data,
+		    "MUL output.rgb, addh.a, output;");
+	snprintf (instruction, 50, "MAD output.rgb, %f, output, %f;",
+		    addhelperGetContrast(s->display) / 100.,
+		    (100. - addhelperGetContrast(s->display)) / 200.);
+	ok &= addDataOpToFunctionData (data, instruction);
+	ok &= addDataOpToFunctionData (data,
+		    "MUL output.rgb, output.a, output;");
+
+	ok &= addColorOpToFunctionData (data, "output", "output");
+
+	if (!ok)
+	{
+	    destroyFunctionData (data);
+	    return 0;
+	}
+
+	handle = createFragmentFunction (s, "addh", data);
+
+	as->contrastFunction = handle;
+
+	destroyFunctionData (data);
+
+	return handle;
+    }
+
+    return 0;
+}
+
 /* Checks if the window is dimmed and, if so, paints it with the modified
  * paint attributes.
  */
@@ -149,6 +210,34 @@ addhelperPaintWindow (CompWindow              *w,
     }
 
     return status;
+}
+
+/* If contrast is modified, checks if the window is dimmed and, if so, apply
+ * the shader transform.
+ */
+static void
+addhelperDrawWindowTexture (CompWindow           *w,
+			    CompTexture          *texture,
+			    const FragmentAttrib *attrib,
+			    unsigned int         mask)
+{
+    FragmentAttrib fa = *attrib;
+    int            function;
+    CompScreen *s = w->screen;
+
+    ADD_SCREEN (s);
+    ADD_WINDOW (w);
+
+    if (addhelperGetContrast (s->display) != 100 && aw->dim)
+    {
+	function = getAddhelperFragmentFunction (s, texture);
+	if (function)
+	    addFragmentFunction (&fa, function);
+    }
+
+    UNWRAP (as, s, drawWindowTexture);
+    (s->drawWindowTexture) (w, texture, aw->dim ? &fa : attrib, mask);
+    WRAP (as, s, drawWindowTexture, addhelperDrawWindowTexture);
 }
 
 /* Takes the inital event. 
@@ -197,6 +286,8 @@ addhelperDisplayOptionChanged (CompDisplay             *d,
 			       CompOption              *opt,
 			       AddhelperDisplayOptions num)
 {
+    CompScreen *s;
+
     ADD_DISPLAY (d);
 
     switch (num) {
@@ -211,6 +302,18 @@ addhelperDisplayOptionChanged (CompDisplay             *d,
 	break;
     case AddhelperDisplayOptionOnoninit:
 	ad->toggle = addhelperGetOnoninit (d);
+	break;
+    case AddhelperDisplayOptionContrast:
+	for (s = d->screens; s; s = s->next)
+	{
+	    ADD_SCREEN (s);
+	    if (as->contrastFunction)
+	    {
+		destroyFragmentFunction (s, as->contrastFunction);
+		as->contrastFunction = 0;
+		damageScreen (s);
+	    }
+	}
 	break;
     default:
 	break;
@@ -270,7 +373,11 @@ addhelperInitScreen (CompPlugin *p,
 	return FALSE;
     }
 
+    as->contrastFunction = 0;
+
+    /* wrap overloaded functions */
     WRAP (as, s, paintWindow, addhelperPaintWindow);
+    WRAP (as, s, drawWindowTexture, addhelperDrawWindowTexture);
 
     s->base.privates[ad->screenPrivateIndex].ptr = as;
 
@@ -284,6 +391,9 @@ addhelperFiniScreen (CompPlugin *p,
     ADD_SCREEN (s);
 
     UNWRAP (as, s, paintWindow);
+
+    if (as->contrastFunction)
+	destroyFragmentFunction (s, as->contrastFunction);
 
     free (as);
 }
@@ -315,6 +425,7 @@ addhelperInitDisplay (CompPlugin  *p,
     addhelperSetOpacityNotify (d, addhelperDisplayOptionChanged);
     addhelperSetSaturationNotify (d, addhelperDisplayOptionChanged);
     addhelperSetOnoninitNotify (d, addhelperDisplayOptionChanged);
+    addhelperSetContrastNotify (d, addhelperDisplayOptionChanged);
 
     ad->brightness = (addhelperGetBrightness (d) * BRIGHT) / 100;
     ad->opacity = (addhelperGetOpacity (d) * OPAQUE) / 100;
