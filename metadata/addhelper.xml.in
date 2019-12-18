@@ -51,6 +51,13 @@
           <min>1</min>
           <max>100</max>
         </option>
+        <option name="contrast" type="int">
+          <_short>Contrast</_short>
+          <_long>Contrast of the content of the window.</_long>
+          <default>100</default>
+          <min>0</min>
+          <max>100</max>
+        </option>
       </group>
     </display>
   </plugin>

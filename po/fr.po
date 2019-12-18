@@ -2230,6 +2230,12 @@ msgstr ""
 msgid "Ignore already overlapping windows in the calculations"
 msgstr "Ignorer les fenêtres déjà recoupées dans les calculs"
 
+msgid "Contrast"
+msgstr "Contraste"
+
+msgid "Contrast of the content of the window."
+msgstr "Contraste du contenu de la fenêtre."
+
 # Traduction difficile.
 msgid ""
 "Treat windows that are already overlapping with the current window as non-"
