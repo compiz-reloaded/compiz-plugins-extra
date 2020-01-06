@@ -3485,9 +3485,6 @@ msgstr "Karışım Rengi 1"
 #~ msgid "Big"
 #~ msgstr "Büyük"
 
-#~ msgid "Centered on screen"
-#~ msgstr "Ekranın merkezine ortalanmış"
-
 #~ msgid "Darken Background"
 #~ msgstr "Arkaplanı Koyulaştır"
 
@@ -3547,9 +3544,6 @@ msgstr "Karışım Rengi 1"
 
 #~ msgid "Show Window Title"
 #~ msgstr "Pencere Başlığını Göster"
-
-#~ msgid "Text Placement"
-#~ msgstr "Metin Konumlandırma"
 
 #~ msgid "Thumbnail Height"
 #~ msgstr "Küçük Pencere Yüksekliği"
@@ -4561,3 +4555,77 @@ msgstr "Karışım Rengi 1"
 
 #~ msgid "Tile or Stretch"
 #~ msgstr "Döşe ya da Uzat"
+
+msgid "Workspace Naming"
+msgstr ""
+
+msgid "Allows assigning descriptions to workspaces"
+msgstr ""
+
+msgid "Names"
+msgstr ""
+
+msgid "Workspace Names"
+msgstr ""
+
+#, fuzzy
+msgid "Viewport"
+msgstr "Üst Masaüstü"
+
+msgid "Number of viewport to be named"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+#, fuzzy
+msgid "Viewport name"
+msgstr "Sol Masaüstü"
+
+msgid "Timeout (in s) of the name display"
+msgstr ""
+
+msgid "Time (in s) the name display fades out after being shown."
+msgstr ""
+
+#, fuzzy
+msgid "Text Display"
+msgstr "Gösterme Süresi"
+
+msgid "Selects if the text should be displayed in bold font or not."
+msgstr ""
+
+#, fuzzy
+msgid "Font Family"
+msgstr "Yazıtipi Boyutu"
+
+msgid "Font family for the text display."
+msgstr ""
+
+#, fuzzy
+msgid "Font size for the text display."
+msgstr "Pencere başlığı için yazıtipi boyutu"
+
+msgid "Text Placement"
+msgstr "Metin Konumlandırma"
+
+msgid "Selects where to place the text."
+msgstr ""
+
+msgid "Centered on screen"
+msgstr "Ekranın merkezine ortalanmış"
+
+#, fuzzy
+msgid "Top of screen"
+msgstr "FPS'yi Ekranda Göster"
+
+#, fuzzy
+msgid "Bottom of screen"
+msgstr "Aşağıdan Yukarıya"
+
+msgid "Background color for the text display."
+msgstr ""
+
+#, fuzzy
+msgid "Font color for the text display."
+msgstr "Pencere başlığı için yazıtipi rengi"

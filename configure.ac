@@ -157,6 +157,9 @@ fi
 PKG_CHECK_MODULES(COMPIZANIMATION, compiz-animation, [have_compiz_animation=yes], [have_compiz_animation=no])
 AM_CONDITIONAL(ANIMATIONADDON_PLUGIN, test "x$have_compiz_animation" = "xyes")
 
+PKG_CHECK_MODULES(COMPIZTEXT, compiz-text, [have_compiz_text=yes], [have_compiz_text=no])
+AM_CONDITIONAL(WORKSPACENAMES_PLUGIN, test "x$have_compiz_text" = "xyes")
+
 AC_PATH_PROG(UPDATE_ICON_CACHE, gtk-update-icon-cache)
 
 AC_OUTPUT([
@@ -196,5 +199,6 @@ src/showmouse/Makefile
 src/loginout/Makefile
 src/vidcap/Makefile
 src/wallpaper/Makefile
+src/workspacenames/Makefile
 po/Makefile.in
 ])

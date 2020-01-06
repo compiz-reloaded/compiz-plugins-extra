@@ -3924,9 +3924,6 @@ msgstr ""
 #~ msgid "Big"
 #~ msgstr "Handia"
 
-#~ msgid "Centered on screen"
-#~ msgstr "Pantailan zentratua"
-
 #~ msgid ""
 #~ "Changes the minimum brightness factor for windows in the ring. The farer "
 #~ "away windows are, the less bright are they."
@@ -4040,9 +4037,6 @@ msgstr ""
 #~ msgid "Show windows that are minimized, shaded or in show desktop mode."
 #~ msgstr ""
 #~ "Erakutsi txikitutako leihoak, itzaldurik edo mahaigain erakuste moduan."
-
-#~ msgid "Text Placement"
-#~ msgstr "Testu kokapena"
 
 #~ msgid "Thumbnail Height"
 #~ msgstr "Koadro txiki altura"
@@ -4464,3 +4458,82 @@ msgstr ""
 
 #~ msgid "Enables the drawing of the backside of windows."
 #~ msgstr "Gaitu kuboaren atzeko aurpegien marrazketa"
+
+msgid "Workspace Naming"
+msgstr ""
+
+msgid "Allows assigning descriptions to workspaces"
+msgstr ""
+
+msgid "Names"
+msgstr ""
+
+msgid "Workspace Names"
+msgstr ""
+
+#, fuzzy
+msgid "Viewport"
+msgstr "Mahaigain aurkezpen gainean"
+
+msgid "Number of viewport to be named"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+#, fuzzy
+msgid "Viewport name"
+msgstr "Mahaigain aurkezpen ezkerrean"
+
+msgid "Timeout (in s) of the name display"
+msgstr ""
+
+#, fuzzy
+msgid "Time (in s) the name display fades out after being shown."
+msgstr "Zenbat segundo dago ikusgarri fitxa barra fitxa aldatu ondoren"
+
+#, fuzzy
+msgid "Text Display"
+msgstr "Ez erakutsi"
+
+#, fuzzy
+msgid "Selects if the text should be displayed in bold font or not."
+msgstr "Aukeratu leiho tituluan letrak lodiak izango diren ala ez."
+
+#, fuzzy
+msgid "Font Family"
+msgstr "Letren tamaina"
+
+#, fuzzy
+msgid "Font family for the text display."
+msgstr "Leiho tituluaren testu tamaina"
+
+#, fuzzy
+msgid "Font size for the text display."
+msgstr "Leiho tituluaren testu tamaina"
+
+msgid "Text Placement"
+msgstr "Testu kokapena"
+
+#, fuzzy
+msgid "Selects where to place the text."
+msgstr "Aukeratu non jarri leiho titulua."
+
+msgid "Centered on screen"
+msgstr "Pantailan zentratua"
+
+#, fuzzy
+msgid "Top of screen"
+msgstr "Saihestu pantailaz-kanpokoa "
+
+#, fuzzy
+msgid "Bottom of screen"
+msgstr "Azpiko ezker ertza konikotu"
+
+#, fuzzy
+msgid "Background color for the text display."
+msgstr "Atzeko planoko kolorea leiho tituluan"
+
+#, fuzzy
+msgid "Font color for the text display."
+msgstr "Letra kolorea leiho tituluan"

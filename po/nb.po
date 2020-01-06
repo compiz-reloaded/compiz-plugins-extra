@@ -4203,9 +4203,6 @@ msgstr "Fargeovergang, farge 1"
 #~ msgid "Big"
 #~ msgstr "Stor"
 
-#~ msgid "Centered on screen"
-#~ msgstr "Sentrert på skjermen"
-
 #~ msgid ""
 #~ "Changes the minimum brightness factor for windows in the ring. The farer "
 #~ "away windows are, the less bright are they."
@@ -4350,9 +4347,6 @@ msgstr "Fargeovergang, farge 1"
 #~ msgid "Show windows that are minimized, shaded or in show desktop mode."
 #~ msgstr ""
 #~ "Viser vinduer som er minimert, rullet opp eller i vis-skrivebord-modus"
-
-#~ msgid "Text Placement"
-#~ msgstr "Tekstplassering"
 
 #~ msgid "Thumbnail Height"
 #~ msgstr "Miniatyrhøyde"
@@ -5914,3 +5908,83 @@ msgstr "Fargeovergang, farge 1"
 #~ "aktivertTegn vinduenes baksiderAktiverer tegning av baksider på "
 #~ "vindueneDette vil lage MIP-kart som forbedrer helhetlig teksturutseende, "
 #~ "og reduserer hakkete kanter.Vindusbredde"
+
+msgid "Workspace Naming"
+msgstr ""
+
+msgid "Allows assigning descriptions to workspaces"
+msgstr ""
+
+msgid "Names"
+msgstr ""
+
+msgid "Workspace Names"
+msgstr ""
+
+#, fuzzy
+msgid "Viewport"
+msgstr "Arbeidsområde øverst"
+
+#, fuzzy
+msgid "Number of viewport to be named"
+msgstr "Antall vinduer å holde rede på"
+
+msgid "Name"
+msgstr ""
+
+#, fuzzy
+msgid "Viewport name"
+msgstr "Arbeidsområde venstre"
+
+msgid "Timeout (in s) of the name display"
+msgstr ""
+
+#, fuzzy
+msgid "Time (in s) the name display fades out after being shown."
+msgstr "Tid (i sek) fanelinjen er synlig etter fanebytte"
+
+#, fuzzy
+msgid "Text Display"
+msgstr "Visningsvarighet"
+
+#, fuzzy
+msgid "Selects if the text should be displayed in bold font or not."
+msgstr "Velg om vindustittelen skal bli vist i fet skrift eller ikke."
+
+#, fuzzy
+msgid "Font Family"
+msgstr "Skriftstørrelse"
+
+#, fuzzy
+msgid "Font family for the text display."
+msgstr "Skriftstørrelse for visning av vindustittel"
+
+#, fuzzy
+msgid "Font size for the text display."
+msgstr "Skriftstørrelse for visning av vindustittel"
+
+msgid "Text Placement"
+msgstr "Tekstplassering"
+
+#, fuzzy
+msgid "Selects where to place the text."
+msgstr "Velger hvor vindustittelen plasseres."
+
+msgid "Centered on screen"
+msgstr "Sentrert på skjermen"
+
+#, fuzzy
+msgid "Top of screen"
+msgstr "Unngå utenfor skjermen"
+
+#, fuzzy
+msgid "Bottom of screen"
+msgstr "Nederst til øverst"
+
+#, fuzzy
+msgid "Background color for the text display."
+msgstr "Bakgrunnsfarge for vindustittelen"
+
+#, fuzzy
+msgid "Font color for the text display."
+msgstr "Skriftfarge for vindustittelen"

@@ -28,7 +28,8 @@ icons_DATA =				\
 	plugin-trailfocus.svg		\
 	plugin-vidcap.svg		\
 	plugin-wallpaper.svg		\
-	plugin-widget.svg
+	plugin-widget.svg		\
+	plugin-workspacenames.svg
 
 EXTRA_DIST = \
 	$(icons_DATA)

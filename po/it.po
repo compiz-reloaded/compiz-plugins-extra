@@ -4723,9 +4723,6 @@ msgstr "Colore del secondo gradiente."
 #~ msgid "Big"
 #~ msgstr "Grande"
 
-#~ msgid "Centered on screen"
-#~ msgstr "Centrato sullo schermo"
-
 #~ msgid ""
 #~ "Changes the minimum brightness factor for windows in the ring. The farer "
 #~ "away windows are, the less bright are they."
@@ -4893,9 +4890,6 @@ msgstr "Colore del secondo gradiente."
 #~ msgstr ""
 #~ "Mostra finestre che sono minimizzate, oscurate o in modalità mostra "
 #~ "scrivania."
-
-#~ msgid "Text Placement"
-#~ msgstr "Posizione del testo"
 
 #~ msgid "Thumbnail Height"
 #~ msgstr "Altezza anteprima"
@@ -6488,3 +6482,83 @@ msgstr "Colore del secondo gradiente."
 
 #~ msgid "ScreenCasting"
 #~ msgstr "Video"
+
+msgid "Workspace Naming"
+msgstr ""
+
+msgid "Allows assigning descriptions to workspaces"
+msgstr ""
+
+msgid "Names"
+msgstr ""
+
+msgid "Workspace Names"
+msgstr ""
+
+#, fuzzy
+msgid "Viewport"
+msgstr "Area visibile in alto"
+
+#, fuzzy
+msgid "Number of viewport to be named"
+msgstr "Numero di finestre"
+
+msgid "Name"
+msgstr ""
+
+#, fuzzy
+msgid "Viewport name"
+msgstr "Area visibile a sinistra"
+
+msgid "Timeout (in s) of the name display"
+msgstr ""
+
+#, fuzzy
+msgid "Time (in s) the name display fades out after being shown."
+msgstr ""
+
+#, fuzzy
+msgid "Text Display"
+msgstr "Visualizzazione"
+
+#, fuzzy
+msgid "Selects if the text should be displayed in bold font or not."
+msgstr ""
+
+#, fuzzy
+msgid "Font Family"
+msgstr "Dimensione carattere"
+
+#, fuzzy
+msgid "Font family for the text display."
+msgstr ""
+
+#, fuzzy
+msgid "Font size for the text display."
+msgstr ""
+
+msgid "Text Placement"
+msgstr "Posizione del testo"
+
+#, fuzzy
+msgid "Selects where to place the text."
+msgstr "Stabilisce dove posizionare il titolo della finestra."
+
+msgid "Centered on screen"
+msgstr "Centrato sullo schermo"
+
+#, fuzzy
+msgid "Top of screen"
+msgstr "Tipo della creatura marina"
+
+#, fuzzy
+msgid "Bottom of screen"
+msgstr "Dal basso verso l'alto"
+
+#, fuzzy
+msgid "Background color for the text display."
+msgstr "Colore di sfondo per il titolo della finestra"
+
+#, fuzzy
+msgid "Font color for the text display."
+msgstr "Colore del carattere per il titolo della finestra"

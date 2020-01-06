@@ -4492,9 +4492,6 @@ msgstr "Δεύτερο χρώμα διαβάθμισης."
 #~ msgid "Big"
 #~ msgstr "Μεγάλο"
 
-#~ msgid "Centered on screen"
-#~ msgstr "Κεντραρισμένο στην οθόνη"
-
 #~ msgid ""
 #~ "Changes the minimum brightness factor for windows in the ring. The farer "
 #~ "away windows are, the less bright are they."
@@ -4648,9 +4645,6 @@ msgstr "Δεύτερο χρώμα διαβάθμισης."
 #~ msgstr ""
 #~ "Εμφάνιση παραθύρων που είναι ελαχιστοποιημένα, σκιασμένα ή σε κατάσταση "
 #~ "εμφάνισης επιφάνειας εργασίας."
-
-#~ msgid "Text Placement"
-#~ msgstr "Τοποθέτηση Κειμένου"
 
 #~ msgid "Thumbnail Height"
 #~ msgstr "Ύψος Μικρογραφίας"
@@ -6407,3 +6401,83 @@ msgstr "Δεύτερο χρώμα διαβάθμισης."
 
 #~ msgid "Change viewport on mouse events on the Desktop"
 #~ msgstr "Αλλαγή επιφάνειας εργασίας με το ποντίκι στην Επιφάνεια Εργασίας"
+
+msgid "Workspace Naming"
+msgstr ""
+
+msgid "Allows assigning descriptions to workspaces"
+msgstr ""
+
+msgid "Names"
+msgstr ""
+
+msgid "Workspace Names"
+msgstr ""
+
+#, fuzzy
+msgid "Viewport"
+msgstr "Πάνω Εικονική Επιφάνεια Εργασίας"
+
+#, fuzzy
+msgid "Number of viewport to be named"
+msgstr "Ο Αριθμός των Παραθύρων που θα Παρακολουθούνται"
+
+msgid "Name"
+msgstr ""
+
+#, fuzzy
+msgid "Viewport name"
+msgstr "Αριστερή Εικονική Επιφάνεια Εργασίας"
+
+msgid "Timeout (in s) of the name display"
+msgstr ""
+
+#, fuzzy
+msgid "Time (in s) the name display fades out after being shown."
+msgstr ""
+
+#, fuzzy
+msgid "Text Display"
+msgstr "Οθόνη"
+
+#, fuzzy
+msgid "Selects if the text should be displayed in bold font or not."
+msgstr ""
+
+#, fuzzy
+msgid "Font Family"
+msgstr "Μέγεθος Γραμματοσειράς"
+
+#, fuzzy
+msgid "Font family for the text display."
+msgstr "Χρώμα γραμματοσειράς εμφάνισης του τίτλου παραθύρου"
+
+#, fuzzy
+msgid "Font size for the text display."
+msgstr "Χρώμα γραμματοσειράς εμφάνισης του τίτλου παραθύρου"
+
+msgid "Text Placement"
+msgstr "Τοποθέτηση Κειμένου"
+
+#, fuzzy
+msgid "Selects where to place the text."
+msgstr "Επιλέγει που να τοποθετήσει τον τίτλο παραθύρου"
+
+msgid "Centered on screen"
+msgstr "Κεντραρισμένο στην οθόνη"
+
+#, fuzzy
+msgid "Top of screen"
+msgstr "Είδος πλάσματος της θάλασσας."
+
+#, fuzzy
+msgid "Bottom of screen"
+msgstr "Απο κάτω προς τα Πάνω"
+
+#, fuzzy
+msgid "Background color for the text display."
+msgstr "Χρώμα τίτλου του παραθύρου"
+
+#, fuzzy
+msgid "Font color for the text display."
+msgstr "Χρώμα γραμματοσειράς για τον τίτλο παραθύρου"

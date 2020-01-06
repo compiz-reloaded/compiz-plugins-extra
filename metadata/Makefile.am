@@ -37,6 +37,11 @@ if THREED_PLUGIN
 threedxml = 3d.xml.in
 endif
 
+if WORKSPACENAMES_PLUGIN
+#depends on text
+workspacenamesxml = workspacenames.xml.in
+endif
+
 xml_in_files = 	             \
 	addhelper.xml.in     \
 	bench.xml.in         \
@@ -66,7 +71,8 @@ xml_in_files = 	             \
 	$(scalefilterxml)    \
 	$(showmousexml)      \
 	$(highlightcontentxml)      \
-	$(threedxml)
+	$(threedxml)         \
+	$(workspacenamesxml)
 
 xml_files    = $(xml_in_files:.xml.in=.xml)
 xml_DATA     = $(xml_files)

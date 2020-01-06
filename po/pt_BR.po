@@ -4241,9 +4241,6 @@ msgstr "Cor Gradiente 1"
 #~ msgid "Big"
 #~ msgstr "Grande"
 
-#~ msgid "Centered on screen"
-#~ msgstr "Centralizado na área de trabalho"
-
 #~ msgid ""
 #~ "Changes the minimum brightness factor for windows in the ring. The farer "
 #~ "away windows are, the less bright are they."
@@ -4387,9 +4384,6 @@ msgstr "Cor Gradiente 1"
 
 #~ msgid "Show window title of currently selected window."
 #~ msgstr "Mostrar título da janela atual."
-
-#~ msgid "Text Placement"
-#~ msgstr "Colocação Texto"
 
 #~ msgid "Thumbnail Height"
 #~ msgstr "Altura da Miniatura"
@@ -5983,3 +5977,83 @@ msgstr "Cor Gradiente 1"
 #~ msgstr ""
 #~ "Esta opção cria mipmap que melhoram a aparência geral das texturas, e "
 #~ "reduzem as arestas distorcidas."
+
+msgid "Workspace Naming"
+msgstr ""
+
+msgid "Allows assigning descriptions to workspaces"
+msgstr ""
+
+msgid "Names"
+msgstr ""
+
+msgid "Workspace Names"
+msgstr ""
+
+#, fuzzy
+msgid "Viewport"
+msgstr "Janela de Visualização da parte superior"
+
+#, fuzzy
+msgid "Number of viewport to be named"
+msgstr "Número de janelas a acompanhar"
+
+msgid "Name"
+msgstr ""
+
+#, fuzzy
+msgid "Viewport name"
+msgstr "Janela de Visualização da Esquerda"
+
+msgid "Timeout (in s) of the name display"
+msgstr ""
+
+#, fuzzy
+msgid "Time (in s) the name display fades out after being shown."
+msgstr "Tempo (em s) que a barra de abas é visível após uma alteração nas abas"
+
+#, fuzzy
+msgid "Text Display"
+msgstr "Duração do Ecrã de Logótipo."
+
+#, fuzzy
+msgid "Selects if the text should be displayed in bold font or not."
+msgstr "Determina se o título da janela deve ser exibido em negrito ou não."
+
+#, fuzzy
+msgid "Font Family"
+msgstr "Tamanho da fonte"
+
+#, fuzzy
+msgid "Font family for the text display."
+msgstr "Tamanho da fonte do título da janela"
+
+#, fuzzy
+msgid "Font size for the text display."
+msgstr "Tamanho da fonte do título da janela"
+
+msgid "Text Placement"
+msgstr "Colocação Texto"
+
+#, fuzzy
+msgid "Selects where to place the text."
+msgstr "Determina onde posicionar o título da janela."
+
+msgid "Centered on screen"
+msgstr "Centralizado na área de trabalho"
+
+#, fuzzy
+msgid "Top of screen"
+msgstr "Evitar sair da área de trabalho"
+
+#, fuzzy
+msgid "Bottom of screen"
+msgstr "Baixo para cima"
+
+#, fuzzy
+msgid "Background color for the text display."
+msgstr "Cor de fundo para o título da janela"
+
+#, fuzzy
+msgid "Font color for the text display."
+msgstr "Cor da fonte para o título da janela"

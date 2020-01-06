@@ -4213,9 +4213,6 @@ msgstr "Toinen väriliu'un väri."
 #~ msgid "Big"
 #~ msgstr "Suuri"
 
-#~ msgid "Centered on screen"
-#~ msgstr "Keskitetty näytölle"
-
 #~ msgid "Darken Background"
 #~ msgstr "Tummenna tausta"
 
@@ -4315,9 +4312,6 @@ msgstr "Toinen väriliu'un väri."
 
 #~ msgid "Show window title of currently selected window."
 #~ msgstr "Näytä valitun ikkunan otsikko."
-
-#~ msgid "Text Placement"
-#~ msgstr "Tekstin sijoittelu"
 
 #~ msgid "Thumbnail Height"
 #~ msgstr "Esikatselukuvan korkeus"
@@ -5538,3 +5532,81 @@ msgstr "Toinen väriliu'un väri."
 
 #~ msgid "Misc. options"
 #~ msgstr "Sekalaiset valinnat"
+
+msgid "Workspace Naming"
+msgstr ""
+
+msgid "Allows assigning descriptions to workspaces"
+msgstr ""
+
+msgid "Names"
+msgstr ""
+
+msgid "Workspace Names"
+msgstr ""
+
+#, fuzzy
+msgid "Viewport"
+msgstr "Ylempi työtila"
+
+#, fuzzy
+msgid "Number of viewport to be named"
+msgstr "Ikkunoiden määrä, joita tulee jäljittää"
+
+msgid "Name"
+msgstr ""
+
+#, fuzzy
+msgid "Viewport name"
+msgstr "Vasen työtila"
+
+msgid "Timeout (in s) of the name display"
+msgstr ""
+
+#, fuzzy
+msgid "Time (in s) the name display fades out after being shown."
+msgstr ""
+
+#, fuzzy
+msgid "Text Display"
+msgstr "Näyttö"
+
+msgid "Selects if the text should be displayed in bold font or not."
+msgstr ""
+
+#, fuzzy
+msgid "Font Family"
+msgstr "Kirjasimen koko"
+
+#, fuzzy
+msgid "Font family for the text display."
+msgstr "Ikkunan nimen fontti"
+
+#, fuzzy
+msgid "Font size for the text display."
+msgstr "Ikkunan nimen fontti"
+
+msgid "Text Placement"
+msgstr "Tekstin sijoittelu"
+
+msgid "Selects where to place the text."
+msgstr ""
+
+msgid "Centered on screen"
+msgstr "Keskitetty näytölle"
+
+#, fuzzy
+msgid "Top of screen"
+msgstr "Merieliön tyyppi."
+
+#, fuzzy
+msgid "Bottom of screen"
+msgstr "Alhaalta ylös"
+
+#, fuzzy
+msgid "Background color for the text display."
+msgstr "Ikkunan nimen taustaväri"
+
+#, fuzzy
+msgid "Font color for the text display."
+msgstr "Ikkunan nimen fontin väri"
