@@ -4440,9 +4440,6 @@ msgstr "Kolor drugiego gradientu"
 #~ msgid "Big"
 #~ msgstr "Duża"
 
-#~ msgid "Centered on screen"
-#~ msgstr "Na środku ekranu"
-
 #~ msgid ""
 #~ "Changes the minimum brightness factor for windows in the ring. The farer "
 #~ "away windows are, the less bright are they."
@@ -4595,9 +4592,6 @@ msgstr "Kolor drugiego gradientu"
 #~ msgid "Show windows that are minimized, shaded or in show desktop mode."
 #~ msgstr ""
 #~ "Pokaż zminimalizowane, zwinięte lub ukryte trybem \"pokaż pulpit\" okna."
-
-#~ msgid "Text Placement"
-#~ msgstr "Położenie tekstu"
 
 #~ msgid "Thumbnail Height"
 #~ msgstr "Wysokość miniatury"
@@ -6214,3 +6208,83 @@ msgstr "Kolor drugiego gradientu"
 
 #~ msgid "Use spring model for the tab bar when moving the window"
 #~ msgstr "Użyj modelu sprężyny dla okna zakładek podczar poruszania oknem"
+
+msgid "Workspace Naming"
+msgstr ""
+
+msgid "Allows assigning descriptions to workspaces"
+msgstr ""
+
+msgid "Names"
+msgstr ""
+
+msgid "Workspace Names"
+msgstr ""
+
+#, fuzzy
+msgid "Viewport"
+msgstr "Górny wirtualny pulpit"
+
+#, fuzzy
+msgid "Number of viewport to be named"
+msgstr "Ilość okien do śledzenia"
+
+msgid "Name"
+msgstr ""
+
+#, fuzzy
+msgid "Viewport name"
+msgstr "Lewy wirtualny pulpit"
+
+msgid "Timeout (in s) of the name display"
+msgstr ""
+
+#, fuzzy
+msgid "Time (in s) the name display fades out after being shown."
+msgstr ""
+
+#, fuzzy
+msgid "Text Display"
+msgstr "Wyświetlanie"
+
+#, fuzzy
+msgid "Selects if the text should be displayed in bold font or not."
+msgstr "Wybór pokazywania tytułu okna pogrubioną czcionką."
+
+#, fuzzy
+msgid "Font Family"
+msgstr "Wielkość czcionki"
+
+#, fuzzy
+msgid "Font family for the text display."
+msgstr "Rozmiar czcionki dla tytułu okna"
+
+#, fuzzy
+msgid "Font size for the text display."
+msgstr "Rozmiar czcionki dla tytułu okna"
+
+msgid "Text Placement"
+msgstr "Położenie tekstu"
+
+#, fuzzy
+msgid "Selects where to place the text."
+msgstr "Wybór położenia tytułu okna."
+
+msgid "Centered on screen"
+msgstr "Na środku ekranu"
+
+#, fuzzy
+msgid "Top of screen"
+msgstr "Typ stworzeń morskich."
+
+#, fuzzy
+msgid "Bottom of screen"
+msgstr "Z dołu do góry"
+
+#, fuzzy
+msgid "Background color for the text display."
+msgstr "Kolor tła dla tytułu okna"
+
+#, fuzzy
+msgid "Font color for the text display."
+msgstr "Kolor czcionki dla tytułu okna"

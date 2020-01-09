@@ -3067,3 +3067,71 @@ msgstr ""
 
 #~ msgid "Misc. options"
 #~ msgstr "خيارات أخرى"
+
+msgid "Workspace Naming"
+msgstr ""
+
+msgid "Allows assigning descriptions to workspaces"
+msgstr ""
+
+msgid "Names"
+msgstr ""
+
+msgid "Workspace Names"
+msgstr ""
+
+msgid "Viewport"
+msgstr ""
+
+msgid "Number of viewport to be named"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "Viewport name"
+msgstr ""
+
+msgid "Timeout (in s) of the name display"
+msgstr ""
+
+msgid "Time (in s) the name display fades out after being shown."
+msgstr ""
+
+#, fuzzy
+msgid "Text Display"
+msgstr "أنواع النوافذ"
+
+msgid "Selects if the text should be displayed in bold font or not."
+msgstr ""
+
+msgid "Font Family"
+msgstr ""
+
+msgid "Font family for the text display."
+msgstr ""
+
+msgid "Font size for the text display."
+msgstr ""
+
+msgid "Text Placement"
+msgstr ""
+
+msgid "Selects where to place the text."
+msgstr ""
+
+msgid "Centered on screen"
+msgstr ""
+
+msgid "Top of screen"
+msgstr ""
+
+#, fuzzy
+msgid "Bottom of screen"
+msgstr "ميل الزاوية السفلى اليسرى"
+
+msgid "Background color for the text display."
+msgstr ""
+
+msgid "Font color for the text display."
+msgstr ""

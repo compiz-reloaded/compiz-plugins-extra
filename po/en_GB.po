@@ -2397,3 +2397,69 @@ msgstr "Colour 2"
 
 msgid "Second gradient color."
 msgstr "Second gradient colour."
+
+msgid "Workspace Naming"
+msgstr "Workspace Naming"
+
+msgid "Allows assigning descriptions to workspaces"
+msgstr "Allows assigning descriptions to workspaces"
+
+msgid "Names"
+msgstr "Names"
+
+msgid "Workspace Names"
+msgstr "Workspace Names"
+
+msgid "Viewport"
+msgstr "Viewport"
+
+msgid "Number of viewport to be named"
+msgstr "Number of viewport to be named"
+
+msgid "Name"
+msgstr "Name"
+
+msgid "Viewport name"
+msgstr "Viewport name"
+
+msgid "Timeout (in s) of the name display"
+msgstr "Timeout (in s) of the name display"
+
+msgid "Time (in s) the name display fades out after being shown."
+msgstr "Time (in s) the name display fades out after being shown."
+
+msgid "Text Display"
+msgstr "Text Display"
+
+msgid "Selects if the text should be displayed in bold font or not."
+msgstr "Selects if the text should be displayed in bold font or not."
+
+msgid "Font Family"
+msgstr "Font Family"
+
+msgid "Font family for the text display."
+msgstr "Font family for the text display."
+
+msgid "Font size for the text display."
+msgstr "Font size for the text display."
+
+msgid "Text Placement"
+msgstr "Text Placement"
+
+msgid "Selects where to place the text."
+msgstr "Selects where to place the text."
+
+msgid "Centered on screen"
+msgstr "Centred on screen"
+
+msgid "Top of screen"
+msgstr "Top of screen"
+
+msgid "Bottom of screen"
+msgstr "Bottom of screen"
+
+msgid "Background color for the text display."
+msgstr "Background colour for the text display."
+
+msgid "Font color for the text display."
+msgstr "Font colour for the text display."

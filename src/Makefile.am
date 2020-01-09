@@ -27,4 +27,5 @@ SUBDIRS = 3d \
 	  showmouse \
 	  loginout \
 	  vidcap \
-	  wallpaper
+	  wallpaper \
+	  workspacenames

@@ -4288,9 +4288,6 @@ msgstr "두번째 그라데이션 색."
 #~ msgid "Big"
 #~ msgstr "크게"
 
-#~ msgid "Centered on screen"
-#~ msgstr "화면 중앙"
-
 #~ msgid ""
 #~ "Changes the minimum brightness factor for windows in the ring. The farer "
 #~ "away windows are, the less bright are they."
@@ -4439,9 +4436,6 @@ msgstr "두번째 그라데이션 색."
 #~ msgid "Show windows that are minimized, shaded or in show desktop mode."
 #~ msgstr ""
 #~ "최소화되거나 말아올려지거나 바탕 화면 보기 모드에 있는 창들을 보여줌"
-
-#~ msgid "Text Placement"
-#~ msgstr "글자 배치"
 
 #~ msgid "Thumbnail Height"
 #~ msgstr "미리 보기 높이"
@@ -6020,3 +6014,83 @@ msgstr "두번째 그라데이션 색."
 #~ msgstr ""
 #~ "이 옵션은 전체적인 텍스쳐 모양을 향상시키는 mipmaps를 만들고 들쭉날쭉한 모"
 #~ "서리를 감소시킵니다."
+
+msgid "Workspace Naming"
+msgstr ""
+
+msgid "Allows assigning descriptions to workspaces"
+msgstr ""
+
+msgid "Names"
+msgstr ""
+
+msgid "Workspace Names"
+msgstr ""
+
+#, fuzzy
+msgid "Viewport"
+msgstr "작업 공간 상단"
+
+#, fuzzy
+msgid "Number of viewport to be named"
+msgstr "초점 추적을 사용할 창의 숫자"
+
+msgid "Name"
+msgstr ""
+
+#, fuzzy
+msgid "Viewport name"
+msgstr "작업 공간 좌측"
+
+msgid "Timeout (in s) of the name display"
+msgstr ""
+
+#, fuzzy
+msgid "Time (in s) the name display fades out after being shown."
+msgstr "탭 바꾸기 후 탭 막대가 보여질 시간(초)"
+
+#, fuzzy
+msgid "Text Display"
+msgstr "표시"
+
+#, fuzzy
+msgid "Selects if the text should be displayed in bold font or not."
+msgstr "창 제목을 굵은 글씨로 표시할지를 선택함"
+
+#, fuzzy
+msgid "Font Family"
+msgstr "글자 크기"
+
+#, fuzzy
+msgid "Font family for the text display."
+msgstr "창 제목 표시를 위한 글자 색"
+
+#, fuzzy
+msgid "Font size for the text display."
+msgstr "창 제목 표시를 위한 글자 색"
+
+msgid "Text Placement"
+msgstr "글자 배치"
+
+#, fuzzy
+msgid "Selects where to place the text."
+msgstr "창 제목을 어디에 둘지 선택함"
+
+msgid "Centered on screen"
+msgstr "화면 중앙"
+
+#, fuzzy
+msgid "Top of screen"
+msgstr "바다 동물의 종류"
+
+#, fuzzy
+msgid "Bottom of screen"
+msgstr "아래에서 위로"
+
+#, fuzzy
+msgid "Background color for the text display."
+msgstr "창 제목에 대한 배경 색"
+
+#, fuzzy
+msgid "Font color for the text display."
+msgstr "창 제목의 글자 색"

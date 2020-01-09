@@ -4652,9 +4652,6 @@ msgstr "Segundo color de gradiente"
 #~ msgid "Big"
 #~ msgstr "Grande"
 
-#~ msgid "Centered on screen"
-#~ msgstr "Centrar en la pantalla"
-
 #~ msgid ""
 #~ "Changes the minimum brightness factor for windows in the ring. The farer "
 #~ "away windows are, the less bright are they."
@@ -4805,9 +4802,6 @@ msgstr "Segundo color de gradiente"
 #~ msgid "Show windows that are minimized, shaded or in show desktop mode."
 #~ msgstr ""
 #~ "Mostrar ventanas que estén minimizadas, opacadas o en modo escritorio."
-
-#~ msgid "Text Placement"
-#~ msgstr "Posición del texto"
 
 #~ msgid "Thumbnail Height"
 #~ msgstr "Alto de la miniatura"
@@ -6485,3 +6479,83 @@ msgstr "Segundo color de gradiente"
 #~ msgstr ""
 #~ "Usar el modelo de resortes en la barra de fichas cuando la ventana es "
 #~ "movida"
+
+msgid "Workspace Naming"
+msgstr ""
+
+msgid "Allows assigning descriptions to workspaces"
+msgstr ""
+
+msgid "Names"
+msgstr ""
+
+msgid "Workspace Names"
+msgstr ""
+
+#, fuzzy
+msgid "Viewport"
+msgstr "Escritorio Superior"
+
+#, fuzzy
+msgid "Number of viewport to be named"
+msgstr "Número de ventanas a memorizar"
+
+msgid "Name"
+msgstr ""
+
+#, fuzzy
+msgid "Viewport name"
+msgstr "Escritorio Izquierdo"
+
+msgid "Timeout (in s) of the name display"
+msgstr ""
+
+#, fuzzy
+msgid "Time (in s) the name display fades out after being shown."
+msgstr ""
+
+#, fuzzy
+msgid "Text Display"
+msgstr "Fuente de los títulos de las ventanas"
+
+#, fuzzy
+msgid "Selects if the text should be displayed in bold font or not."
+msgstr "Seleccionar sí el título de la ventana debe estar en Negrita o no."
+
+#, fuzzy
+msgid "Font Family"
+msgstr "Tamaño de la fuente"
+
+#, fuzzy
+msgid "Font family for the text display."
+msgstr "Color del título de la ventana"
+
+#, fuzzy
+msgid "Font size for the text display."
+msgstr "Color del título de la ventana"
+
+msgid "Text Placement"
+msgstr "Posición del texto"
+
+#, fuzzy
+msgid "Selects where to place the text."
+msgstr "Seleccionar donde desea posicionar el título de la ventana."
+
+msgid "Centered on screen"
+msgstr "Centrar en la pantalla"
+
+#, fuzzy
+msgid "Top of screen"
+msgstr "Tipo de criaturas marinas."
+
+#, fuzzy
+msgid "Bottom of screen"
+msgstr "De abajo a arriba"
+
+#, fuzzy
+msgid "Background color for the text display."
+msgstr "El color del título de la ventana en la barra de fichas"
+
+#, fuzzy
+msgid "Font color for the text display."
+msgstr "El color del título de la ventana en la barra de fichas"

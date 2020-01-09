@@ -4255,9 +4255,6 @@ msgstr "El segon color del degradat."
 #~ msgid "Big"
 #~ msgstr "Gran"
 
-#~ msgid "Centered on screen"
-#~ msgstr "Centrat a la pantalla"
-
 #~ msgid ""
 #~ "Changes the minimum brightness factor for windows in the ring. The farer "
 #~ "away windows are, the less bright are they."
@@ -4413,9 +4410,6 @@ msgstr "El segon color del degradat."
 #~ msgstr ""
 #~ "Mostra les finestres que estan minimitzades, ombrejades o al mode mostra "
 #~ "l'escriptori."
-
-#~ msgid "Text Placement"
-#~ msgstr "Ubicació del text"
 
 #~ msgid "Thumbnail Height"
 #~ msgstr "Alçada de la miniatura"
@@ -5985,3 +5979,69 @@ msgstr "El segon color del degradat."
 #~ msgstr ""
 #~ "Això crearà mipmaps que millorarà l'aparença general de la textura, i "
 #~ "reduirà els cantons escapçats."
+
+msgid "Workspace Naming"
+msgstr "Anomenar els espais de treball"
+
+msgid "Allows assigning descriptions to workspaces"
+msgstr "Permet assignar descripcions als espais de treball"
+
+msgid "Names"
+msgstr "Noms"
+
+msgid "Workspace Names"
+msgstr "Noms dels espais de treball"
+
+msgid "Viewport"
+msgstr "Àrea de visualització"
+
+msgid "Number of viewport to be named"
+msgstr "Número de l'ària de visualització a anomenar"
+
+msgid "Name"
+msgstr "Nom"
+
+msgid "Viewport name"
+msgstr "Nom de l'àrea de visualització"
+
+msgid "Timeout (in s) of the name display"
+msgstr "Temps d'espera (en s) de la visualització del nom"
+
+msgid "Time (in s) the name display fades out after being shown."
+msgstr ""
+
+msgid "Text Display"
+msgstr "Visualització del text"
+
+msgid "Selects if the text should be displayed in bold font or not."
+msgstr "Selecciona si el text ha de mostrar-se en negreta o no."
+
+msgid "Font Family"
+msgstr "Família de la lletra"
+
+msgid "Font family for the text display."
+msgstr "La família del tipus de lletra per a la visualització del text."
+
+msgid "Font size for the text display."
+msgstr "La mida del tipus de lletra per a la visualització del text."
+
+msgid "Text Placement"
+msgstr "Ubicació del text"
+
+msgid "Selects where to place the text."
+msgstr "Selecciona on ubicar el text."
+
+msgid "Centered on screen"
+msgstr "Centrat a la pantalla"
+
+msgid "Top of screen"
+msgstr "Part superior de la pantalla"
+
+msgid "Bottom of screen"
+msgstr "Part inferior de la pantalla"
+
+msgid "Background color for the text display."
+msgstr "El color del fons per a la visualització del text."
+
+msgid "Font color for the text display."
+msgstr "El color de la lletra per a la visualització del text."

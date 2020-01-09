@@ -4017,9 +4017,6 @@ msgstr "Второй цвет градиента"
 #~ msgstr "Большой"
 
 #, fuzzy
-#~ msgid "Centered on screen"
-#~ msgstr "Блокировать экран при переходе в спящий режим"
-
 #, fuzzy
 #~ msgid "Darken Background"
 #~ msgstr "Затемнить фон"
@@ -4138,9 +4135,6 @@ msgstr "Второй цвет градиента"
 
 #~ msgid "Show window title of currently selected window."
 #~ msgstr "Отображение заголовка текущего окна."
-
-#~ msgid "Text Placement"
-#~ msgstr "Замена текста"
 
 #, fuzzy
 #~ msgid "Thumbnail Height"
@@ -5577,3 +5571,80 @@ msgstr "Второй цвет градиента"
 #, fuzzy
 #~ msgid "Tile or Stretch"
 #~ msgstr "<span size=\"small\"><b>Название</b></span>"
+
+msgid "Workspace Naming"
+msgstr ""
+
+msgid "Allows assigning descriptions to workspaces"
+msgstr ""
+
+msgid "Names"
+msgstr ""
+
+msgid "Workspace Names"
+msgstr ""
+
+#, fuzzy
+msgid "Viewport"
+msgstr "О_становить программу"
+
+#, fuzzy
+msgid "Number of viewport to be named"
+msgstr "Количество отслеживаемых окон"
+
+msgid "Name"
+msgstr ""
+
+#, fuzzy
+msgid "Viewport name"
+msgstr "Повернуть в_лево"
+
+msgid "Timeout (in s) of the name display"
+msgstr ""
+
+msgid "Time (in s) the name display fades out after being shown."
+msgstr ""
+
+#, fuzzy
+msgid "Text Display"
+msgstr "Время показа"
+
+msgid "Selects if the text should be displayed in bold font or not."
+msgstr ""
+
+#, fuzzy
+msgid "Font Family"
+msgstr "Размер шрифта"
+
+msgid "Font family for the text display."
+msgstr ""
+
+#, fuzzy
+msgid "Font size for the text display."
+msgstr "Размер окна слишком мал для Nano...\n"
+
+msgid "Text Placement"
+msgstr "Замена текста"
+
+msgid "Selects where to place the text."
+msgstr ""
+
+#, fuzzy
+msgid "Centered on screen"
+msgstr "Блокировать экран при переходе в спящий режим"
+
+#, fuzzy
+msgid "Top of screen"
+msgstr "Тип морских созданий."
+
+#, fuzzy
+msgid "Bottom of screen"
+msgstr "снизу вверх"
+
+#, fuzzy
+msgid "Background color for the text display."
+msgstr "Цвет фона для графика загрузки диска"
+
+#, fuzzy
+msgid "Font color for the text display."
+msgstr "Тут будет заголовок окна"

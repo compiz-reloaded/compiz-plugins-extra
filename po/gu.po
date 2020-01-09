@@ -4129,9 +4129,6 @@ msgstr "ઢાળ રંગ ૧"
 #~ msgid "Big"
 #~ msgstr "મોટું"
 
-#~ msgid "Centered on screen"
-#~ msgstr "સ્ક્રીન પર કેન્દ્રિકૃત થયેલ"
-
 #~ msgid ""
 #~ "Changes the minimum brightness factor for windows in the ring. The farer "
 #~ "away windows are, the less bright are they."
@@ -4271,9 +4268,6 @@ msgstr "ઢાળ રંગ ૧"
 
 #~ msgid "Show window title of currently selected window."
 #~ msgstr "વર્તમાનમાં પસંદિત વિન્ડોના વિન્ડો શીર્ષકને બતાવો."
-
-#~ msgid "Text Placement"
-#~ msgstr "લખાણ જમાવટ"
 
 #~ msgid "Thumbnail Height"
 #~ msgstr "થમ્બનેઈલ ઊંચાઈ"
@@ -5778,3 +5772,83 @@ msgstr "ઢાળ રંગ ૧"
 
 #~ msgid "Tile or Stretch"
 #~ msgstr "તકતી અથવા ખેંચ"
+
+msgid "Workspace Naming"
+msgstr ""
+
+msgid "Allows assigning descriptions to workspaces"
+msgstr ""
+
+msgid "Names"
+msgstr ""
+
+msgid "Workspace Names"
+msgstr ""
+
+#, fuzzy
+msgid "Viewport"
+msgstr "દૃશ્યપોર્ટ ટોચે"
+
+#, fuzzy
+msgid "Number of viewport to be named"
+msgstr "ટ્રેક કરવા માટેની વિન્ડોની સંખ્યા"
+
+msgid "Name"
+msgstr ""
+
+#, fuzzy
+msgid "Viewport name"
+msgstr "દૃશ્યપોર્ટ ડાબે"
+
+msgid "Timeout (in s) of the name display"
+msgstr ""
+
+#, fuzzy
+msgid "Time (in s) the name display fades out after being shown."
+msgstr "ટેબ બદલાવ પછી ટેબ પટ્ટી દેખીતી થાય તેમાં લાગતો સમય (સેકન્ડમાં)"
+
+#, fuzzy
+msgid "Text Display"
+msgstr "ડિસ્પ્લે સમય"
+
+#, fuzzy
+msgid "Selects if the text should be displayed in bold font or not."
+msgstr "પસંદ કરે છે કે શું વિન્ડો શીર્ષક ઘાટા ફોન્ટમાં દર્શાવવું જોઈએ કે નહિં."
+
+#, fuzzy
+msgid "Font Family"
+msgstr "ફોન્ટ માપ"
+
+#, fuzzy
+msgid "Font family for the text display."
+msgstr "વિન્ડો શીર્ષક ડિસ્પ્લે માટે ફોન્ટ માપ"
+
+#, fuzzy
+msgid "Font size for the text display."
+msgstr "વિન્ડો શીર્ષક ડિસ્પ્લે માટે ફોન્ટ માપ"
+
+msgid "Text Placement"
+msgstr "લખાણ જમાવટ"
+
+#, fuzzy
+msgid "Selects where to place the text."
+msgstr "વિન્ડો શીર્ષકને ક્યાં મૂકવી તે પસંદ કરે છે."
+
+msgid "Centered on screen"
+msgstr "સ્ક્રીન પર કેન્દ્રિકૃત થયેલ"
+
+#, fuzzy
+msgid "Top of screen"
+msgstr "ઓફસ્ક્રીન ટાળો"
+
+#, fuzzy
+msgid "Bottom of screen"
+msgstr "તળિયેથી ટોચ સુધી"
+
+#, fuzzy
+msgid "Background color for the text display."
+msgstr "વિન્ડો શીર્ષક માટે પાશ્વભાગનો રંગ"
+
+#, fuzzy
+msgid "Font color for the text display."
+msgstr "વિન્ડો શીર્ષકનો ફોન્ટ રંગ"
