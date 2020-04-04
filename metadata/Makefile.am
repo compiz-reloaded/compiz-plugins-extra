@@ -88,7 +88,7 @@ EXTRA_DIST =				\
 	notification.xml.in		\
 	scalefilter.xml.in		\
 	showmouse.xml.in		\
-	Highlightcontent.xml.in		\
+	highlightcontent.xml.in		\
 	3d.xml.in
 
 DISTCLEANFILES =	\

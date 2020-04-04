@@ -5,7 +5,7 @@ if HIGHLIGHTCONTENT_PLUGIN
 libhighlightcontent_la_LDFLAGS = $(PFLAGS)
 libhighlightcontent_la_LIBADD = @COMPIZ_LIBS@ @HIGHLIGHTCONTENT_LIBS@
 nodist_libhighlightcontent_la_SOURCES = highlightcontent_options.c highlightcontent_options.h
-dist_libhighlightcontent_la_SOURCES = highlightcontent.c highlightcontent_tex.h
+dist_libhighlightcontent_la_SOURCES = highlightcontent.c
 endif
 
 BUILT_SOURCES = $(nodist_libhighlightcontent_la_SOURCES)
