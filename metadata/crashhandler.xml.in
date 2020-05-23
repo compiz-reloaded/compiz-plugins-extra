@@ -1,31 +1,31 @@
 <?xml version="1.0"?>
 <compiz>
 	<plugin name="crashhandler" useBcop="true">
-		<_short>Crash handler</_short>
-		<_long>Compiz crash handler plugin</_long>
+		<short>Crash handler</short>
+		<long>Compiz crash handler plugin</long>
 		<category>Utility</category>
 		<display>
 			<group>
-				<_short>Main</_short>
+				<short>Main</short>
 				<option name="enabled" type="bool">
-					<_short>Enable Crash Handler</_short>
-					<_long>Activate Crash Handler.</_long>
+					<short>Enable Crash Handler</short>
+					<long>Activate Crash Handler.</long>
 					<default>true</default>
 				</option>
 				<option name="directory" type="string">
-					<_short>Crash Dump Directory</_short>
-					<_long>Directory to dump the crash logs to.</_long>
+					<short>Crash Dump Directory</short>
+					<long>Directory to dump the crash logs to.</long>
 					<hints>directory;</hints>
 					<default>/tmp</default>
 				</option>
 				<option name="start_wm" type="bool">
-					<_short>Start Other Window Manager</_short>
-					<_long>Start other window manager on Crash.</_long>
+					<short>Start Other Window Manager</short>
+					<long>Start other window manager on Crash.</long>
 					<default>false</default>
 				</option>
 				<option name="wm_cmd" type="string">
-					<_short>Window Manager Command Line</_short>
-					<_long>Window manager command line. DO NOT ENTER COMPIZ HERE!!!</_long>
+					<short>Window Manager Command Line</short>
+					<long>Window manager command line. DO NOT ENTER COMPIZ HERE!!!</long>
 					<hints>command;</hints>
 					<default/>
 				</option>

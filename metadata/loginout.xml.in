@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <compiz>
 	<plugin name="loginout" useBcop="true">
-		<_short>Login/Logout</_short>
-		<_long>Login/Logout effect</_long>
+		<short>Login/Logout</short>
+		<long>Login/Logout effect</long>
 		<category>Effects</category>
 		<deps>
 			<requirement>
@@ -14,39 +14,39 @@
 		</deps>
 		<screen>
 			<group>
-				<_short>Login</_short>
+				<short>Login</short>
 				<option name="in_match" type="match">
-					<_short>Login Window match</_short>
-					<_long>Login Window Match</_long>
+					<short>Login Window match</short>
+					<long>Login Window Match</long>
 					<default>(iclass=^ksplash)</default>
 				</option>
 				<option name="in_time" type="float">
-					<_short>Fade In/Out Time</_short>
-					<_long>Fade In/Out Time.</_long>
+					<short>Fade In/Out Time</short>
+					<long>Fade In/Out Time.</long>
 					<default>1.0</default>
 					<min>0.0</min>
 					<max>100.0</max>
 					<precision>0.1</precision>
 				</option>
 				<option name="in_saturation" type="float">
-					<_short>Saturation</_short>
-					<_long>Background/Window saturation.</_long>
+					<short>Saturation</short>
+					<long>Background/Window saturation.</long>
 					<default>0.0</default>
 					<min>0.0</min>
 					<max>100.0</max>
 					<precision>0.1</precision>
 				</option>
 				<option name="in_brightness" type="float">
-					<_short>Brightness</_short>
-					<_long>Background/Window brightness.</_long>
+					<short>Brightness</short>
+					<long>Background/Window brightness.</long>
 					<default>100.0</default>
 					<min>0.0</min>
 					<max>100.0</max>
 					<precision>0.1</precision>
 				</option>
 				<option name="in_opacity" type="float">
-					<_short>Opacity</_short>
-					<_long>Window opacity.</_long>
+					<short>Opacity</short>
+					<long>Window opacity.</long>
 					<default>100.0</default>
 					<min>0.0</min>
 					<max>100.0</max>
@@ -54,39 +54,39 @@
 				</option>
 			</group>
 			<group>
-				<_short>Logout</_short>
+				<short>Logout</short>
 				<option name="out_match" type="match">
-					<_short>Logout Window match</_short>
-					<_long>Logout Window Match</_long>
+					<short>Logout Window match</short>
+					<long>Logout Window Match</long>
 					<default>(iclass=ksmserver &amp; (role=logoutdialog | role=logouteffect)) | (class=Libssui-tool &amp; type=Dialog)</default>
 				</option>
 				<option name="out_time" type="float">
-					<_short>Fade In/Out Time</_short>
-					<_long>Fade In/Out Time.</_long>
+					<short>Fade In/Out Time</short>
+					<long>Fade In/Out Time.</long>
 					<default>1.0</default>
 					<min>0.0</min>
 					<max>100.0</max>
 					<precision>0.1</precision>
 				</option>
 				<option name="out_saturation" type="float">
-					<_short>Saturation</_short>
-					<_long>Background/Window saturation.</_long>
+					<short>Saturation</short>
+					<long>Background/Window saturation.</long>
 					<default>0.0</default>
 					<min>0.0</min>
 					<max>100.0</max>
 					<precision>0.1</precision>
 				</option>
 				<option name="out_brightness" type="float">
-					<_short>Brightness</_short>
-					<_long>Background/Window brightness.</_long>
+					<short>Brightness</short>
+					<long>Background/Window brightness.</long>
 					<default>100.0</default>
 					<min>0.0</min>
 					<max>100.0</max>
 					<precision>0.1</precision>
 				</option>
 				<option name="out_opacity" type="float">
-					<_short>Opacity</_short>
-					<_long>Window opacity.</_long>
+					<short>Opacity</short>
+					<long>Window opacity.</long>
 					<default>100.0</default>
 					<min>0.0</min>
 					<max>100.0</max>

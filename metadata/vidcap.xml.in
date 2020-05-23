@@ -1,29 +1,29 @@
 <?xml version="1.0"?>
 <compiz>
     <plugin name="vidcap" useBcop="true">
-	<_short>Vidcap</_short>
-	<_long>Screen Recorder</_long>
+	<short>Vidcap</short>
+	<long>Screen Recorder</long>
 	<category>Utility</category>
 		<display>
 			<option name="toggle_record" type="key">
-				<_short>Start / Stop</_short>
-				<_long>Start and stop recording</_long>
+				<short>Start / Stop</short>
+				<long>Start and stop recording</long>
 				<default>&lt;Super&gt;v</default>
 			</option>
 			<option name="directory" type="string">
-				<_short>Directory</_short>
-				<_long>Directory to store videos</_long>
+				<short>Directory</short>
+				<long>Directory to store videos</long>
 				<default>/tmp</default>
 				<hints>directory;</hints>
 			</option>
 			<option name="command" type="string">
-				<_short>Command</_short>
-				<_long>Command to be used for encoding video. Use a dash (-) for the input file and %f.ext for the output file</_long>
+				<short>Command</short>
+				<long>Command to be used for encoding video. Use a dash (-) for the input file and %f.ext for the output file</long>
 				<default>ffmpeg -i - %f.mp4</default>
 			</option>
 			<option name="draw_indicator" type="bool">
-				<_short>Draw Status Indicator</_short>
-				<_long>Draw color coded status dot</_long>
+				<short>Draw Status Indicator</short>
+				<long>Draw color coded status dot</long>
 				<default>true</default>
 			</option>
 		</display>

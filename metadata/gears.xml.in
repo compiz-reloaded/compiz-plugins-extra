@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <compiz>
 	<plugin name="gears">
-		<_short>Cube Gears</_short>
-		<_long>Render gears inside of the transparent cube</_long>
+		<short>Cube Gears</short>
+		<long>Render gears inside of the transparent cube</long>
 		<category>Effects</category>
 		<deps>
 		    <relation type="after">

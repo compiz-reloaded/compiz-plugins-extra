@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <compiz>
 	<plugin name="reflex" useBcop="true">
-		<_short>Reflection</_short>
-		<_long>Draws reflections</_long>
+		<short>Reflection</short>
+		<long>Draws reflections</long>
 		<category>Effects</category>
 		<deps>
 			<relation type="after">
@@ -14,38 +14,38 @@
 		</deps>
 		<screen>
 			<group>
-				<_short>Main</_short>
+				<short>Main</short>
 				<option name="file" type="string">
-					<_short>Reflection Image</_short>
-					<_long>Reflection Image file</_long>
+					<short>Reflection Image</short>
+					<long>Reflection Image file</long>
 					<hints>file;image;</hints>
 					<default>reflection.png</default>
 				</option>
 				<option name="match" type="match">
-					<_short>Window match</_short>
-					<_long>Reflection Window Match</_long>
+					<short>Window match</short>
+					<long>Reflection Window Match</long>
 					<default>any</default>
 				</option>
 				<option name="window" type="bool">
-					<_short>Reflection for Windows</_short>
-					<_long>Draw Reflection for windows.</_long>
+					<short>Reflection for Windows</short>
+					<long>Draw Reflection for windows.</long>
 					<default>false</default>
 				</option>
 				<option name="decoration" type="bool">
-					<_short>Reflection for Decorations</_short>
-					<_long>Draw Reflection for decorations.</_long>
+					<short>Reflection for Decorations</short>
+					<long>Draw Reflection for decorations.</long>
 					<default>true</default>
 				</option>
 				<option name="threshold" type="int">
-					<_short>Alpha Dependence Threshold</_short>
-					<_long>Alpha dependence threshold.</_long>
+					<short>Alpha Dependence Threshold</short>
+					<long>Alpha dependence threshold.</long>
 					<default>1</default>
 					<min>1</min>
 					<max>10</max>
 				</option>
 				<option name="moving" type="bool">
-					<_short>Moving reflection</_short>
-					<_long>Move the reflection on window move.</_long>
+					<short>Moving reflection</short>
+					<long>Move the reflection on window move.</long>
 					<default>true</default>
 				</option>
 			</group>

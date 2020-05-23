@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <compiz>
 	<plugin name="widget" useBcop="true">
-		<_short>Widget Layer</_short>
-		<_long>Show widget windows on a separate layer</_long>
+		<short>Widget Layer</short>
+		<long>Show widget windows on a separate layer</long>
 		<category>Desktop</category>
 		<deps>
 			<relation type="before">
@@ -12,55 +12,55 @@
 		</deps>
 		<display>
 			<option name="toggle_key" type="key">
-				<_short>Toggle Widget Display</_short>
-				<_long>Show or hide widget windows</_long>
+				<short>Toggle Widget Display</short>
+				<long>Show or hide widget windows</long>
 				<default>F9</default>
 			</option>
 			<option name="toggle_button" type="button">
-				<_short>Toggle Widget Display</_short>
-				<_long>Show or hide widget windows</_long>
+				<short>Toggle Widget Display</short>
+				<long>Show or hide widget windows</long>
 			</option>
 			<option name="toggle_edge" type="edge">
-				<_short>Toggle Widget Display</_short>
-				<_long>Show or hide widget windows</_long>
+				<short>Toggle Widget Display</short>
+				<long>Show or hide widget windows</long>
 			</option>
 		</display>
 		<screen>
 			<group>
-				<_short>Behaviour</_short>
+				<short>Behaviour</short>
 				<option name="match" type="match">
-					<_short>Widget Windows</_short>
-					<_long>Windows that always should be treated as widgets</_long>
+					<short>Widget Windows</short>
+					<long>Windows that always should be treated as widgets</long>
 					<default></default>
 				</option>
 				<option name="end_on_click" type="bool">
-					<_short>End Widget Mode on Click</_short>
-					<_long>End widget mode when a non-widget window is clicked.</_long>
+					<short>End Widget Mode on Click</short>
+					<long>End widget mode when a non-widget window is clicked.</long>
 					<default>true</default>
 				</option>
 			</group>
 			<group>
-				<_short>Appearance</_short>
+				<short>Appearance</short>
 				<option name="fade_time" type="float">
-					<_short>Fade Time</_short>
-					<_long>Time (in s) for fading into/out of the widget layer.</_long>
+					<short>Fade Time</short>
+					<long>Time (in s) for fading into/out of the widget layer.</long>
 					<default>0.5</default>
 					<min>0</min>
 					<max>10</max>
 					<precision>0.1</precision>
 				</option>
 				<subgroup>
-					<_short>Background in Widget Mode</_short>
+					<short>Background in Widget Mode</short>
 					<option name="bg_brightness" type="int">
-						<_short>Background Brightness</_short>
-						<_long>Brightness of non-widget windows in widget modes.</_long>
+						<short>Background Brightness</short>
+						<long>Brightness of non-widget windows in widget modes.</long>
 						<default>50</default>
 						<min>0</min>
 						<max>100</max>
 					</option>
 					<option name="bg_saturation" type="int">
-						<_short>Background Saturation</_short>
-						<_long>Saturation of non-widget windows in widget modes.</_long>
+						<short>Background Saturation</short>
+						<long>Saturation of non-widget windows in widget modes.</long>
 						<default>100</default>
 						<min>0</min>
 						<max>100</max>

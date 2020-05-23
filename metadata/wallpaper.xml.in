@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <compiz>
 	<plugin name="wallpaper" useBcop="true">
-		<_short>Wallpaper</_short>
-		<_long>Draw the desktop wallpaper</_long>
+		<short>Wallpaper</short>
+		<long>Draw the desktop wallpaper</long>
 		<category>Utility</category>
 		<deps>
 			<relation type="after">
@@ -13,103 +13,103 @@
 		</deps>
 		<display>
 			<option name="recursive" type="bool">
-				<_short>Recursive directory search</_short>
-				<_long>Search in all sub-directories.</_long>
+				<short>Recursive directory search</short>
+				<long>Search in all sub-directories.</long>
 				<default>true</default>
 			</option>
 		</display>
 		<screen>
 			<option name="cycle" type="bool">
-				<_short>Cycle</_short>
-				<_long>Automatically cycle through wallpapers.</_long>
+				<short>Cycle</short>
+				<long>Automatically cycle through wallpapers.</long>
 				<default>true</default>
 			</option>
 			<option name="cycle_timeout" type="float">
-				<_short>Cycle timeout</_short>
-				<_long>Time before cycling to next wallpaper (in minutes).</_long>
+				<short>Cycle timeout</short>
+				<long>Time before cycling to next wallpaper (in minutes).</long>
 				<default>5.0</default>
 				<min>0.1</min>
 				<max>2880.0</max> <!-- 48 hrs -->
 			</option>
 			<option name="fade_time" type="float">
-				<_short>Fade time</_short>
-				<_long>Fade transition time (in seconds).</_long>
+				<short>Fade time</short>
+				<long>Fade transition time (in seconds).</long>
 				<default>2.5</default>
 				<min>0.1</min>
 				<max>5.0</max>
 			</option>
 			<option name="randomize" type="bool">
-				<_short>Randomize</_short>
-				<_long>Randomly order wallpapers.</_long>
+				<short>Randomize</short>
+				<long>Randomly order wallpapers.</long>
 				<default>true</default>
 			</option>
 			<option name="hide_other_backgrounds" type="bool">
-				<_short>Hide other desktop background windows</_short>
-				<_long>Don't draw desktop backgrounds rendered by other applications. Mouse and keyboard input works as if the background were drawn.</_long>
+				<short>Hide other desktop background windows</short>
+				<long>Don't draw desktop backgrounds rendered by other applications. Mouse and keyboard input works as if the background were drawn.</long>
 				<default>false</default>
 			</option>
 			<subgroup>
-				<_short>Backgrounds</_short>
+				<short>Backgrounds</short>
 				<option name="bg_image" type="list">
-					<_short>Image</_short>
-					<_long>Image file.</_long>
+					<short>Image</short>
+					<long>Image file.</long>
 					<type>string</type>
 					<hints>path;file;image;</hints>
 				</option>
 				<option name="bg_image_pos" type="list">
-					<_short>Position</_short>
-					<_long>Image position.</_long>
+					<short>Position</short>
+					<long>Image position.</long>
 					<type>int</type>
 					<min>0</min>
 					<max>4</max>
 					<desc>
 						<value>0</value>
-						<_name>Scale and Crop</_name>
+						<name>Scale and Crop</name>
 					</desc>
 					<desc>
 						<value>1</value>
-						<_name>Scaled</_name>
+						<name>Scaled</name>
 					</desc>
 					<desc>
 						<value>2</value>
-						<_name>Centered</_name>
+						<name>Centered</name>
 					</desc>
 					<desc>
 						<value>3</value>
-						<_name>Tiled</_name>
+						<name>Tiled</name>
 					</desc>
 					<desc>
 						<value>4</value>
-						<_name>Center Tiled</_name>
+						<name>Center Tiled</name>
 					</desc>
 				</option>
 				<option name="bg_fill_type" type="list">
-					<_short>Fill type</_short>
-					<_long>Background fill type.</_long>
+					<short>Fill type</short>
+					<long>Background fill type.</long>
 					<type>int</type>
 					<min>0</min>
 					<max>2</max>
 					<desc>
 						<value>0</value>
-						<_name>Solid fill</_name>
+						<name>Solid fill</name>
 					</desc>
 					<desc>
 						<value>1</value>
-						<_name>Vertical gradient</_name>
+						<name>Vertical gradient</name>
 					</desc>
 					<desc>
 						<value>2</value>
-						<_name>Horizontal gradient</_name>
+						<name>Horizontal gradient</name>
 					</desc>
 				</option>
 				<option name="bg_color1" type="list">
-					<_short>Color 1</_short>
-					<_long>Fill or first gradient color.</_long>
+					<short>Color 1</short>
+					<long>Fill or first gradient color.</long>
 					<type>color</type>
 				</option>
 				<option name="bg_color2" type="list">
-					<_short>Color 2</_short>
-					<_long>Second gradient color.</_long>
+					<short>Color 2</short>
+					<long>Second gradient color.</long>
 					<type>color</type>
 				</option>
 			</subgroup>

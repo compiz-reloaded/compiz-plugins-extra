@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <compiz>
 	<plugin name="cubeaddon" useBcop="true">
-		<_short>Cube Reflection and Deformation</_short>
-		<_long>Compiz cube reflection and deformation</_long>
+		<short>Cube Reflection and Deformation</short>
+		<long>Compiz cube reflection and deformation</long>
 		<category>Effects</category>
 		<deps>
 		<relation type="after">
@@ -19,49 +19,49 @@
 		</deps>
 		<display>
 			<group>
-				<_short>Cube caps</_short>
+				<short>Cube caps</short>
 				<subgroup>
-					<_short>Bindings</_short>
+					<short>Bindings</short>
 					<option name="top_next_key" type="key">
-						<_short>Next top image</_short>
-						<_long>Advance to next image for top face of the cube</_long>
+						<short>Next top image</short>
+						<long>Advance to next image for top face of the cube</long>
 						<passive_grab>false</passive_grab>
 						<default>space</default>
 					</option>
 					<option name="top_next_button" type="button">
-						<_short>Next top image</_short>
-						<_long>Advance to next image for top face of the cube</_long>
+						<short>Next top image</short>
+						<long>Advance to next image for top face of the cube</long>
 						<passive_grab>false</passive_grab>
 					</option>
 					<option name="top_prev_key" type="key">
-						<_short>Prev top image</_short>
-						<_long>Go back to previous image for top face of the cube</_long>
+						<short>Prev top image</short>
+						<long>Go back to previous image for top face of the cube</long>
 						<passive_grab>false</passive_grab>
 						<default>Backspace</default>
 					</option>
 					<option name="top_prev_button" type="button">
-						<_short>Prev top image</_short>
-						<_long>Go back to previous image for top face of the cube</_long>
+						<short>Prev top image</short>
+						<long>Go back to previous image for top face of the cube</long>
 						<passive_grab>false</passive_grab>
 					</option>
 					<option name="bottom_next_key" type="key">
-						<_short>Next bottom image</_short>
-						<_long>Advance to next image for bottom face of the cube</_long>
+						<short>Next bottom image</short>
+						<long>Advance to next image for bottom face of the cube</long>
 						<passive_grab>false</passive_grab>
 					</option>
 					<option name="bottom_next_button" type="button">
-						<_short>Next bottom image</_short>
-						<_long>Advance to next image for bottom face of the cube</_long>
+						<short>Next bottom image</short>
+						<long>Advance to next image for bottom face of the cube</long>
 						<passive_grab>false</passive_grab>
 					</option>
 					<option name="bottom_prev_key" type="key">
-						<_short>Prev bottom image</_short>
-						<_long>Go back to previous image for bottom face of the cube</_long>
+						<short>Prev bottom image</short>
+						<long>Go back to previous image for bottom face of the cube</long>
 						<passive_grab>false</passive_grab>
 					</option>
 					<option name="bottom_prev_button" type="button">
-						<_short>Prev bottom image</_short>
-						<_long>Go back to previous image for bottom face of the cube</_long>
+						<short>Prev bottom image</short>
+						<long>Go back to previous image for bottom face of the cube</long>
 						<passive_grab>false</passive_grab>
 					</option>
 				</subgroup>
@@ -69,15 +69,15 @@
 		</display>
 		<screen>
 			<group>
-				<_short>Reflection</_short>
+				<short>Reflection</short>
 				<option name="reflection" type="bool">
-					<_short>Enabled</_short>
-					<_long>Give cube a reflective ground.</_long>
+					<short>Enabled</short>
+					<long>Give cube a reflective ground.</long>
 					<default>true</default>
 				</option>
 				<option name="ground_color1" type="color">
-					<_short>Ground color(near)</_short>
-					<_long>Color of the ground (near).</_long>
+					<short>Ground color(near)</short>
+					<long>Color of the ground (near).</long>
 					<default>
 						<red>0xb333</red>
 						<green>0xb333</green>
@@ -86,8 +86,8 @@
 					</default>
 				</option>
 				<option name="ground_color2" type="color">
-					<_short>Ground color(far)</_short>
-					<_long>Color of the ground (far).</_long>
+					<short>Ground color(far)</short>
+					<long>Color of the ground (far).</long>
 					<default>
 						<red>0xb333</red>
 						<green>0xb333</green>
@@ -96,96 +96,96 @@
 					</default>
 				</option>
 				<option name="ground_size" type="float">
-					<_short>Reflection ground size</_short>
-					<_long>Reflection ground size.</_long>
+					<short>Reflection ground size</short>
+					<long>Reflection ground size.</long>
 					<default>0.5</default>
 					<min>0.0</min>
 					<max>1.0</max>
 					<precision>0.01</precision>
 				</option>
 				<option name="intensity" type="float">
-					<_short>Intensity</_short>
-					<_long>Reflection intensity</_long>
+					<short>Intensity</short>
+					<long>Reflection intensity</long>
 					<default>0.4</default>
 					<min>0.0</min>
 					<max>1.0</max>
 					<precision>0.01</precision>
 				</option>
 				<option name="auto_zoom" type="bool">
-					<_short>Auto zoom</_short>
-					<_long>Zoom out automatically to make the cube fit to the screen.</_long>
+					<short>Auto zoom</short>
+					<long>Zoom out automatically to make the cube fit to the screen.</long>
 					<default>true</default>
 				</option>
 				<option name="zoom_manual_only" type="bool">
-					<_short>Auto zoom only on Mouse Rotate</_short>
-					<_long>Zoom out automatically only on mouse rotate.</_long>
+					<short>Auto zoom only on Mouse Rotate</short>
+					<long>Zoom out automatically only on mouse rotate.</long>
 					<default>true</default>
 				</option>
 				<option name="mode" type="int">
-					<_short>Reflection mode</_short>
-					<_long>Reflection mode.</_long>
+					<short>Reflection mode</short>
+					<long>Reflection mode.</long>
 					<default>0</default>
 					<min>0</min>
 					<max>3</max>
 					<desc>
 						<value>0</value>
-						<_name>Jumpy</_name>
+						<name>Jumpy</name>
 					</desc>
 					<desc>
 						<value>1</value>
-						<_name>Jumpy reflection</_name>
+						<name>Jumpy reflection</name>
 					</desc>
 					<desc>
 						<value>2</value>
-						<_name>Distance</_name>
+						<name>Distance</name>
 					</desc>
 					<desc>
 						<value>3</value>
-						<_name>Above</_name>
+						<name>Above</name>
 					</desc>
 				</option>
 			</group>
 			<group>
-				<_short>Deformation</_short>
+				<short>Deformation</short>
 				<option name="deformation" type="int">
-					<_short>Deformation</_short>
-					<_long>Deformation mode.</_long>
+					<short>Deformation</short>
+					<long>Deformation mode.</long>
 					<default>1</default>
 					<min>0</min>
 					<max>2</max>
 					<desc>
 						<value>0</value>
-						<_name>None</_name>
+						<name>None</name>
 					</desc>
 					<desc>
 						<value>1</value>
-						<_name>Cylinder</_name>
+						<name>Cylinder</name>
 					</desc>
 					<desc>
 						<value>2</value>
-						<_name>Sphere</_name>
+						<name>Sphere</name>
 					</desc>
 				</option>
 				<option name="unfold_deformation" type="bool">
-					<_short>Unfold cube deformation</_short>
-					<_long>Deformation in unfold cube mode.</_long>
+					<short>Unfold cube deformation</short>
+					<long>Deformation in unfold cube mode.</long>
 					<default>true</default>
 				</option>
 				<option name="cylinder_manual_only" type="bool">
-					<_short>Deform only on mouse rotate</_short>
-					<_long>Initiates cube cylinder deformation only if rotation is mouse driven.</_long>
+					<short>Deform only on mouse rotate</short>
+					<long>Initiates cube cylinder deformation only if rotation is mouse driven.</long>
 					<default>false</default>
 				</option>
 				<subgroup>
-					<_short>Sphere</_short>
+					<short>Sphere</short>
 					<option name="deform_caps" type="bool">
-						<_short>Deform caps</_short>
-						<_long>Deform cube caps.</_long>
+						<short>Deform caps</short>
+						<long>Deform cube caps.</long>
 						<default>true</default>
 					</option>
 					<option name="sphere_aspect" type="float">
-						<_short>Aspect ratio</_short>
-						<_long>Aspect ratio of the deformed cube</_long>
+						<short>Aspect ratio</short>
+						<long>Aspect ratio of the deformed cube</long>
 						<min>0.0</min>
 						<max>1.0</max>
 						<precision>0.1</precision>
@@ -194,65 +194,65 @@
 				</subgroup>
 			</group>
 			<group>
-				<_short>Cube caps</_short>
+				<short>Cube caps</short>
 				<subgroup>
-					<_short>Behaviour</_short>
+					<short>Behaviour</short>
 					<option name="draw_top" type="bool">
-						<_short>Draw top face</_short>
-						<_long>Draw top face of the cube</_long>
+						<short>Draw top face</short>
+						<long>Draw top face of the cube</long>
 						<default>true</default>
 					</option>
 					<option name="draw_bottom" type="bool">
-						<_short>Draw bottom face</_short>
-						<_long>Draw bottom face of the cube</_long>
+						<short>Draw bottom face</short>
+						<long>Draw bottom face of the cube</long>
 						<default>true</default>
 					</option>
 					<option name="adjust_top" type="bool">
-						<_short>Adjust top image</_short>
-						<_long>Adjust top face image to rotation</_long>
+						<short>Adjust top image</short>
+						<long>Adjust top face image to rotation</long>
 						<default>false</default>
 					</option>
 					<option name="adjust_bottom" type="bool">
-						<_short>Adjust bottom image</_short>
-						<_long>Adjust bottom face image to rotation</_long>
+						<short>Adjust bottom image</short>
+						<long>Adjust bottom face image to rotation</long>
 						<default>false</default>
 					</option>
 					<option name="top_scale" type="bool">
-						<_short>Scale top image</_short>
-						<_long>Scale image to cover top face of cube</_long>
+						<short>Scale top image</short>
+						<long>Scale image to cover top face of cube</long>
 						<default>true</default>
 					</option>
 					<option name="bottom_scale" type="bool">
-						<_short>Scale bottom image</_short>
-						<_long>Scale image to cover bottom face of cube</_long>
+						<short>Scale bottom image</short>
+						<long>Scale image to cover bottom face of cube</long>
 						<default>true</default>
 					</option>
 					<option name="top_aspect" type="bool">
-						<_short>Maintain top aspect ratio</_short>
-						<_long>Maintain top cap image aspect ratio.</_long>
+						<short>Maintain top aspect ratio</short>
+						<long>Maintain top cap image aspect ratio.</long>
 						<default>true</default>
 					</option>
 					<option name="bottom_aspect" type="bool">
-						<_short>Maintain bottom aspect ratio</_short>
-						<_long>Maintain bottom cap image aspect ratio.</_long>
+						<short>Maintain bottom aspect ratio</short>
+						<long>Maintain bottom cap image aspect ratio.</long>
 						<default>true</default>
 					</option>
 					<option name="top_clamp" type="bool">
-						<_short>Clamp top face image to border</_short>
-						<_long>Clamp top face image to border. This is often the best if your image doesn't fit the size of the cube or if it's transparent. It can lead to some ugly dotted lines when enabled (especially with large enough images) though.</_long>
+						<short>Clamp top face image to border</short>
+						<long>Clamp top face image to border. This is often the best if your image doesn't fit the size of the cube or if it's transparent. It can lead to some ugly dotted lines when enabled (especially with large enough images) though.</long>
 						<default>true</default>
 					</option>
 					<option name="bottom_clamp" type="bool">
-						<_short>Clamp bottom face image to border</_short>
-						<_long>Clamp bottom face image to border. This is often the best if your image doesn't fit the size of the cube or if it's transparent. It can lead to some ugly dotted lines when enabled (especially with large enough images) though.</_long>
+						<short>Clamp bottom face image to border</short>
+						<long>Clamp bottom face image to border. This is often the best if your image doesn't fit the size of the cube or if it's transparent. It can lead to some ugly dotted lines when enabled (especially with large enough images) though.</long>
 						<default>true</default>
 					</option>
 				</subgroup>
 				<subgroup>
-					<_short>Appearance</_short>
+					<short>Appearance</short>
 					<option name="top_color" type="color">
-						<_short>Cube Top Color</_short>
-						<_long>Color of top face of the cube</_long>
+						<short>Cube Top Color</short>
+						<long>Color of top face of the cube</long>
 						<default>
 							<red>0xffff</red>
 							<green>0xffff</green>
@@ -260,8 +260,8 @@
 						</default>
 					</option>
 					<option name="bottom_color" type="color">
-						<_short>Cube Bottom Color</_short>
-						<_long>Color of bottom face of the cube</_long>
+						<short>Cube Bottom Color</short>
+						<long>Color of bottom face of the cube</long>
 						<default>
 							<red>0xffff</red>
 							<green>0xffff</green>
@@ -269,8 +269,8 @@
 						</default>
 					</option>
 					<option name="top_images" type="list">
-						<_short>Top image files</_short>
-						<_long>List of PNG and SVG files that should be rendered on top face of cube</_long>
+						<short>Top image files</short>
+						<long>List of PNG and SVG files that should be rendered on top face of cube</long>
 						<type>string</type>
 						<hints>file;image;</hints>
 						<default>
@@ -279,8 +279,8 @@
 						<hints>file;image;</hints>
 					</option>
 					<option name="bottom_images" type="list">
-						<_short>Bottom image files</_short>
-						<_long>List of PNG and SVG files that should be rendered on bottom face of cube</_long>
+						<short>Bottom image files</short>
+						<long>List of PNG and SVG files that should be rendered on bottom face of cube</long>
 						<type>string</type>
 						<hints>file;image;</hints>
 						<default>
