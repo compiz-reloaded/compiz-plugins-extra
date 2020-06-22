@@ -6,9 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: compiz-plugins-extra\n"
-"Report-Msgid-Bugs-To: https://gitlab.com/compiz/compiz-plugins-"
-"extra/issues\n"
-"POT-Creation-Date: 2017-01-12 18:19+0300\n"
+"Report-Msgid-Bugs-To: https://gitlab.com/compiz/compiz-plugins-extra/issues\n"
+"POT-Creation-Date: 2020-06-23 00:40+0200\n"
 "PO-Revision-Date: 2009-04-20 02:46+0200\n"
 "Last-Translator: Jim Dusis <jimdusis@yahoo.gr>\n"
 "Language-Team: Greek <el@li.org>\n"
@@ -28,10 +27,12 @@ msgstr ""
 msgid "Bindings"
 msgstr "Συνδυασμοί"
 
-msgid "Toggle AddHelper"
+#, fuzzy
+msgid "Toggle ADD Helper"
 msgstr "Εκκίνηση-Σταμάτημα του AddHelper"
 
-msgid "Use this to enable/disable AddHelper on the fly."
+#, fuzzy
+msgid "Use this to enable/disable ADD Helper on the fly."
 msgstr ""
 "Επιλέξτε το για να ενεργοποιήσετε/απενεργοποιήσετε τον AddHelper άμεσα."
 
@@ -41,7 +42,8 @@ msgstr "Διάφορες Επιλογές"
 msgid "Window Types"
 msgstr "Είδη Παραθύρων"
 
-msgid "Window types that should be Opacified."
+#, fuzzy
+msgid "Window types that should be affected."
 msgstr "Είδη παραθύρων που πρέπει να χρησιμοποιήσουν την αδιαφάνεια."
 
 msgid "Enable ADD Helper on start"
@@ -67,6 +69,14 @@ msgstr "Αδιαφάνεια"
 
 msgid "Opacity of faded windows"
 msgstr "Αδιαφάνεια ξεθωριασμένων παραθύρων"
+
+#, fuzzy
+msgid "Contrast"
+msgstr "Έλεγχος"
+
+#, fuzzy
+msgid "Contrast of the content of the window."
+msgstr "Η τοποθέτηση δείκτη χρησιμοποιεί το κέντρο του παραθύρου"
 
 msgid "Animations Add-On"
 msgstr "Πρόσθετο-Παραπάνω Γραφικών Απεικονίσεων"
@@ -400,6 +410,24 @@ msgstr "Διακτινισμός"
 
 msgid "Leaf Spread"
 msgstr "Διασπορά Φύλλων"
+
+msgid "Audible Bell"
+msgstr ""
+
+msgid "Plays an audible sound for the system bell"
+msgstr ""
+
+msgid "Play sound on system bell"
+msgstr ""
+
+msgid "Spatial Sounds"
+msgstr ""
+
+msgid ""
+"Whether to spatially locate sounds or not. If enabled, sounds coming from "
+"the left of the sceen will be heard mostly on the left channel, the ones "
+"coming from the right on the right channel and so on."
+msgstr ""
 
 msgid "Benchmark"
 msgstr "Τεστ Επιδόσεων"
@@ -934,8 +962,8 @@ msgid ""
 "multiple times in a row."
 msgstr ""
 
-msgid "Corners / Edges"
-msgstr ""
+msgid "Behavior"
+msgstr "Συμπεριφορά"
 
 #, fuzzy
 msgid "Resize Actions"
@@ -944,6 +972,10 @@ msgstr "Αντανάκλαση"
 #, fuzzy
 msgid "Window resize action"
 msgstr "Γραμματοσειρά Τίτλου Παραθύρου"
+
+#, fuzzy
+msgid "Top Left Corner"
+msgstr "Στις Γωνίες"
 
 #, fuzzy
 msgid "Action to be performed when window is dropped on the top left corner"
@@ -972,10 +1004,6 @@ msgstr "Πλήρης Οθόνη"
 #, fuzzy
 msgid "Right Half"
 msgstr "Δεξιά"
-
-#, fuzzy
-msgid "Top Left Corner"
-msgstr "Στις Γωνίες"
 
 msgid "Top Half"
 msgstr ""
@@ -1045,6 +1073,16 @@ msgstr "Αριθμός pixels από την πάνω άκρη οπου το πα
 msgid "Maximum number of pixels from the Bottom edge a window can be dropped"
 msgstr "Αριθμός pixels από την κάτω άκρη οπου το παράθυρο θα έρθει να αράξει"
 
+#, fuzzy
+msgid "Select output with mouse pointer"
+msgstr "Κλιμάκωση του δείκτη ποντικιού"
+
+msgid ""
+"In the case of multiple outputs, chooses the output containing the mouse "
+"pointer. If this option is not checked, the output is choosen based on the "
+"center of the window."
+msgstr ""
+
 msgid "Draw Indicator"
 msgstr ""
 
@@ -1059,6 +1097,10 @@ msgstr "Διάρκεια Γραφικής Απεικόνισης"
 #, fuzzy
 msgid "Preview animation duration (in ms)."
 msgstr "Διάρκεια της γραφικής απεικόνισης της σκίασης."
+
+#, fuzzy
+msgid "Outline Thickness"
+msgstr "Πάχος"
 
 msgid "Outline Color"
 msgstr "Χρώμα Περιγράμματος"
@@ -1539,6 +1581,58 @@ msgstr "Τετράγωνη λάμψη"
 msgid "Glow ring"
 msgstr "Δαχτυλίδι Λάμψης"
 
+#, fuzzy
+msgid "Highlight Content"
+msgstr "Κατάσταση Τονισμού"
+
+msgid ""
+"Listens for screen reader events and renders highlight for the currently "
+"spoken word."
+msgstr ""
+
+msgid "Toggle Highlight of Content."
+msgstr ""
+
+#, fuzzy
+msgid "Enable on startup"
+msgstr "Ενεργοποίηση του Βοηθού στην εκκίνηση"
+
+#, fuzzy
+msgid "Enables this plugin when it is loaded."
+msgstr "Ενεργοποιεί τον Βοηθό στην πρώτη φόρτωση"
+
+msgid "Highlight Speech synthesis"
+msgstr ""
+
+msgid "Highlight Speech synthesis' current word."
+msgstr ""
+
+#, fuzzy
+msgid "Speech Options"
+msgstr "Επιλογή"
+
+#, fuzzy
+msgid "Rectangle Border Thickness"
+msgstr "Μέγεθος Ορίου Τίτλου"
+
+msgid "How thick the border of the rectangle should be, in pixels."
+msgstr ""
+
+#, fuzzy
+msgid "Rectangle Color"
+msgstr "Τετράγωνη λάμψη"
+
+#, fuzzy
+msgid "Color of the borders of the rectangle."
+msgstr "Χρώμα πάνω όψης του κύβου."
+
+#, fuzzy
+msgid "Show only border of rectangle"
+msgstr "Εμφάνιση Ορθογωνίου"
+
+msgid "Whether we draw a filled rectangle or just its border."
+msgstr ""
+
 msgid "Motion blur"
 msgstr "Θόλωμα Κίνησης"
 
@@ -1919,8 +2013,41 @@ msgstr "Αύξηση ορατότητας του δείκτη ποντικιού
 msgid "Toggle the mouse pointer trail."
 msgstr "Εκκίνηση-Σταμάτημα του ίχνους ουράς του δείκτη ποντικιού"
 
+#, fuzzy
+msgid "Particles"
+msgstr "Μέγεθος στοιχείων."
+
+#, fuzzy
+msgid "Enable particles."
+msgstr "Ενεργοποίηση Τίτλων"
+
+msgid "Crosshair"
+msgstr ""
+
+#, fuzzy
+msgid "Enable crosshair."
+msgstr "Ενεργοποίηση χρωμάτων"
+
 msgid "Particle Options"
 msgstr "Επιλογές Στοιχείων"
+
+msgid "Rotation speed"
+msgstr "Ταχύτητα περιστροφής"
+
+msgid "Rotation speed."
+msgstr "Ταχύτητα περιστροφής."
+
+msgid "Radius"
+msgstr "Ακτίνα"
+
+msgid "Ring radius"
+msgstr "Ακτίνα δαχτυλιδιού"
+
+msgid "Emitters"
+msgstr "Ακτινοβολητές"
+
+msgid "Number of particle emitters."
+msgstr "Αριθμός ακτινοβολητών κομματιών"
 
 msgid "Number Of Particles"
 msgstr "Αριθμός των Στοιχείων"
@@ -1970,23 +2097,27 @@ msgstr "Τυχαία Χρωματισμένα Στοιχεία"
 msgid "Have random colors for the particles"
 msgstr "Τυχαία χρώματα για τα στοιχεία"
 
-msgid "Rotation speed"
-msgstr "Ταχύτητα περιστροφής"
+#, fuzzy
+msgid "Crosshair Options"
+msgstr "Επιλογές Στοιχείων"
 
-msgid "Rotation speed."
-msgstr "Ταχύτητα περιστροφής."
+msgid "Crosshair thickness"
+msgstr ""
 
-msgid "Radius"
-msgstr "Ακτίνα"
+msgid "How thick mouse crosshair should be, in pixels."
+msgstr ""
 
-msgid "Ring radius"
-msgstr "Ακτίνα δαχτυλιδιού"
+msgid "Crosshair empty radius"
+msgstr ""
 
-msgid "Emitters"
-msgstr "Ακτινοβολητές"
+msgid "Radius of the disk around the cursor which is not covered by crosshair."
+msgstr ""
 
-msgid "Number of particle emitters."
-msgstr "Αριθμός ακτινοβολητών κομματιών"
+msgid "Crosshair Color"
+msgstr ""
+
+msgid "Crosshair color."
+msgstr ""
 
 msgid "Login/Logout"
 msgstr "Σύνδεση/Αποσύνδεση"
@@ -2424,11 +2555,90 @@ msgstr "Στρογγύλεμα Κάτω Δεξιά"
 msgid "Bevel bottom right corner"
 msgstr "Στρογγύλεμα της κάτω δεξιάς γωνίας"
 
+msgid "Vidcap"
+msgstr ""
+
+#, fuzzy
+msgid "Screen Recorder"
+msgstr "Άκρες Οθόνης"
+
+#, fuzzy
+msgid "Start / Stop"
+msgstr "Εκκίνηση Αρχικής Οθόνης."
+
+msgid "Start and stop recording"
+msgstr ""
+
+msgid "Directory"
+msgstr "Διαδρομή"
+
+msgid "Directory to store videos"
+msgstr ""
+
+msgid "Command"
+msgstr ""
+
+msgid ""
+"Command to be used for encoding video. Use a dash (-) for the input file and "
+"%f.ext for the output file"
+msgstr ""
+
+#, fuzzy
+msgid "Draw Status Indicator"
+msgstr "Σχεδίαση Τονισμού Παραθύρου"
+
+msgid "Draw color coded status dot"
+msgstr ""
+
 msgid "Wallpaper"
 msgstr "Ταπετσαρία"
 
 msgid "Draw the desktop wallpaper"
 msgstr "Σχεδίαση του φόντου της επιφάνειας εργασίας"
+
+msgid "Recursive directory search"
+msgstr ""
+
+msgid "Search in all sub-directories."
+msgstr ""
+
+msgid "Cycle"
+msgstr ""
+
+msgid "Automatically cycle through wallpapers."
+msgstr ""
+
+#, fuzzy
+msgid "Cycle timeout"
+msgstr "Τέλος Χρόνου Απόκρυψης"
+
+msgid "Time before cycling to next wallpaper (in minutes)."
+msgstr ""
+
+#, fuzzy
+msgid "Fade time"
+msgstr "Χρόνος Ξεθωριάσματος"
+
+#, fuzzy
+msgid "Fade transition time (in seconds)."
+msgstr "Διάρκεια Ξεθωριάσματος Μέσα/Έξω σε δευτερόλεπτα."
+
+#, fuzzy
+msgid "Randomize"
+msgstr "Τυχαία Επιλογή"
+
+#, fuzzy
+msgid "Randomly order wallpapers."
+msgstr "Τυχαία Χρωματισμένα Στοιχεία"
+
+#, fuzzy
+msgid "Hide other desktop background windows"
+msgstr "Απόκρυψη όλων των μη βρισκόμενων στην επιφάνεια εργασίας παραθύρων"
+
+msgid ""
+"Don't draw desktop backgrounds rendered by other applications. Mouse and "
+"keyboard input works as if the background were drawn."
+msgstr ""
 
 msgid "Backgrounds"
 msgstr "Φόντο"
@@ -2486,6 +2696,84 @@ msgstr "Χρώμα 2"
 
 msgid "Second gradient color."
 msgstr "Δεύτερο χρώμα διαβάθμισης."
+
+msgid "Workspace Naming"
+msgstr ""
+
+msgid "Allows assigning descriptions to workspaces"
+msgstr ""
+
+msgid "Names"
+msgstr ""
+
+msgid "Workspace Names"
+msgstr ""
+
+#, fuzzy
+msgid "Viewport"
+msgstr "Πάνω Εικονική Επιφάνεια Εργασίας"
+
+#, fuzzy
+msgid "Number of viewport to be named"
+msgstr "Ο Αριθμός των Παραθύρων που θα Παρακολουθούνται"
+
+msgid "Name"
+msgstr ""
+
+#, fuzzy
+msgid "Viewport name"
+msgstr "Αριστερή Εικονική Επιφάνεια Εργασίας"
+
+msgid "Timeout (in s) of the name display"
+msgstr ""
+
+msgid "Time (in s) the name display fades out after being shown."
+msgstr ""
+
+#, fuzzy
+msgid "Text Display"
+msgstr "Οθόνη"
+
+msgid "Selects if the text should be displayed in bold font or not."
+msgstr ""
+
+#, fuzzy
+msgid "Font Family"
+msgstr "Μέγεθος Γραμματοσειράς"
+
+#, fuzzy
+msgid "Font family for the text display."
+msgstr "Χρώμα γραμματοσειράς εμφάνισης του τίτλου παραθύρου"
+
+#, fuzzy
+msgid "Font size for the text display."
+msgstr "Χρώμα γραμματοσειράς εμφάνισης του τίτλου παραθύρου"
+
+msgid "Text Placement"
+msgstr "Τοποθέτηση Κειμένου"
+
+#, fuzzy
+msgid "Selects where to place the text."
+msgstr "Επιλέγει που να τοποθετήσει τον τίτλο παραθύρου"
+
+msgid "Centered on screen"
+msgstr "Κεντραρισμένο στην οθόνη"
+
+#, fuzzy
+msgid "Top of screen"
+msgstr "Είδος πλάσματος της θάλασσας."
+
+#, fuzzy
+msgid "Bottom of screen"
+msgstr "Απο κάτω προς τα Πάνω"
+
+#, fuzzy
+msgid "Background color for the text display."
+msgstr "Χρώμα τίτλου του παραθύρου"
+
+#, fuzzy
+msgid "Font color for the text display."
+msgstr "Χρώμα γραμματοσειράς για τον τίτλο παραθύρου"
 
 #~ msgid ""
 #~ "All effects are chosen randomly, ignoring the selected effect. If None is "
@@ -3787,9 +4075,6 @@ msgstr "Δεύτερο χρώμα διαβάθμισης."
 #~ msgid "Restrain the mouse to the zoom area"
 #~ msgstr "Συγκράτηση ποντικιού στη ζουμαρισμένη περιοχή"
 
-#~ msgid "Scale the mouse pointer"
-#~ msgstr "Κλιμάκωση του δείκτη ποντικιού"
-
 #~ msgid "Specific Zoom"
 #~ msgstr "Συγκεκριμένο Ζουμ"
 
@@ -4386,9 +4671,6 @@ msgstr "Δεύτερο χρώμα διαβάθμισης."
 #~ msgid "Put To Next Output"
 #~ msgstr "Τοποθέτηση Στην Επόμενη Οθόνη"
 
-#~ msgid "Put pointer uses the center of the window"
-#~ msgstr "Η τοποθέτηση δείκτη χρησιμοποιεί το κέντρο του παραθύρου"
-
 #~ msgid "Put to adjacent viewport"
 #~ msgstr "Τοποθέτηση σε παράπλευρη εικονική επιφάνεια εργασίας"
 
@@ -4820,9 +5102,6 @@ msgstr "Δεύτερο χρώμα διαβάθμισης."
 #~ "Απόκρυψη όλων των μη βρισκόμενων στην επιφάνεια εργασίας παραθύρων κατα "
 #~ "την αλλαγή"
 
-#~ msgid "Hide non Desktop windows"
-#~ msgstr "Απόκρυψη όλων των μη βρισκόμενων στην επιφάνεια εργασίας παραθύρων"
-
 #~ msgid "Initiate (All Workspaces)"
 #~ msgstr "Εκκίνηση (Όλες οι Επιφάνειες Εργασίας)"
 
@@ -4919,9 +5198,6 @@ msgstr "Δεύτερο χρώμα διαβάθμισης."
 #~ msgid "Choose 'Resistance', 'Attraction' or 'Full Mode'."
 #~ msgstr "Επιλογή 'Αντίστασης', 'Έλξης' ή 'Πλήρης Κατάσταση'."
 
-#~ msgid "Control"
-#~ msgstr "Έλεγχος"
-
 #~ msgid "Edge Attraction Distance"
 #~ msgstr "Απόσταση Έλξης Άκρης"
 
@@ -4939,9 +5215,6 @@ msgstr "Δεύτερο χρώμα διαβάθμισης."
 
 #~ msgid "Meta"
 #~ msgstr "Meta"
-
-#~ msgid "Screen edges"
-#~ msgstr "Άκρες Οθόνης"
 
 #~ msgid "Shift"
 #~ msgstr "Αλλαγή"
@@ -5062,9 +5335,6 @@ msgstr "Δεύτερο χρώμα διαβάθμισης."
 #~ "Ποσό αδιαφάνειας (σε ποσοστό) για τα παράθυρα στον επιλογέα που δεν είναι "
 #~ "επιλεγμένα"
 
-#~ msgid "Behavior"
-#~ msgstr "Συμπεριφορά"
-
 #~ msgid "Darken background when showing the stack"
 #~ msgstr "Σκοτείνιασμα φόντου όταν εμφανίζεται η στοίβα"
 
@@ -5134,9 +5404,6 @@ msgstr "Δεύτερο χρώμα διαβάθμισης."
 
 #~ msgid "Highlight Border Inlay Color"
 #~ msgstr "Τονισμός Χρώματος Ψηφίδων Ορίου"
-
-#~ msgid "Highlight Mode"
-#~ msgstr "Κατάσταση Τονισμού"
 
 #~ msgid "Icon"
 #~ msgstr "Εικονίδιο"
@@ -5240,9 +5507,6 @@ msgstr "Δεύτερο χρώμα διαβάθμισης."
 #~ msgid "Selected Window Highlight"
 #~ msgstr "Τονισμός Επιλεγμένου Παραθύρου"
 
-#~ msgid "Show Rectangle"
-#~ msgstr "Εμφάνιση Ορθογωνίου"
-
 #~ msgid "Show icon next to thumbnail"
 #~ msgstr "Εμφάνιση εικονιδίου δίπλα στην μικρογραφία"
 
@@ -5280,14 +5544,8 @@ msgstr "Δεύτερο χρώμα διαβάθμισης."
 #~ msgid "Text"
 #~ msgstr "Κείμενο"
 
-#~ msgid "Enable Titles"
-#~ msgstr "Ενεργοποίηση Τίτλων"
-
 #~ msgid "Fade In/Out Duration"
 #~ msgstr "Διάρκεια Ξεθωριάσματος Μέσα/Έξω"
-
-#~ msgid "Fade In/Out Duration in seconds."
-#~ msgstr "Διάρκεια Ξεθωριάσματος Μέσα/Έξω σε δευτερόλεπτα."
 
 #~ msgid "Generate Mipmaps"
 #~ msgstr "Δημιουργία Mipmaps"
@@ -6106,9 +6364,6 @@ msgstr "Δεύτερο χρώμα διαβάθμισης."
 #~ msgid "Toggle prompt visible."
 #~ msgstr "Εκκίνηση ορατής παρακίνησης."
 
-#~ msgid "Directory"
-#~ msgstr "Διαδρομή"
-
 #~ msgid "Initiate screencasting"
 #~ msgstr "Εκκίνηση screencasting"
 
@@ -6126,9 +6381,6 @@ msgstr "Δεύτερο χρώμα διαβάθμισης."
 
 #~ msgid "Dolphin size."
 #~ msgstr "Μέγεθος δελφινιών."
-
-#~ msgid "Enable colors"
-#~ msgstr "Ενεργοποίηση χρωμάτων"
 
 #~ msgid "Fish size"
 #~ msgstr "Μέγεθος ψαριών"
@@ -6401,83 +6653,3 @@ msgstr "Δεύτερο χρώμα διαβάθμισης."
 
 #~ msgid "Change viewport on mouse events on the Desktop"
 #~ msgstr "Αλλαγή επιφάνειας εργασίας με το ποντίκι στην Επιφάνεια Εργασίας"
-
-msgid "Workspace Naming"
-msgstr ""
-
-msgid "Allows assigning descriptions to workspaces"
-msgstr ""
-
-msgid "Names"
-msgstr ""
-
-msgid "Workspace Names"
-msgstr ""
-
-#, fuzzy
-msgid "Viewport"
-msgstr "Πάνω Εικονική Επιφάνεια Εργασίας"
-
-#, fuzzy
-msgid "Number of viewport to be named"
-msgstr "Ο Αριθμός των Παραθύρων που θα Παρακολουθούνται"
-
-msgid "Name"
-msgstr ""
-
-#, fuzzy
-msgid "Viewport name"
-msgstr "Αριστερή Εικονική Επιφάνεια Εργασίας"
-
-msgid "Timeout (in s) of the name display"
-msgstr ""
-
-#, fuzzy
-msgid "Time (in s) the name display fades out after being shown."
-msgstr ""
-
-#, fuzzy
-msgid "Text Display"
-msgstr "Οθόνη"
-
-#, fuzzy
-msgid "Selects if the text should be displayed in bold font or not."
-msgstr ""
-
-#, fuzzy
-msgid "Font Family"
-msgstr "Μέγεθος Γραμματοσειράς"
-
-#, fuzzy
-msgid "Font family for the text display."
-msgstr "Χρώμα γραμματοσειράς εμφάνισης του τίτλου παραθύρου"
-
-#, fuzzy
-msgid "Font size for the text display."
-msgstr "Χρώμα γραμματοσειράς εμφάνισης του τίτλου παραθύρου"
-
-msgid "Text Placement"
-msgstr "Τοποθέτηση Κειμένου"
-
-#, fuzzy
-msgid "Selects where to place the text."
-msgstr "Επιλέγει που να τοποθετήσει τον τίτλο παραθύρου"
-
-msgid "Centered on screen"
-msgstr "Κεντραρισμένο στην οθόνη"
-
-#, fuzzy
-msgid "Top of screen"
-msgstr "Είδος πλάσματος της θάλασσας."
-
-#, fuzzy
-msgid "Bottom of screen"
-msgstr "Απο κάτω προς τα Πάνω"
-
-#, fuzzy
-msgid "Background color for the text display."
-msgstr "Χρώμα τίτλου του παραθύρου"
-
-#, fuzzy
-msgid "Font color for the text display."
-msgstr "Χρώμα γραμματοσειράς για τον τίτλο παραθύρου"

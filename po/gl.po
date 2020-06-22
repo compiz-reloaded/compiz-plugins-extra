@@ -6,9 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: compiz-plugins-extra\n"
-"Report-Msgid-Bugs-To: https://gitlab.com/compiz/compiz-plugins-"
-"extra/issues\n"
-"POT-Creation-Date: 2017-01-12 18:19+0300\n"
+"Report-Msgid-Bugs-To: https://gitlab.com/compiz/compiz-plugins-extra/issues\n"
+"POT-Creation-Date: 2020-06-23 00:40+0200\n"
 "PO-Revision-Date: 2009-04-13 12:54+0200\n"
 "Last-Translator: Francisco Dieguez <fran.dieguez@glug.es>\n"
 "Language-Team: Galician <gl@li.org>\n"
@@ -30,10 +29,12 @@ msgstr ""
 msgid "Bindings"
 msgstr "Atallos"
 
-msgid "Toggle AddHelper"
+#, fuzzy
+msgid "Toggle ADD Helper"
 msgstr "Trocar AddHelper"
 
-msgid "Use this to enable/disable AddHelper on the fly."
+#, fuzzy
+msgid "Use this to enable/disable ADD Helper on the fly."
 msgstr "Empregar isto para activar/desactivar o AddHelper automaticamente."
 
 msgid "Misc. Options"
@@ -42,7 +43,8 @@ msgstr "Opcións varias"
 msgid "Window Types"
 msgstr "Tipos de Fiestras"
 
-msgid "Window types that should be Opacified."
+#, fuzzy
+msgid "Window types that should be affected."
 msgstr "Fiestras que deben facerse Opacas."
 
 msgid "Enable ADD Helper on start"
@@ -68,6 +70,14 @@ msgstr "Opacidade"
 
 msgid "Opacity of faded windows"
 msgstr "Opacidade das xanelas desvanecidas"
+
+#, fuzzy
+msgid "Contrast"
+msgstr "Control"
+
+#, fuzzy
+msgid "Contrast of the content of the window."
+msgstr "O cursor de Colocar usa o centro da xanela como referencia"
 
 msgid "Animations Add-On"
 msgstr "Complemento de Animacións"
@@ -398,6 +408,24 @@ msgstr "Raio de luz cara arriba"
 
 msgid "Leaf Spread"
 msgstr "Extensión de Folla"
+
+msgid "Audible Bell"
+msgstr ""
+
+msgid "Plays an audible sound for the system bell"
+msgstr ""
+
+msgid "Play sound on system bell"
+msgstr ""
+
+msgid "Spatial Sounds"
+msgstr ""
+
+msgid ""
+"Whether to spatially locate sounds or not. If enabled, sounds coming from "
+"the left of the sceen will be heard mostly on the left channel, the ones "
+"coming from the right on the right channel and so on."
+msgstr ""
 
 msgid "Benchmark"
 msgstr "Banco de probas"
@@ -929,8 +957,8 @@ msgid ""
 "multiple times in a row."
 msgstr ""
 
-msgid "Corners / Edges"
-msgstr ""
+msgid "Behavior"
+msgstr "Comportamento"
 
 #, fuzzy
 msgid "Resize Actions"
@@ -939,6 +967,10 @@ msgstr "Reflexo"
 #, fuzzy
 msgid "Window resize action"
 msgstr "Fonte do Título da Fiestra"
+
+#, fuzzy
+msgid "Top Left Corner"
+msgstr "Para os Cantos"
 
 #, fuzzy
 msgid "Action to be performed when window is dropped on the top left corner"
@@ -967,10 +999,6 @@ msgstr "pantalla Inteiro"
 #, fuzzy
 msgid "Right Half"
 msgstr "Para a dereita"
-
-#, fuzzy
-msgid "Top Left Corner"
-msgstr "Para os Cantos"
 
 msgid "Top Half"
 msgstr ""
@@ -1044,6 +1072,16 @@ msgid "Maximum number of pixels from the Bottom edge a window can be dropped"
 msgstr ""
 "Número de píxeles dende marxe de abaixo da pantalla onde a xanela parará"
 
+#, fuzzy
+msgid "Select output with mouse pointer"
+msgstr "Escalar o punteiro do rato"
+
+msgid ""
+"In the case of multiple outputs, chooses the output containing the mouse "
+"pointer. If this option is not checked, the output is choosen based on the "
+"center of the window."
+msgstr ""
+
 msgid "Draw Indicator"
 msgstr ""
 
@@ -1058,6 +1096,10 @@ msgstr "Duración da Animación"
 #, fuzzy
 msgid "Preview animation duration (in ms)."
 msgstr "Duración da animación"
+
+#, fuzzy
+msgid "Outline Thickness"
+msgstr "Anchura"
 
 msgid "Outline Color"
 msgstr "Cor de Delineación"
@@ -1533,6 +1575,58 @@ msgstr "Aura rectangular"
 msgid "Glow ring"
 msgstr "Aura circular"
 
+#, fuzzy
+msgid "Highlight Content"
+msgstr "Cor de Resaltado"
+
+msgid ""
+"Listens for screen reader events and renders highlight for the currently "
+"spoken word."
+msgstr ""
+
+msgid "Toggle Highlight of Content."
+msgstr ""
+
+#, fuzzy
+msgid "Enable on startup"
+msgstr "Activar as axudas ADD ó inicio"
+
+#, fuzzy
+msgid "Enables this plugin when it is loaded."
+msgstr "Activar as axudas ADD cando se carga a primeira vez."
+
+msgid "Highlight Speech synthesis"
+msgstr ""
+
+msgid "Highlight Speech synthesis' current word."
+msgstr ""
+
+#, fuzzy
+msgid "Speech Options"
+msgstr "Selección"
+
+#, fuzzy
+msgid "Rectangle Border Thickness"
+msgstr "Tamaño da marxe do título"
+
+msgid "How thick the border of the rectangle should be, in pixels."
+msgstr ""
+
+#, fuzzy
+msgid "Rectangle Color"
+msgstr "Aura rectangular"
+
+#, fuzzy
+msgid "Color of the borders of the rectangle."
+msgstr "Cor da cara superior do cubo"
+
+#, fuzzy
+msgid "Show only border of rectangle"
+msgstr "Amosar rectángulo"
+
+msgid "Whether we draw a filled rectangle or just its border."
+msgstr ""
+
 msgid "Motion blur"
 msgstr "Distorsión durante Movemento"
 
@@ -1911,8 +2005,41 @@ msgstr "Incrementa a visibildade do punteiro do rato"
 msgid "Toggle the mouse pointer trail."
 msgstr "Activar/Desactivar rastro do punteiro do rato."
 
+#, fuzzy
+msgid "Particles"
+msgstr "Tamaño das partículas."
+
+#, fuzzy
+msgid "Enable particles."
+msgstr "Activar Títulos"
+
+msgid "Crosshair"
+msgstr ""
+
+#, fuzzy
+msgid "Enable crosshair."
+msgstr "Activar xestión de erros"
+
 msgid "Particle Options"
 msgstr "Opcións das Particulas"
+
+msgid "Rotation speed"
+msgstr "Velocidade da Rotación"
+
+msgid "Rotation speed."
+msgstr "Velocidade de Rotación."
+
+msgid "Radius"
+msgstr "Radio"
+
+msgid "Ring radius"
+msgstr "Raio Atómico"
+
+msgid "Emitters"
+msgstr "Emisores"
+
+msgid "Number of particle emitters."
+msgstr "Número de emisores de partículas."
 
 msgid "Number Of Particles"
 msgstr "Número De Partículas"
@@ -1962,23 +2089,27 @@ msgstr "Fondo con cor aleatoria"
 msgid "Have random colors for the particles"
 msgstr "Cores aleatorias para partículas"
 
-msgid "Rotation speed"
-msgstr "Velocidade da Rotación"
+#, fuzzy
+msgid "Crosshair Options"
+msgstr "Opcións das Particulas"
 
-msgid "Rotation speed."
-msgstr "Velocidade de Rotación."
+msgid "Crosshair thickness"
+msgstr ""
 
-msgid "Radius"
-msgstr "Radio"
+msgid "How thick mouse crosshair should be, in pixels."
+msgstr ""
 
-msgid "Ring radius"
-msgstr "Raio Atómico"
+msgid "Crosshair empty radius"
+msgstr ""
 
-msgid "Emitters"
-msgstr "Emisores"
+msgid "Radius of the disk around the cursor which is not covered by crosshair."
+msgstr ""
 
-msgid "Number of particle emitters."
-msgstr "Número de emisores de partículas."
+msgid "Crosshair Color"
+msgstr ""
+
+msgid "Crosshair color."
+msgstr ""
 
 msgid "Login/Logout"
 msgstr "Iniciar/Pechar Sesión"
@@ -2404,11 +2535,90 @@ msgstr "Bisel inferior dereita"
 msgid "Bevel bottom right corner"
 msgstr "Bisel da esquina inferior dereita"
 
+msgid "Vidcap"
+msgstr ""
+
+#, fuzzy
+msgid "Screen Recorder"
+msgstr "Marxes da pantalla"
+
+#, fuzzy
+msgid "Start / Stop"
+msgstr "Iniciar pantalla de logotipo."
+
+msgid "Start and stop recording"
+msgstr ""
+
+msgid "Directory"
+msgstr "Directorio"
+
+msgid "Directory to store videos"
+msgstr ""
+
+msgid "Command"
+msgstr ""
+
+msgid ""
+"Command to be used for encoding video. Use a dash (-) for the input file and "
+"%f.ext for the output file"
+msgstr ""
+
+#, fuzzy
+msgid "Draw Status Indicator"
+msgstr "Debuxar realce da xanela"
+
+msgid "Draw color coded status dot"
+msgstr ""
+
 msgid "Wallpaper"
 msgstr "Fondo do escritorio"
 
 msgid "Draw the desktop wallpaper"
 msgstr "Debuxar o fondo do escritorio"
+
+msgid "Recursive directory search"
+msgstr ""
+
+msgid "Search in all sub-directories."
+msgstr ""
+
+msgid "Cycle"
+msgstr ""
+
+msgid "Automatically cycle through wallpapers."
+msgstr ""
+
+#, fuzzy
+msgid "Cycle timeout"
+msgstr "Tempo para Esconder"
+
+msgid "Time before cycling to next wallpaper (in minutes)."
+msgstr ""
+
+#, fuzzy
+msgid "Fade time"
+msgstr "Tempo de desvanecemento"
+
+#, fuzzy
+msgid "Fade transition time (in seconds)."
+msgstr "Duración do desvanecemento en segundos."
+
+#, fuzzy
+msgid "Randomize"
+msgstr "Aleatorio"
+
+#, fuzzy
+msgid "Randomly order wallpapers."
+msgstr "Fondo con cor aleatoria"
+
+#, fuzzy
+msgid "Hide other desktop background windows"
+msgstr "Esconder todas as xanelas non pertencentes ao escritorio"
+
+msgid ""
+"Don't draw desktop backgrounds rendered by other applications. Mouse and "
+"keyboard input works as if the background were drawn."
+msgstr ""
 
 msgid "Backgrounds"
 msgstr "Fondos"
@@ -2466,6 +2676,85 @@ msgstr "Cor 2"
 
 msgid "Second gradient color."
 msgstr "Segunda cor de degradado."
+
+msgid "Workspace Naming"
+msgstr ""
+
+msgid "Allows assigning descriptions to workspaces"
+msgstr ""
+
+msgid "Names"
+msgstr ""
+
+msgid "Workspace Names"
+msgstr ""
+
+#, fuzzy
+msgid "Viewport"
+msgstr "Escritorio de arriba"
+
+#, fuzzy
+msgid "Number of viewport to be named"
+msgstr "Número de Fiestras a Acompañar"
+
+msgid "Name"
+msgstr ""
+
+#, fuzzy
+msgid "Viewport name"
+msgstr "Escritorio da Esquerda"
+
+msgid "Timeout (in s) of the name display"
+msgstr ""
+
+msgid "Time (in s) the name display fades out after being shown."
+msgstr ""
+
+#, fuzzy
+msgid "Text Display"
+msgstr "Pantalla"
+
+#, fuzzy
+msgid "Selects if the text should be displayed in bold font or not."
+msgstr "Selecciona se o título da xanela debe ser mostrada a negrito ou non."
+
+#, fuzzy
+msgid "Font Family"
+msgstr "Tamaño da fonte"
+
+#, fuzzy
+msgid "Font family for the text display."
+msgstr "Tamaño da fonte do título da xanela"
+
+#, fuzzy
+msgid "Font size for the text display."
+msgstr "Tamaño da fonte do título da xanela"
+
+msgid "Text Placement"
+msgstr "Colocación Texto"
+
+#, fuzzy
+msgid "Selects where to place the text."
+msgstr "Selecciona onde posicionar o título da xanela."
+
+msgid "Centered on screen"
+msgstr "Centrado na pantalla "
+
+#, fuzzy
+msgid "Top of screen"
+msgstr "Tipo de criatura do mar."
+
+#, fuzzy
+msgid "Bottom of screen"
+msgstr "Baixo cara arriba"
+
+#, fuzzy
+msgid "Background color for the text display."
+msgstr "Cor de fondo para o título da xanela"
+
+#, fuzzy
+msgid "Font color for the text display."
+msgstr "Cor da fonte para o título da xanela"
 
 #~ msgid ""
 #~ "All effects are chosen randomly, ignoring the selected effect. If None is "
@@ -3750,9 +4039,6 @@ msgstr "Segunda cor de degradado."
 #~ msgid "Restrain the mouse to the zoom area"
 #~ msgstr "Restrinxe o cursor do rato á área magnificada"
 
-#~ msgid "Scale the mouse pointer"
-#~ msgstr "Escalar o punteiro do rato"
-
 #~ msgid "Specific Zoom"
 #~ msgstr "Zoom Específico"
 
@@ -4339,9 +4625,6 @@ msgstr "Segunda cor de degradado."
 #~ msgid "Put To Next Output"
 #~ msgstr "Colocar na Seguinte Saída"
 
-#~ msgid "Put pointer uses the center of the window"
-#~ msgstr "O cursor de Colocar usa o centro da xanela como referencia"
-
 #~ msgid "Put to adjacent viewport"
 #~ msgstr "Colocar no Escritorio adxacente"
 
@@ -4767,9 +5050,6 @@ msgstr "Segunda cor de degradado."
 #~ "Agachar todas as xanelas non pertencentes ao escritorio se está a trocar "
 #~ "de xanela"
 
-#~ msgid "Hide non Desktop windows"
-#~ msgstr "Esconder todas as xanelas non pertencentes ao escritorio"
-
 #~ msgid "Initiate (All Workspaces)"
 #~ msgstr "Iniciar (Todos os Ambientes de Traballo)"
 
@@ -4866,9 +5146,6 @@ msgstr "Segunda cor de degradado."
 #~ msgid "Choose 'Resistance', 'Attraction' or 'Full Mode'."
 #~ msgstr "Escolla 'Resisténcia', 'Atracción' ou 'Modo total'."
 
-#~ msgid "Control"
-#~ msgstr "Control"
-
 #~ msgid "Edge Attraction Distance"
 #~ msgstr "Distancia da Atracción á Marxe"
 
@@ -4886,9 +5163,6 @@ msgstr "Segunda cor de degradado."
 
 #~ msgid "Meta"
 #~ msgstr "Meta"
-
-#~ msgid "Screen edges"
-#~ msgstr "Marxes da pantalla"
 
 #~ msgid "Shift"
 #~ msgstr "Shift"
@@ -5009,9 +5283,6 @@ msgstr "Segunda cor de degradado."
 #~ "Nivel de opacidade (en porcentaxe) para xanelas no anel que non están "
 #~ "seleccionadas"
 
-#~ msgid "Behavior"
-#~ msgstr "Comportamento"
-
 #~ msgid "Darken background when showing the stack"
 #~ msgstr "Escurecer fondo cando se mostre a pila"
 
@@ -5079,9 +5350,6 @@ msgstr "Segunda cor de degradado."
 
 #~ msgid "Highlight Border Inlay Color"
 #~ msgstr "Cor do Borde de Resalte Incrustado "
-
-#~ msgid "Highlight Mode"
-#~ msgstr "Cor de Resaltado"
 
 #~ msgid "Icon"
 #~ msgstr "Icona"
@@ -5183,9 +5451,6 @@ msgstr "Segunda cor de degradado."
 #~ msgid "Selected Window Highlight"
 #~ msgstr "Seleccionar Fiestra Resaltada"
 
-#~ msgid "Show Rectangle"
-#~ msgstr "Amosar rectángulo"
-
 #~ msgid "Show icon next to thumbnail"
 #~ msgstr "Amosar a icona ó lado da vista previa"
 
@@ -5222,14 +5487,8 @@ msgstr "Segunda cor de degradado."
 #~ msgid "Text"
 #~ msgstr "Texto"
 
-#~ msgid "Enable Titles"
-#~ msgstr "Activar Títulos"
-
 #~ msgid "Fade In/Out Duration"
 #~ msgstr "Duración Desvanecemento"
-
-#~ msgid "Fade In/Out Duration in seconds."
-#~ msgstr "Duración do desvanecemento en segundos."
 
 #~ msgid "Generate Mipmaps"
 #~ msgstr "Crear Mipmaps"
@@ -6042,9 +6301,6 @@ msgstr "Segunda cor de degradado."
 #~ msgid "Toggle prompt visible."
 #~ msgstr "Alternar visibilidade da prompt."
 
-#~ msgid "Directory"
-#~ msgstr "Directorio"
-
 #~ msgid "Initiate screencasting"
 #~ msgstr "Iniciar captura de pantalla"
 
@@ -6056,83 +6312,3 @@ msgstr "Segunda cor de degradado."
 
 #~ msgid "ScreenCasting"
 #~ msgstr "Captura de pantalla"
-
-msgid "Workspace Naming"
-msgstr ""
-
-msgid "Allows assigning descriptions to workspaces"
-msgstr ""
-
-msgid "Names"
-msgstr ""
-
-msgid "Workspace Names"
-msgstr ""
-
-#, fuzzy
-msgid "Viewport"
-msgstr "Escritorio de arriba"
-
-#, fuzzy
-msgid "Number of viewport to be named"
-msgstr "Número de Fiestras a Acompañar"
-
-msgid "Name"
-msgstr ""
-
-#, fuzzy
-msgid "Viewport name"
-msgstr "Escritorio da Esquerda"
-
-msgid "Timeout (in s) of the name display"
-msgstr ""
-
-#, fuzzy
-msgid "Time (in s) the name display fades out after being shown."
-msgstr ""
-
-#, fuzzy
-msgid "Text Display"
-msgstr "Pantalla"
-
-#, fuzzy
-msgid "Selects if the text should be displayed in bold font or not."
-msgstr "Selecciona se o título da xanela debe ser mostrada a negrito ou non."
-
-#, fuzzy
-msgid "Font Family"
-msgstr "Tamaño da fonte"
-
-#, fuzzy
-msgid "Font family for the text display."
-msgstr "Tamaño da fonte do título da xanela"
-
-#, fuzzy
-msgid "Font size for the text display."
-msgstr "Tamaño da fonte do título da xanela"
-
-msgid "Text Placement"
-msgstr "Colocación Texto"
-
-#, fuzzy
-msgid "Selects where to place the text."
-msgstr "Selecciona onde posicionar o título da xanela."
-
-msgid "Centered on screen"
-msgstr "Centrado na pantalla "
-
-#, fuzzy
-msgid "Top of screen"
-msgstr "Tipo de criatura do mar."
-
-#, fuzzy
-msgid "Bottom of screen"
-msgstr "Baixo cara arriba"
-
-#, fuzzy
-msgid "Background color for the text display."
-msgstr "Cor de fondo para o título da xanela"
-
-#, fuzzy
-msgid "Font color for the text display."
-msgstr "Cor da fonte para o título da xanela"

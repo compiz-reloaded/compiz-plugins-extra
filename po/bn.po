@@ -5,9 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: compiz-plugins-extra\n"
-"Report-Msgid-Bugs-To: https://gitlab.com/compiz/compiz-plugins-"
-"extra/issues\n"
-"POT-Creation-Date: 2017-01-12 18:19+0300\n"
+"Report-Msgid-Bugs-To: https://gitlab.com/compiz/compiz-plugins-extra/issues\n"
+"POT-Creation-Date: 2020-06-23 00:40+0200\n"
 "PO-Revision-Date: 2007-12-26 09:57+0100\n"
 "Last-Translator: Mahdee Jameel <mahdee.jameel@gmail.com>\n"
 "Language-Team: gist bengali team <info.gist@cdac.in>\n"
@@ -28,10 +27,12 @@ msgstr ""
 msgid "Bindings"
 msgstr "সীমাবদ্ধতা"
 
-msgid "Toggle AddHelper"
+#, fuzzy
+msgid "Toggle ADD Helper"
 msgstr "AddHelper চালু/বন্ধ কর"
 
-msgid "Use this to enable/disable AddHelper on the fly."
+#, fuzzy
+msgid "Use this to enable/disable ADD Helper on the fly."
 msgstr "এক্ষুনি AddHelper চালু/বন্ধ করার জন্য এটি ব্যবহার করুন."
 
 msgid "Misc. Options"
@@ -40,7 +41,8 @@ msgstr "বিবিধ বিকল্প"
 msgid "Window Types"
 msgstr "উইন্ডোর প্রকৃতি"
 
-msgid "Window types that should be Opacified."
+#, fuzzy
+msgid "Window types that should be affected."
 msgstr "যে উইন্ডোগুলি অস্বচ্ছ করা হবে."
 
 msgid "Enable ADD Helper on start"
@@ -66,6 +68,12 @@ msgstr "অস্বচ্ছতা"
 
 msgid "Opacity of faded windows"
 msgstr "মলিন উইন্ডোর অস্বচ্ছতা"
+
+msgid "Contrast"
+msgstr ""
+
+msgid "Contrast of the content of the window."
+msgstr ""
 
 #, fuzzy
 msgid "Animations Add-On"
@@ -389,6 +397,24 @@ msgstr "ওপরে রশ্মি"
 
 msgid "Leaf Spread"
 msgstr "পাতা ছড়ানোর ব্যাপ্তি"
+
+msgid "Audible Bell"
+msgstr ""
+
+msgid "Plays an audible sound for the system bell"
+msgstr ""
+
+msgid "Play sound on system bell"
+msgstr ""
+
+msgid "Spatial Sounds"
+msgstr ""
+
+msgid ""
+"Whether to spatially locate sounds or not. If enabled, sounds coming from "
+"the left of the sceen will be heard mostly on the left channel, the ones "
+"coming from the right on the right channel and so on."
+msgstr ""
 
 msgid "Benchmark"
 msgstr ""
@@ -907,7 +933,7 @@ msgid ""
 "multiple times in a row."
 msgstr ""
 
-msgid "Corners / Edges"
+msgid "Behavior"
 msgstr ""
 
 #, fuzzy
@@ -917,6 +943,10 @@ msgstr "অ্যানিমেশন"
 #, fuzzy
 msgid "Window resize action"
 msgstr "উইন্ডোর ব্যবধান"
+
+#, fuzzy
+msgid "Top Left Corner"
+msgstr "ওপরের বাঁদিকের কোণা উচু কর"
 
 msgid "Action to be performed when window is dropped on the top left corner"
 msgstr ""
@@ -941,10 +971,6 @@ msgstr ""
 
 msgid "Right Half"
 msgstr ""
-
-#, fuzzy
-msgid "Top Left Corner"
-msgstr "ওপরের বাঁদিকের কোণা উচু কর"
 
 msgid "Top Half"
 msgstr ""
@@ -1003,6 +1029,15 @@ msgstr ""
 msgid "Maximum number of pixels from the Bottom edge a window can be dropped"
 msgstr ""
 
+msgid "Select output with mouse pointer"
+msgstr ""
+
+msgid ""
+"In the case of multiple outputs, chooses the output containing the mouse "
+"pointer. If this option is not checked, the output is choosen based on the "
+"center of the window."
+msgstr ""
+
 msgid "Draw Indicator"
 msgstr ""
 
@@ -1016,6 +1051,9 @@ msgstr "অ্যানিমেশন নির্বাচন"
 #, fuzzy
 msgid "Preview animation duration (in ms)."
 msgstr "অ্যানিমেশন নির্বাচন"
+
+msgid "Outline Thickness"
+msgstr ""
 
 msgid "Outline Color"
 msgstr ""
@@ -1451,6 +1489,53 @@ msgstr ""
 msgid "Glow ring"
 msgstr ""
 
+#, fuzzy
+msgid "Highlight Content"
+msgstr "রশ্মির রঙ"
+
+msgid ""
+"Listens for screen reader events and renders highlight for the currently "
+"spoken word."
+msgstr ""
+
+msgid "Toggle Highlight of Content."
+msgstr ""
+
+msgid "Enable on startup"
+msgstr ""
+
+msgid "Enables this plugin when it is loaded."
+msgstr ""
+
+msgid "Highlight Speech synthesis"
+msgstr ""
+
+msgid "Highlight Speech synthesis' current word."
+msgstr ""
+
+#, fuzzy
+msgid "Speech Options"
+msgstr "বিবিধ বিকল্প"
+
+msgid "Rectangle Border Thickness"
+msgstr ""
+
+msgid "How thick the border of the rectangle should be, in pixels."
+msgstr ""
+
+#, fuzzy
+msgid "Rectangle Color"
+msgstr "রশ্মির রঙ"
+
+msgid "Color of the borders of the rectangle."
+msgstr ""
+
+msgid "Show only border of rectangle"
+msgstr ""
+
+msgid "Whether we draw a filled rectangle or just its border."
+msgstr ""
+
 msgid "Motion blur"
 msgstr ""
 
@@ -1813,8 +1898,43 @@ msgid "Toggle the mouse pointer trail."
 msgstr ""
 
 #, fuzzy
+msgid "Particles"
+msgstr "অগ্নিকণার আকার."
+
+#, fuzzy
+msgid "Enable particles."
+msgstr "অগ্নিকণার আকার."
+
+msgid "Crosshair"
+msgstr ""
+
+msgid "Enable crosshair."
+msgstr ""
+
+#, fuzzy
 msgid "Particle Options"
 msgstr "বিবিধ বিকল্প"
+
+#, fuzzy
+msgid "Rotation speed"
+msgstr "অ্যানিমেশনের গতি"
+
+#, fuzzy
+msgid "Rotation speed."
+msgstr "অ্যানিমেশনের গতি"
+
+msgid "Radius"
+msgstr ""
+
+msgid "Ring radius"
+msgstr ""
+
+msgid "Emitters"
+msgstr ""
+
+#, fuzzy
+msgid "Number of particle emitters."
+msgstr "অগ্নিকণার বয়স."
 
 msgid "Number Of Particles"
 msgstr ""
@@ -1875,25 +1995,26 @@ msgid "Have random colors for the particles"
 msgstr "আগুনের ইফেক্টের জন্য এলোমেলো রং হবে, বাউল আগুনের জন্য"
 
 #, fuzzy
-msgid "Rotation speed"
-msgstr "অ্যানিমেশনের গতি"
+msgid "Crosshair Options"
+msgstr "বিবিধ বিকল্প"
 
-#, fuzzy
-msgid "Rotation speed."
-msgstr "অ্যানিমেশনের গতি"
-
-msgid "Radius"
+msgid "Crosshair thickness"
 msgstr ""
 
-msgid "Ring radius"
+msgid "How thick mouse crosshair should be, in pixels."
 msgstr ""
 
-msgid "Emitters"
+msgid "Crosshair empty radius"
 msgstr ""
 
-#, fuzzy
-msgid "Number of particle emitters."
-msgstr "অগ্নিকণার বয়স."
+msgid "Radius of the disk around the cursor which is not covered by crosshair."
+msgstr ""
+
+msgid "Crosshair Color"
+msgstr ""
+
+msgid "Crosshair color."
+msgstr ""
 
 msgid "Login/Logout"
 msgstr ""
@@ -2309,10 +2430,82 @@ msgstr "নিচের ডানদিকে উচু কর"
 msgid "Bevel bottom right corner"
 msgstr "ওপরের ডানদিকের কোণা উচু কর"
 
+msgid "Vidcap"
+msgstr ""
+
+msgid "Screen Recorder"
+msgstr ""
+
+msgid "Start / Stop"
+msgstr ""
+
+msgid "Start and stop recording"
+msgstr ""
+
+#, fuzzy
+msgid "Directory"
+msgstr "ভাজের দিক"
+
+msgid "Directory to store videos"
+msgstr ""
+
+msgid "Command"
+msgstr ""
+
+msgid ""
+"Command to be used for encoding video. Use a dash (-) for the input file and "
+"%f.ext for the output file"
+msgstr ""
+
+msgid "Draw Status Indicator"
+msgstr ""
+
+msgid "Draw color coded status dot"
+msgstr ""
+
 msgid "Wallpaper"
 msgstr ""
 
 msgid "Draw the desktop wallpaper"
+msgstr ""
+
+msgid "Recursive directory search"
+msgstr ""
+
+msgid "Search in all sub-directories."
+msgstr ""
+
+msgid "Cycle"
+msgstr ""
+
+msgid "Automatically cycle through wallpapers."
+msgstr ""
+
+msgid "Cycle timeout"
+msgstr ""
+
+msgid "Time before cycling to next wallpaper (in minutes)."
+msgstr ""
+
+#, fuzzy
+msgid "Fade time"
+msgstr "মলিন করা"
+
+msgid "Fade transition time (in seconds)."
+msgstr ""
+
+msgid "Randomize"
+msgstr ""
+
+msgid "Randomly order wallpapers."
+msgstr ""
+
+msgid "Hide other desktop background windows"
+msgstr ""
+
+msgid ""
+"Don't draw desktop backgrounds rendered by other applications. Mouse and "
+"keyboard input works as if the background were drawn."
 msgstr ""
 
 msgid "Backgrounds"
@@ -2375,6 +2568,74 @@ msgid "Color 2"
 msgstr ""
 
 msgid "Second gradient color."
+msgstr ""
+
+msgid "Workspace Naming"
+msgstr ""
+
+msgid "Allows assigning descriptions to workspaces"
+msgstr ""
+
+msgid "Names"
+msgstr ""
+
+msgid "Workspace Names"
+msgstr ""
+
+msgid "Viewport"
+msgstr ""
+
+msgid "Number of viewport to be named"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "Viewport name"
+msgstr ""
+
+msgid "Timeout (in s) of the name display"
+msgstr ""
+
+msgid "Time (in s) the name display fades out after being shown."
+msgstr ""
+
+#, fuzzy
+msgid "Text Display"
+msgstr "উইন্ডোর প্রকৃতি"
+
+msgid "Selects if the text should be displayed in bold font or not."
+msgstr ""
+
+msgid "Font Family"
+msgstr ""
+
+msgid "Font family for the text display."
+msgstr ""
+
+msgid "Font size for the text display."
+msgstr ""
+
+msgid "Text Placement"
+msgstr ""
+
+msgid "Selects where to place the text."
+msgstr ""
+
+msgid "Centered on screen"
+msgstr ""
+
+msgid "Top of screen"
+msgstr ""
+
+#, fuzzy
+msgid "Bottom of screen"
+msgstr "নিচের বাঁদিকের কোণা উচু কর"
+
+msgid "Background color for the text display."
+msgstr ""
+
+msgid "Font color for the text display."
 msgstr ""
 
 #~ msgid ""
@@ -2440,9 +2701,6 @@ msgstr ""
 
 #~ msgid "Duration"
 #~ msgstr "ব্যাপ্তি"
-
-#~ msgid "Fade"
-#~ msgstr "মলিন করা"
 
 #~ msgid "Fixed window interior during the Rollup animation."
 #~ msgstr "রোল আপ অ্যানিমেশনের সময় উইন্ডোর ভিতরে ঠিক রাখো."
@@ -2616,10 +2874,6 @@ msgstr ""
 #~ msgstr "যে উইন্ডোগুলি 3D দ্বারা পরিচালিত হবে"
 
 #, fuzzy
-#~ msgid "Highlight Border Color"
-#~ msgstr "রশ্মির রঙ"
-
-#, fuzzy
 #~ msgid "Icon"
 #~ msgstr "ভিতর"
 
@@ -2658,10 +2912,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Windows that should not slide during the slide animation"
 #~ msgstr "যে উইন্ডোগুলি 3D দ্বারা পরিচালিত হবে"
-
-#, fuzzy
-#~ msgid "Directory"
-#~ msgstr "ভাজের দিক"
 
 #~ msgid ""
 #~ "Amplitude (size of the waves in the fold) of the Horizontal Folds "
@@ -2753,71 +3003,3 @@ msgstr ""
 
 #~ msgid "Misc. options"
 #~ msgstr "বিবিধ বিকল্প"
-
-msgid "Workspace Naming"
-msgstr ""
-
-msgid "Allows assigning descriptions to workspaces"
-msgstr ""
-
-msgid "Names"
-msgstr ""
-
-msgid "Workspace Names"
-msgstr ""
-
-msgid "Viewport"
-msgstr ""
-
-msgid "Number of viewport to be named"
-msgstr ""
-
-msgid "Name"
-msgstr ""
-
-msgid "Viewport name"
-msgstr ""
-
-msgid "Timeout (in s) of the name display"
-msgstr ""
-
-msgid "Time (in s) the name display fades out after being shown."
-msgstr ""
-
-#, fuzzy
-msgid "Text Display"
-msgstr "উইন্ডোর প্রকৃতি"
-
-msgid "Selects if the text should be displayed in bold font or not."
-msgstr ""
-
-msgid "Font Family"
-msgstr ""
-
-msgid "Font family for the text display."
-msgstr ""
-
-msgid "Font size for the text display."
-msgstr ""
-
-msgid "Text Placement"
-msgstr ""
-
-msgid "Selects where to place the text."
-msgstr ""
-
-msgid "Centered on screen"
-msgstr ""
-
-msgid "Top of screen"
-msgstr ""
-
-#, fuzzy
-msgid "Bottom of screen"
-msgstr "নিচের বাঁদিকের কোণা উচু কর"
-
-msgid "Background color for the text display."
-msgstr ""
-
-msgid "Font color for the text display."
-msgstr ""

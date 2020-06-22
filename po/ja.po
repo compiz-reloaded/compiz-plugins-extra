@@ -8,9 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: compiz-plugins-extra\n"
-"Report-Msgid-Bugs-To: https://gitlab.com/compiz/compiz-plugins-"
-"extra/issues\n"
-"POT-Creation-Date: 2017-01-12 18:19+0300\n"
+"Report-Msgid-Bugs-To: https://gitlab.com/compiz/compiz-plugins-extra/issues\n"
+"POT-Creation-Date: 2020-06-23 00:40+0200\n"
 "PO-Revision-Date: 2009-05-10 21:12+0900\n"
 "Last-Translator: jiro kawada <jiro.kawada@gmail.com>\n"
 "Language-Team: Japanese <ja@li.org>\n"
@@ -29,10 +28,12 @@ msgstr "アクティブ・ウィンドウ以外を暗くして集中しやすく
 msgid "Bindings"
 msgstr "割り当て"
 
-msgid "Toggle AddHelper"
+#, fuzzy
+msgid "Toggle ADD Helper"
 msgstr "ヘルパーの追加のオンオフ"
 
-msgid "Use this to enable/disable AddHelper on the fly."
+#, fuzzy
+msgid "Use this to enable/disable ADD Helper on the fly."
 msgstr "ヘルパーの追加を即時に利用/非利用するために使用"
 
 msgid "Misc. Options"
@@ -41,7 +42,8 @@ msgstr "その他オプション"
 msgid "Window Types"
 msgstr "ウィンドウの種類"
 
-msgid "Window types that should be Opacified."
+#, fuzzy
+msgid "Window types that should be affected."
 msgstr "不透明度等の変更の適用対象にするウィンドウの種類"
 
 msgid "Enable ADD Helper on start"
@@ -67,6 +69,14 @@ msgstr "不透明度"
 
 msgid "Opacity of faded windows"
 msgstr "フェードしたウィンドウの不透明度"
+
+#, fuzzy
+msgid "Contrast"
+msgstr "Control"
+
+#, fuzzy
+msgid "Contrast of the content of the window."
+msgstr "「ポインタに移動」時にウィンドウの隅の代わりに中心を使用"
 
 msgid "Animations Add-On"
 msgstr "アニメーションのアドオン"
@@ -392,6 +402,24 @@ msgstr "転送ビーム"
 
 msgid "Leaf Spread"
 msgstr "散らばる葉っぱ"
+
+msgid "Audible Bell"
+msgstr ""
+
+msgid "Plays an audible sound for the system bell"
+msgstr ""
+
+msgid "Play sound on system bell"
+msgstr ""
+
+msgid "Spatial Sounds"
+msgstr ""
+
+msgid ""
+"Whether to spatially locate sounds or not. If enabled, sounds coming from "
+"the left of the sceen will be heard mostly on the left channel, the ones "
+"coming from the right on the right channel and so on."
+msgstr ""
 
 msgid "Benchmark"
 msgstr "ベンチマーク"
@@ -914,8 +942,8 @@ msgid ""
 "multiple times in a row."
 msgstr ""
 
-msgid "Corners / Edges"
-msgstr ""
+msgid "Behavior"
+msgstr "動作"
 
 #, fuzzy
 msgid "Resize Actions"
@@ -924,6 +952,10 @@ msgstr "反射"
 #, fuzzy
 msgid "Window resize action"
 msgstr "ウィンドウのタイトルフォント"
+
+#, fuzzy
+msgid "Top Left Corner"
+msgstr "四隅"
 
 #, fuzzy
 msgid "Action to be performed when window is dropped on the top left corner"
@@ -952,10 +984,6 @@ msgstr "全画面表示"
 #, fuzzy
 msgid "Right Half"
 msgstr "右"
-
-#, fuzzy
-msgid "Top Left Corner"
-msgstr "四隅"
 
 msgid "Top Half"
 msgstr ""
@@ -1024,6 +1052,16 @@ msgstr "ウィンドウが収まる先の画面上端からのピクセル数"
 msgid "Maximum number of pixels from the Bottom edge a window can be dropped"
 msgstr "ウィンドウが収まる先の画面下端からのピクセル数"
 
+#, fuzzy
+msgid "Select output with mouse pointer"
+msgstr "マウスポインタを拡大"
+
+msgid ""
+"In the case of multiple outputs, chooses the output containing the mouse "
+"pointer. If this option is not checked, the output is choosen based on the "
+"center of the window."
+msgstr ""
+
 msgid "Draw Indicator"
 msgstr ""
 
@@ -1038,6 +1076,10 @@ msgstr "アニメーション持続時間"
 #, fuzzy
 msgid "Preview animation duration (in ms)."
 msgstr "アニメーション持続時間"
+
+#, fuzzy
+msgid "Outline Thickness"
+msgstr "厚さ"
 
 msgid "Outline Color"
 msgstr "輪郭の色"
@@ -1503,6 +1545,58 @@ msgstr "矩形の発光"
 msgid "Glow ring"
 msgstr "光輪"
 
+#, fuzzy
+msgid "Highlight Content"
+msgstr "強調モード"
+
+msgid ""
+"Listens for screen reader events and renders highlight for the currently "
+"spoken word."
+msgstr ""
+
+msgid "Toggle Highlight of Content."
+msgstr ""
+
+#, fuzzy
+msgid "Enable on startup"
+msgstr "スタート時点でヘルパーの追加をオン"
+
+#, fuzzy
+msgid "Enables this plugin when it is loaded."
+msgstr "ヘルパーの追加を読み込んだ時点で即利用可能にする"
+
+msgid "Highlight Speech synthesis"
+msgstr ""
+
+msgid "Highlight Speech synthesis' current word."
+msgstr ""
+
+#, fuzzy
+msgid "Speech Options"
+msgstr "選択"
+
+#, fuzzy
+msgid "Rectangle Border Thickness"
+msgstr "タイトルの枠の大きさ"
+
+msgid "How thick the border of the rectangle should be, in pixels."
+msgstr ""
+
+#, fuzzy
+msgid "Rectangle Color"
+msgstr "矩形の発光"
+
+#, fuzzy
+msgid "Color of the borders of the rectangle."
+msgstr "キューブの上面の色"
+
+#, fuzzy
+msgid "Show only border of rectangle"
+msgstr "矩形を表示"
+
+msgid "Whether we draw a filled rectangle or just its border."
+msgstr ""
+
 msgid "Motion blur"
 msgstr "モーションブラー"
 
@@ -1879,8 +1973,41 @@ msgstr "マウスポインタの視認性の向上"
 msgid "Toggle the mouse pointer trail."
 msgstr "マウスポインタの軌跡のオンオフ"
 
+#, fuzzy
+msgid "Particles"
+msgstr "粒子の大きさ"
+
+#, fuzzy
+msgid "Enable particles."
+msgstr "タイトルを有効"
+
+msgid "Crosshair"
+msgstr ""
+
+#, fuzzy
+msgid "Enable crosshair."
+msgstr "クラッシュハンドラを有効化"
+
 msgid "Particle Options"
 msgstr "粒子のオプション"
+
+msgid "Rotation speed"
+msgstr "回転速度"
+
+msgid "Rotation speed."
+msgstr "回転速度"
+
+msgid "Radius"
+msgstr "半径"
+
+msgid "Ring radius"
+msgstr "リングの半径"
+
+msgid "Emitters"
+msgstr "放出体"
+
+msgid "Number of particle emitters."
+msgstr "粒子放出体の数"
 
 msgid "Number Of Particles"
 msgstr "粒子の数"
@@ -1930,23 +2057,27 @@ msgstr "ランダム色の粒子"
 msgid "Have random colors for the particles"
 msgstr "粒子をランダムな色で色付け"
 
-msgid "Rotation speed"
-msgstr "回転速度"
+#, fuzzy
+msgid "Crosshair Options"
+msgstr "粒子のオプション"
 
-msgid "Rotation speed."
-msgstr "回転速度"
+msgid "Crosshair thickness"
+msgstr ""
 
-msgid "Radius"
-msgstr "半径"
+msgid "How thick mouse crosshair should be, in pixels."
+msgstr ""
 
-msgid "Ring radius"
-msgstr "リングの半径"
+msgid "Crosshair empty radius"
+msgstr ""
 
-msgid "Emitters"
-msgstr "放出体"
+msgid "Radius of the disk around the cursor which is not covered by crosshair."
+msgstr ""
 
-msgid "Number of particle emitters."
-msgstr "粒子放出体の数"
+msgid "Crosshair Color"
+msgstr ""
+
+msgid "Crosshair color."
+msgstr ""
 
 msgid "Login/Logout"
 msgstr "ログイン/ログアウト"
@@ -2360,11 +2491,91 @@ msgstr "右下の面取り"
 msgid "Bevel bottom right corner"
 msgstr "右下の角の面取り"
 
+msgid "Vidcap"
+msgstr ""
+
+#, fuzzy
+msgid "Screen Recorder"
+msgstr "スクリーンエッジ"
+
+#, fuzzy
+msgid "Start / Stop"
+msgstr "スプラッシュ開始"
+
+msgid "Start and stop recording"
+msgstr ""
+
+#, fuzzy
+msgid "Directory"
+msgstr "クラッシュダンプ・ディレクトリ"
+
+msgid "Directory to store videos"
+msgstr ""
+
+msgid "Command"
+msgstr ""
+
+msgid ""
+"Command to be used for encoding video. Use a dash (-) for the input file and "
+"%f.ext for the output file"
+msgstr ""
+
+#, fuzzy
+msgid "Draw Status Indicator"
+msgstr "ウィンドウの強調表示を描画"
+
+msgid "Draw color coded status dot"
+msgstr ""
+
 msgid "Wallpaper"
 msgstr "壁紙"
 
 msgid "Draw the desktop wallpaper"
 msgstr "デスクトップの壁紙を描画"
+
+msgid "Recursive directory search"
+msgstr ""
+
+msgid "Search in all sub-directories."
+msgstr ""
+
+msgid "Cycle"
+msgstr ""
+
+msgid "Automatically cycle through wallpapers."
+msgstr ""
+
+#, fuzzy
+msgid "Cycle timeout"
+msgstr "非表示タイムアウト"
+
+msgid "Time before cycling to next wallpaper (in minutes)."
+msgstr ""
+
+#, fuzzy
+msgid "Fade time"
+msgstr "フェード時間"
+
+#, fuzzy
+msgid "Fade transition time (in seconds)."
+msgstr "フェードイン/アウトの継続時間（秒）"
+
+#, fuzzy
+msgid "Randomize"
+msgstr "ランダム"
+
+#, fuzzy
+msgid "Randomly order wallpapers."
+msgstr "ランダム色の粒子"
+
+#, fuzzy
+msgid "Hide other desktop background windows"
+msgstr "非デスクトップウィンドウを隠す"
+
+msgid ""
+"Don't draw desktop backgrounds rendered by other applications. Mouse and "
+"keyboard input works as if the background were drawn."
+msgstr ""
 
 msgid "Backgrounds"
 msgstr "背景"
@@ -2422,6 +2633,86 @@ msgstr "色2"
 
 msgid "Second gradient color."
 msgstr "グラデーションの終端色"
+
+msgid "Workspace Naming"
+msgstr ""
+
+msgid "Allows assigning descriptions to workspaces"
+msgstr ""
+
+msgid "Names"
+msgstr ""
+
+msgid "Workspace Names"
+msgstr ""
+
+#, fuzzy
+msgid "Viewport"
+msgstr "上のビューポート"
+
+#, fuzzy
+msgid "Number of viewport to be named"
+msgstr "追跡するウィンドウの数"
+
+msgid "Name"
+msgstr ""
+
+#, fuzzy
+msgid "Viewport name"
+msgstr "左のビューポート"
+
+msgid "Timeout (in s) of the name display"
+msgstr ""
+
+#, fuzzy
+msgid "Time (in s) the name display fades out after being shown."
+msgstr "タブの切り替え後にタブバーを表示する時間(秒)"
+
+#, fuzzy
+msgid "Text Display"
+msgstr "表示"
+
+#, fuzzy
+msgid "Selects if the text should be displayed in bold font or not."
+msgstr "ウィンドウタイトルを太字で表示するか否かの選択"
+
+#, fuzzy
+msgid "Font Family"
+msgstr "フォントの大きさ"
+
+#, fuzzy
+msgid "Font family for the text display."
+msgstr "ウィンドウタイトル表示のフォントの大きさ"
+
+#, fuzzy
+msgid "Font size for the text display."
+msgstr "ウィンドウタイトル表示のフォントの大きさ"
+
+msgid "Text Placement"
+msgstr "テキスト配置"
+
+#, fuzzy
+msgid "Selects where to place the text."
+msgstr "ウィンドウタイトルの配置場所の選択"
+
+msgid "Centered on screen"
+msgstr "画面中央"
+
+#, fuzzy
+msgid "Top of screen"
+msgstr "海洋生物の種類"
+
+#, fuzzy
+msgid "Bottom of screen"
+msgstr "下から上へ"
+
+#, fuzzy
+msgid "Background color for the text display."
+msgstr "ウィンドウタイトルの背景色"
+
+#, fuzzy
+msgid "Font color for the text display."
+msgstr "ウィンドウタイトルのフォント色"
 
 #~ msgid ""
 #~ "All effects are chosen randomly, ignoring the selected effect. If None is "
@@ -3643,9 +3934,6 @@ msgstr "グラデーションの終端色"
 #~ msgid "Restrain the mouse to the zoom area"
 #~ msgstr "マウスをズーム域に制限"
 
-#~ msgid "Scale the mouse pointer"
-#~ msgstr "マウスポインタを拡大"
-
 #~ msgid "Specific Zoom"
 #~ msgstr "指定ズーム"
 
@@ -4225,9 +4513,6 @@ msgstr "グラデーションの終端色"
 #~ msgid "Put To Next Output"
 #~ msgstr "次の出力に移動"
 
-#~ msgid "Put pointer uses the center of the window"
-#~ msgstr "「ポインタに移動」時にウィンドウの隅の代わりに中心を使用"
-
 #~ msgid "Put to adjacent viewport"
 #~ msgstr "隣接ビューポートに移動"
 
@@ -4638,9 +4923,6 @@ msgstr "グラデーションの終端色"
 #~ msgid "Hide all non Desktop windows during switching"
 #~ msgstr "スイッチ中にすべての非デスクトップウィンドウを隠す"
 
-#~ msgid "Hide non Desktop windows"
-#~ msgstr "非デスクトップウィンドウを隠す"
-
 #~ msgid "Initiate (All Workspaces)"
 #~ msgstr "開始（すべてのワークスペース）"
 
@@ -4736,9 +5018,6 @@ msgstr "グラデーションの終端色"
 #~ msgid "Choose 'Resistance', 'Attraction' or 'Full Mode'."
 #~ msgstr "「抵抗力」や「引力」ないしは「フルモード」を選択"
 
-#~ msgid "Control"
-#~ msgstr "Control"
-
 #~ msgid "Edge Attraction Distance"
 #~ msgstr "エッジ引力距離"
 
@@ -4756,9 +5035,6 @@ msgstr "グラデーションの終端色"
 
 #~ msgid "Meta"
 #~ msgstr "Meta"
-
-#~ msgid "Screen edges"
-#~ msgstr "スクリーンエッジ"
 
 #~ msgid "Shift"
 #~ msgstr "Shift"
@@ -4877,9 +5153,6 @@ msgstr "グラデーションの終端色"
 #~ "selected"
 #~ msgstr "スイッチャーの非選択ウィンドウに適用する不透明度（％単位）"
 
-#~ msgid "Behavior"
-#~ msgstr "動作"
-
 #~ msgid "Darken background when showing the stack"
 #~ msgstr "スタックの表示時に背景を暗くする"
 
@@ -4945,9 +5218,6 @@ msgstr "グラデーションの終端色"
 
 #~ msgid "Highlight Border Inlay Color"
 #~ msgstr "矩形型強調の境界線の塗り色"
-
-#~ msgid "Highlight Mode"
-#~ msgstr "強調モード"
 
 #~ msgid "Icon"
 #~ msgstr "アイコン"
@@ -5048,9 +5318,6 @@ msgstr "グラデーションの終端色"
 #~ msgid "Selected Window Highlight"
 #~ msgstr "選択ウィンドウの強調表示"
 
-#~ msgid "Show Rectangle"
-#~ msgstr "矩形を表示"
-
 #~ msgid "Show icon next to thumbnail"
 #~ msgstr "サムネイルの隣にアイコンを表示"
 
@@ -5087,14 +5354,8 @@ msgstr "グラデーションの終端色"
 #~ msgid "Text"
 #~ msgstr "テキスト"
 
-#~ msgid "Enable Titles"
-#~ msgstr "タイトルを有効"
-
 #~ msgid "Fade In/Out Duration"
 #~ msgstr "フェードイン/アウトの継続時間"
-
-#~ msgid "Fade In/Out Duration in seconds."
-#~ msgstr "フェードイン/アウトの継続時間（秒）"
 
 #~ msgid "Generate Mipmaps"
 #~ msgstr "ミップマップを生成"
@@ -5859,83 +6120,3 @@ msgstr "グラデーションの終端色"
 
 #~ msgid "Workarounds"
 #~ msgstr "次善策"
-
-msgid "Workspace Naming"
-msgstr ""
-
-msgid "Allows assigning descriptions to workspaces"
-msgstr ""
-
-msgid "Names"
-msgstr ""
-
-msgid "Workspace Names"
-msgstr ""
-
-#, fuzzy
-msgid "Viewport"
-msgstr "上のビューポート"
-
-#, fuzzy
-msgid "Number of viewport to be named"
-msgstr "追跡するウィンドウの数"
-
-msgid "Name"
-msgstr ""
-
-#, fuzzy
-msgid "Viewport name"
-msgstr "左のビューポート"
-
-msgid "Timeout (in s) of the name display"
-msgstr ""
-
-#, fuzzy
-msgid "Time (in s) the name display fades out after being shown."
-msgstr "タブの切り替え後にタブバーを表示する時間(秒)"
-
-#, fuzzy
-msgid "Text Display"
-msgstr "表示"
-
-#, fuzzy
-msgid "Selects if the text should be displayed in bold font or not."
-msgstr "ウィンドウタイトルを太字で表示するか否かの選択"
-
-#, fuzzy
-msgid "Font Family"
-msgstr "フォントの大きさ"
-
-#, fuzzy
-msgid "Font family for the text display."
-msgstr "ウィンドウタイトル表示のフォントの大きさ"
-
-#, fuzzy
-msgid "Font size for the text display."
-msgstr "ウィンドウタイトル表示のフォントの大きさ"
-
-msgid "Text Placement"
-msgstr "テキスト配置"
-
-#, fuzzy
-msgid "Selects where to place the text."
-msgstr "ウィンドウタイトルの配置場所の選択"
-
-msgid "Centered on screen"
-msgstr "画面中央"
-
-#, fuzzy
-msgid "Top of screen"
-msgstr "海洋生物の種類"
-
-#, fuzzy
-msgid "Bottom of screen"
-msgstr "下から上へ"
-
-#, fuzzy
-msgid "Background color for the text display."
-msgstr "ウィンドウタイトルの背景色"
-
-#, fuzzy
-msgid "Font color for the text display."
-msgstr "ウィンドウタイトルのフォント色"

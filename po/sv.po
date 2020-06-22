@@ -9,9 +9,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: compiz-plugins-extra\n"
-"Report-Msgid-Bugs-To: https://gitlab.com/compiz/compiz-plugins-"
-"extra/issues\n"
-"POT-Creation-Date: 2017-01-12 18:19+0300\n"
+"Report-Msgid-Bugs-To: https://gitlab.com/compiz/compiz-plugins-extra/issues\n"
+"POT-Creation-Date: 2020-06-23 00:40+0200\n"
 "PO-Revision-Date: 2008-12-09 16:46+0100\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
 "Language-Team: Swedish <sv@li.org>\n"
@@ -32,10 +31,12 @@ msgstr ""
 msgid "Bindings"
 msgstr "Bindningar"
 
-msgid "Toggle AddHelper"
+#, fuzzy
+msgid "Toggle ADD Helper"
 msgstr "Växla AddHelper"
 
-msgid "Use this to enable/disable AddHelper on the fly."
+#, fuzzy
+msgid "Use this to enable/disable ADD Helper on the fly."
 msgstr "Använd detta för att aktivera/inaktivera AddHelper i realtid"
 
 msgid "Misc. Options"
@@ -44,7 +45,8 @@ msgstr "Diverse inställningar"
 msgid "Window Types"
 msgstr "Fönstertyper"
 
-msgid "Window types that should be Opacified."
+#, fuzzy
+msgid "Window types that should be affected."
 msgstr "Fönstertyper som ska bli genomskinliga"
 
 msgid "Enable ADD Helper on start"
@@ -70,6 +72,14 @@ msgstr "Opacitet"
 
 msgid "Opacity of faded windows"
 msgstr "Opacitet på tonade fönster"
+
+#, fuzzy
+msgid "Contrast"
+msgstr "Kontroll"
+
+#, fuzzy
+msgid "Contrast of the content of the window."
+msgstr "Placera muspekare använder mitten av fönstret"
 
 #, fuzzy
 msgid "Animations Add-On"
@@ -404,6 +414,24 @@ msgstr "Stråla upp"
 
 msgid "Leaf Spread"
 msgstr "Lövspridning"
+
+msgid "Audible Bell"
+msgstr ""
+
+msgid "Plays an audible sound for the system bell"
+msgstr ""
+
+msgid "Play sound on system bell"
+msgstr ""
+
+msgid "Spatial Sounds"
+msgstr ""
+
+msgid ""
+"Whether to spatially locate sounds or not. If enabled, sounds coming from "
+"the left of the sceen will be heard mostly on the left channel, the ones "
+"coming from the right on the right channel and so on."
+msgstr ""
 
 msgid "Benchmark"
 msgstr "Prestandatest"
@@ -928,8 +956,8 @@ msgid ""
 "multiple times in a row."
 msgstr ""
 
-msgid "Corners / Edges"
-msgstr ""
+msgid "Behavior"
+msgstr "Beteende"
 
 #, fuzzy
 msgid "Resize Actions"
@@ -938,6 +966,10 @@ msgstr "Reflektion"
 #, fuzzy
 msgid "Window resize action"
 msgstr "Typsnitt på fönstertitel"
+
+#, fuzzy
+msgid "Top Left Corner"
+msgstr "Till kanterna"
 
 #, fuzzy
 msgid "Action to be performed when window is dropped on the top left corner"
@@ -966,10 +998,6 @@ msgstr "Helskärm"
 #, fuzzy
 msgid "Right Half"
 msgstr "Höger"
-
-#, fuzzy
-msgid "Top Left Corner"
-msgstr "Till kanterna"
 
 msgid "Top Half"
 msgstr ""
@@ -1040,6 +1068,16 @@ msgstr "Antal pixlar från den övre kanten som fönster kommer bli satta i dval
 msgid "Maximum number of pixels from the Bottom edge a window can be dropped"
 msgstr "Antal pixlar från den nedre kanten som fönster kommer bli satt i dvala"
 
+#, fuzzy
+msgid "Select output with mouse pointer"
+msgstr "Skala muspekaren"
+
+msgid ""
+"In the case of multiple outputs, chooses the output containing the mouse "
+"pointer. If this option is not checked, the output is choosen based on the "
+"center of the window."
+msgstr ""
+
 msgid "Draw Indicator"
 msgstr ""
 
@@ -1054,6 +1092,10 @@ msgstr "Varaktighet på animation"
 #, fuzzy
 msgid "Preview animation duration (in ms)."
 msgstr "Varaktighet på animation"
+
+#, fuzzy
+msgid "Outline Thickness"
+msgstr "Tjocklek"
 
 msgid "Outline Color"
 msgstr "Konturfärg"
@@ -1518,6 +1560,58 @@ msgstr "Rektangulär glöd"
 msgid "Glow ring"
 msgstr "Glödring"
 
+#, fuzzy
+msgid "Highlight Content"
+msgstr "Framhävningsfärg"
+
+msgid ""
+"Listens for screen reader events and renders highlight for the currently "
+"spoken word."
+msgstr ""
+
+msgid "Toggle Highlight of Content."
+msgstr ""
+
+#, fuzzy
+msgid "Enable on startup"
+msgstr "Aktivera ADD-hjälpare vid uppstart"
+
+#, fuzzy
+msgid "Enables this plugin when it is loaded."
+msgstr "Aktiverar ADD-hjälpare när den först läses in."
+
+msgid "Highlight Speech synthesis"
+msgstr ""
+
+msgid "Highlight Speech synthesis' current word."
+msgstr ""
+
+#, fuzzy
+msgid "Speech Options"
+msgstr "Selektion"
+
+#, fuzzy
+msgid "Rectangle Border Thickness"
+msgstr "Bredd på titelkant"
+
+msgid "How thick the border of the rectangle should be, in pixels."
+msgstr ""
+
+#, fuzzy
+msgid "Rectangle Color"
+msgstr "Rektangulär glöd"
+
+#, fuzzy
+msgid "Color of the borders of the rectangle."
+msgstr "Färgen på toppytan av kuben"
+
+#, fuzzy
+msgid "Show only border of rectangle"
+msgstr "Visa rektangel"
+
+msgid "Whether we draw a filled rectangle or just its border."
+msgstr ""
+
 msgid "Motion blur"
 msgstr "Rörelseoskärpa"
 
@@ -1895,8 +1989,42 @@ msgstr "Ökar synligheten för muspekaren"
 msgid "Toggle the mouse pointer trail."
 msgstr "Skala muspekaren"
 
+#, fuzzy
+msgid "Particles"
+msgstr "Storlek på partiklar."
+
+#, fuzzy
+msgid "Enable particles."
+msgstr "Aktivera titlar"
+
+msgid "Crosshair"
+msgstr ""
+
+#, fuzzy
+msgid "Enable crosshair."
+msgstr "Aktivera färger"
+
 msgid "Particle Options"
 msgstr "Alternativ för partiklar"
+
+msgid "Rotation speed"
+msgstr "Rotationshastighet"
+
+msgid "Rotation speed."
+msgstr "Rotationshastighet."
+
+msgid "Radius"
+msgstr "Radie"
+
+msgid "Ring radius"
+msgstr "Ringradie"
+
+msgid "Emitters"
+msgstr ""
+
+#, fuzzy
+msgid "Number of particle emitters."
+msgstr "Antal partiklar"
 
 msgid "Number Of Particles"
 msgstr "Antal partiklar"
@@ -1949,24 +2077,27 @@ msgstr "Slumpmässigt färgade partiklar"
 msgid "Have random colors for the particles"
 msgstr "Ha slumpmässiga färger till eldeffekten, också känd som Mystisk Eld"
 
-msgid "Rotation speed"
-msgstr "Rotationshastighet"
+#, fuzzy
+msgid "Crosshair Options"
+msgstr "Alternativ för partiklar"
 
-msgid "Rotation speed."
-msgstr "Rotationshastighet."
-
-msgid "Radius"
-msgstr "Radie"
-
-msgid "Ring radius"
-msgstr "Ringradie"
-
-msgid "Emitters"
+msgid "Crosshair thickness"
 msgstr ""
 
-#, fuzzy
-msgid "Number of particle emitters."
-msgstr "Antal partiklar"
+msgid "How thick mouse crosshair should be, in pixels."
+msgstr ""
+
+msgid "Crosshair empty radius"
+msgstr ""
+
+msgid "Radius of the disk around the cursor which is not covered by crosshair."
+msgstr ""
+
+msgid "Crosshair Color"
+msgstr ""
+
+msgid "Crosshair color."
+msgstr ""
 
 msgid "Login/Logout"
 msgstr "Inloggning/utloggning"
@@ -2402,11 +2533,90 @@ msgstr "Runda nedre höger"
 msgid "Bevel bottom right corner"
 msgstr "Runda det nedre högra hörnet"
 
+msgid "Vidcap"
+msgstr ""
+
+#, fuzzy
+msgid "Screen Recorder"
+msgstr "Skärmkanter"
+
+#, fuzzy
+msgid "Start / Stop"
+msgstr "Startbild för start"
+
+msgid "Start and stop recording"
+msgstr ""
+
+msgid "Directory"
+msgstr "Katalog"
+
+msgid "Directory to store videos"
+msgstr ""
+
+msgid "Command"
+msgstr ""
+
+msgid ""
+"Command to be used for encoding video. Use a dash (-) for the input file and "
+"%f.ext for the output file"
+msgstr ""
+
+#, fuzzy
+msgid "Draw Status Indicator"
+msgstr "Rita fönsterframhävning"
+
+msgid "Draw color coded status dot"
+msgstr ""
+
 msgid "Wallpaper"
 msgstr "Bakgrund"
 
 msgid "Draw the desktop wallpaper"
 msgstr "Rita bakgrundsbilden"
+
+msgid "Recursive directory search"
+msgstr ""
+
+msgid "Search in all sub-directories."
+msgstr ""
+
+msgid "Cycle"
+msgstr ""
+
+msgid "Automatically cycle through wallpapers."
+msgstr ""
+
+#, fuzzy
+msgid "Cycle timeout"
+msgstr "Göm-fördröjning"
+
+msgid "Time before cycling to next wallpaper (in minutes)."
+msgstr ""
+
+#, fuzzy
+msgid "Fade time"
+msgstr "Toningstid"
+
+#, fuzzy
+msgid "Fade transition time (in seconds)."
+msgstr "Tona in/ut varaktighet i sekunder"
+
+#, fuzzy
+msgid "Randomize"
+msgstr "Slumpmässig"
+
+#, fuzzy
+msgid "Randomly order wallpapers."
+msgstr "Slumpmässigt färgade partiklar"
+
+#, fuzzy
+msgid "Hide other desktop background windows"
+msgstr "Göm fönster som inte tillhör skrivbord"
+
+msgid ""
+"Don't draw desktop backgrounds rendered by other applications. Mouse and "
+"keyboard input works as if the background were drawn."
+msgstr ""
 
 msgid "Backgrounds"
 msgstr "Bakgrunder"
@@ -2466,6 +2676,86 @@ msgstr "Färg 2"
 
 msgid "Second gradient color."
 msgstr "Andra gradientfärgen."
+
+msgid "Workspace Naming"
+msgstr ""
+
+msgid "Allows assigning descriptions to workspaces"
+msgstr ""
+
+msgid "Names"
+msgstr ""
+
+msgid "Workspace Names"
+msgstr ""
+
+#, fuzzy
+msgid "Viewport"
+msgstr "Övre arbetsyta"
+
+#, fuzzy
+msgid "Number of viewport to be named"
+msgstr "Antal fönster att spåra."
+
+msgid "Name"
+msgstr ""
+
+#, fuzzy
+msgid "Viewport name"
+msgstr "Vänster arbetsyta"
+
+msgid "Timeout (in s) of the name display"
+msgstr ""
+
+#, fuzzy
+msgid "Time (in s) the name display fades out after being shown."
+msgstr "Tiden (i s) som tabbfältet är synligt ett tabb-byte"
+
+#, fuzzy
+msgid "Text Display"
+msgstr "Visa tid"
+
+#, fuzzy
+msgid "Selects if the text should be displayed in bold font or not."
+msgstr "Väljer om fönstertiteln ska visas i fet typsnitt eller inte."
+
+#, fuzzy
+msgid "Font Family"
+msgstr "Typsnittsstorlek"
+
+#, fuzzy
+msgid "Font family for the text display."
+msgstr "Typsnittsstorlek för fönstertitelvisning"
+
+#, fuzzy
+msgid "Font size for the text display."
+msgstr "Typsnittsstorlek för fönstertitelvisning"
+
+msgid "Text Placement"
+msgstr "Textplacering"
+
+#, fuzzy
+msgid "Selects where to place the text."
+msgstr "Väljer placeringen av fönstertiteln"
+
+msgid "Centered on screen"
+msgstr "Centrerad på skärmen"
+
+#, fuzzy
+msgid "Top of screen"
+msgstr "Undvik utanför skärmen"
+
+#, fuzzy
+msgid "Bottom of screen"
+msgstr "Botten till toppen"
+
+#, fuzzy
+msgid "Background color for the text display."
+msgstr "Bakgrundsfärgen för fönstertiteln"
+
+#, fuzzy
+msgid "Font color for the text display."
+msgstr "Typsnittsfärg för fönstertiteln"
 
 #~ msgid ""
 #~ "All effects are chosen randomly, ignoring the selected effect. If None is "
@@ -3522,9 +3812,6 @@ msgstr "Andra gradientfärgen."
 #~ msgid "Restrain the mouse to the zoom area"
 #~ msgstr "Hindra musen att lämna zoomområdet"
 
-#~ msgid "Scale the mouse pointer"
-#~ msgstr "Skala muspekaren"
-
 #~ msgid "Specific Zoom"
 #~ msgstr "Specifik zoom"
 
@@ -4080,9 +4367,6 @@ msgstr "Andra gradientfärgen."
 #~ msgid "Put To Next Output"
 #~ msgstr "Placera överst, vänster"
 
-#~ msgid "Put pointer uses the center of the window"
-#~ msgstr "Placera muspekare använder mitten av fönstret"
-
 #~ msgid "Put to adjacent viewport"
 #~ msgstr "Placera på närliggande arbetsyta"
 
@@ -4474,9 +4758,6 @@ msgstr "Andra gradientfärgen."
 #~ msgid "Hide all non Desktop windows during switching"
 #~ msgstr "Göm alla fönster som inte tillhör skrivbordet under växling"
 
-#~ msgid "Hide non Desktop windows"
-#~ msgstr "Göm fönster som inte tillhör skrivbord"
-
 #~ msgid "Initiate (All Workspaces)"
 #~ msgstr "Initiera (alla arbetsytor)"
 
@@ -4571,9 +4852,6 @@ msgstr "Andra gradientfärgen."
 #~ msgid "Choose 'Resistance', 'Attraction' or 'Full Mode'."
 #~ msgstr "Välj 'Resistans', 'Attrahering' eller 'Hel-läge'."
 
-#~ msgid "Control"
-#~ msgstr "Kontroll"
-
 #~ msgid "Edge Attraction Distance"
 #~ msgstr "Kantattraheringavstånd"
 
@@ -4591,9 +4869,6 @@ msgstr "Andra gradientfärgen."
 
 #~ msgid "Meta"
 #~ msgstr "Meta"
-
-#~ msgid "Screen edges"
-#~ msgstr "Skärmkanter"
 
 #~ msgid "Shift"
 #~ msgstr "Shift"
@@ -4713,9 +4988,6 @@ msgstr "Andra gradientfärgen."
 #~ msgstr ""
 #~ "Mängden opacitet (i procent) för fönster i växlaren som inte är valda"
 
-#~ msgid "Behavior"
-#~ msgstr "Beteende"
-
 #, fuzzy
 #~ msgid "Darken background when showing the stack"
 #~ msgstr "Förmörka bakgrunden när ringen visas"
@@ -4781,10 +5053,6 @@ msgstr "Andra gradientfärgen."
 
 #, fuzzy
 #~ msgid "Highlight Border Inlay Color"
-#~ msgstr "Framhävningsfärg"
-
-#, fuzzy
-#~ msgid "Highlight Mode"
 #~ msgstr "Framhävningsfärg"
 
 #~ msgid "Icon"
@@ -4889,9 +5157,6 @@ msgstr "Andra gradientfärgen."
 #~ msgid "Selected Window Highlight"
 #~ msgstr "Fönsterframhävning"
 
-#~ msgid "Show Rectangle"
-#~ msgstr "Visa rektangel"
-
 #~ msgid "Show icon next to thumbnail"
 #~ msgstr "Visa ikon bredvid i miniatyrbild"
 
@@ -4921,14 +5186,8 @@ msgstr "Andra gradientfärgen."
 #~ msgid "Text"
 #~ msgstr "Text"
 
-#~ msgid "Enable Titles"
-#~ msgstr "Aktivera titlar"
-
 #~ msgid "Fade In/Out Duration"
 #~ msgstr "Tona in/ut varaktighet"
-
-#~ msgid "Fade In/Out Duration in seconds."
-#~ msgstr "Tona in/ut varaktighet i sekunder"
 
 #~ msgid "Generate Mipmaps"
 #~ msgstr "Generera mipmaps"
@@ -5705,9 +5964,6 @@ msgstr "Andra gradientfärgen."
 #~ msgid "Toggle prompt visible."
 #~ msgstr "Växla prompt synlig."
 
-#~ msgid "Directory"
-#~ msgstr "Katalog"
-
 #~ msgid "Initiate screencasting"
 #~ msgstr "Initiera \"screencasting\""
 
@@ -5725,9 +5981,6 @@ msgstr "Andra gradientfärgen."
 
 #~ msgid "Dolphin size."
 #~ msgstr "Delfinstorlek."
-
-#~ msgid "Enable colors"
-#~ msgstr "Aktivera färger"
 
 #~ msgid "Fish size"
 #~ msgstr "Fiskstorlek"
@@ -5892,83 +6145,3 @@ msgstr "Andra gradientfärgen."
 #~ msgstr ""
 #~ "Det här kommer skapa mipmaps som generellt kommer förbättra utseende på "
 #~ "textur och reducera ojämna kanter"
-
-msgid "Workspace Naming"
-msgstr ""
-
-msgid "Allows assigning descriptions to workspaces"
-msgstr ""
-
-msgid "Names"
-msgstr ""
-
-msgid "Workspace Names"
-msgstr ""
-
-#, fuzzy
-msgid "Viewport"
-msgstr "Övre arbetsyta"
-
-#, fuzzy
-msgid "Number of viewport to be named"
-msgstr "Antal fönster att spåra."
-
-msgid "Name"
-msgstr ""
-
-#, fuzzy
-msgid "Viewport name"
-msgstr "Vänster arbetsyta"
-
-msgid "Timeout (in s) of the name display"
-msgstr ""
-
-#, fuzzy
-msgid "Time (in s) the name display fades out after being shown."
-msgstr "Tiden (i s) som tabbfältet är synligt ett tabb-byte"
-
-#, fuzzy
-msgid "Text Display"
-msgstr "Visa tid"
-
-#, fuzzy
-msgid "Selects if the text should be displayed in bold font or not."
-msgstr "Väljer om fönstertiteln ska visas i fet typsnitt eller inte."
-
-#, fuzzy
-msgid "Font Family"
-msgstr "Typsnittsstorlek"
-
-#, fuzzy
-msgid "Font family for the text display."
-msgstr "Typsnittsstorlek för fönstertitelvisning"
-
-#, fuzzy
-msgid "Font size for the text display."
-msgstr "Typsnittsstorlek för fönstertitelvisning"
-
-msgid "Text Placement"
-msgstr "Textplacering"
-
-#, fuzzy
-msgid "Selects where to place the text."
-msgstr "Väljer placeringen av fönstertiteln"
-
-msgid "Centered on screen"
-msgstr "Centrerad på skärmen"
-
-#, fuzzy
-msgid "Top of screen"
-msgstr "Undvik utanför skärmen"
-
-#, fuzzy
-msgid "Bottom of screen"
-msgstr "Botten till toppen"
-
-#, fuzzy
-msgid "Background color for the text display."
-msgstr "Bakgrundsfärgen för fönstertiteln"
-
-#, fuzzy
-msgid "Font color for the text display."
-msgstr "Typsnittsfärg för fönstertiteln"

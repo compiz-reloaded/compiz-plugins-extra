@@ -6,9 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: compiz-plugins-extra\n"
-"Report-Msgid-Bugs-To: https://gitlab.com/compiz/compiz-plugins-"
-"extra/issues\n"
-"POT-Creation-Date: 2017-01-12 18:19+0300\n"
+"Report-Msgid-Bugs-To: https://gitlab.com/compiz/compiz-plugins-extra/issues\n"
+"POT-Creation-Date: 2020-06-23 00:40+0200\n"
 "PO-Revision-Date: 2008-03-16 19:01+0100\n"
 "Last-Translator: Ketil Wendelbo Aanensen <ketil.w.aanensen@gmail.com>\n"
 "Language-Team: Norwegian Bokmaal <nb@li.org>\n"
@@ -29,10 +28,12 @@ msgstr ""
 msgid "Bindings"
 msgstr "Hurtigtast"
 
-msgid "Toggle AddHelper"
+#, fuzzy
+msgid "Toggle ADD Helper"
 msgstr "Slå av/på ADD-hjelper"
 
-msgid "Use this to enable/disable AddHelper on the fly."
+#, fuzzy
+msgid "Use this to enable/disable ADD Helper on the fly."
 msgstr "Bruk dette for å aktivere/deaktivere ADD-helper mens du jobber."
 
 msgid "Misc. Options"
@@ -41,7 +42,8 @@ msgstr "Diverse valg"
 msgid "Window Types"
 msgstr "Vindustyper"
 
-msgid "Window types that should be Opacified."
+#, fuzzy
+msgid "Window types that should be affected."
 msgstr "Vindustyper som skal tones ut."
 
 msgid "Enable ADD Helper on start"
@@ -67,6 +69,14 @@ msgstr "Dekkevne"
 
 msgid "Opacity of faded windows"
 msgstr "Dekkevne for uttonede vinduer"
+
+#, fuzzy
+msgid "Contrast"
+msgstr "Ctrl"
+
+#, fuzzy
+msgid "Contrast of the content of the window."
+msgstr "Plasser musepeker bruker midten av vinduet"
 
 #, fuzzy
 msgid "Animations Add-On"
@@ -398,6 +408,24 @@ msgstr "Strål opp"
 
 msgid "Leaf Spread"
 msgstr "Løvspredning"
+
+msgid "Audible Bell"
+msgstr ""
+
+msgid "Plays an audible sound for the system bell"
+msgstr ""
+
+msgid "Play sound on system bell"
+msgstr ""
+
+msgid "Spatial Sounds"
+msgstr ""
+
+msgid ""
+"Whether to spatially locate sounds or not. If enabled, sounds coming from "
+"the left of the sceen will be heard mostly on the left channel, the ones "
+"coming from the right on the right channel and so on."
+msgstr ""
 
 msgid "Benchmark"
 msgstr "Ytelsestest"
@@ -940,8 +968,9 @@ msgid ""
 "multiple times in a row."
 msgstr ""
 
-msgid "Corners / Edges"
-msgstr ""
+#, fuzzy
+msgid "Behavior"
+msgstr "Oppførsel"
 
 #, fuzzy
 msgid "Resize Actions"
@@ -950,6 +979,10 @@ msgstr "Speiling"
 #, fuzzy
 msgid "Window resize action"
 msgstr "Skrifttype for vindustittel"
+
+#, fuzzy
+msgid "Top Left Corner"
+msgstr "Til hjørner"
 
 #, fuzzy
 msgid "Action to be performed when window is dropped on the top left corner"
@@ -978,10 +1011,6 @@ msgstr "Fullskjerm"
 #, fuzzy
 msgid "Right Half"
 msgstr "Høyre"
-
-#, fuzzy
-msgid "Top Left Corner"
-msgstr "Til hjørner"
 
 msgid "Top Half"
 msgstr ""
@@ -1050,6 +1079,16 @@ msgstr "Antall piksler fra øverste kant hvor vinduet vil plassere"
 msgid "Maximum number of pixels from the Bottom edge a window can be dropped"
 msgstr "Antall piksler fra nederste kant hvor vinduet vil plasseres"
 
+#, fuzzy
+msgid "Select output with mouse pointer"
+msgstr "Skaler musepekeren"
+
+msgid ""
+"In the case of multiple outputs, chooses the output containing the mouse "
+"pointer. If this option is not checked, the output is choosen based on the "
+"center of the window."
+msgstr ""
+
 msgid "Draw Indicator"
 msgstr ""
 
@@ -1064,6 +1103,10 @@ msgstr "Animasjonsvarighet"
 #, fuzzy
 msgid "Preview animation duration (in ms)."
 msgstr "Animasjonsvarighet"
+
+#, fuzzy
+msgid "Outline Thickness"
+msgstr "Tykkelse"
 
 msgid "Outline Color"
 msgstr "Omrissfarge"
@@ -1531,6 +1574,57 @@ msgstr "Rektangulær glød"
 msgid "Glow ring"
 msgstr "Glødering"
 
+#, fuzzy
+msgid "Highlight Content"
+msgstr "Farge for fremheving"
+
+msgid ""
+"Listens for screen reader events and renders highlight for the currently "
+"spoken word."
+msgstr ""
+
+msgid "Toggle Highlight of Content."
+msgstr ""
+
+#, fuzzy
+msgid "Enable on startup"
+msgstr "Bruk farger"
+
+msgid "Enables this plugin when it is loaded."
+msgstr ""
+
+msgid "Highlight Speech synthesis"
+msgstr ""
+
+msgid "Highlight Speech synthesis' current word."
+msgstr ""
+
+#, fuzzy
+msgid "Speech Options"
+msgstr "Utvalg"
+
+#, fuzzy
+msgid "Rectangle Border Thickness"
+msgstr "Kantstørrelse for kant"
+
+msgid "How thick the border of the rectangle should be, in pixels."
+msgstr ""
+
+#, fuzzy
+msgid "Rectangle Color"
+msgstr "Rektangulær glød"
+
+#, fuzzy
+msgid "Color of the borders of the rectangle."
+msgstr "Farge på toppen av kuben"
+
+#, fuzzy
+msgid "Show only border of rectangle"
+msgstr "Rektangulær"
+
+msgid "Whether we draw a filled rectangle or just its border."
+msgstr ""
+
 msgid "Motion blur"
 msgstr "Bevegelsesslør"
 
@@ -1908,8 +2002,41 @@ msgstr "Øker musepekerens synlighet"
 msgid "Toggle the mouse pointer trail."
 msgstr "Slå av/på musepeker-sporet."
 
+#, fuzzy
+msgid "Particles"
+msgstr "Partikkelstørrelse."
+
+#, fuzzy
+msgid "Enable particles."
+msgstr "Bruk titler"
+
+msgid "Crosshair"
+msgstr ""
+
+#, fuzzy
+msgid "Enable crosshair."
+msgstr "Bruk farger"
+
 msgid "Particle Options"
 msgstr "Partikkelvalg"
+
+msgid "Rotation speed"
+msgstr "Rotasjonshastighet"
+
+msgid "Rotation speed."
+msgstr "Rotasjonshastighet."
+
+msgid "Radius"
+msgstr "Radius"
+
+msgid "Ring radius"
+msgstr "Ringradius"
+
+msgid "Emitters"
+msgstr "Utsendere"
+
+msgid "Number of particle emitters."
+msgstr "Antall partikkelutsendere"
 
 msgid "Number Of Particles"
 msgstr "Antall partikler"
@@ -1959,23 +2086,27 @@ msgstr "Tilfeldig fargede partikler"
 msgid "Have random colors for the particles"
 msgstr "Ha tilfeldige farger for partiklene"
 
-msgid "Rotation speed"
-msgstr "Rotasjonshastighet"
+#, fuzzy
+msgid "Crosshair Options"
+msgstr "Partikkelvalg"
 
-msgid "Rotation speed."
-msgstr "Rotasjonshastighet."
+msgid "Crosshair thickness"
+msgstr ""
 
-msgid "Radius"
-msgstr "Radius"
+msgid "How thick mouse crosshair should be, in pixels."
+msgstr ""
 
-msgid "Ring radius"
-msgstr "Ringradius"
+msgid "Crosshair empty radius"
+msgstr ""
 
-msgid "Emitters"
-msgstr "Utsendere"
+msgid "Radius of the disk around the cursor which is not covered by crosshair."
+msgstr ""
 
-msgid "Number of particle emitters."
-msgstr "Antall partikkelutsendere"
+msgid "Crosshair Color"
+msgstr ""
+
+msgid "Crosshair color."
+msgstr ""
 
 msgid "Login/Logout"
 msgstr "Inn-/utlogging"
@@ -2424,11 +2555,90 @@ msgstr "Skråstill nederst, høyre"
 msgid "Bevel bottom right corner"
 msgstr "Skråstill nederst, høyre hjørne"
 
+msgid "Vidcap"
+msgstr ""
+
+#, fuzzy
+msgid "Screen Recorder"
+msgstr "Skjermkanter"
+
+#, fuzzy
+msgid "Start / Stop"
+msgstr "Start Plask"
+
+msgid "Start and stop recording"
+msgstr ""
+
+msgid "Directory"
+msgstr "Katalog"
+
+msgid "Directory to store videos"
+msgstr ""
+
+msgid "Command"
+msgstr ""
+
+msgid ""
+"Command to be used for encoding video. Use a dash (-) for the input file and "
+"%f.ext for the output file"
+msgstr ""
+
+#, fuzzy
+msgid "Draw Status Indicator"
+msgstr "Tegn vindusfremheving"
+
+msgid "Draw color coded status dot"
+msgstr ""
+
 msgid "Wallpaper"
 msgstr "Bakgrunnsbilde"
 
 msgid "Draw the desktop wallpaper"
 msgstr "Tegn bakgrunnsbilde"
+
+msgid "Recursive directory search"
+msgstr ""
+
+msgid "Search in all sub-directories."
+msgstr ""
+
+msgid "Cycle"
+msgstr ""
+
+msgid "Automatically cycle through wallpapers."
+msgstr ""
+
+#, fuzzy
+msgid "Cycle timeout"
+msgstr "Ventetid før skjul"
+
+msgid "Time before cycling to next wallpaper (in minutes)."
+msgstr ""
+
+#, fuzzy
+msgid "Fade time"
+msgstr "Uttoningstid"
+
+#, fuzzy
+msgid "Fade transition time (in seconds)."
+msgstr "Varighet for inn-/ut-toning i sekunder"
+
+#, fuzzy
+msgid "Randomize"
+msgstr "Tilfeldig"
+
+#, fuzzy
+msgid "Randomly order wallpapers."
+msgstr "Tilfeldig fargede partikler"
+
+#, fuzzy
+msgid "Hide other desktop background windows"
+msgstr "Skjul ikke-skrivebordsvinduer"
+
+msgid ""
+"Don't draw desktop backgrounds rendered by other applications. Mouse and "
+"keyboard input works as if the background were drawn."
+msgstr ""
 
 msgid "Backgrounds"
 msgstr "Bakgrunner"
@@ -2501,6 +2711,86 @@ msgstr "Farger"
 #, fuzzy
 msgid "Second gradient color."
 msgstr "Fargeovergang, farge 1"
+
+msgid "Workspace Naming"
+msgstr ""
+
+msgid "Allows assigning descriptions to workspaces"
+msgstr ""
+
+msgid "Names"
+msgstr ""
+
+msgid "Workspace Names"
+msgstr ""
+
+#, fuzzy
+msgid "Viewport"
+msgstr "Arbeidsområde øverst"
+
+#, fuzzy
+msgid "Number of viewport to be named"
+msgstr "Antall vinduer å holde rede på"
+
+msgid "Name"
+msgstr ""
+
+#, fuzzy
+msgid "Viewport name"
+msgstr "Arbeidsområde venstre"
+
+msgid "Timeout (in s) of the name display"
+msgstr ""
+
+#, fuzzy
+msgid "Time (in s) the name display fades out after being shown."
+msgstr "Tid (i sek) fanelinjen er synlig etter fanebytte"
+
+#, fuzzy
+msgid "Text Display"
+msgstr "Visningsvarighet"
+
+#, fuzzy
+msgid "Selects if the text should be displayed in bold font or not."
+msgstr "Velg om vindustittelen skal bli vist i fet skrift eller ikke."
+
+#, fuzzy
+msgid "Font Family"
+msgstr "Skriftstørrelse"
+
+#, fuzzy
+msgid "Font family for the text display."
+msgstr "Skriftstørrelse for visning av vindustittel"
+
+#, fuzzy
+msgid "Font size for the text display."
+msgstr "Skriftstørrelse for visning av vindustittel"
+
+msgid "Text Placement"
+msgstr "Tekstplassering"
+
+#, fuzzy
+msgid "Selects where to place the text."
+msgstr "Velger hvor vindustittelen plasseres."
+
+msgid "Centered on screen"
+msgstr "Sentrert på skjermen"
+
+#, fuzzy
+msgid "Top of screen"
+msgstr "Unngå utenfor skjermen"
+
+#, fuzzy
+msgid "Bottom of screen"
+msgstr "Nederst til øverst"
+
+#, fuzzy
+msgid "Background color for the text display."
+msgstr "Bakgrunnsfarge for vindustittelen"
+
+#, fuzzy
+msgid "Font color for the text display."
+msgstr "Skriftfarge for vindustittelen"
 
 #~ msgid ""
 #~ "All effects are chosen randomly, ignoring the selected effect. If None is "
@@ -3538,9 +3828,6 @@ msgstr "Fargeovergang, farge 1"
 #~ msgid "Restrain the mouse to the zoom area"
 #~ msgstr "Hold musen innefor det forstørrede området"
 
-#~ msgid "Scale the mouse pointer"
-#~ msgstr "Skaler musepekeren"
-
 #~ msgid "Specific Zoom"
 #~ msgstr "Spesifikk forstørrelse"
 
@@ -4101,9 +4388,6 @@ msgstr "Fargeovergang, farge 1"
 #~ msgid "Put To Next Output"
 #~ msgstr "Plasser øverst, venstre"
 
-#~ msgid "Put pointer uses the center of the window"
-#~ msgstr "Plasser musepeker bruker midten av vinduet"
-
 #~ msgid "Put to adjacent viewport"
 #~ msgstr "Plasser på arbeidsområdet ved siden av"
 
@@ -4508,9 +4792,6 @@ msgstr "Fargeovergang, farge 1"
 #~ msgid "Hide all non Desktop windows during switching"
 #~ msgstr "Skjul alle ikke-skrivebordsvinduer ved skifting"
 
-#~ msgid "Hide non Desktop windows"
-#~ msgstr "Skjul ikke-skrivebordsvinduer"
-
 #~ msgid "Initiate (All Workspaces)"
 #~ msgstr "Start (alle arbeidsområder)"
 
@@ -4605,9 +4886,6 @@ msgstr "Fargeovergang, farge 1"
 #~ msgid "Choose 'Resistance', 'Attraction' or 'Full Mode'."
 #~ msgstr "Velg 'Motstand', 'Tiltrekning' eller 'Full-modus'."
 
-#~ msgid "Control"
-#~ msgstr "Ctrl"
-
 #~ msgid "Edge Attraction Distance"
 #~ msgstr "Avstand for kanttiltrekning"
 
@@ -4625,9 +4903,6 @@ msgstr "Fargeovergang, farge 1"
 
 #~ msgid "Meta"
 #~ msgstr "Windows"
-
-#~ msgid "Screen edges"
-#~ msgstr "Skjermkanter"
 
 #~ msgid "Shift"
 #~ msgstr "Shift"
@@ -4747,10 +5022,6 @@ msgstr "Fargeovergang, farge 1"
 #~ msgstr "Dekkevne (i prosent) for vinduer i i ringen, som ikke er valgt"
 
 #, fuzzy
-#~ msgid "Behavior"
-#~ msgstr "Oppførsel"
-
-#, fuzzy
 #~ msgid "Darken background when showing the stack"
 #~ msgstr "Gjør bakgrunnen mørkere når ringen vises"
 
@@ -4813,10 +5084,6 @@ msgstr "Fargeovergang, farge 1"
 
 #, fuzzy
 #~ msgid "Highlight Border Inlay Color"
-#~ msgstr "Farge for fremheving"
-
-#, fuzzy
-#~ msgid "Highlight Mode"
 #~ msgstr "Farge for fremheving"
 
 #, fuzzy
@@ -4921,10 +5188,6 @@ msgstr "Fargeovergang, farge 1"
 #~ msgstr "Fremhev vindu"
 
 #, fuzzy
-#~ msgid "Show Rectangle"
-#~ msgstr "Rektangulær"
-
-#, fuzzy
 #~ msgid "Show icon next to thumbnail"
 #~ msgstr "Vis vindustittel i miniatyr."
 
@@ -4957,14 +5220,8 @@ msgstr "Fargeovergang, farge 1"
 #~ msgid "Text"
 #~ msgstr "Tekst"
 
-#~ msgid "Enable Titles"
-#~ msgstr "Bruk titler"
-
 #~ msgid "Fade In/Out Duration"
 #~ msgstr "Varighet for inn-/ut-toning"
-
-#~ msgid "Fade In/Out Duration in seconds."
-#~ msgstr "Varighet for inn-/ut-toning i sekunder"
 
 #~ msgid "Generate Mipmaps"
 #~ msgstr "Lag MIP-kart"
@@ -5732,9 +5989,6 @@ msgstr "Fargeovergang, farge 1"
 #~ msgid "Toggle prompt visible."
 #~ msgstr "Synlig spørsmål som lar deg slå av/på."
 
-#~ msgid "Directory"
-#~ msgstr "Katalog"
-
 #~ msgid "Initiate screencasting"
 #~ msgstr "Start skjermopptak"
 
@@ -5752,9 +6006,6 @@ msgstr "Fargeovergang, farge 1"
 
 #~ msgid "Dolphin size."
 #~ msgstr "Delfinstørrelse."
-
-#~ msgid "Enable colors"
-#~ msgstr "Bruk farger"
 
 #~ msgid "Fish size"
 #~ msgstr "Fiskstørrelse"
@@ -5908,83 +6159,3 @@ msgstr "Fargeovergang, farge 1"
 #~ "aktivertTegn vinduenes baksiderAktiverer tegning av baksider på "
 #~ "vindueneDette vil lage MIP-kart som forbedrer helhetlig teksturutseende, "
 #~ "og reduserer hakkete kanter.Vindusbredde"
-
-msgid "Workspace Naming"
-msgstr ""
-
-msgid "Allows assigning descriptions to workspaces"
-msgstr ""
-
-msgid "Names"
-msgstr ""
-
-msgid "Workspace Names"
-msgstr ""
-
-#, fuzzy
-msgid "Viewport"
-msgstr "Arbeidsområde øverst"
-
-#, fuzzy
-msgid "Number of viewport to be named"
-msgstr "Antall vinduer å holde rede på"
-
-msgid "Name"
-msgstr ""
-
-#, fuzzy
-msgid "Viewport name"
-msgstr "Arbeidsområde venstre"
-
-msgid "Timeout (in s) of the name display"
-msgstr ""
-
-#, fuzzy
-msgid "Time (in s) the name display fades out after being shown."
-msgstr "Tid (i sek) fanelinjen er synlig etter fanebytte"
-
-#, fuzzy
-msgid "Text Display"
-msgstr "Visningsvarighet"
-
-#, fuzzy
-msgid "Selects if the text should be displayed in bold font or not."
-msgstr "Velg om vindustittelen skal bli vist i fet skrift eller ikke."
-
-#, fuzzy
-msgid "Font Family"
-msgstr "Skriftstørrelse"
-
-#, fuzzy
-msgid "Font family for the text display."
-msgstr "Skriftstørrelse for visning av vindustittel"
-
-#, fuzzy
-msgid "Font size for the text display."
-msgstr "Skriftstørrelse for visning av vindustittel"
-
-msgid "Text Placement"
-msgstr "Tekstplassering"
-
-#, fuzzy
-msgid "Selects where to place the text."
-msgstr "Velger hvor vindustittelen plasseres."
-
-msgid "Centered on screen"
-msgstr "Sentrert på skjermen"
-
-#, fuzzy
-msgid "Top of screen"
-msgstr "Unngå utenfor skjermen"
-
-#, fuzzy
-msgid "Bottom of screen"
-msgstr "Nederst til øverst"
-
-#, fuzzy
-msgid "Background color for the text display."
-msgstr "Bakgrunnsfarge for vindustittelen"
-
-#, fuzzy
-msgid "Font color for the text display."
-msgstr "Skriftfarge for vindustittelen"
