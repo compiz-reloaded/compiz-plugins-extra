@@ -8,8 +8,8 @@ dist_libvidcap_la_SOURCES = vidcap.c wcap-decode.h
 
 BUILT_SOURCES = $(nodist_libvidcap_la_SOURCES)
 
-AM_CPPFLAGS =                              \
-	@COMPIZ_CFLAGS@                  \
+AM_CPPFLAGS =                               \
+	@COMPIZ_CFLAGS@                     \
 	-DDATADIR='"$(compdatadir)"'        \
 	-DLIBDIR='"$(libdir)"'              \
 	-DLOCALEDIR="\"@datadir@/locale\""  \

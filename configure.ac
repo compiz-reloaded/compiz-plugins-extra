@@ -82,6 +82,7 @@ if test "x$GCC" = "xyes"; then
 fi
 
 AC_C_BIGENDIAN
+AC_SYS_LARGEFILE
 
 plugindir=$libdir/compiz
 AC_SUBST(plugindir)
@@ -111,7 +112,7 @@ PKG_CHECK_MODULES(BCOP, bcop >= 0.7.3, [bcop_found=yes])
 if test "$bcop_found" = yes; then
   if test -z "$PKG_CONFIG"; then
       AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
-  fi  
+  fi
   if test "$PKG_CONFIG" != "no" ; then
       BCOP_BIN=`$PKG_CONFIG --variable=bin bcop`
       AC_SUBST(BCOP_BIN)
