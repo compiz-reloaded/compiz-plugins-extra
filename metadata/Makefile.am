@@ -89,7 +89,8 @@ EXTRA_DIST =                    \
 	scalefilter.xml.in      \
 	showmouse.xml.in        \
 	highlightcontent.xml.in \
-	3d.xml.in
+	3d.xml.in               \
+	workspacenames.xml.in
 
 CLEANFILES =                    \
 	$(xml_files)
