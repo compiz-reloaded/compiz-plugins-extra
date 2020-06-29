@@ -7,9 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: compiz-plugins-extra\n"
-"Report-Msgid-Bugs-To: https://gitlab.com/compiz/compiz-plugins-"
-"extra/issues\n"
-"POT-Creation-Date: 2017-01-12 18:19+0300\n"
+"Report-Msgid-Bugs-To: https://gitlab.com/compiz/compiz-plugins-extra/issues\n"
+"POT-Creation-Date: 2020-06-23 00:40+0200\n"
 "PO-Revision-Date: 2016-08-21 17:15+0200\n"
 "Last-Translator: Robert Antoni Buj Gelonch <rbuj@fedoraproject.org>\n"
 "Language-Team: Catalan <ca@li.org>\n"
@@ -31,10 +30,12 @@ msgstr ""
 msgid "Bindings"
 msgstr "Vinculacions"
 
-msgid "Toggle AddHelper"
+#, fuzzy
+msgid "Toggle ADD Helper"
 msgstr "Commuta l'ajudant ADD"
 
-msgid "Use this to enable/disable AddHelper on the fly."
+#, fuzzy
+msgid "Use this to enable/disable ADD Helper on the fly."
 msgstr "Utilitzeu-ho per a habilitar/inhabilitar l'ajudant ADD al vol."
 
 msgid "Misc. Options"
@@ -43,7 +44,8 @@ msgstr "Altres opcions"
 msgid "Window Types"
 msgstr "Tipus de finestra"
 
-msgid "Window types that should be Opacified."
+#, fuzzy
+msgid "Window types that should be affected."
 msgstr "Els tipus de finestra que s'han de convertir a opac."
 
 msgid "Enable ADD Helper on start"
@@ -69,6 +71,14 @@ msgstr "Opacitat"
 
 msgid "Opacity of faded windows"
 msgstr "Opacitat de les finestres esvaïdes"
+
+#, fuzzy
+msgid "Contrast"
+msgstr "Control"
+
+#, fuzzy
+msgid "Contrast of the content of the window."
+msgstr "Posa al punter utilitza el centre de la finestra"
 
 msgid "Animations Add-On"
 msgstr ""
@@ -377,6 +387,24 @@ msgid "Beam Up"
 msgstr ""
 
 msgid "Leaf Spread"
+msgstr ""
+
+msgid "Audible Bell"
+msgstr ""
+
+msgid "Plays an audible sound for the system bell"
+msgstr ""
+
+msgid "Play sound on system bell"
+msgstr ""
+
+msgid "Spatial Sounds"
+msgstr ""
+
+msgid ""
+"Whether to spatially locate sounds or not. If enabled, sounds coming from "
+"the left of the sceen will be heard mostly on the left channel, the ones "
+"coming from the right on the right channel and so on."
 msgstr ""
 
 msgid "Benchmark"
@@ -899,8 +927,8 @@ msgid ""
 "multiple times in a row."
 msgstr ""
 
-msgid "Corners / Edges"
-msgstr ""
+msgid "Behavior"
+msgstr "Comportament"
 
 #, fuzzy
 msgid "Resize Actions"
@@ -909,6 +937,10 @@ msgstr "Reflexió"
 #, fuzzy
 msgid "Window resize action"
 msgstr "Direcció de la neu"
+
+#, fuzzy
+msgid "Top Left Corner"
+msgstr "A les cantonades"
 
 #, fuzzy
 msgid "Action to be performed when window is dropped on the top left corner"
@@ -937,10 +969,6 @@ msgstr "Pantalla completa"
 #, fuzzy
 msgid "Right Half"
 msgstr "Dreta"
-
-#, fuzzy
-msgid "Top Left Corner"
-msgstr "A les cantonades"
 
 msgid "Top Half"
 msgstr ""
@@ -1009,6 +1037,16 @@ msgstr "Nombre de píxels des de la vora superior on descansarà la finestra"
 msgid "Maximum number of pixels from the Bottom edge a window can be dropped"
 msgstr "Nombre de píxels des de la vora inferior on descansarà la finestra"
 
+#, fuzzy
+msgid "Select output with mouse pointer"
+msgstr "Escala el punter del ratolí"
+
+msgid ""
+"In the case of multiple outputs, chooses the output containing the mouse "
+"pointer. If this option is not checked, the output is choosen based on the "
+"center of the window."
+msgstr ""
+
 msgid "Draw Indicator"
 msgstr ""
 
@@ -1023,6 +1061,10 @@ msgstr "Durada de l'animació"
 #, fuzzy
 msgid "Preview animation duration (in ms)."
 msgstr "Durada de l'animació"
+
+#, fuzzy
+msgid "Outline Thickness"
+msgstr "Guix"
 
 msgid "Outline Color"
 msgstr "Color del contorn"
@@ -1461,6 +1503,58 @@ msgstr ""
 msgid "Glow ring"
 msgstr "Anell de resplendor"
 
+#, fuzzy
+msgid "Highlight Content"
+msgstr "Mode de ressaltament"
+
+msgid ""
+"Listens for screen reader events and renders highlight for the currently "
+"spoken word."
+msgstr ""
+
+msgid "Toggle Highlight of Content."
+msgstr ""
+
+#, fuzzy
+msgid "Enable on startup"
+msgstr "Habilita l'ajudant ADD amb l'inici"
+
+#, fuzzy
+msgid "Enables this plugin when it is loaded."
+msgstr "Habilita l'ajudant ADD quan es carrega per primera vegada."
+
+msgid "Highlight Speech synthesis"
+msgstr ""
+
+msgid "Highlight Speech synthesis' current word."
+msgstr ""
+
+#, fuzzy
+msgid "Speech Options"
+msgstr "Selecció"
+
+#, fuzzy
+msgid "Rectangle Border Thickness"
+msgstr "Mida del contorn del títol"
+
+msgid "How thick the border of the rectangle should be, in pixels."
+msgstr ""
+
+#, fuzzy
+msgid "Rectangle Color"
+msgstr "Color de selecció"
+
+#, fuzzy
+msgid "Color of the borders of the rectangle."
+msgstr "Color de la cara superior del cub"
+
+#, fuzzy
+msgid "Show only border of rectangle"
+msgstr "Mostra el rectangle"
+
+msgid "Whether we draw a filled rectangle or just its border."
+msgstr ""
+
 msgid "Motion blur"
 msgstr "Desenfocament del moviment"
 
@@ -1846,8 +1940,41 @@ msgstr "Incrementa la visibilitat del punter del ratolí"
 msgid "Toggle the mouse pointer trail."
 msgstr "Commuta el rastre del punter del ratolí."
 
+#, fuzzy
+msgid "Particles"
+msgstr "La mida de la partícula."
+
+#, fuzzy
+msgid "Enable particles."
+msgstr "Habilita els títols"
+
+msgid "Crosshair"
+msgstr ""
+
+#, fuzzy
+msgid "Enable crosshair."
+msgstr "Activa lluentor"
+
 msgid "Particle Options"
 msgstr "Opcions de les partícules"
+
+msgid "Rotation speed"
+msgstr "Velocitat de gir"
+
+msgid "Rotation speed."
+msgstr "La velocitat de gir."
+
+msgid "Radius"
+msgstr "Radi"
+
+msgid "Ring radius"
+msgstr "Radi de l'anell"
+
+msgid "Emitters"
+msgstr "Emissors"
+
+msgid "Number of particle emitters."
+msgstr "El nombre d'emissors de partícules."
 
 msgid "Number Of Particles"
 msgstr "Nombre de partícules"
@@ -1897,23 +2024,27 @@ msgstr "Acoloreix aleatòriament les partícules"
 msgid "Have random colors for the particles"
 msgstr "Amb colors aleatoris per a les partícules"
 
-msgid "Rotation speed"
-msgstr "Velocitat de gir"
+#, fuzzy
+msgid "Crosshair Options"
+msgstr "Opcions de les partícules"
 
-msgid "Rotation speed."
-msgstr "La velocitat de gir."
+msgid "Crosshair thickness"
+msgstr ""
 
-msgid "Radius"
-msgstr "Radi"
+msgid "How thick mouse crosshair should be, in pixels."
+msgstr ""
 
-msgid "Ring radius"
-msgstr "Radi de l'anell"
+msgid "Crosshair empty radius"
+msgstr ""
 
-msgid "Emitters"
-msgstr "Emissors"
+msgid "Radius of the disk around the cursor which is not covered by crosshair."
+msgstr ""
 
-msgid "Number of particle emitters."
-msgstr "El nombre d'emissors de partícules."
+msgid "Crosshair Color"
+msgstr ""
+
+msgid "Crosshair color."
+msgstr ""
 
 msgid "Login/Logout"
 msgstr ""
@@ -2315,11 +2446,89 @@ msgstr ""
 msgid "Bevel bottom right corner"
 msgstr ""
 
+msgid "Vidcap"
+msgstr ""
+
+#, fuzzy
+msgid "Screen Recorder"
+msgstr "Vores de la pantalla"
+
+msgid "Start / Stop"
+msgstr ""
+
+msgid "Start and stop recording"
+msgstr ""
+
+#, fuzzy
+msgid "Directory"
+msgstr "Directori de volcat de fallades"
+
+msgid "Directory to store videos"
+msgstr ""
+
+msgid "Command"
+msgstr ""
+
+msgid ""
+"Command to be used for encoding video. Use a dash (-) for the input file and "
+"%f.ext for the output file"
+msgstr ""
+
+#, fuzzy
+msgid "Draw Status Indicator"
+msgstr "Dibuixa el ressaltament de la finestra"
+
+msgid "Draw color coded status dot"
+msgstr ""
+
 msgid "Wallpaper"
 msgstr "Paper pintat"
 
 msgid "Draw the desktop wallpaper"
 msgstr "Dibuix el paper pintat de l'escriptori"
+
+msgid "Recursive directory search"
+msgstr ""
+
+msgid "Search in all sub-directories."
+msgstr ""
+
+msgid "Cycle"
+msgstr ""
+
+msgid "Automatically cycle through wallpapers."
+msgstr ""
+
+msgid "Cycle timeout"
+msgstr ""
+
+msgid "Time before cycling to next wallpaper (in minutes)."
+msgstr ""
+
+#, fuzzy
+msgid "Fade time"
+msgstr "Temps d'esvaïment"
+
+#, fuzzy
+msgid "Fade transition time (in seconds)."
+msgstr "La durada de l'entrada/sortida de l'esvaïment en segons."
+
+#, fuzzy
+msgid "Randomize"
+msgstr "Aleatori"
+
+#, fuzzy
+msgid "Randomly order wallpapers."
+msgstr "Acoloreix aleatòriament les partícules"
+
+#, fuzzy
+msgid "Hide other desktop background windows"
+msgstr "Amaga les finestres que no són de l'escriptori"
+
+msgid ""
+"Don't draw desktop backgrounds rendered by other applications. Mouse and "
+"keyboard input works as if the background were drawn."
+msgstr ""
 
 msgid "Backgrounds"
 msgstr "Fons"
@@ -2377,6 +2586,72 @@ msgstr "Color 2"
 
 msgid "Second gradient color."
 msgstr "El segon color del degradat."
+
+msgid "Workspace Naming"
+msgstr "Anomenar els espais de treball"
+
+msgid "Allows assigning descriptions to workspaces"
+msgstr "Permet assignar descripcions als espais de treball"
+
+msgid "Names"
+msgstr "Noms"
+
+msgid "Workspace Names"
+msgstr "Noms dels espais de treball"
+
+msgid "Viewport"
+msgstr "Àrea de visualització"
+
+msgid "Number of viewport to be named"
+msgstr "Número de l'ària de visualització a anomenar"
+
+msgid "Name"
+msgstr "Nom"
+
+msgid "Viewport name"
+msgstr "Nom de l'àrea de visualització"
+
+msgid "Timeout (in s) of the name display"
+msgstr "Temps d'espera (en s) de la visualització del nom"
+
+msgid "Time (in s) the name display fades out after being shown."
+msgstr ""
+
+msgid "Text Display"
+msgstr "Visualització del text"
+
+msgid "Selects if the text should be displayed in bold font or not."
+msgstr "Selecciona si el text ha de mostrar-se en negreta o no."
+
+msgid "Font Family"
+msgstr "Família de la lletra"
+
+msgid "Font family for the text display."
+msgstr "La família del tipus de lletra per a la visualització del text."
+
+msgid "Font size for the text display."
+msgstr "La mida del tipus de lletra per a la visualització del text."
+
+msgid "Text Placement"
+msgstr "Ubicació del text"
+
+msgid "Selects where to place the text."
+msgstr "Selecciona on ubicar el text."
+
+msgid "Centered on screen"
+msgstr "Centrat a la pantalla"
+
+msgid "Top of screen"
+msgstr "Part superior de la pantalla"
+
+msgid "Bottom of screen"
+msgstr "Part inferior de la pantalla"
+
+msgid "Background color for the text display."
+msgstr "El color del fons per a la visualització del text."
+
+msgid "Font color for the text display."
+msgstr "El color de la lletra per a la visualització del text."
 
 #~ msgid ""
 #~ "All effects are chosen randomly, ignoring the selected effect. If None is "
@@ -3560,9 +3835,6 @@ msgstr "El segon color del degradat."
 #~ msgid "Restrain the mouse to the zoom area"
 #~ msgstr "Restringeix el ratolí a l'àrea de zoom"
 
-#~ msgid "Scale the mouse pointer"
-#~ msgstr "Escala el punter del ratolí"
-
 #~ msgid "Specific Zoom"
 #~ msgstr "Zoom específic"
 
@@ -4146,9 +4418,6 @@ msgstr "El segon color del degradat."
 #~ msgid "Put To Next Output"
 #~ msgstr "Posa a la sortida següent"
 
-#~ msgid "Put pointer uses the center of the window"
-#~ msgstr "Posa al punter utilitza el centre de la finestra"
-
 #~ msgid "Put to adjacent viewport"
 #~ msgstr "Posa a l'àrea de visualització adjacent"
 
@@ -4587,9 +4856,6 @@ msgstr "El segon color del degradat."
 #~ msgstr ""
 #~ "Oculta totes les finestres que no siguin de l'escriptori mentre es canvia"
 
-#~ msgid "Hide non Desktop windows"
-#~ msgstr "Amaga les finestres que no són de l'escriptori"
-
 #~ msgid "Initiate (All Workspaces)"
 #~ msgstr "Inicia (tots els espais de treball)"
 
@@ -4678,9 +4944,6 @@ msgstr "El segon color del degradat."
 #~ msgid "Choose 'Resistance', 'Attraction' or 'Full Mode'."
 #~ msgstr "Tria 'Resistència', 'Atracció' o 'Mode complet'."
 
-#~ msgid "Control"
-#~ msgstr "Control"
-
 #~ msgid "Edge Attraction Distance"
 #~ msgstr "Distància d'atracció de la vora"
 
@@ -4698,9 +4961,6 @@ msgstr "El segon color del degradat."
 
 #~ msgid "Meta"
 #~ msgstr "Meta"
-
-#~ msgid "Screen edges"
-#~ msgstr "Vores de la pantalla"
 
 #~ msgid "Shift"
 #~ msgstr "Majúscules"
@@ -4797,9 +5057,6 @@ msgstr "El segon color del degradat."
 #~ msgid "Top to Bottom"
 #~ msgstr "De dalt a baix"
 
-#~ msgid "Behavior"
-#~ msgstr "Comportament"
-
 #~ msgid "Darken background when showing the stack"
 #~ msgstr "L'enfosquiment del fons quan es mostra la pila"
 
@@ -4865,9 +5122,6 @@ msgstr "El segon color del degradat."
 
 #~ msgid "Highlight Border Inlay Color"
 #~ msgstr "Color de la incrustació del contorn de ressaltament"
-
-#~ msgid "Highlight Mode"
-#~ msgstr "Mode de ressaltament"
 
 #~ msgid "Icon"
 #~ msgstr "Icona"
@@ -4972,9 +5226,6 @@ msgstr "El segon color del degradat."
 #~ msgid "Selected Window Highlight"
 #~ msgstr "Ressaltament de la finestra seleccionada"
 
-#~ msgid "Show Rectangle"
-#~ msgstr "Mostra el rectangle"
-
 #~ msgid "Show icon next to thumbnail"
 #~ msgstr "Mostra la icona al costat de la miniatura"
 
@@ -5014,14 +5265,8 @@ msgstr "El segon color del degradat."
 #~ msgid "Text"
 #~ msgstr "Text"
 
-#~ msgid "Enable Titles"
-#~ msgstr "Habilita els títols"
-
 #~ msgid "Fade In/Out Duration"
 #~ msgstr "Durada de l'entrada/sortida de l'esvaïment"
-
-#~ msgid "Fade In/Out Duration in seconds."
-#~ msgstr "La durada de l'entrada/sortida de l'esvaïment en segons."
 
 #~ msgid "Generate Mipmaps"
 #~ msgstr "Genera els mipmaps"
@@ -5835,16 +6080,8 @@ msgstr "El segon color del degradat."
 #~ msgstr "Reflexió del Cub"
 
 #, fuzzy
-#~ msgid "Directory"
-#~ msgstr "Directori de volcat de fallades"
-
-#, fuzzy
 #~ msgid "Initiate screencasting"
 #~ msgstr "Inicia dibuix del foc"
-
-#, fuzzy
-#~ msgid "Enable colors"
-#~ msgstr "Activa lluentor"
 
 #~ msgid "Fire"
 #~ msgstr "Foc"
@@ -5979,69 +6216,3 @@ msgstr "El segon color del degradat."
 #~ msgstr ""
 #~ "Això crearà mipmaps que millorarà l'aparença general de la textura, i "
 #~ "reduirà els cantons escapçats."
-
-msgid "Workspace Naming"
-msgstr "Anomenar els espais de treball"
-
-msgid "Allows assigning descriptions to workspaces"
-msgstr "Permet assignar descripcions als espais de treball"
-
-msgid "Names"
-msgstr "Noms"
-
-msgid "Workspace Names"
-msgstr "Noms dels espais de treball"
-
-msgid "Viewport"
-msgstr "Àrea de visualització"
-
-msgid "Number of viewport to be named"
-msgstr "Número de l'ària de visualització a anomenar"
-
-msgid "Name"
-msgstr "Nom"
-
-msgid "Viewport name"
-msgstr "Nom de l'àrea de visualització"
-
-msgid "Timeout (in s) of the name display"
-msgstr "Temps d'espera (en s) de la visualització del nom"
-
-msgid "Time (in s) the name display fades out after being shown."
-msgstr ""
-
-msgid "Text Display"
-msgstr "Visualització del text"
-
-msgid "Selects if the text should be displayed in bold font or not."
-msgstr "Selecciona si el text ha de mostrar-se en negreta o no."
-
-msgid "Font Family"
-msgstr "Família de la lletra"
-
-msgid "Font family for the text display."
-msgstr "La família del tipus de lletra per a la visualització del text."
-
-msgid "Font size for the text display."
-msgstr "La mida del tipus de lletra per a la visualització del text."
-
-msgid "Text Placement"
-msgstr "Ubicació del text"
-
-msgid "Selects where to place the text."
-msgstr "Selecciona on ubicar el text."
-
-msgid "Centered on screen"
-msgstr "Centrat a la pantalla"
-
-msgid "Top of screen"
-msgstr "Part superior de la pantalla"
-
-msgid "Bottom of screen"
-msgstr "Part inferior de la pantalla"
-
-msgid "Background color for the text display."
-msgstr "El color del fons per a la visualització del text."
-
-msgid "Font color for the text display."
-msgstr "El color de la lletra per a la visualització del text."

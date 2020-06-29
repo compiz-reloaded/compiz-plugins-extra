@@ -6,9 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: compiz-plugins-extra\n"
-"Report-Msgid-Bugs-To: https://gitlab.com/compiz/compiz-plugins-"
-"extra/issues\n"
-"POT-Creation-Date: 2017-01-12 18:19+0300\n"
+"Report-Msgid-Bugs-To: https://gitlab.com/compiz/compiz-plugins-extra/issues\n"
+"POT-Creation-Date: 2020-06-23 00:40+0200\n"
 "PO-Revision-Date: 2009-04-25 04:25+0100\n"
 "Last-Translator: Yotam Benshalom <benshalom@gmail.com>\n"
 "Language-Team: Hebrew <he@li.org>\n"
@@ -27,10 +26,12 @@ msgstr "הקל מעט על הריכוז בעזרת עמעום כל החלונו�
 msgid "Bindings"
 msgstr "צימודים"
 
-msgid "Toggle AddHelper"
+#, fuzzy
+msgid "Toggle ADD Helper"
 msgstr "הפעל\\הפסק את סייען ADD"
 
-msgid "Use this to enable/disable AddHelper on the fly."
+#, fuzzy
+msgid "Use this to enable/disable ADD Helper on the fly."
 msgstr "השתמש בצימוד זה כדי להפעיל ולהפסיק את סייען ADD תוך כדי עבודה."
 
 msgid "Misc. Options"
@@ -39,7 +40,8 @@ msgstr "אפשרויות נוספות"
 msgid "Window Types"
 msgstr "סוגי חלונות"
 
-msgid "Window types that should be Opacified."
+#, fuzzy
+msgid "Window types that should be affected."
 msgstr "סוגי חלונות שיש להחיל עליהם את הכללים."
 
 msgid "Enable ADD Helper on start"
@@ -65,6 +67,14 @@ msgstr "אטימות"
 
 msgid "Opacity of faded windows"
 msgstr "אטימות חלונות מעומעמים"
+
+#, fuzzy
+msgid "Contrast"
+msgstr "Control"
+
+#, fuzzy
+msgid "Contrast of the content of the window."
+msgstr "הצבה על הסמן מוגדרת על פי מרכז החלון"
 
 #, fuzzy
 msgid "Animations Add-On"
@@ -394,6 +404,24 @@ msgstr "שגר מעלה"
 
 msgid "Leaf Spread"
 msgstr "פיזור עלים"
+
+msgid "Audible Bell"
+msgstr ""
+
+msgid "Plays an audible sound for the system bell"
+msgstr ""
+
+msgid "Play sound on system bell"
+msgstr ""
+
+msgid "Spatial Sounds"
+msgstr ""
+
+msgid ""
+"Whether to spatially locate sounds or not. If enabled, sounds coming from "
+"the left of the sceen will be heard mostly on the left channel, the ones "
+"coming from the right on the right channel and so on."
+msgstr ""
 
 msgid "Benchmark"
 msgstr "מד ביצועים"
@@ -915,8 +943,8 @@ msgid ""
 "multiple times in a row."
 msgstr ""
 
-msgid "Corners / Edges"
-msgstr ""
+msgid "Behavior"
+msgstr "התנהגות"
 
 #, fuzzy
 msgid "Resize Actions"
@@ -925,6 +953,10 @@ msgstr "השתקפות"
 #, fuzzy
 msgid "Window resize action"
 msgstr "גופן כותרת חלון"
+
+#, fuzzy
+msgid "Top Left Corner"
+msgstr "אל הפינות"
 
 #, fuzzy
 msgid "Action to be performed when window is dropped on the top left corner"
@@ -953,10 +985,6 @@ msgstr "מסך מלא"
 #, fuzzy
 msgid "Right Half"
 msgstr "ימינה"
-
-#, fuzzy
-msgid "Top Left Corner"
-msgstr "אל הפינות"
 
 msgid "Top Half"
 msgstr ""
@@ -1025,6 +1053,16 @@ msgstr "מספר הפיקסלים מקצה המסך העליון שבהם יעצ
 msgid "Maximum number of pixels from the Bottom edge a window can be dropped"
 msgstr "מספר הפיקסלים מקצה המסך התחתון שבהם יעצור החלון מתנועה"
 
+#, fuzzy
+msgid "Select output with mouse pointer"
+msgstr "התאם את גודל סמן העכבר"
+
+msgid ""
+"In the case of multiple outputs, chooses the output containing the mouse "
+"pointer. If this option is not checked, the output is choosen based on the "
+"center of the window."
+msgstr ""
+
 msgid "Draw Indicator"
 msgstr ""
 
@@ -1039,6 +1077,10 @@ msgstr "משך האנימציה"
 #, fuzzy
 msgid "Preview animation duration (in ms)."
 msgstr "משך אנימציה"
+
+#, fuzzy
+msgid "Outline Thickness"
+msgstr "עובי"
 
 msgid "Outline Color"
 msgstr "צבע מתאר"
@@ -1494,6 +1536,58 @@ msgstr "הילה מלבנית"
 msgid "Glow ring"
 msgstr "הילת טבעת"
 
+#, fuzzy
+msgid "Highlight Content"
+msgstr "מצב הדגשה"
+
+msgid ""
+"Listens for screen reader events and renders highlight for the currently "
+"spoken word."
+msgstr ""
+
+msgid "Toggle Highlight of Content."
+msgstr ""
+
+#, fuzzy
+msgid "Enable on startup"
+msgstr "הפעל את סייען ADD עם הפעלת קומפיז"
+
+#, fuzzy
+msgid "Enables this plugin when it is loaded."
+msgstr "הפעל את סייען ADD עם טעינתו הראשונה."
+
+msgid "Highlight Speech synthesis"
+msgstr ""
+
+msgid "Highlight Speech synthesis' current word."
+msgstr ""
+
+#, fuzzy
+msgid "Speech Options"
+msgstr "בחירה"
+
+#, fuzzy
+msgid "Rectangle Border Thickness"
+msgstr "גודל גבול כותרת"
+
+msgid "How thick the border of the rectangle should be, in pixels."
+msgstr ""
+
+#, fuzzy
+msgid "Rectangle Color"
+msgstr "הילה מלבנית"
+
+#, fuzzy
+msgid "Color of the borders of the rectangle."
+msgstr "צבע פאת קוביה עליונה"
+
+#, fuzzy
+msgid "Show only border of rectangle"
+msgstr "הצג מלבן"
+
+msgid "Whether we draw a filled rectangle or just its border."
+msgstr ""
+
 msgid "Motion blur"
 msgstr "טשטוש תנועה"
 
@@ -1865,8 +1959,41 @@ msgstr "משפר את נראות סמן העכבר"
 msgid "Toggle the mouse pointer trail."
 msgstr "הפעל\\נטרל את שובל סמן העכבר."
 
+#, fuzzy
+msgid "Particles"
+msgstr "גודל חלקיקים."
+
+#, fuzzy
+msgid "Enable particles."
+msgstr "אפשר כותרות"
+
+msgid "Crosshair"
+msgstr ""
+
+#, fuzzy
+msgid "Enable crosshair."
+msgstr "אפשר צבעים"
+
 msgid "Particle Options"
 msgstr "אפשרויות חלקיקים"
+
+msgid "Rotation speed"
+msgstr "מהירות סיבוב"
+
+msgid "Rotation speed."
+msgstr "מהירות סיבוב."
+
+msgid "Radius"
+msgstr "רדיוס"
+
+msgid "Ring radius"
+msgstr "קוטר טבעת"
+
+msgid "Emitters"
+msgstr "משגרים"
+
+msgid "Number of particle emitters."
+msgstr "מספר משגרי חלקיקים."
 
 msgid "Number Of Particles"
 msgstr "מספר חלקיקים"
@@ -1916,23 +2043,27 @@ msgstr "חלקיקים בצבע אקראי"
 msgid "Have random colors for the particles"
 msgstr "צבע חלקיקים אקראי"
 
-msgid "Rotation speed"
-msgstr "מהירות סיבוב"
+#, fuzzy
+msgid "Crosshair Options"
+msgstr "אפשרויות חלקיקים"
 
-msgid "Rotation speed."
-msgstr "מהירות סיבוב."
+msgid "Crosshair thickness"
+msgstr ""
 
-msgid "Radius"
-msgstr "רדיוס"
+msgid "How thick mouse crosshair should be, in pixels."
+msgstr ""
 
-msgid "Ring radius"
-msgstr "קוטר טבעת"
+msgid "Crosshair empty radius"
+msgstr ""
 
-msgid "Emitters"
-msgstr "משגרים"
+msgid "Radius of the disk around the cursor which is not covered by crosshair."
+msgstr ""
 
-msgid "Number of particle emitters."
-msgstr "מספר משגרי חלקיקים."
+msgid "Crosshair Color"
+msgstr ""
+
+msgid "Crosshair color."
+msgstr ""
 
 msgid "Login/Logout"
 msgstr "התחברות\\התנתקות"
@@ -2343,11 +2474,90 @@ msgstr "החלקה ימנית תחתונה"
 msgid "Bevel bottom right corner"
 msgstr "החלקת הפינה הימנית התחתונה"
 
+msgid "Vidcap"
+msgstr ""
+
+#, fuzzy
+msgid "Screen Recorder"
+msgstr "גבולות המסך"
+
+#, fuzzy
+msgid "Start / Stop"
+msgstr "מסך פתיחה התחלי."
+
+msgid "Start and stop recording"
+msgstr ""
+
+msgid "Directory"
+msgstr "תיקיה"
+
+msgid "Directory to store videos"
+msgstr ""
+
+msgid "Command"
+msgstr ""
+
+msgid ""
+"Command to be used for encoding video. Use a dash (-) for the input file and "
+"%f.ext for the output file"
+msgstr ""
+
+#, fuzzy
+msgid "Draw Status Indicator"
+msgstr "צייר הדגשת חלון"
+
+msgid "Draw color coded status dot"
+msgstr ""
+
 msgid "Wallpaper"
 msgstr "תמונת רקע"
 
 msgid "Draw the desktop wallpaper"
 msgstr "צייר את תמונת הרקע של שולחן העבודה"
+
+msgid "Recursive directory search"
+msgstr ""
+
+msgid "Search in all sub-directories."
+msgstr ""
+
+msgid "Cycle"
+msgstr ""
+
+msgid "Automatically cycle through wallpapers."
+msgstr ""
+
+#, fuzzy
+msgid "Cycle timeout"
+msgstr "זמן לפני הסתרה"
+
+msgid "Time before cycling to next wallpaper (in minutes)."
+msgstr ""
+
+#, fuzzy
+msgid "Fade time"
+msgstr "זמן דהייה"
+
+#, fuzzy
+msgid "Fade transition time (in seconds)."
+msgstr "משך הדהייה בשניות."
+
+#, fuzzy
+msgid "Randomize"
+msgstr "אקראי"
+
+#, fuzzy
+msgid "Randomly order wallpapers."
+msgstr "חלקיקים בצבע אקראי"
+
+#, fuzzy
+msgid "Hide other desktop background windows"
+msgstr "הסתר חלונות שאינם שולחן העבודה"
+
+msgid ""
+"Don't draw desktop backgrounds rendered by other applications. Mouse and "
+"keyboard input works as if the background were drawn."
+msgstr ""
 
 msgid "Backgrounds"
 msgstr "רקעים"
@@ -2405,6 +2615,86 @@ msgstr "צבע 2"
 
 msgid "Second gradient color."
 msgstr "צבע רקע מדורג שני."
+
+msgid "Workspace Naming"
+msgstr ""
+
+msgid "Allows assigning descriptions to workspaces"
+msgstr ""
+
+msgid "Names"
+msgstr ""
+
+msgid "Workspace Names"
+msgstr ""
+
+#, fuzzy
+msgid "Viewport"
+msgstr "משטח עבודה עליון"
+
+#, fuzzy
+msgid "Number of viewport to be named"
+msgstr "מספר חלונות למעקב"
+
+msgid "Name"
+msgstr ""
+
+#, fuzzy
+msgid "Viewport name"
+msgstr "משטח עבודה שמאלי"
+
+msgid "Timeout (in s) of the name display"
+msgstr ""
+
+#, fuzzy
+msgid "Time (in s) the name display fades out after being shown."
+msgstr "משך זמן (בשניות) שבו שורת התוויות נראית לעין לאחר מעבר תווית"
+
+#, fuzzy
+msgid "Text Display"
+msgstr "משך הצגה"
+
+#, fuzzy
+msgid "Selects if the text should be displayed in bold font or not."
+msgstr "קובע אם כותרת החלון תוצג בגופן מודגש אם לאו."
+
+#, fuzzy
+msgid "Font Family"
+msgstr "גודל גופן"
+
+#, fuzzy
+msgid "Font family for the text display."
+msgstr "גודל גופן להצגת כותרת חלון"
+
+#, fuzzy
+msgid "Font size for the text display."
+msgstr "גודל גופן להצגת כותרת חלון"
+
+msgid "Text Placement"
+msgstr "מיקום טקסט"
+
+#, fuzzy
+msgid "Selects where to place the text."
+msgstr "קובע את מיקום כותרת החלון."
+
+msgid "Centered on screen"
+msgstr "ממורכז על המסך"
+
+#, fuzzy
+msgid "Top of screen"
+msgstr "סוג היצור הימי."
+
+#, fuzzy
+msgid "Bottom of screen"
+msgstr "מלמטה למעלה"
+
+#, fuzzy
+msgid "Background color for the text display."
+msgstr "צבע רקע כותרת החלון"
+
+#, fuzzy
+msgid "Font color for the text display."
+msgstr "צבע גופן כותרת החלון"
 
 #~ msgid ""
 #~ "All effects are chosen randomly, ignoring the selected effect. If None is "
@@ -3679,9 +3969,6 @@ msgstr "צבע רקע מדורג שני."
 #~ msgid "Restrain the mouse to the zoom area"
 #~ msgstr "הגבל עכבר לאיזור התקריב"
 
-#~ msgid "Scale the mouse pointer"
-#~ msgstr "התאם את גודל סמן העכבר"
-
 #~ msgid "Specific Zoom"
 #~ msgstr "תקריב ספציפי"
 
@@ -4248,9 +4535,6 @@ msgstr "צבע רקע מדורג שני."
 #~ msgid "Put To Next Output"
 #~ msgstr "הצב מעלה משמאל"
 
-#~ msgid "Put pointer uses the center of the window"
-#~ msgstr "הצבה על הסמן מוגדרת על פי מרכז החלון"
-
 #~ msgid "Put to adjacent viewport"
 #~ msgstr "הצב במשטח עבודה סמוך"
 
@@ -4655,9 +4939,6 @@ msgstr "צבע רקע מדורג שני."
 #~ msgid "Hide all non Desktop windows during switching"
 #~ msgstr "הסתר בעת העברה את כל החלונות, פרט לשולחן העבודה"
 
-#~ msgid "Hide non Desktop windows"
-#~ msgstr "הסתר חלונות שאינם שולחן העבודה"
-
 #~ msgid "Initiate (All Workspaces)"
 #~ msgstr "הפעל (בכל משטחי העבודה)"
 
@@ -4755,9 +5036,6 @@ msgstr "צבע רקע מדורג שני."
 #~ msgid "Choose 'Resistance', 'Attraction' or 'Full Mode'."
 #~ msgstr "יש לבחור בין 'דחייה', 'משיכה' ו-'מצב מלא'."
 
-#~ msgid "Control"
-#~ msgstr "Control"
-
 #~ msgid "Edge Attraction Distance"
 #~ msgstr "מרחק למשיכה אל הגבול"
 
@@ -4775,9 +5053,6 @@ msgstr "צבע רקע מדורג שני."
 
 #~ msgid "Meta"
 #~ msgstr "Meta"
-
-#~ msgid "Screen edges"
-#~ msgstr "גבולות המסך"
 
 #~ msgid "Shift"
 #~ msgstr "Shift"
@@ -4895,9 +5170,6 @@ msgstr "צבע רקע מדורג שני."
 #~ "selected"
 #~ msgstr "אחוז האטימות של החלונות במעביר שלא נבחרו"
 
-#~ msgid "Behavior"
-#~ msgstr "התנהגות"
-
 #~ msgid "Darken background when showing the stack"
 #~ msgstr "הכהה את הרקע בעת הצגת השולחן"
 
@@ -4964,9 +5236,6 @@ msgstr "צבע רקע מדורג שני."
 
 #~ msgid "Highlight Border Inlay Color"
 #~ msgstr "צבע מילוי גבול ההדגשה"
-
-#~ msgid "Highlight Mode"
-#~ msgstr "מצב הדגשה"
 
 #~ msgid "Icon"
 #~ msgstr "צלמית"
@@ -5063,9 +5332,6 @@ msgstr "צבע רקע מדורג שני."
 #~ msgid "Selected Window Highlight"
 #~ msgstr "הדגשת חלון נבחר"
 
-#~ msgid "Show Rectangle"
-#~ msgstr "הצג מלבן"
-
 #~ msgid "Show icon next to thumbnail"
 #~ msgstr "הצג צלמית לצד התמונה המוקטנת"
 
@@ -5102,14 +5368,8 @@ msgstr "צבע רקע מדורג שני."
 #~ msgid "Text"
 #~ msgstr "טקסט"
 
-#~ msgid "Enable Titles"
-#~ msgstr "אפשר כותרות"
-
 #~ msgid "Fade In/Out Duration"
 #~ msgstr "משך דהייה"
-
-#~ msgid "Fade In/Out Duration in seconds."
-#~ msgstr "משך הדהייה בשניות."
 
 #~ msgid "Generate Mipmaps"
 #~ msgstr "ייצר mipmap"
@@ -5888,9 +6148,6 @@ msgstr "צבע רקע מדורג שני."
 #~ msgid "Toggle prompt visible."
 #~ msgstr "אפשר\\נטרל הצגת שורת קלט."
 
-#~ msgid "Directory"
-#~ msgstr "תיקיה"
-
 #~ msgid "Initiate screencasting"
 #~ msgstr "הפעל שידור מסך"
 
@@ -5908,9 +6165,6 @@ msgstr "צבע רקע מדורג שני."
 
 #~ msgid "Dolphin size."
 #~ msgstr "גודל דולפין."
-
-#~ msgid "Enable colors"
-#~ msgstr "אפשר צבעים"
 
 #~ msgid "Fish size"
 #~ msgstr "גודל דג"
@@ -6022,83 +6276,3 @@ msgstr "צבע רקע מדורג שני."
 
 #~ msgid "Close Windows In Scale"
 #~ msgstr "סגור חלונות במבט על"
-
-msgid "Workspace Naming"
-msgstr ""
-
-msgid "Allows assigning descriptions to workspaces"
-msgstr ""
-
-msgid "Names"
-msgstr ""
-
-msgid "Workspace Names"
-msgstr ""
-
-#, fuzzy
-msgid "Viewport"
-msgstr "משטח עבודה עליון"
-
-#, fuzzy
-msgid "Number of viewport to be named"
-msgstr "מספר חלונות למעקב"
-
-msgid "Name"
-msgstr ""
-
-#, fuzzy
-msgid "Viewport name"
-msgstr "משטח עבודה שמאלי"
-
-msgid "Timeout (in s) of the name display"
-msgstr ""
-
-#, fuzzy
-msgid "Time (in s) the name display fades out after being shown."
-msgstr "משך זמן (בשניות) שבו שורת התוויות נראית לעין לאחר מעבר תווית"
-
-#, fuzzy
-msgid "Text Display"
-msgstr "משך הצגה"
-
-#, fuzzy
-msgid "Selects if the text should be displayed in bold font or not."
-msgstr "קובע אם כותרת החלון תוצג בגופן מודגש אם לאו."
-
-#, fuzzy
-msgid "Font Family"
-msgstr "גודל גופן"
-
-#, fuzzy
-msgid "Font family for the text display."
-msgstr "גודל גופן להצגת כותרת חלון"
-
-#, fuzzy
-msgid "Font size for the text display."
-msgstr "גודל גופן להצגת כותרת חלון"
-
-msgid "Text Placement"
-msgstr "מיקום טקסט"
-
-#, fuzzy
-msgid "Selects where to place the text."
-msgstr "קובע את מיקום כותרת החלון."
-
-msgid "Centered on screen"
-msgstr "ממורכז על המסך"
-
-#, fuzzy
-msgid "Top of screen"
-msgstr "סוג היצור הימי."
-
-#, fuzzy
-msgid "Bottom of screen"
-msgstr "מלמטה למעלה"
-
-#, fuzzy
-msgid "Background color for the text display."
-msgstr "צבע רקע כותרת החלון"
-
-#, fuzzy
-msgid "Font color for the text display."
-msgstr "צבע גופן כותרת החלון"

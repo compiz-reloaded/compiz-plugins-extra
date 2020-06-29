@@ -7,9 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: compiz-plugins-extra\n"
-"Report-Msgid-Bugs-To: https://gitlab.com/compiz/compiz-plugins-"
-"extra/issues\n"
-"POT-Creation-Date: 2017-01-12 18:19+0300\n"
+"Report-Msgid-Bugs-To: https://gitlab.com/compiz/compiz-plugins-extra/issues\n"
+"POT-Creation-Date: 2020-06-23 00:40+0200\n"
 "PO-Revision-Date: 2009-09-20 21:03+0200\n"
 "Last-Translator: Jan Vlnas <l10n@syntax.oib.com>\n"
 "Language-Team: Czech <cs@li.org>\n"
@@ -29,10 +28,12 @@ msgstr "Ulehčí soustředění ztmavením všech oken s výjimkou aktivního."
 msgid "Bindings"
 msgstr "Klávesové zkratky"
 
-msgid "Toggle AddHelper"
+#, fuzzy
+msgid "Toggle ADD Helper"
 msgstr "Zapnout AddHelper"
 
-msgid "Use this to enable/disable AddHelper on the fly."
+#, fuzzy
+msgid "Use this to enable/disable ADD Helper on the fly."
 msgstr "Použijte pro zapnutí/vypnutí AddHelperu za běhu"
 
 msgid "Misc. Options"
@@ -41,7 +42,8 @@ msgstr "Další možnosti"
 msgid "Window Types"
 msgstr "Typy oken"
 
-msgid "Window types that should be Opacified."
+#, fuzzy
+msgid "Window types that should be affected."
 msgstr "Typy oken, která budou zprůhledněna."
 
 msgid "Enable ADD Helper on start"
@@ -67,6 +69,12 @@ msgstr "Průhlednost"
 
 msgid "Opacity of faded windows"
 msgstr "Míra průhlednosti oken v pozadí"
+
+msgid "Contrast"
+msgstr ""
+
+msgid "Contrast of the content of the window."
+msgstr ""
 
 msgid "Animations Add-On"
 msgstr "Další animace"
@@ -377,6 +385,24 @@ msgstr "Paprsky"
 
 msgid "Leaf Spread"
 msgstr "Roztříštění"
+
+msgid "Audible Bell"
+msgstr ""
+
+msgid "Plays an audible sound for the system bell"
+msgstr ""
+
+msgid "Play sound on system bell"
+msgstr ""
+
+msgid "Spatial Sounds"
+msgstr ""
+
+msgid ""
+"Whether to spatially locate sounds or not. If enabled, sounds coming from "
+"the left of the sceen will be heard mostly on the left channel, the ones "
+"coming from the right on the right channel and so on."
+msgstr ""
 
 msgid "Benchmark"
 msgstr "Test výkonnosti"
@@ -896,8 +922,8 @@ msgid ""
 "multiple times in a row."
 msgstr ""
 
-msgid "Corners / Edges"
-msgstr ""
+msgid "Behavior"
+msgstr "Chování"
 
 #, fuzzy
 msgid "Resize Actions"
@@ -906,6 +932,10 @@ msgstr "Odlesk"
 #, fuzzy
 msgid "Window resize action"
 msgstr "Písmo titulku okna"
+
+#, fuzzy
+msgid "Top Left Corner"
+msgstr "Do rohů"
 
 #, fuzzy
 msgid "Action to be performed when window is dropped on the top left corner"
@@ -934,10 +964,6 @@ msgstr "Celá obrazovka"
 #, fuzzy
 msgid "Right Half"
 msgstr "Vpravo"
-
-#, fuzzy
-msgid "Top Left Corner"
-msgstr "Do rohů"
 
 msgid "Top Half"
 msgstr ""
@@ -1002,6 +1028,16 @@ msgstr ""
 msgid "Maximum number of pixels from the Bottom edge a window can be dropped"
 msgstr ""
 
+#, fuzzy
+msgid "Select output with mouse pointer"
+msgstr "Zvětšit ukazatel myši"
+
+msgid ""
+"In the case of multiple outputs, chooses the output containing the mouse "
+"pointer. If this option is not checked, the output is choosen based on the "
+"center of the window."
+msgstr ""
+
 msgid "Draw Indicator"
 msgstr ""
 
@@ -1016,6 +1052,10 @@ msgstr "Délka animace"
 #, fuzzy
 msgid "Preview animation duration (in ms)."
 msgstr "Délka animace"
+
+#, fuzzy
+msgid "Outline Thickness"
+msgstr "Tloušťka"
 
 msgid "Outline Color"
 msgstr "Barva obrysu"
@@ -1454,6 +1494,56 @@ msgstr "Obdélníková záře"
 msgid "Glow ring"
 msgstr "Prstenec záře"
 
+#, fuzzy
+msgid "Highlight Content"
+msgstr "Režim zvýrazňování"
+
+msgid ""
+"Listens for screen reader events and renders highlight for the currently "
+"spoken word."
+msgstr ""
+
+msgid "Toggle Highlight of Content."
+msgstr ""
+
+msgid "Enable on startup"
+msgstr ""
+
+msgid "Enables this plugin when it is loaded."
+msgstr ""
+
+msgid "Highlight Speech synthesis"
+msgstr ""
+
+msgid "Highlight Speech synthesis' current word."
+msgstr ""
+
+#, fuzzy
+msgid "Speech Options"
+msgstr "Výběr"
+
+#, fuzzy
+msgid "Rectangle Border Thickness"
+msgstr "Velikost okraje titulku"
+
+msgid "How thick the border of the rectangle should be, in pixels."
+msgstr ""
+
+#, fuzzy
+msgid "Rectangle Color"
+msgstr "Obdélníková záře"
+
+#, fuzzy
+msgid "Color of the borders of the rectangle."
+msgstr "Barva vrchní strany kostky"
+
+#, fuzzy
+msgid "Show only border of rectangle"
+msgstr "Zobrazit obdélník"
+
+msgid "Whether we draw a filled rectangle or just its border."
+msgstr ""
+
 msgid "Motion blur"
 msgstr "Rozmáznutí pohybem"
 
@@ -1809,8 +1899,41 @@ msgstr "Zvýší viditelnost kurzoru myši"
 msgid "Toggle the mouse pointer trail."
 msgstr "Přepnout zobrazní dráhy kurzoru myši."
 
+#, fuzzy
+msgid "Particles"
+msgstr "Velikost částic."
+
+#, fuzzy
+msgid "Enable particles."
+msgstr "Počet částic ohně."
+
+msgid "Crosshair"
+msgstr ""
+
+#, fuzzy
+msgid "Enable crosshair."
+msgstr "Spustit obsluhu pádu"
+
 msgid "Particle Options"
 msgstr "Nastavení částic"
+
+msgid "Rotation speed"
+msgstr "Rychlost rotace"
+
+msgid "Rotation speed."
+msgstr "Rychlost otáčení."
+
+msgid "Radius"
+msgstr "Poloměr"
+
+msgid "Ring radius"
+msgstr "Poloměr kruhu"
+
+msgid "Emitters"
+msgstr ""
+
+msgid "Number of particle emitters."
+msgstr "Počet zdrojů částic"
 
 msgid "Number Of Particles"
 msgstr "Počet částic"
@@ -1860,23 +1983,27 @@ msgstr "Náhodné barvy částic"
 msgid "Have random colors for the particles"
 msgstr "Použít náhodné barvy částic"
 
-msgid "Rotation speed"
-msgstr "Rychlost rotace"
+#, fuzzy
+msgid "Crosshair Options"
+msgstr "Nastavení částic"
 
-msgid "Rotation speed."
-msgstr "Rychlost otáčení."
-
-msgid "Radius"
-msgstr "Poloměr"
-
-msgid "Ring radius"
-msgstr "Poloměr kruhu"
-
-msgid "Emitters"
+msgid "Crosshair thickness"
 msgstr ""
 
-msgid "Number of particle emitters."
-msgstr "Počet zdrojů částic"
+msgid "How thick mouse crosshair should be, in pixels."
+msgstr ""
+
+msgid "Crosshair empty radius"
+msgstr ""
+
+msgid "Radius of the disk around the cursor which is not covered by crosshair."
+msgstr ""
+
+msgid "Crosshair Color"
+msgstr ""
+
+msgid "Crosshair color."
+msgstr ""
 
 msgid "Login/Logout"
 msgstr "Přihlášení/odhlášení"
@@ -2274,11 +2401,88 @@ msgstr "Zakulatit spodní pravý"
 msgid "Bevel bottom right corner"
 msgstr "Zakulatit spodní pravý roh"
 
+msgid "Vidcap"
+msgstr ""
+
+#, fuzzy
+msgid "Screen Recorder"
+msgstr "Okraje obrazovky"
+
+msgid "Start / Stop"
+msgstr ""
+
+msgid "Start and stop recording"
+msgstr ""
+
+#, fuzzy
+msgid "Directory"
+msgstr "Složka pro výpis pádu"
+
+msgid "Directory to store videos"
+msgstr ""
+
+msgid "Command"
+msgstr ""
+
+msgid ""
+"Command to be used for encoding video. Use a dash (-) for the input file and "
+"%f.ext for the output file"
+msgstr ""
+
+#, fuzzy
+msgid "Draw Status Indicator"
+msgstr "Zvýraznit okno barvou"
+
+msgid "Draw color coded status dot"
+msgstr ""
+
 msgid "Wallpaper"
 msgstr "Tapeta"
 
 msgid "Draw the desktop wallpaper"
 msgstr "Kreslit pozadí pracovní plochy"
+
+msgid "Recursive directory search"
+msgstr ""
+
+msgid "Search in all sub-directories."
+msgstr ""
+
+msgid "Cycle"
+msgstr ""
+
+msgid "Automatically cycle through wallpapers."
+msgstr ""
+
+msgid "Cycle timeout"
+msgstr ""
+
+msgid "Time before cycling to next wallpaper (in minutes)."
+msgstr ""
+
+#, fuzzy
+msgid "Fade time"
+msgstr "Doba rozplynutí"
+
+#, fuzzy
+msgid "Fade transition time (in seconds)."
+msgstr "Délka rozplynutí v sekundách."
+
+#, fuzzy
+msgid "Randomize"
+msgstr "Náhodně"
+
+#, fuzzy
+msgid "Randomly order wallpapers."
+msgstr "Náhodné barvy částic"
+
+msgid "Hide other desktop background windows"
+msgstr ""
+
+msgid ""
+"Don't draw desktop backgrounds rendered by other applications. Mouse and "
+"keyboard input works as if the background were drawn."
+msgstr ""
 
 msgid "Backgrounds"
 msgstr "Pozadí"
@@ -2337,6 +2541,81 @@ msgstr "Barva 2"
 
 msgid "Second gradient color."
 msgstr "Druhá barva přechodu"
+
+msgid "Workspace Naming"
+msgstr ""
+
+msgid "Allows assigning descriptions to workspaces"
+msgstr ""
+
+msgid "Names"
+msgstr ""
+
+msgid "Workspace Names"
+msgstr ""
+
+#, fuzzy
+msgid "Viewport"
+msgstr "Umístit na plochu"
+
+#, fuzzy
+msgid "Number of viewport to be named"
+msgstr "Počet sledovaných oken"
+
+msgid "Name"
+msgstr ""
+
+#, fuzzy
+msgid "Viewport name"
+msgstr "Umístit na plochu 1"
+
+msgid "Timeout (in s) of the name display"
+msgstr ""
+
+msgid "Time (in s) the name display fades out after being shown."
+msgstr ""
+
+#, fuzzy
+msgid "Text Display"
+msgstr "Zobrazení"
+
+msgid "Selects if the text should be displayed in bold font or not."
+msgstr ""
+
+#, fuzzy
+msgid "Font Family"
+msgstr "Velikost písma"
+
+msgid "Font family for the text display."
+msgstr ""
+
+#, fuzzy
+msgid "Font size for the text display."
+msgstr "Velikost vodních rostlin."
+
+msgid "Text Placement"
+msgstr "Umístění textu"
+
+msgid "Selects where to place the text."
+msgstr ""
+
+msgid "Centered on screen"
+msgstr ""
+
+#, fuzzy
+msgid "Top of screen"
+msgstr "Druh vodních tvorů."
+
+#, fuzzy
+msgid "Bottom of screen"
+msgstr "Zdola nahoru"
+
+msgid "Background color for the text display."
+msgstr ""
+
+#, fuzzy
+msgid "Font color for the text display."
+msgstr "Barva textu v titulku okna"
 
 #~ msgid "Animation Selection"
 #~ msgstr "Výběr animace"
@@ -2719,9 +2998,6 @@ msgstr "Druhá barva přechodu"
 #~ msgid "Mouse Behaviour"
 #~ msgstr "Chování myši"
 
-#~ msgid "Scale the mouse pointer"
-#~ msgstr "Zvětšit ukazatel myši"
-
 #~ msgid "Use linear filter when zoomed in"
 #~ msgstr "Při přiblížení používat lineární filtr"
 
@@ -3076,9 +3352,6 @@ msgstr "Druhá barva přechodu"
 #~ msgid "Intensity."
 #~ msgstr "Intenzita."
 
-#~ msgid "Screen edges"
-#~ msgstr "Okraje obrazovky"
-
 #~ msgid "Snap Type"
 #~ msgstr "Typ přichycení"
 
@@ -3159,9 +3432,6 @@ msgstr "Druhá barva přechodu"
 #~ msgid "Top to Bottom"
 #~ msgstr "Shora dolů"
 
-#~ msgid "Behavior"
-#~ msgstr "Chování"
-
 #~ msgid "Windows"
 #~ msgstr "Okna"
 
@@ -3179,9 +3449,6 @@ msgstr "Druhá barva přechodu"
 
 #~ msgid "Generate mipmaps when possible for higher quality scaling"
 #~ msgstr "Jeli to možné, vytvářet pro kvalitní škálování mipmapy"
-
-#~ msgid "Highlight Mode"
-#~ msgstr "Režim zvýrazňování"
 
 #~ msgid "Icon"
 #~ msgstr "Ikona"
@@ -3231,9 +3498,6 @@ msgstr "Druhá barva přechodu"
 #~ msgid "Selected Window Highlight"
 #~ msgstr "Zvýraznění vybraného okna"
 
-#~ msgid "Show Rectangle"
-#~ msgstr "Zobrazit obdélník"
-
 #~ msgid "Show icon next to thumbnail"
 #~ msgstr "Zobrazit ikonu vedle náhledu"
 
@@ -3257,9 +3521,6 @@ msgstr "Druhá barva přechodu"
 
 #~ msgid "Fade In/Out Duration"
 #~ msgstr "Délka rozplynutí"
-
-#~ msgid "Fade In/Out Duration in seconds."
-#~ msgstr "Délka rozplynutí v sekundách."
 
 #~ msgid "Generate Mipmaps"
 #~ msgstr "Generovat mipmapy"
@@ -3522,78 +3783,3 @@ msgstr "Druhá barva přechodu"
 
 #~ msgid "Misc. options"
 #~ msgstr "Dal nastaven"
-
-msgid "Workspace Naming"
-msgstr ""
-
-msgid "Allows assigning descriptions to workspaces"
-msgstr ""
-
-msgid "Names"
-msgstr ""
-
-msgid "Workspace Names"
-msgstr ""
-
-#, fuzzy
-msgid "Viewport"
-msgstr "Umístit na plochu"
-
-#, fuzzy
-msgid "Number of viewport to be named"
-msgstr "Počet sledovaných oken"
-
-msgid "Name"
-msgstr ""
-
-#, fuzzy
-msgid "Viewport name"
-msgstr "Umístit na plochu 1"
-
-msgid "Timeout (in s) of the name display"
-msgstr ""
-
-msgid "Time (in s) the name display fades out after being shown."
-msgstr ""
-
-#, fuzzy
-msgid "Text Display"
-msgstr "Zobrazení"
-
-msgid "Selects if the text should be displayed in bold font or not."
-msgstr ""
-
-#, fuzzy
-msgid "Font Family"
-msgstr "Velikost písma"
-
-msgid "Font family for the text display."
-msgstr ""
-
-#, fuzzy
-msgid "Font size for the text display."
-msgstr "Velikost vodních rostlin."
-
-msgid "Text Placement"
-msgstr "Umístění textu"
-
-msgid "Selects where to place the text."
-msgstr ""
-
-msgid "Centered on screen"
-msgstr ""
-
-#, fuzzy
-msgid "Top of screen"
-msgstr "Druh vodních tvorů."
-
-#, fuzzy
-msgid "Bottom of screen"
-msgstr "Zdola nahoru"
-
-msgid "Background color for the text display."
-msgstr ""
-
-#, fuzzy
-msgid "Font color for the text display."
-msgstr "Barva textu v titulku okna"

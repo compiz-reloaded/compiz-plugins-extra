@@ -6,9 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: compiz-plugins-extra\n"
-"Report-Msgid-Bugs-To: https://gitlab.com/compiz/compiz-plugins-"
-"extra/issues\n"
-"POT-Creation-Date: 2017-01-12 18:19+0300\n"
+"Report-Msgid-Bugs-To: https://gitlab.com/compiz/compiz-plugins-extra/issues\n"
+"POT-Creation-Date: 2020-06-23 00:40+0200\n"
 "PO-Revision-Date: 2009-09-01 04:10+0200\n"
 "Last-Translator: Lee June Hee <bugbear5@gmail.com>\n"
 "Language-Team: Korean <ko@li.org>\n"
@@ -27,10 +26,12 @@ msgstr "활성창을 제외한 모든 창을 흐릿하게하여 쉽게 집중할
 msgid "Bindings"
 msgstr "바로가기"
 
-msgid "Toggle AddHelper"
+#, fuzzy
+msgid "Toggle ADD Helper"
 msgstr "활성창 돋보이기 사용"
 
-msgid "Use this to enable/disable AddHelper on the fly."
+#, fuzzy
+msgid "Use this to enable/disable ADD Helper on the fly."
 msgstr "활성창 돋보이기 사용"
 
 msgid "Misc. Options"
@@ -39,7 +40,8 @@ msgstr "기타 옵션"
 msgid "Window Types"
 msgstr "창 종류"
 
-msgid "Window types that should be Opacified."
+#, fuzzy
+msgid "Window types that should be affected."
 msgstr "투명도가 변경되는 창의 종류"
 
 msgid "Enable ADD Helper on start"
@@ -65,6 +67,14 @@ msgstr "투명도"
 
 msgid "Opacity of faded windows"
 msgstr "흐린 창의 투명도"
+
+#, fuzzy
+msgid "Contrast"
+msgstr "제어"
+
+#, fuzzy
+msgid "Contrast of the content of the window."
+msgstr "포인터 위치를 창 중앙으로 놓고 던지기"
 
 msgid "Animations Add-On"
 msgstr "애니메이션 추가 기능"
@@ -389,6 +399,24 @@ msgstr "광선"
 
 msgid "Leaf Spread"
 msgstr "잎이 퍼지듯이"
+
+msgid "Audible Bell"
+msgstr ""
+
+msgid "Plays an audible sound for the system bell"
+msgstr ""
+
+msgid "Play sound on system bell"
+msgstr ""
+
+msgid "Spatial Sounds"
+msgstr ""
+
+msgid ""
+"Whether to spatially locate sounds or not. If enabled, sounds coming from "
+"the left of the sceen will be heard mostly on the left channel, the ones "
+"coming from the right on the right channel and so on."
+msgstr ""
 
 msgid "Benchmark"
 msgstr "벤치마크"
@@ -910,8 +938,8 @@ msgid ""
 "multiple times in a row."
 msgstr ""
 
-msgid "Corners / Edges"
-msgstr ""
+msgid "Behavior"
+msgstr "동작"
 
 #, fuzzy
 msgid "Resize Actions"
@@ -920,6 +948,10 @@ msgstr "반사"
 #, fuzzy
 msgid "Window resize action"
 msgstr "창 제목 글꼴"
+
+#, fuzzy
+msgid "Top Left Corner"
+msgstr "가장자리로"
 
 #, fuzzy
 msgid "Action to be performed when window is dropped on the top left corner"
@@ -948,10 +980,6 @@ msgstr "전체 화면"
 #, fuzzy
 msgid "Right Half"
 msgstr "오른쪽"
-
-#, fuzzy
-msgid "Top Left Corner"
-msgstr "가장자리로"
 
 msgid "Top Half"
 msgstr ""
@@ -1020,6 +1048,16 @@ msgstr "창이 초기화될 위치에 대한 상단으로부터의 픽셀 숫자
 msgid "Maximum number of pixels from the Bottom edge a window can be dropped"
 msgstr "창이 초기화될 위치에 대한 하단으로부터의 픽셀 숫자"
 
+#, fuzzy
+msgid "Select output with mouse pointer"
+msgstr "마우스 포인터의 크기를 변경함"
+
+msgid ""
+"In the case of multiple outputs, chooses the output containing the mouse "
+"pointer. If this option is not checked, the output is choosen based on the "
+"center of the window."
+msgstr ""
+
 msgid "Draw Indicator"
 msgstr ""
 
@@ -1034,6 +1072,10 @@ msgstr "애니메이션 지속 시간"
 #, fuzzy
 msgid "Preview animation duration (in ms)."
 msgstr "애니메이션 지속 시간"
+
+#, fuzzy
+msgid "Outline Thickness"
+msgstr "두께"
 
 msgid "Outline Color"
 msgstr "외곽선 색"
@@ -1488,6 +1530,58 @@ msgstr "사각형으로"
 msgid "Glow ring"
 msgstr "둥글게"
 
+#, fuzzy
+msgid "Highlight Content"
+msgstr "강조 모드"
+
+msgid ""
+"Listens for screen reader events and renders highlight for the currently "
+"spoken word."
+msgstr ""
+
+msgid "Toggle Highlight of Content."
+msgstr ""
+
+#, fuzzy
+msgid "Enable on startup"
+msgstr "시작할 때 활성창 돋보이기 사용"
+
+#, fuzzy
+msgid "Enables this plugin when it is loaded."
+msgstr "처음 시작될 때 활성창 돋보이기를 가능하게 함"
+
+msgid "Highlight Speech synthesis"
+msgstr ""
+
+msgid "Highlight Speech synthesis' current word."
+msgstr ""
+
+#, fuzzy
+msgid "Speech Options"
+msgstr "선택"
+
+#, fuzzy
+msgid "Rectangle Border Thickness"
+msgstr "제목 가장자리 크기"
+
+msgid "How thick the border of the rectangle should be, in pixels."
+msgstr ""
+
+#, fuzzy
+msgid "Rectangle Color"
+msgstr "사각형으로"
+
+#, fuzzy
+msgid "Color of the borders of the rectangle."
+msgstr "큐브의 천장 색"
+
+#, fuzzy
+msgid "Show only border of rectangle"
+msgstr "사각형 보여주기"
+
+msgid "Whether we draw a filled rectangle or just its border."
+msgstr ""
+
 msgid "Motion blur"
 msgstr "모션 블러"
 
@@ -1860,8 +1954,41 @@ msgstr "마우스 포인터의 가시성 증가"
 msgid "Toggle the mouse pointer trail."
 msgstr "마우스 포인터 추적을 켭니다."
 
+#, fuzzy
+msgid "Particles"
+msgstr "입자 크기."
+
+#, fuzzy
+msgid "Enable particles."
+msgstr "제목 활성화"
+
+msgid "Crosshair"
+msgstr ""
+
+#, fuzzy
+msgid "Enable crosshair."
+msgstr "색 활성화"
+
 msgid "Particle Options"
 msgstr "입자 옵션"
+
+msgid "Rotation speed"
+msgstr "회전 속도"
+
+msgid "Rotation speed."
+msgstr "회전 속도."
+
+msgid "Radius"
+msgstr "반경"
+
+msgid "Ring radius"
+msgstr "링 반경"
+
+msgid "Emitters"
+msgstr "방사되는 불꽃 수"
+
+msgid "Number of particle emitters."
+msgstr "방사되는 입자의 수"
 
 msgid "Number Of Particles"
 msgstr "입자의 수"
@@ -1911,23 +2038,27 @@ msgstr "무작위 입자 색"
 msgid "Have random colors for the particles"
 msgstr "입자의 색을 랜덤으로 함"
 
-msgid "Rotation speed"
-msgstr "회전 속도"
+#, fuzzy
+msgid "Crosshair Options"
+msgstr "입자 옵션"
 
-msgid "Rotation speed."
-msgstr "회전 속도."
+msgid "Crosshair thickness"
+msgstr ""
 
-msgid "Radius"
-msgstr "반경"
+msgid "How thick mouse crosshair should be, in pixels."
+msgstr ""
 
-msgid "Ring radius"
-msgstr "링 반경"
+msgid "Crosshair empty radius"
+msgstr ""
 
-msgid "Emitters"
-msgstr "방사되는 불꽃 수"
+msgid "Radius of the disk around the cursor which is not covered by crosshair."
+msgstr ""
 
-msgid "Number of particle emitters."
-msgstr "방사되는 입자의 수"
+msgid "Crosshair Color"
+msgstr ""
+
+msgid "Crosshair color."
+msgstr ""
 
 msgid "Login/Logout"
 msgstr "로그인/로그아웃"
@@ -2340,11 +2471,90 @@ msgstr "오른쪽 하단을 둥글게 자름"
 msgid "Bevel bottom right corner"
 msgstr "오른쪽 하단을 둥글게 자름"
 
+msgid "Vidcap"
+msgstr ""
+
+#, fuzzy
+msgid "Screen Recorder"
+msgstr "화면 가장자리"
+
+#, fuzzy
+msgid "Start / Stop"
+msgstr "스플래시 시작."
+
+msgid "Start and stop recording"
+msgstr ""
+
+msgid "Directory"
+msgstr "디렉토리"
+
+msgid "Directory to store videos"
+msgstr ""
+
+msgid "Command"
+msgstr ""
+
+msgid ""
+"Command to be used for encoding video. Use a dash (-) for the input file and "
+"%f.ext for the output file"
+msgstr ""
+
+#, fuzzy
+msgid "Draw Status Indicator"
+msgstr "창을 강조함"
+
+msgid "Draw color coded status dot"
+msgstr ""
+
 msgid "Wallpaper"
 msgstr "배경 화면"
 
 msgid "Draw the desktop wallpaper"
 msgstr "데스크탑 배경 화면 그리기"
+
+msgid "Recursive directory search"
+msgstr ""
+
+msgid "Search in all sub-directories."
+msgstr ""
+
+msgid "Cycle"
+msgstr ""
+
+msgid "Automatically cycle through wallpapers."
+msgstr ""
+
+#, fuzzy
+msgid "Cycle timeout"
+msgstr "사라지는 시간"
+
+msgid "Time before cycling to next wallpaper (in minutes)."
+msgstr ""
+
+#, fuzzy
+msgid "Fade time"
+msgstr "페이드 시간"
+
+#, fuzzy
+msgid "Fade transition time (in seconds)."
+msgstr "페이드 인/아웃 지속 시간 (초 단위)."
+
+#, fuzzy
+msgid "Randomize"
+msgstr "무작위"
+
+#, fuzzy
+msgid "Randomly order wallpapers."
+msgstr "무작위 입자 색"
+
+#, fuzzy
+msgid "Hide other desktop background windows"
+msgstr "데스크탑 창이 아닌 창을 숨김"
+
+msgid ""
+"Don't draw desktop backgrounds rendered by other applications. Mouse and "
+"keyboard input works as if the background were drawn."
+msgstr ""
 
 msgid "Backgrounds"
 msgstr "배경"
@@ -2402,6 +2612,86 @@ msgstr "색 2"
 
 msgid "Second gradient color."
 msgstr "두번째 그라데이션 색."
+
+msgid "Workspace Naming"
+msgstr ""
+
+msgid "Allows assigning descriptions to workspaces"
+msgstr ""
+
+msgid "Names"
+msgstr ""
+
+msgid "Workspace Names"
+msgstr ""
+
+#, fuzzy
+msgid "Viewport"
+msgstr "작업 공간 상단"
+
+#, fuzzy
+msgid "Number of viewport to be named"
+msgstr "초점 추적을 사용할 창의 숫자"
+
+msgid "Name"
+msgstr ""
+
+#, fuzzy
+msgid "Viewport name"
+msgstr "작업 공간 좌측"
+
+msgid "Timeout (in s) of the name display"
+msgstr ""
+
+#, fuzzy
+msgid "Time (in s) the name display fades out after being shown."
+msgstr "탭 바꾸기 후 탭 막대가 보여질 시간(초)"
+
+#, fuzzy
+msgid "Text Display"
+msgstr "표시"
+
+#, fuzzy
+msgid "Selects if the text should be displayed in bold font or not."
+msgstr "창 제목을 굵은 글씨로 표시할지를 선택함"
+
+#, fuzzy
+msgid "Font Family"
+msgstr "글자 크기"
+
+#, fuzzy
+msgid "Font family for the text display."
+msgstr "창 제목 표시를 위한 글자 색"
+
+#, fuzzy
+msgid "Font size for the text display."
+msgstr "창 제목 표시를 위한 글자 색"
+
+msgid "Text Placement"
+msgstr "글자 배치"
+
+#, fuzzy
+msgid "Selects where to place the text."
+msgstr "창 제목을 어디에 둘지 선택함"
+
+msgid "Centered on screen"
+msgstr "화면 중앙"
+
+#, fuzzy
+msgid "Top of screen"
+msgstr "바다 동물의 종류"
+
+#, fuzzy
+msgid "Bottom of screen"
+msgstr "아래에서 위로"
+
+#, fuzzy
+msgid "Background color for the text display."
+msgstr "창 제목에 대한 배경 색"
+
+#, fuzzy
+msgid "Font color for the text display."
+msgstr "창 제목의 글자 색"
 
 #~ msgid ""
 #~ "All effects are chosen randomly, ignoring the selected effect. If None is "
@@ -3616,9 +3906,6 @@ msgstr "두번째 그라데이션 색."
 #~ msgid "Restrain the mouse to the zoom area"
 #~ msgstr "마우스를 항상 확대 영역 안에 둠"
 
-#~ msgid "Scale the mouse pointer"
-#~ msgstr "마우스 포인터의 크기를 변경함"
-
 #~ msgid "Specific Zoom"
 #~ msgstr "특정 수준으로 확대"
 
@@ -4186,9 +4473,6 @@ msgstr "두번째 그라데이션 색."
 #~ msgid "Put To Next Output"
 #~ msgstr "다음 모니터로 던지기"
 
-#~ msgid "Put pointer uses the center of the window"
-#~ msgstr "포인터 위치를 창 중앙으로 놓고 던지기"
-
 #~ msgid "Put to adjacent viewport"
 #~ msgstr "인접 작업 공간으로 던지기"
 
@@ -4600,9 +4884,6 @@ msgstr "두번째 그라데이션 색."
 #~ msgid "Hide all non Desktop windows during switching"
 #~ msgstr "전환할 때 데스크탑 창이 아닌 모든 창을 숨김"
 
-#~ msgid "Hide non Desktop windows"
-#~ msgstr "데스크탑 창이 아닌 창을 숨김"
-
 #~ msgid "Initiate (All Workspaces)"
 #~ msgstr "시작 (모든 작업 공간)"
 
@@ -4697,9 +4978,6 @@ msgstr "두번째 그라데이션 색."
 #~ msgid "Choose 'Resistance', 'Attraction' or 'Full Mode'."
 #~ msgstr "'저항'이나 '끌어당김', '전체 모드' 중에서 선택함"
 
-#~ msgid "Control"
-#~ msgstr "제어"
-
 #~ msgid "Edge Attraction Distance"
 #~ msgstr "가장자리 끌어당기기 거리"
 
@@ -4717,9 +4995,6 @@ msgstr "두번째 그라데이션 색."
 
 #~ msgid "Meta"
 #~ msgstr "Meta"
-
-#~ msgid "Screen edges"
-#~ msgstr "화면 가장자리"
 
 #~ msgid "Shift"
 #~ msgstr "Shift"
@@ -4838,9 +5113,6 @@ msgstr "두번째 그라데이션 색."
 #~ "selected"
 #~ msgstr "전환할 때 선택되지 않은 창의 투명도 정도(퍼센트)"
 
-#~ msgid "Behavior"
-#~ msgstr "동작"
-
 #~ msgid "Darken background when showing the stack"
 #~ msgstr "선반이 나타날때 배경을 어둡게 함"
 
@@ -4906,9 +5178,6 @@ msgstr "두번째 그라데이션 색."
 
 #~ msgid "Highlight Border Inlay Color"
 #~ msgstr "강조 테두리 무늬 색"
-
-#~ msgid "Highlight Mode"
-#~ msgstr "강조 모드"
 
 #~ msgid "Icon"
 #~ msgstr "아이콘"
@@ -5009,9 +5278,6 @@ msgstr "두번째 그라데이션 색."
 #~ msgid "Selected Window Highlight"
 #~ msgstr "선택된 창 강조"
 
-#~ msgid "Show Rectangle"
-#~ msgstr "사각형 보여주기"
-
 #~ msgid "Show icon next to thumbnail"
 #~ msgstr "미리보기 옆에 아이콘 표시"
 
@@ -5048,14 +5314,8 @@ msgstr "두번째 그라데이션 색."
 #~ msgid "Text"
 #~ msgstr "글자"
 
-#~ msgid "Enable Titles"
-#~ msgstr "제목 활성화"
-
 #~ msgid "Fade In/Out Duration"
 #~ msgstr "페이드 인/아웃 지속 시간"
-
-#~ msgid "Fade In/Out Duration in seconds."
-#~ msgstr "페이드 인/아웃 지속 시간 (초 단위)."
 
 #~ msgid "Generate Mipmaps"
 #~ msgstr "Mipmap 생성"
@@ -5832,9 +6092,6 @@ msgstr "두번째 그라데이션 색."
 #~ msgid "Toggle prompt visible."
 #~ msgstr "프롬프트 표시"
 
-#~ msgid "Directory"
-#~ msgstr "디렉토리"
-
 #~ msgid "Initiate screencasting"
 #~ msgstr "스크린 캐스트 시작"
 
@@ -5852,9 +6109,6 @@ msgstr "두번째 그라데이션 색."
 
 #~ msgid "Dolphin size."
 #~ msgstr "돌고래 크기."
-
-#~ msgid "Enable colors"
-#~ msgstr "색 활성화"
 
 #~ msgid "Fish size"
 #~ msgstr "물고기 크기"
@@ -6014,83 +6268,3 @@ msgstr "두번째 그라데이션 색."
 #~ msgstr ""
 #~ "이 옵션은 전체적인 텍스쳐 모양을 향상시키는 mipmaps를 만들고 들쭉날쭉한 모"
 #~ "서리를 감소시킵니다."
-
-msgid "Workspace Naming"
-msgstr ""
-
-msgid "Allows assigning descriptions to workspaces"
-msgstr ""
-
-msgid "Names"
-msgstr ""
-
-msgid "Workspace Names"
-msgstr ""
-
-#, fuzzy
-msgid "Viewport"
-msgstr "작업 공간 상단"
-
-#, fuzzy
-msgid "Number of viewport to be named"
-msgstr "초점 추적을 사용할 창의 숫자"
-
-msgid "Name"
-msgstr ""
-
-#, fuzzy
-msgid "Viewport name"
-msgstr "작업 공간 좌측"
-
-msgid "Timeout (in s) of the name display"
-msgstr ""
-
-#, fuzzy
-msgid "Time (in s) the name display fades out after being shown."
-msgstr "탭 바꾸기 후 탭 막대가 보여질 시간(초)"
-
-#, fuzzy
-msgid "Text Display"
-msgstr "표시"
-
-#, fuzzy
-msgid "Selects if the text should be displayed in bold font or not."
-msgstr "창 제목을 굵은 글씨로 표시할지를 선택함"
-
-#, fuzzy
-msgid "Font Family"
-msgstr "글자 크기"
-
-#, fuzzy
-msgid "Font family for the text display."
-msgstr "창 제목 표시를 위한 글자 색"
-
-#, fuzzy
-msgid "Font size for the text display."
-msgstr "창 제목 표시를 위한 글자 색"
-
-msgid "Text Placement"
-msgstr "글자 배치"
-
-#, fuzzy
-msgid "Selects where to place the text."
-msgstr "창 제목을 어디에 둘지 선택함"
-
-msgid "Centered on screen"
-msgstr "화면 중앙"
-
-#, fuzzy
-msgid "Top of screen"
-msgstr "바다 동물의 종류"
-
-#, fuzzy
-msgid "Bottom of screen"
-msgstr "아래에서 위로"
-
-#, fuzzy
-msgid "Background color for the text display."
-msgstr "창 제목에 대한 배경 색"
-
-#, fuzzy
-msgid "Font color for the text display."
-msgstr "창 제목의 글자 색"

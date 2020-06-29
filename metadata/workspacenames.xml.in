@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <compiz>
     <plugin name="workspacenames" useBcop="true">
-	<_short>Workspace Naming</_short>
-	<_long>Allows assigning descriptions to workspaces</_long>
+	<short>Workspace Naming</short>
+	<long>Allows assigning descriptions to workspaces</long>
 	<category>Window Management</category>
 	<deps>
 	    <relation type="after">
@@ -11,86 +11,86 @@
 	</deps>
 	<screen>
 	    <group>
-		<_short>Names</_short>
+		<short>Names</short>
 		<subgroup>
-		    <_short>Workspace Names</_short>
+		    <short>Workspace Names</short>
 		    <option name="viewports" type="list">
-			<_short>Viewport</_short>
-			<_long>Number of viewport to be named</_long>
+			<short>Viewport</short>
+			<long>Number of viewport to be named</long>
 			<type>int</type>
 			<min>1</min>
 			<max>50</max>
 		    </option>
 		    <option name="names" type="list">
-			<_short>Name</_short>
-			<_long>Viewport name</_long>
+			<short>Name</short>
+			<long>Viewport name</long>
 			<type>string</type>
 		    </option>
 		</subgroup>
 	    </group>
 	    <group>
-		<_short>Appearance</_short>
+		<short>Appearance</short>
 		<option name="display_time" type="float">
-		    <_short>Display Time</_short>
-		    <_long>Timeout (in s) of the name display</_long>
+		    <short>Display Time</short>
+		    <long>Timeout (in s) of the name display</long>
 		    <min>0.1</min>
 		    <max>5.0</max>
 		    <precision>0.05</precision>
 		    <default>0.5</default>
 		</option>
 		<option name="fade_time" type="float">
-		    <_short>Fade Time</_short>
-		    <_long>Time (in s) the name display fades out after being shown.</_long>
+		    <short>Fade Time</short>
+		    <long>Time (in s) the name display fades out after being shown.</long>
 		    <min>0.0</min>
 		    <max>5.0</max>
 		    <precision>0.05</precision>
 		    <default>0.25</default>
 		</option>
 		<subgroup>
-		    <_short>Text Display</_short>
+		    <short>Text Display</short>
 		    <option name="bold_text" type="bool">
-			<_short>Bold Font</_short>
-			<_long>Selects if the text should be displayed in bold font or not.</_long>
+			<short>Bold Font</short>
+			<long>Selects if the text should be displayed in bold font or not.</long>
 			<default>false</default>
 		    </option>
 		    <option name="text_font_family" type="string">
-			<_short>Font Family</_short>
-			<_long>Font family for the text display.</_long>
+			<short>Font Family</short>
+			<long>Font family for the text display.</long>
 			<hints>family;</hints>
 			<default>Sans</default>
 		    </option>
 		    <option name="text_font_size" type="int">
-			<_short>Font Size</_short>
-			<_long>Font size for the text display.</_long>
+			<short>Font Size</short>
+			<long>Font size for the text display.</long>
 			<default>16</default>
 			<min>6</min>
 			<max>288</max>
 		    </option>
 		    <option name="text_placement" type="int">
-			<_short>Text Placement</_short>
-			<_long>Selects where to place the text.</_long>
+			<short>Text Placement</short>
+			<long>Selects where to place the text.</long>
 			<default>0</default>
 			<min>0</min>
 			<max>2</max>
 			<desc>
 			    <value>0</value>
-			    <_name>Centered on screen</_name>
+			    <name>Centered on screen</name>
 			</desc>
 			<desc>
 			    <value>1</value>
-			    <_name>Top of screen</_name>
+			    <name>Top of screen</name>
 			</desc>
 			<desc>
 			    <value>2</value>
-			    <_name>Bottom of screen</_name>
+			    <name>Bottom of screen</name>
 			</desc>
 		    </option>
 		</subgroup>
 		<subgroup>
-		    <_short>Colors</_short>
+		    <short>Colors</short>
 		    <option name="back_color" type="color">
-			<_short>Background Color</_short>
-			<_long>Background color for the text display.</_long>
+			<short>Background Color</short>
+			<long>Background color for the text display.</long>
 			<default>
 			    <red>0x0000</red>
 			    <green>0x0000</green>
@@ -99,8 +99,8 @@
 			</default>
 		    </option>
 		    <option name="font_color" type="color">
-			<_short>Font Color</_short>
-			<_long>Font color for the text display.</_long>
+			<short>Font Color</short>
+			<long>Font color for the text display.</long>
 			<default>
 			    <red>0xffff</red>
 			    <green>0xffff</green>

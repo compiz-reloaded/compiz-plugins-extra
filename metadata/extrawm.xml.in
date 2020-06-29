@@ -1,37 +1,37 @@
 <?xml version="1.0"?>
 <compiz>
     <plugin name="extrawm" useBcop="true">
-	<_short>Extra WM Actions</_short>
-	<_long>Provides less commonly used WM actions</_long>
+	<short>Extra WM Actions</short>
+	<long>Provides less commonly used WM actions</long>
 	<category>Window Management</category>
 	<display>
 	    <option name="activate" type="action">
-		<_short>Activate Window</_short>
-		<_long>Activate a given window</_long>
+		<short>Activate Window</short>
+		<long>Activate a given window</long>
 	    </option>
 	    <option name="toggle_redirect_key" type="key">
-		<_short>Toggle Redirect</_short>
-		<_long>Toggle window redirect</_long>
+		<short>Toggle Redirect</short>
+		<long>Toggle window redirect</long>
 	    </option>
 	    <option name="toggle_fullscreen_key" type="key">
-		<_short>Toggle Fullscreen</_short>
-		<_long>Toggle window fullscreen</_long>
+		<short>Toggle Fullscreen</short>
+		<long>Toggle window fullscreen</long>
 	    </option>
 	    <option name="toggle_always_on_top_key" type="key">
-		<_short>Toggle Always-On-Top</_short>
-		<_long>Toggle always on top for the active window</_long>
+		<short>Toggle Always-On-Top</short>
+		<long>Toggle always on top for the active window</long>
 	    </option>
 	    <option name="toggle_sticky_key" type="key">
-		<_short>Toggle Sticky</_short>
-		<_long>Toggle window stickyness</_long>
+		<short>Toggle Sticky</short>
+		<long>Toggle window stickyness</long>
 	    </option>
 	    <option name="activate_demands_attention_key" type="key">
-		<_short>Activate Demanding Attention Window</_short>
-		<_long>Activate next window which has the "demands attention" flag set.</_long>
+		<short>Activate Demanding Attention Window</short>
+		<long>Activate next window which has the "demands attention" flag set.</long>
 	    </option>
 	    <option name="to_next_output_key" type="key">
-		<_short>Move Window To Next Output</_short>
-		<_long>Move the selected window to the next output device.</_long>
+		<short>Move Window To Next Output</short>
+		<long>Move the selected window to the next output device.</long>
 	    </option>
 	</display>
     </plugin>

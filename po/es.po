@@ -7,9 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: compiz-plugins-extra\n"
-"Report-Msgid-Bugs-To: https://gitlab.com/compiz/compiz-plugins-"
-"extra/issues\n"
-"POT-Creation-Date: 2017-01-12 18:19+0300\n"
+"Report-Msgid-Bugs-To: https://gitlab.com/compiz/compiz-plugins-extra/issues\n"
+"POT-Creation-Date: 2020-06-23 00:40+0200\n"
 "PO-Revision-Date: 2009-09-23 18:59+0200\n"
 "Last-Translator: Mariano Sanz <masanzsa@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -30,10 +29,12 @@ msgstr ""
 msgid "Bindings"
 msgstr "Combinaciones de teclado"
 
-msgid "Toggle AddHelper"
+#, fuzzy
+msgid "Toggle ADD Helper"
 msgstr "Habilitar o deshabilitar la ayuda a la concentración"
 
-msgid "Use this to enable/disable AddHelper on the fly."
+#, fuzzy
+msgid "Use this to enable/disable ADD Helper on the fly."
 msgstr ""
 "Utilice esto para habilitar o deshabilitar la ayuda a la concentración "
 "rápidamente"
@@ -44,7 +45,8 @@ msgstr "Opciones varias"
 msgid "Window Types"
 msgstr "Tipos de ventana"
 
-msgid "Window types that should be Opacified."
+#, fuzzy
+msgid "Window types that should be affected."
 msgstr "Tipos de ventanas de deberían ser opacadas."
 
 msgid "Enable ADD Helper on start"
@@ -71,6 +73,14 @@ msgstr "Opacidad"
 
 msgid "Opacity of faded windows"
 msgstr "Opacidad de las ventanas semitransparentes"
+
+#, fuzzy
+msgid "Contrast"
+msgstr "Control"
+
+#, fuzzy
+msgid "Contrast of the content of the window."
+msgstr "Poner el puntero en el centro de la ventana"
 
 #, fuzzy
 msgid "Animations Add-On"
@@ -427,6 +437,24 @@ msgstr "Usar Haz"
 msgid "Leaf Spread"
 msgstr "Separación entre las hojas"
 
+msgid "Audible Bell"
+msgstr ""
+
+msgid "Plays an audible sound for the system bell"
+msgstr ""
+
+msgid "Play sound on system bell"
+msgstr ""
+
+msgid "Spatial Sounds"
+msgstr ""
+
+msgid ""
+"Whether to spatially locate sounds or not. If enabled, sounds coming from "
+"the left of the sceen will be heard mostly on the left channel, the ones "
+"coming from the right on the right channel and so on."
+msgstr ""
+
 msgid "Benchmark"
 msgstr "Pruebas"
 
@@ -455,36 +483,6 @@ msgstr "Salida a la pantalla"
 
 msgid "Enable"
 msgstr "Habilitar"
-
-msgid "Vidcap"
-msgstr ""
-
-msgid "Screen Recorder"
-msgstr "Grabador de pantalla"
-
-msgid "Start / Stop"
-msgstr ""
-
-msgid "Start and stop recording"
-msgstr "Comience y pare la grabación"
-
-msgid "Directory"
-msgstr "Directorio"
-
-msgid "Directory to store videos"
-msgstr "Directorio para almacenar videos"
-
-msgid "Command"
-msgstr "comando"
-
-msgid "Command to be used for encoding video. Use a dash (-) for the input file and %f.ext for the output file"
-msgstr "Comando que se utilizará para codificar video. Utilice un guion (-) para el archivo de entrada y% f.ext para el archivo de salida"
-
-msgid "Draw Status Indicator"
-msgstr "Dibujar indicador de estado"
-
-msgid "Draw color coded status dot"
-msgstr "Dibujar un punto de estado con código de color"
 
 msgid "Display FPS on screen"
 msgstr "Mostrar la cantidad de cuadros por segundo en la pantalla"
@@ -996,8 +994,8 @@ msgid ""
 "multiple times in a row."
 msgstr ""
 
-msgid "Corners / Edges"
-msgstr ""
+msgid "Behavior"
+msgstr "Comportamiento"
 
 #, fuzzy
 msgid "Resize Actions"
@@ -1006,6 +1004,10 @@ msgstr "Reflejos"
 #, fuzzy
 msgid "Window resize action"
 msgstr "Fuente de los títulos de las ventanas"
+
+#, fuzzy
+msgid "Top Left Corner"
+msgstr "Hacia los bordes"
 
 #, fuzzy
 msgid "Action to be performed when window is dropped on the top left corner"
@@ -1034,10 +1036,6 @@ msgstr "Pantalla completa"
 #, fuzzy
 msgid "Right Half"
 msgstr "Derecha"
-
-#, fuzzy
-msgid "Top Left Corner"
-msgstr "Hacia los bordes"
 
 msgid "Top Half"
 msgstr ""
@@ -1112,6 +1110,16 @@ msgstr ""
 "Cantidad de pixeles desde el borde inferior donde la ventana entrará en "
 "reposo"
 
+#, fuzzy
+msgid "Select output with mouse pointer"
+msgstr "Escalar el puntero del ratón"
+
+msgid ""
+"In the case of multiple outputs, chooses the output containing the mouse "
+"pointer. If this option is not checked, the output is choosen based on the "
+"center of the window."
+msgstr ""
+
 msgid "Draw Indicator"
 msgstr ""
 
@@ -1126,6 +1134,10 @@ msgstr "Duración de la animación"
 #, fuzzy
 msgid "Preview animation duration (in ms)."
 msgstr "Duración de la animación"
+
+#, fuzzy
+msgid "Outline Thickness"
+msgstr "Espesor"
 
 msgid "Outline Color"
 msgstr "Color de línea externa"
@@ -1613,6 +1625,58 @@ msgstr "Resplandor rectangular"
 msgid "Glow ring"
 msgstr "Resplandor en forma de anillo"
 
+#, fuzzy
+msgid "Highlight Content"
+msgstr "Color para destacar una ventana"
+
+msgid ""
+"Listens for screen reader events and renders highlight for the currently "
+"spoken word."
+msgstr ""
+
+msgid "Toggle Highlight of Content."
+msgstr ""
+
+#, fuzzy
+msgid "Enable on startup"
+msgstr "Habilitar Ayudante al iniciar"
+
+#, fuzzy
+msgid "Enables this plugin when it is loaded."
+msgstr "Habilita Ayudante cuando se carga por primera vez"
+
+msgid "Highlight Speech synthesis"
+msgstr ""
+
+msgid "Highlight Speech synthesis' current word."
+msgstr ""
+
+#, fuzzy
+msgid "Speech Options"
+msgstr "Selección"
+
+#, fuzzy
+msgid "Rectangle Border Thickness"
+msgstr "Tamaño de borde del título"
+
+msgid "How thick the border of the rectangle should be, in pixels."
+msgstr ""
+
+#, fuzzy
+msgid "Rectangle Color"
+msgstr "Resplandor rectangular"
+
+#, fuzzy
+msgid "Color of the borders of the rectangle."
+msgstr "Color de la cima del cubo"
+
+#, fuzzy
+msgid "Show only border of rectangle"
+msgstr "Rectangular"
+
+msgid "Whether we draw a filled rectangle or just its border."
+msgstr ""
+
 msgid "Motion blur"
 msgstr "Desenfoque de movimiento"
 
@@ -2001,8 +2065,44 @@ msgstr "Incrementar la visibilidad del puntero del ratón"
 msgid "Toggle the mouse pointer trail."
 msgstr "Alternar el rastro del puntero del ratón."
 
+#, fuzzy
+msgid "Particles"
+msgstr "Tamaño de las partículas."
+
+#, fuzzy
+msgid "Enable particles."
+msgstr "Activar títulos"
+
+msgid "Crosshair"
+msgstr ""
+
+#, fuzzy
+msgid "Enable crosshair."
+msgstr "Habilitar colores"
+
 msgid "Particle Options"
 msgstr "Opciones de las partículas"
+
+#, fuzzy
+msgid "Rotation speed"
+msgstr "Velocidad de la animación"
+
+#, fuzzy
+msgid "Rotation speed."
+msgstr "Velocidad de la animación"
+
+msgid "Radius"
+msgstr "Radio"
+
+#, fuzzy
+msgid "Ring radius"
+msgstr "Radio del borde"
+
+msgid "Emitters"
+msgstr "Emisores"
+
+msgid "Number of particle emitters."
+msgstr "Número de emisores de partículas."
 
 msgid "Number Of Particles"
 msgstr "Número de partículas"
@@ -2058,25 +2158,26 @@ msgstr ""
 "\"Fuego Místico\"."
 
 #, fuzzy
-msgid "Rotation speed"
-msgstr "Velocidad de la animación"
+msgid "Crosshair Options"
+msgstr "Opciones de las partículas"
 
-#, fuzzy
-msgid "Rotation speed."
-msgstr "Velocidad de la animación"
+msgid "Crosshair thickness"
+msgstr ""
 
-msgid "Radius"
-msgstr "Radio"
+msgid "How thick mouse crosshair should be, in pixels."
+msgstr ""
 
-#, fuzzy
-msgid "Ring radius"
-msgstr "Radio del borde"
+msgid "Crosshair empty radius"
+msgstr ""
 
-msgid "Emitters"
-msgstr "Emisores"
+msgid "Radius of the disk around the cursor which is not covered by crosshair."
+msgstr ""
 
-msgid "Number of particle emitters."
-msgstr "Número de emisores de partículas."
+msgid "Crosshair Color"
+msgstr ""
+
+msgid "Crosshair color."
+msgstr ""
 
 msgid "Login/Logout"
 msgstr "Iniciar/cerrar sesión"
@@ -2541,11 +2642,89 @@ msgstr "Bisel Inferior Derecho"
 msgid "Bevel bottom right corner"
 msgstr "Bisel esquina inferior derecha"
 
+msgid "Vidcap"
+msgstr ""
+
+msgid "Screen Recorder"
+msgstr "Grabador de pantalla"
+
+msgid "Start / Stop"
+msgstr ""
+
+msgid "Start and stop recording"
+msgstr "Comience y pare la grabación"
+
+msgid "Directory"
+msgstr "Directorio"
+
+msgid "Directory to store videos"
+msgstr "Directorio para almacenar videos"
+
+msgid "Command"
+msgstr "comando"
+
+msgid ""
+"Command to be used for encoding video. Use a dash (-) for the input file and "
+"%f.ext for the output file"
+msgstr ""
+"Comando que se utilizará para codificar video. Utilice un guion (-) para el "
+"archivo de entrada y% f.ext para el archivo de salida"
+
+msgid "Draw Status Indicator"
+msgstr "Dibujar indicador de estado"
+
+msgid "Draw color coded status dot"
+msgstr "Dibujar un punto de estado con código de color"
+
 msgid "Wallpaper"
 msgstr "Fondo de Pantalla"
 
 msgid "Draw the desktop wallpaper"
 msgstr "Dibuje el papel tapiz del escritorio"
+
+msgid "Recursive directory search"
+msgstr ""
+
+msgid "Search in all sub-directories."
+msgstr ""
+
+msgid "Cycle"
+msgstr ""
+
+msgid "Automatically cycle through wallpapers."
+msgstr ""
+
+#, fuzzy
+msgid "Cycle timeout"
+msgstr "Tiempo de fundición"
+
+msgid "Time before cycling to next wallpaper (in minutes)."
+msgstr ""
+
+#, fuzzy
+msgid "Fade time"
+msgstr "Tiempo de fundición"
+
+#, fuzzy
+msgid "Fade transition time (in seconds)."
+msgstr "Duración (en seg) del desvanecimiento"
+
+#, fuzzy
+msgid "Randomize"
+msgstr "Aleatorio"
+
+#, fuzzy
+msgid "Randomly order wallpapers."
+msgstr "Fuego de colores aleatorios"
+
+#, fuzzy
+msgid "Hide other desktop background windows"
+msgstr "Esconder las ventanas que no sean del escritorio"
+
+msgid ""
+"Don't draw desktop backgrounds rendered by other applications. Mouse and "
+"keyboard input works as if the background were drawn."
+msgstr ""
 
 msgid "Backgrounds"
 msgstr "Fondos"
@@ -2603,6 +2782,85 @@ msgstr "Color 2"
 
 msgid "Second gradient color."
 msgstr "Segundo color de gradiente"
+
+msgid "Workspace Naming"
+msgstr ""
+
+msgid "Allows assigning descriptions to workspaces"
+msgstr ""
+
+msgid "Names"
+msgstr ""
+
+msgid "Workspace Names"
+msgstr ""
+
+#, fuzzy
+msgid "Viewport"
+msgstr "Escritorio Superior"
+
+#, fuzzy
+msgid "Number of viewport to be named"
+msgstr "Número de ventanas a memorizar"
+
+msgid "Name"
+msgstr ""
+
+#, fuzzy
+msgid "Viewport name"
+msgstr "Escritorio Izquierdo"
+
+msgid "Timeout (in s) of the name display"
+msgstr ""
+
+msgid "Time (in s) the name display fades out after being shown."
+msgstr ""
+
+#, fuzzy
+msgid "Text Display"
+msgstr "Fuente de los títulos de las ventanas"
+
+#, fuzzy
+msgid "Selects if the text should be displayed in bold font or not."
+msgstr "Seleccionar sí el título de la ventana debe estar en Negrita o no."
+
+#, fuzzy
+msgid "Font Family"
+msgstr "Tamaño de la fuente"
+
+#, fuzzy
+msgid "Font family for the text display."
+msgstr "Color del título de la ventana"
+
+#, fuzzy
+msgid "Font size for the text display."
+msgstr "Color del título de la ventana"
+
+msgid "Text Placement"
+msgstr "Posición del texto"
+
+#, fuzzy
+msgid "Selects where to place the text."
+msgstr "Seleccionar donde desea posicionar el título de la ventana."
+
+msgid "Centered on screen"
+msgstr "Centrar en la pantalla"
+
+#, fuzzy
+msgid "Top of screen"
+msgstr "Tipo de criaturas marinas."
+
+#, fuzzy
+msgid "Bottom of screen"
+msgstr "De abajo a arriba"
+
+#, fuzzy
+msgid "Background color for the text display."
+msgstr "El color del título de la ventana en la barra de fichas"
+
+#, fuzzy
+msgid "Font color for the text display."
+msgstr "El color del título de la ventana en la barra de fichas"
 
 #~ msgid ""
 #~ "All effects are chosen randomly, ignoring the selected effect. If None is "
@@ -3970,9 +4228,6 @@ msgstr "Segundo color de gradiente"
 #~ msgid "Restrain the mouse to the zoom area"
 #~ msgstr "Restringir el ratón al aŕea con zoom"
 
-#~ msgid "Scale the mouse pointer"
-#~ msgstr "Escalar el puntero del ratón"
-
 #~ msgid "Specific Zoom"
 #~ msgstr "Zoom específico"
 
@@ -4534,9 +4789,6 @@ msgstr "Segundo color de gradiente"
 #~ msgid "Put To Next Output"
 #~ msgstr "Biselar la esquina superior izquierda"
 
-#~ msgid "Put pointer uses the center of the window"
-#~ msgstr "Poner el puntero en el centro de la ventana"
-
 #~ msgid "Put to adjacent viewport"
 #~ msgstr "Poner en el escritorio adyacente"
 
@@ -4996,9 +5248,6 @@ msgstr "Segundo color de gradiente"
 #~ msgid "Hide all non Desktop windows during switching"
 #~ msgstr "Esconder las ventanas que sean del escritorio al cambiar"
 
-#~ msgid "Hide non Desktop windows"
-#~ msgstr "Esconder las ventanas que no sean del escritorio"
-
 #~ msgid "Initiate (All Workspaces)"
 #~ msgstr "Iniciar (en todos los escritorios)"
 
@@ -5101,9 +5350,6 @@ msgstr "Segundo color de gradiente"
 
 #~ msgid "Choose 'Resistance', 'Attraction' or 'Full Mode'."
 #~ msgstr "Elegir entre 'Resistencia', 'Atracción' o 'Modo completo'."
-
-#~ msgid "Control"
-#~ msgstr "Control"
 
 #~ msgid "Edge Attraction Distance"
 #~ msgstr "Distancia de atracción a los bordes"
@@ -5247,9 +5493,6 @@ msgstr "Segundo color de gradiente"
 #~ "Nivel de opacidad (%) para las ventanas que no están seleccionadas en el "
 #~ "cambiador"
 
-#~ msgid "Behavior"
-#~ msgstr "Comportamiento"
-
 #, fuzzy
 #~ msgid "Darken background when showing the stack"
 #~ msgstr "Oscurecer fondo cuando se muestra el anillo"
@@ -5327,10 +5570,6 @@ msgstr "Segundo color de gradiente"
 #~ msgstr "Color para destacar una ventana"
 
 #~ msgid "Highlight Border Inlay Color"
-#~ msgstr "Color para destacar una ventana"
-
-#, fuzzy
-#~ msgid "Highlight Mode"
 #~ msgstr "Color para destacar una ventana"
 
 #, fuzzy
@@ -5447,10 +5686,6 @@ msgstr "Segundo color de gradiente"
 #~ msgid "Selected Window Highlight"
 #~ msgstr "Ancho de las ventanas"
 
-#, fuzzy
-#~ msgid "Show Rectangle"
-#~ msgstr "Rectangular"
-
 #~ msgid "Show icon next to thumbnail"
 #~ msgstr "Mostrar ícono junto a la miniatura"
 
@@ -5491,14 +5726,8 @@ msgstr "Segundo color de gradiente"
 #~ msgid "Text"
 #~ msgstr "Textos"
 
-#~ msgid "Enable Titles"
-#~ msgstr "Activar títulos"
-
 #~ msgid "Fade In/Out Duration"
 #~ msgstr "Duración del tiempo de fundición"
-
-#~ msgid "Fade In/Out Duration in seconds."
-#~ msgstr "Duración (en seg) del desvanecimiento"
 
 #~ msgid "Generate Mipmaps"
 #~ msgstr "Generar Mipmaps"
@@ -6307,9 +6536,6 @@ msgstr "Segundo color de gradiente"
 #~ msgid "Dolphin size."
 #~ msgstr "Tamaño del delfín."
 
-#~ msgid "Enable colors"
-#~ msgstr "Habilitar colores"
-
 #~ msgid "Fish size"
 #~ msgstr "Tamaño del pez"
 
@@ -6479,83 +6705,3 @@ msgstr "Segundo color de gradiente"
 #~ msgstr ""
 #~ "Usar el modelo de resortes en la barra de fichas cuando la ventana es "
 #~ "movida"
-
-msgid "Workspace Naming"
-msgstr ""
-
-msgid "Allows assigning descriptions to workspaces"
-msgstr ""
-
-msgid "Names"
-msgstr ""
-
-msgid "Workspace Names"
-msgstr ""
-
-#, fuzzy
-msgid "Viewport"
-msgstr "Escritorio Superior"
-
-#, fuzzy
-msgid "Number of viewport to be named"
-msgstr "Número de ventanas a memorizar"
-
-msgid "Name"
-msgstr ""
-
-#, fuzzy
-msgid "Viewport name"
-msgstr "Escritorio Izquierdo"
-
-msgid "Timeout (in s) of the name display"
-msgstr ""
-
-#, fuzzy
-msgid "Time (in s) the name display fades out after being shown."
-msgstr ""
-
-#, fuzzy
-msgid "Text Display"
-msgstr "Fuente de los títulos de las ventanas"
-
-#, fuzzy
-msgid "Selects if the text should be displayed in bold font or not."
-msgstr "Seleccionar sí el título de la ventana debe estar en Negrita o no."
-
-#, fuzzy
-msgid "Font Family"
-msgstr "Tamaño de la fuente"
-
-#, fuzzy
-msgid "Font family for the text display."
-msgstr "Color del título de la ventana"
-
-#, fuzzy
-msgid "Font size for the text display."
-msgstr "Color del título de la ventana"
-
-msgid "Text Placement"
-msgstr "Posición del texto"
-
-#, fuzzy
-msgid "Selects where to place the text."
-msgstr "Seleccionar donde desea posicionar el título de la ventana."
-
-msgid "Centered on screen"
-msgstr "Centrar en la pantalla"
-
-#, fuzzy
-msgid "Top of screen"
-msgstr "Tipo de criaturas marinas."
-
-#, fuzzy
-msgid "Bottom of screen"
-msgstr "De abajo a arriba"
-
-#, fuzzy
-msgid "Background color for the text display."
-msgstr "El color del título de la ventana en la barra de fichas"
-
-#, fuzzy
-msgid "Font color for the text display."
-msgstr "El color del título de la ventana en la barra de fichas"

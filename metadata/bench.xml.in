@@ -1,54 +1,54 @@
 <?xml version="1.0"?>
 <compiz>
   <plugin name="bench" useBcop="true">
-    <_short>Benchmark</_short>
-    <_long>A simple benchmark plugin</_long>
+    <short>Benchmark</short>
+    <long>A simple benchmark plugin</long>
 	<category>Extras</category>
     <display>
       <group>
-        <_short>Main</_short>
+        <short>Main</short>
         <option name="initiate_key" type="key">
-          <_short>Initiate</_short>
-          <_long>Start benchmark</_long>
+          <short>Initiate</short>
+          <long>Start benchmark</long>
 	  <default>&lt;Super&gt;F12</default>
         </option>
         <option name="disable_limiter" type="bool">
-          <_short>Disable limiter</_short>
-          <_long>Disable Compiz integrated FPS limiter</_long>
+          <short>Disable limiter</short>
+          <long>Disable Compiz integrated FPS limiter</long>
           <default>true</default>
         </option>
         <subgroup>
-          <_short>Screen Output</_short>
+          <short>Screen Output</short>
           <option name="output_screen" type="bool">
-            <_short>Enable</_short>
-            <_long>Display FPS on screen</_long>
+            <short>Enable</short>
+            <long>Display FPS on screen</long>
             <default>true</default>
           </option>
           <option name="position_x" type="int">
-            <_short>X position</_short>
-            <_long>X Position of benchmark window</_long>
+            <short>X position</short>
+            <long>X Position of benchmark window</long>
             <default>0</default>
             <min>0</min>
             <max>4096</max>
           </option>
           <option name="position_y" type="int">
-            <_short>Y position</_short>
-            <_long>Y Position of benchmark window</_long>
+            <short>Y position</short>
+            <long>Y Position of benchmark window</long>
             <default>0</default>
             <min>0</min>
             <max>4096</max>
           </option>
         </subgroup>
         <subgroup>
-          <_short>Console Output</_short>
+          <short>Console Output</short>
           <option name="output_console" type="bool">
-            <_short>Enable</_short>
-            <_long>Print FPS to console</_long>
+            <short>Enable</short>
+            <long>Print FPS to console</long>
             <default>false</default>
           </option>
           <option name="console_update_time" type="int">
-            <_short>Update time</_short>
-            <_long>Console output update time</_long>
+            <short>Update time</short>
+            <long>Console output update time</long>
             <default>5</default>
             <min>1</min>
             <max>60</max>

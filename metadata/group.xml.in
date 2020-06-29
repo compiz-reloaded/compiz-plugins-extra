@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <compiz>
   <plugin name="group" useBcop="true">
-    <_short>Group and Tab Windows</_short>
-    <_long>With this plugin you can group and tab windows</_long>
+    <short>Group and Tab Windows</short>
+    <long>With this plugin you can group and tab windows</long>
 	<category>Window Management</category>
 	<deps>
 		<relation type="after">
@@ -13,170 +13,170 @@
 	</deps>
     <display>
       <group>
-        <_short>Selection</_short>
+        <short>Selection</short>
         <subgroup>
-          <_short>Key bindings</_short>
+          <short>Key bindings</short>
           <option name="select_button" type="button">
-            <_short>Select</_short>
-            <_long>The key for starting selecting windows.</_long>
+            <short>Select</short>
+            <long>The key for starting selecting windows.</long>
           </option>
           <option name="select_single_key" type="key">
-            <_short>Select Single Window</_short>
-            <_long>The key for selecting the current window.</_long>
+            <short>Select Single Window</short>
+            <long>The key for selecting the current window.</long>
             <default>&lt;Super&gt;s</default>
           </option>
         </subgroup>
       </group>
       <group>
-        <_short>Grouping</_short>
+        <short>Grouping</short>
         <subgroup>
-          <_short>Key bindings</_short>
+          <short>Key bindings</short>
           <option name="group_key" type="key">
-            <_short>Group Windows</_short>
-            <_long>The key for grouping windows.</_long>
+            <short>Group Windows</short>
+            <long>The key for grouping windows.</long>
             <default>&lt;Super&gt;g</default>
           </option>
           <option name="ungroup_key" type="key">
-            <_short>Ungroup Windows</_short>
-            <_long>The key for ungrouping the current group.</_long>
+            <short>Ungroup Windows</short>
+            <long>The key for ungrouping the current group.</long>
             <default>&lt;Super&gt;u</default>
           </option>
           <option name="remove_key" type="key">
-            <_short>Remove Group Window</_short>
-            <_long>The key for removing the selected window from its group.</_long>
+            <short>Remove Group Window</short>
+            <long>The key for removing the selected window from its group.</long>
             <default>&lt;Super&gt;r</default>
           </option>
           <option name="close_key" type="key">
-            <_short>Close Group</_short>
-            <_long>The key for closing all windows in the group.</_long>
+            <short>Close Group</short>
+            <long>The key for closing all windows in the group.</long>
             <default>&lt;Super&gt;c</default>
           </option>
           <option name="ignore_key" type="key">
-            <_short>Ignore Group</_short>
-            <_long>The key for ignoring the group. If this key is pressed, you can do actions for a single window in the group only.</_long>
+            <short>Ignore Group</short>
+            <long>The key for ignoring the group. If this key is pressed, you can do actions for a single window in the group only.</long>
             <default>&lt;Super&gt;x</default>
           </option>
         </subgroup>
       </group>
       <group>
-        <_short>Tabbing</_short>
+        <short>Tabbing</short>
         <subgroup>
-          <_short>Key bindings</_short>
+          <short>Key bindings</short>
           <option name="tabmode_key" type="key">
-            <_short>Tab Group</_short>
-            <_long>The key for toggling the tab mode for the current group.</_long>
+            <short>Tab Group</short>
+            <long>The key for toggling the tab mode for the current group.</long>
             <default>&lt;Super&gt;t</default>
           </option>
           <option name="change_tab_left_key" type="key">
-            <_short>Change Tab Left</_short>
-            <_long>The key for switching to the tab left of the current one.</_long>
+            <short>Change Tab Left</short>
+            <long>The key for switching to the tab left of the current one.</long>
             <default>&lt;Super&gt;Left</default>
           </option>
           <option name="change_tab_right_key" type="key">
-            <_short>Change Tab Right</_short>
-            <_long>The key for switching to the tab right of the current one.</_long>
+            <short>Change Tab Right</short>
+            <long>The key for switching to the tab right of the current one.</long>
             <default>&lt;Super&gt;Right</default>
           </option>
         </subgroup>
       </group>
       <group>
-        <_short>Glow</_short>
+        <short>Glow</short>
         <subgroup>
-          <_short>Key bindings</_short>
+          <short>Key bindings</short>
           <option name="change_color_key" type="key">
-            <_short>Glow Color Change</_short>
-            <_long>If you don't like the current glow color, you can change it with this key.</_long>
+            <short>Glow Color Change</short>
+            <long>If you don't like the current glow color, you can change it with this key.</long>
           </option>
         </subgroup>
       </group>
     </display>
     <screen>
       <group>
-        <_short>General</_short>
+        <short>General</short>
         <option name="move_all" type="bool">
-          <_short>Move every window in the group</_short>
-          <_long>If one window in the group is moved, all other group windows are moved as well.</_long>
+          <short>Move every window in the group</short>
+          <long>If one window in the group is moved, all other group windows are moved as well.</long>
           <default>true</default>
         </option>
         <option name="resize_all" type="bool">
-          <_short>Resize every window in the group</_short>
-          <_long>If one window in the group is resized, all other group windows are resized as well.</_long>
+          <short>Resize every window in the group</short>
+          <long>If one window in the group is resized, all other group windows are resized as well.</long>
           <default>false</default>
         </option>
         <option name="raise_all" type="bool">
-          <_short>Raise every window in the group</_short>
-          <_long>If one window in the group is activated, all other group windows are raised as well.</_long>
+          <short>Raise every window in the group</short>
+          <long>If one window in the group is activated, all other group windows are raised as well.</long>
           <default>true</default>
         </option>
         <option name="maximize_unmaximize_all" type="bool">
-          <_short>Maximize/unmaximize with group</_short>
-          <_long>If one window in the group is (un)maximized, all other group windows are (un)maximized as well.</_long>
+          <short>Maximize/unmaximize with group</short>
+          <long>If one window in the group is (un)maximized, all other group windows are (un)maximized as well.</long>
           <default>false</default>
         </option>
         <option name="minimize_all" type="bool">
-          <_short>Minimize with group</_short>
-          <_long>If one window in the group is (un)minimized, all other group windows are (un)minimized as well.</_long>
+          <short>Minimize with group</short>
+          <long>If one window in the group is (un)minimized, all other group windows are (un)minimized as well.</long>
           <default>true</default>
         </option>
         <option name="shade_all" type="bool">
-          <_short>Shade with group</_short>
-          <_long>If one window in the group is (un)shaded, all other group windows are (un)shaded as well.</_long>
+          <short>Shade with group</short>
+          <long>If one window in the group is (un)shaded, all other group windows are (un)shaded as well.</long>
           <default>false</default>
         </option>
         <option name="auto_group" type="bool">
-          <_short>Group the windows after selection</_short>
-          <_long>If you have selected some windows, this automatically groups them (Doesn't work with selection mode 'Normal').</_long>
+          <short>Group the windows after selection</short>
+          <long>If you have selected some windows, this automatically groups them (Doesn't work with selection mode 'Normal').</long>
           <default>false</default>
         </option>
         <option name="auto_ungroup" type="bool">
-          <_short>Ungroup the windows if only one window is left</_short>
-          <_long>If there is only 1 window left in the group, it will be ungrouped.</_long>
+          <short>Ungroup the windows if only one window is left</short>
+          <long>If there is only 1 window left in the group, it will be ungrouped.</long>
           <default>true</default>
         </option>
         <option name="window_match" type="match">
-          <_short>Group Window Match</_short>
-          <_long>Windows that should be allowed to be grouped</_long>
+          <short>Group Window Match</short>
+          <long>Windows that should be allowed to be grouped</long>
           <default>Toolbar | Utility | Dialog | Normal | Unknown</default>
         </option>
       </group>
       <group>
-        <_short>Selection</_short>
+        <short>Selection</short>
         <subgroup>
-          <_short>Options</_short>
+          <short>Options</short>
           <option name="select_opacity" type="int">
-            <_short>Opacity</_short>
-            <_long>Opacity of selected windows</_long>
+            <short>Opacity</short>
+            <long>Opacity of selected windows</long>
             <default>80</default>
             <min>0</min>
             <max>100</max>
           </option>
           <option name="select_saturation" type="int">
-            <_short>Saturation</_short>
-            <_long>Saturation of selected windows</_long>
+            <short>Saturation</short>
+            <long>Saturation of selected windows</long>
             <default>20</default>
             <min>0</min>
             <max>100</max>
           </option>
           <option name="select_brightness" type="int">
-            <_short>Brightness</_short>
-            <_long>Brightness of selected windows</_long>
+            <short>Brightness</short>
+            <long>Brightness of selected windows</long>
             <default>70</default>
             <min>0</min>
             <max>100</max>
           </option>
           <option name="select_precision" type="int">
-            <_short>Precision</_short>
-            <_long>Precision of the selection (percentage of the visible window area which must be selected for the selection to be recognized).</_long>
+            <short>Precision</short>
+            <long>Precision of the selection (percentage of the visible window area which must be selected for the selection to be recognized).</long>
             <default>25</default>
             <min>1</min>
             <max>100</max>
           </option>
         </subgroup>
         <subgroup>
-          <_short>Colors</_short>
+          <short>Colors</short>
           <option name="fill_color" type="color">
-            <_short>Selection Color</_short>
-            <_long>Fill color of the selection rectangle</_long>
+            <short>Selection Color</short>
+            <long>Fill color of the selection rectangle</long>
             <default>
               <red>0x0000</red>
               <green>0x0000</green>
@@ -185,8 +185,8 @@
             </default>
           </option>
           <option name="line_color" type="color">
-            <_short>Line Color</_short>
-            <_long>Line color of the selection rectangle</_long>
+            <short>Line Color</short>
+            <long>Line color of the selection rectangle</long>
             <default>
               <red>0x0000</red>
               <green>0x0000</green>
@@ -197,27 +197,27 @@
         </subgroup>
       </group>
       <group>
-        <_short>Tabbing</_short>
+        <short>Tabbing</short>
         <subgroup>
-          <_short>Misc. Options</_short>
+          <short>Misc. Options</short>
           <option name="mipmaps" type="bool">
-            <_short>Create mipmaps for thumbnails</_short>
-            <_long>Create mipmaps for thumbnails in the tab bar</_long>
+            <short>Create mipmaps for thumbnails</short>
+            <long>Create mipmaps for thumbnails in the tab bar</long>
             <default>false</default>
           </option>
           <option name="untab_on_close" type="bool">
-            <_short>Untab when closing top tab</_short>
-            <_long>Untab the group when closing the top tab window instead of changing tab</_long>
+            <short>Untab when closing top tab</short>
+            <long>Untab the group when closing the top tab window instead of changing tab</long>
             <default>false</default>
           </option>
           <option name="autotab_create" type="bool">
-            <_short>Autotab windows on creation</_short>
-            <_long>Autotab windows with themselves on window creation</_long>
+            <short>Autotab windows on creation</short>
+            <long>Autotab windows with themselves on window creation</long>
             <default>false</default>
           </option>
           <option name="tabbar_show_delay" type="float">
-            <_short>Tab Bar Show Delay</_short>
-            <_long>Time (in s) before the tab bar is shown after hovering the title bar</_long>
+            <short>Tab Bar Show Delay</short>
+            <long>Time (in s) before the tab bar is shown after hovering the title bar</long>
             <default>0.4</default>
             <min>0.0</min>
             <max>10.0</max>
@@ -225,66 +225,66 @@
           </option>
         </subgroup>
         <subgroup>
-          <_short>Animation Options</_short>
+          <short>Animation Options</short>
           <option name="tabbing_speed" type="float">
-            <_short>Tabbing Speed</_short>
-            <_long>Tabbing speed</_long>
+            <short>Tabbing Speed</short>
+            <long>Tabbing speed</long>
             <default>1.2</default>
             <min>0.1</min>
             <max>50.0</max>
             <precision>0.1</precision>
           </option>
           <option name="tabbing_timestep" type="float">
-            <_short>Tabbing Timestep</_short>
-            <_long>Tabbing timestep</_long>
+            <short>Tabbing Timestep</short>
+            <long>Tabbing timestep</long>
             <default>1.5</default>
             <min>0.1</min>
             <max>50.0</max>
             <precision>0.1</precision>
           </option>
           <option name="fade_time" type="float">
-            <_short>Fade time for tab bar animations</_short>
-            <_long>Duration (in s) of the tab bar fading animation when showing/hiding it</_long>
+            <short>Fade time for tab bar animations</short>
+            <long>Duration (in s) of the tab bar fading animation when showing/hiding it</long>
             <default>0.2</default>
             <min>0.0</min>
             <max>5.0</max>
             <precision>0.1</precision>
           </option>
 		  <option name="pulse_time" type="float">
-            <_short>Time for tab bar pulse animation</_short>
-            <_long>Duration (in s) of the tab bar pulse animation</_long>
+            <short>Time for tab bar pulse animation</short>
+            <long>Duration (in s) of the tab bar pulse animation</long>
             <default>0.6</default>
             <min>0.0</min>
             <max>5.0</max>
             <precision>0.1</precision>
           </option>
 		  <option name="reflex_time" type="float">
-            <_short>Time for tab bar reflex animation</_short>
-            <_long>Duration (in s) of the tab bar reflex animation</_long>
+            <short>Time for tab bar reflex animation</short>
+            <long>Duration (in s) of the tab bar reflex animation</long>
             <default>0.5</default>
             <min>0.0</min>
             <max>5.0</max>
             <precision>0.1</precision>
           </option>
           <option name="fade_text_time" type="float">
-            <_short>Fade time for text animations</_short>
-            <_long>Duration (in s) of the text fading animation when showing/hiding it</_long>
+            <short>Fade time for text animations</short>
+            <long>Duration (in s) of the text fading animation when showing/hiding it</long>
             <default>0.25</default>
             <min>0.0</min>
             <max>5.0</max>
             <precision>0.05</precision>
           </option>
           <option name="visibility_time" type="float">
-            <_short>Tab bar visibility time after tab change</_short>
-            <_long>Time (in s) the tab bar is visibly after a tab change</_long>
+            <short>Tab bar visibility time after tab change</short>
+            <long>Time (in s) the tab bar is visibly after a tab change</long>
             <default>0.5</default>
             <min>0.0</min>
             <max>10.0</max>
             <precision>0.05</precision>
           </option>
           <option name="change_animation_time" type="float">
-            <_short>Change tab animation duration</_short>
-            <_long>Duration (in s) of the animation that happens when changing tabs</_long>
+            <short>Change tab animation duration</short>
+            <long>Duration (in s) of the animation that happens when changing tabs</long>
             <default>0.5</default>
             <min>0.0</min>
             <max>5.0</max>
@@ -292,43 +292,43 @@
           </option>
         </subgroup>
         <subgroup>
-          <_short>Appearance</_short>
+          <short>Appearance</short>
           <option name="bar_animations" type="bool">
-            <_short>Use tab bar animations</_short>
-            <_long>Play animations on the tab bar e.g. on fade in.</_long>
+            <short>Use tab bar animations</short>
+            <long>Play animations on the tab bar e.g. on fade in.</long>
             <default>true</default>
           </option>
           <option name="thumb_size" type="int">
-            <_short>Thumb Size</_short>
-            <_long>The size of the window thumbs in the task bar</_long>
+            <short>Thumb Size</short>
+            <long>The size of the window thumbs in the task bar</long>
             <default>96</default>
             <min>16</min>
             <max>768</max>
           </option>
           <option name="thumb_space" type="int">
-            <_short>Space</_short>
-            <_long>The space between the thumbs</_long>
+            <short>Space</short>
+            <long>The space between the thumbs</long>
             <default>5</default>
             <min>1</min>
             <max>60</max>
           </option>
           <option name="border_radius" type="int">
-            <_short>Border Radius</_short>
-            <_long>The radius for the tab bar edges</_long>
+            <short>Border Radius</short>
+            <long>The radius for the tab bar edges</long>
             <default>10</default>
             <min>1</min>
             <max>60</max>
           </option>
           <option name="border_width" type="int">
-            <_short>Border Width</_short>
-            <_long>The width of the tab bar outline</_long>
+            <short>Border Width</short>
+            <long>The width of the tab bar outline</long>
             <default>1</default>
             <min>1</min>
             <max>15</max>
           </option>
           <option name="tab_base_color" type="color">
-            <_short>Tab Base Color</_short>
-            <_long>Fill color of the tab bar</_long>
+            <short>Tab Base Color</short>
+            <long>Fill color of the tab bar</long>
             <default>
               <red>0x0000</red>
               <green>0x0000</green>
@@ -337,8 +337,8 @@
             </default>
           </option>
           <option name="tab_border_color" type="color">
-            <_short>Tab Border Color</_short>
-            <_long>Border color of the tab bar</_long>
+            <short>Tab Border Color</short>
+            <long>Border color of the tab bar</long>
             <default>
               <red>0x0000</red>
               <green>0x0000</green>
@@ -347,8 +347,8 @@
             </default>
           </option>
           <option name="tab_highlight_color" type="color">
-            <_short>Tab Highlight Color</_short>
-            <_long>Fill color of the tab bar</_long>
+            <short>Tab Highlight Color</short>
+            <long>Fill color of the tab bar</long>
             <default>
               <red>0xffff</red>
               <green>0xffff</green>
@@ -357,51 +357,51 @@
             </default>
           </option>
           <option name="tab_style" type="int">
-            <_short>Tab Style</_short>
-            <_long>The style of the tab bar</_long>
+            <short>Tab Style</short>
+            <long>The style of the tab bar</long>
 			<default>0</default>
 			<min>0</min>
 			<max>4</max>
 			<desc>
 				<value>0</value>
-				<_name>Simple</_name>
+				<name>Simple</name>
 			</desc>
 			<desc>
 				<value>1</value>
-				<_name>Gradient</_name>
+				<name>Gradient</name>
 			</desc>
 			<desc>
 				<value>2</value>
-				<_name>Glass</_name>
+				<name>Glass</name>
 			</desc>
 			<desc>
 				<value>3</value>
-				<_name>Metal</_name>
+				<name>Metal</name>
 			</desc>
 			<desc>
 				<value>4</value>
-				<_name>Murrina</_name>
+				<name>Murrina</name>
 			</desc>
           </option>
         </subgroup>
         <subgroup>
-          <_short>Window Title Font</_short>
+          <short>Window Title Font</short>
 			<option name="tabbar_font_family" type="string">
-				<_short>Font family</_short>
-				<_long>Name of the font to display title in the tab bar</_long>
+				<short>Font family</short>
+				<long>Name of the font to display title in the tab bar</long>
 				<hints>family;</hints>
 				<default>Sans</default>
 			</option>
           <option name="tabbar_font_size" type="int">
-            <_short>Font Size</_short>
-            <_long>The size of the window title font in the tab bar</_long>
+            <short>Font Size</short>
+            <long>The size of the window title font in the tab bar</long>
             <default>12</default>
             <min>6</min>
             <max>72</max>
           </option>
           <option name="tabbar_font_color" type="color">
-            <_short>Font Color</_short>
-            <_long>The color of the window title in the tab bar</_long>
+            <short>Font Color</short>
+            <long>The color of the window title in the tab bar</long>
             <default>
               <red>0xffff</red>
               <green>0xffff</green>
@@ -411,46 +411,46 @@
           </option>
         </subgroup>
         <subgroup>
-          <_short>Slot Dragging</_short>
+          <short>Slot Dragging</short>
           <option name="dnd_ungroup_window" type="bool">
-            <_short>Remove window from group after dropping it outside a tab bar</_short>
-            <_long>Remove window from group after dropping it outside a tab bar</_long>
+            <short>Remove window from group after dropping it outside a tab bar</short>
+            <long>Remove window from group after dropping it outside a tab bar</long>
             <default>true</default>
           </option>
           <option name="drag_hover_time" type="float">
-            <_short>Hover time for slot dragging</_short>
-            <_long>Timespan (in s) after which a grouped window is activated if a window of another group is dragged over it</_long>
+            <short>Hover time for slot dragging</short>
+            <long>Timespan (in s) after which a grouped window is activated if a window of another group is dragged over it</long>
             <default>0.5</default>
             <min>0.0</min>
             <max>5.0</max>
             <precision>0.1</precision>
           </option>
           <option name="drag_spring_k" type="float">
-            <_short>Slot Drag Spring K</_short>
-            <_long>Spring Konstant used for slot dragging</_long>
+            <short>Slot Drag Spring K</short>
+            <long>Spring Konstant used for slot dragging</long>
             <default>8.0</default>
             <min>0.1</min>
             <max>30.0</max>
             <precision>0.1</precision>
           </option>
           <option name="drag_friction" type="float">
-            <_short>Slot drag friction</_short>
-            <_long>Spring friction for slot dragging</_long>
+            <short>Slot drag friction</short>
+            <long>Spring friction for slot dragging</long>
             <default>35.0</default>
             <min>0.1</min>
             <max>100.0</max>
             <precision>0.1</precision>
           </option>
           <option name="drag_y_distance" type="int">
-            <_short>Y distance for spring model</_short>
-            <_long>Distance (in pixels) between the tab bar and the dragged slot for applying the spring model. If the distance is larger than that value, the model isn't applied.</_long>
+            <short>Y distance for spring model</short>
+            <long>Distance (in pixels) between the tab bar and the dragged slot for applying the spring model. If the distance is larger than that value, the model isn't applied.</long>
             <default>400</default>
             <min>10</min>
             <max>2500</max>
           </option>
           <option name="drag_speed_limit" type="int">
-            <_short>Speed limit for spring model</_short>
-            <_long>Mouse pointer movement speed limit (in pixels/second) for the spring model</_long>
+            <short>Speed limit for spring model</short>
+            <long>Mouse pointer movement speed limit (in pixels/second) for the spring model</long>
             <default>800</default>
             <min>0</min>
             <max>2000</max>
@@ -458,32 +458,32 @@
         </subgroup>
       </group>
       <group>
-        <_short>Glow</_short>
+        <short>Glow</short>
         <option name="glow" type="bool">
-          <_short>Enable Glow</_short>
-          <_long>Enable grouped window glowing</_long>
+          <short>Enable Glow</short>
+          <long>Enable grouped window glowing</long>
           <default>true</default>
         </option>
         <option name="glow_size" type="int">
-          <_short>Glow Size</_short>
-          <_long>The size of the grouped window glow</_long>
+          <short>Glow Size</short>
+          <long>The size of the grouped window glow</long>
           <default>64</default>
           <min>1</min>
           <max>900</max>
         </option>
         <option name="glow_type" type="int">
-          <_short>Glow Type</_short>
-          <_long>The type of the glow</_long>
+          <short>Glow Type</short>
+          <long>The type of the glow</long>
 		  <default>0</default>
 		  <min>0</min>
 		  <max>1</max>
 		  <desc>
 			  <value>0</value>
-			  <_name>Rectangular glow</_name>
+			  <name>Rectangular glow</name>
 		  </desc>
 		  <desc>
 			  <value>1</value>
-			  <_name>Glow ring</_name>
+			  <name>Glow ring</name>
 		  </desc>
         </option>
       </group>

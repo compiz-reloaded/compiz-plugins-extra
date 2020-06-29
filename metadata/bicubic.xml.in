@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <compiz>
 	<plugin name="bicubic">
-		<_short>Bicubic filter</_short>
-		<_long>Bicubic texture filtering</_long>
+		<short>Bicubic filter</short>
+		<long>Bicubic texture filtering</long>
 		<category>Effects</category>
 		<deps>
 			<relation type="after">

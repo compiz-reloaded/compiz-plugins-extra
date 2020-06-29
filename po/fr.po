@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: compiz-plugins-extra\n"
 "Report-Msgid-Bugs-To: https://gitlab.com/compiz/compiz-plugins-extra/issues\n"
-"POT-Creation-Date: 2019-11-07 14:25+0100\n"
+"POT-Creation-Date: 2020-06-23 00:40+0200\n"
 "PO-Revision-Date: 2019-10-16 18:39+0200\n"
 "Last-Translator: Colomban Wendling <cwendling@hypra.fr>\n"
 "Language-Team: French <fr@li.org>\n"
@@ -71,6 +71,12 @@ msgstr "Opacité"
 
 msgid "Opacity of faded windows"
 msgstr "Opacité des fenêtres ombrées"
+
+msgid "Contrast"
+msgstr "Contraste"
+
+msgid "Contrast of the content of the window."
+msgstr "Contraste du contenu de la fenêtre."
 
 msgid "Animations Add-On"
 msgstr "Animations supplémentaires"
@@ -2230,12 +2236,6 @@ msgstr ""
 msgid "Ignore already overlapping windows in the calculations"
 msgstr "Ignorer les fenêtres déjà recoupées dans les calculs"
 
-msgid "Contrast"
-msgstr "Contraste"
-
-msgid "Contrast of the content of the window."
-msgstr "Contraste du contenu de la fenêtre."
-
 # Traduction difficile.
 msgid ""
 "Treat windows that are already overlapping with the current window as non-"
@@ -2590,7 +2590,6 @@ msgstr "Répertoire où enregistrer les vidéos"
 msgid "Command"
 msgstr "Commande"
 
-#, no-c-format
 msgid ""
 "Command to be used for encoding video. Use a dash (-) for the input file and "
 "%f.ext for the output file"
@@ -2711,6 +2710,85 @@ msgstr "Couleur 2"
 
 msgid "Second gradient color."
 msgstr "Seconde couleur du gradient."
+
+msgid "Workspace Naming"
+msgstr ""
+
+msgid "Allows assigning descriptions to workspaces"
+msgstr ""
+
+msgid "Names"
+msgstr ""
+
+msgid "Workspace Names"
+msgstr ""
+
+#, fuzzy
+msgid "Viewport"
+msgstr "Bureau Supérieur"
+
+#, fuzzy
+msgid "Number of viewport to be named"
+msgstr "Nombre de fenêtres à suivre"
+
+msgid "Name"
+msgstr ""
+
+#, fuzzy
+msgid "Viewport name"
+msgstr "Bureau de Gauche"
+
+msgid "Timeout (in s) of the name display"
+msgstr ""
+
+msgid "Time (in s) the name display fades out after being shown."
+msgstr ""
+
+#, fuzzy
+msgid "Text Display"
+msgstr "Durée d'affichage"
+
+#, fuzzy
+msgid "Selects if the text should be displayed in bold font or not."
+msgstr "Afficher la police du titre de la fenêtre en gras"
+
+#, fuzzy
+msgid "Font Family"
+msgstr "Taille de la police"
+
+#, fuzzy
+msgid "Font family for the text display."
+msgstr "Taille de police du titre de fenêtre"
+
+#, fuzzy
+msgid "Font size for the text display."
+msgstr "Taille de police du titre de fenêtre"
+
+msgid "Text Placement"
+msgstr "Positionnement du texte"
+
+#, fuzzy
+msgid "Selects where to place the text."
+msgstr "Position du titre de la fenêtre"
+
+msgid "Centered on screen"
+msgstr "Centré sur l'écran"
+
+#, fuzzy
+msgid "Top of screen"
+msgstr "Type de créature aquatique"
+
+#, fuzzy
+msgid "Bottom of screen"
+msgstr "De bas en haut"
+
+#, fuzzy
+msgid "Background color for the text display."
+msgstr "Couleur de fond pour le titre de la fenêtre"
+
+#, fuzzy
+msgid "Font color for the text display."
+msgstr "Couleur de police pour le titre de la fenêtre"
 
 #~ msgid ""
 #~ "All effects are chosen randomly, ignoring the selected effect. If None is "
@@ -6383,83 +6461,3 @@ msgstr "Seconde couleur du gradient."
 
 #~ msgid "Tile or Stretch"
 #~ msgstr "Carreler ou étirer"
-
-msgid "Workspace Naming"
-msgstr ""
-
-msgid "Allows assigning descriptions to workspaces"
-msgstr ""
-
-msgid "Names"
-msgstr ""
-
-msgid "Workspace Names"
-msgstr ""
-
-#, fuzzy
-msgid "Viewport"
-msgstr "Bureau Supérieur"
-
-#, fuzzy
-msgid "Number of viewport to be named"
-msgstr "Nombre de fenêtres à suivre"
-
-msgid "Name"
-msgstr ""
-
-#, fuzzy
-msgid "Viewport name"
-msgstr "Bureau de Gauche"
-
-msgid "Timeout (in s) of the name display"
-msgstr ""
-
-#, fuzzy
-msgid "Time (in s) the name display fades out after being shown."
-msgstr ""
-
-#, fuzzy
-msgid "Text Display"
-msgstr "Durée d'affichage"
-
-#, fuzzy
-msgid "Selects if the text should be displayed in bold font or not."
-msgstr "Afficher la police du titre de la fenêtre en gras"
-
-#, fuzzy
-msgid "Font Family"
-msgstr "Taille de la police"
-
-#, fuzzy
-msgid "Font family for the text display."
-msgstr "Taille de police du titre de fenêtre"
-
-#, fuzzy
-msgid "Font size for the text display."
-msgstr "Taille de police du titre de fenêtre"
-
-msgid "Text Placement"
-msgstr "Positionnement du texte"
-
-#, fuzzy
-msgid "Selects where to place the text."
-msgstr "Position du titre de la fenêtre"
-
-msgid "Centered on screen"
-msgstr "Centré sur l'écran"
-
-#, fuzzy
-msgid "Top of screen"
-msgstr "Type de créature aquatique"
-
-#, fuzzy
-msgid "Bottom of screen"
-msgstr "De bas en haut"
-
-#, fuzzy
-msgid "Background color for the text display."
-msgstr "Couleur de fond pour le titre de la fenêtre"
-
-#, fuzzy
-msgid "Font color for the text display."
-msgstr "Couleur de police pour le titre de la fenêtre"

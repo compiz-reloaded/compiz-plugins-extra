@@ -1,4 +1,4 @@
-xmldir       = $(metadatadir)
+xmldir = $(metadatadir)
 
 if ANIMATIONADDON_PLUGIN
 animationaddonxml = animationaddon.xml.in
@@ -18,7 +18,6 @@ endif
 
 if NOTIFICATION_PLUGIN
 notificationxml = notification.xml.in
-else
 endif
 
 if SCALEFILTER_PLUGIN
@@ -38,59 +37,60 @@ threedxml = 3d.xml.in
 endif
 
 if WORKSPACENAMES_PLUGIN
-#depends on text
+# Depends on Text
 workspacenamesxml = workspacenames.xml.in
 endif
 
-xml_in_files = 	             \
-	addhelper.xml.in     \
-	bench.xml.in         \
-	bicubic.xml.in       \
-	crashhandler.xml.in  \
-	extrawm.xml.in       \
-	fadedesktop.xml.in   \
-	firepaint.xml.in     \
-	gears.xml.in         \
-	grid.xml.in          \
-	loginout.xml.in      \
-	maximumize.xml.in    \
-	mblur.xml.in         \
-	reflex.xml.in        \
-	shelf.xml.in         \
-	showdesktop.xml.in   \
-	splash.xml.in        \
-	trailfocus.xml.in    \
-	widget.xml.in        \
-	vidcap.xml.in        \
-	wallpaper.xml.in     \
-	$(animationaddonxml) \
-	$(cubeaddonxml)      \
-	$(bellxml)           \
-	$(groupxml)          \
-	$(notificationxml)   \
-	$(scalefilterxml)    \
-	$(showmousexml)      \
-	$(highlightcontentxml)      \
-	$(threedxml)         \
+xml_in_files =                 \
+	addhelper.xml.in       \
+	bench.xml.in           \
+	bicubic.xml.in         \
+	crashhandler.xml.in    \
+	extrawm.xml.in         \
+	fadedesktop.xml.in     \
+	firepaint.xml.in       \
+	gears.xml.in           \
+	grid.xml.in            \
+	loginout.xml.in        \
+	maximumize.xml.in      \
+	mblur.xml.in           \
+	reflex.xml.in          \
+	shelf.xml.in           \
+	showdesktop.xml.in     \
+	splash.xml.in          \
+	trailfocus.xml.in      \
+	widget.xml.in          \
+	vidcap.xml.in          \
+	wallpaper.xml.in       \
+	$(animationaddonxml)   \
+	$(cubeaddonxml)        \
+	$(bellxml)             \
+	$(groupxml)            \
+	$(notificationxml)     \
+	$(scalefilterxml)      \
+	$(showmousexml)        \
+	$(highlightcontentxml) \
+	$(threedxml)           \
 	$(workspacenamesxml)
 
 xml_files    = $(xml_in_files:.xml.in=.xml)
 xml_DATA     = $(xml_files)
 
-@INTLTOOL_XML_RULE@
+%.xml: %.xml.in
+	GETTEXTDATADIR=$(top_srcdir)/gettext $(AM_V_GEN)$(MSGFMT) --xml --template $< -d $(top_srcdir)/po -o $@
 
-EXTRA_DIST =				\
-	$(xml_in_files)			\
-	animationaddon.xml.in	\
-	cubeaddon.xml.in		\
-	bell.xml.in			\
-	group.xml.in			\
-	notification.xml.in		\
-	scalefilter.xml.in		\
-	showmouse.xml.in		\
-	highlightcontent.xml.in		\
-	3d.xml.in
+EXTRA_DIST =                    \
+	$(xml_in_files)         \
+	animationaddon.xml.in   \
+	cubeaddon.xml.in        \
+	bell.xml.in             \
+	group.xml.in            \
+	notification.xml.in     \
+	scalefilter.xml.in      \
+	showmouse.xml.in        \
+	highlightcontent.xml.in \
+	3d.xml.in               \
+	workspacenames.xml.in
 
-DISTCLEANFILES =	\
+CLEANFILES =                    \
 	$(xml_files)
-

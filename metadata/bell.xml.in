@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <compiz>
 	<plugin name="bell" useBcop="true">
-		<_short>Audible Bell</_short>
-		<_long>Plays an audible sound for the system bell</_long>
+		<short>Audible Bell</short>
+		<long>Plays an audible sound for the system bell</long>
 		<category>Utility</category>
 		<deps>
 			<relation type="after">
@@ -13,13 +13,13 @@
 		</deps>
 		<display>
 			<option name="bell" type="bell">
-				<_short>Audible Bell</_short>
-				<_long>Play sound on system bell</_long>
+				<short>Audible Bell</short>
+				<long>Play sound on system bell</long>
 				<default>true</default>
 			</option>
 			<option name="spatial_sounds" type="bool">
-				<_short>Spatial Sounds</_short>
-				<_long>Whether to spatially locate sounds or not. If enabled, sounds coming from the left of the sceen will be heard mostly on the left channel, the ones coming from the right on the right channel and so on.</_long>
+				<short>Spatial Sounds</short>
+				<long>Whether to spatially locate sounds or not. If enabled, sounds coming from the left of the sceen will be heard mostly on the left channel, the ones coming from the right on the right channel and so on.</long>
 				<default>true</default>
 			</option>
 		</display>

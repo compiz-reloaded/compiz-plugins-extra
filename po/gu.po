@@ -6,9 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: compiz-plugins-extra\n"
-"Report-Msgid-Bugs-To: https://gitlab.com/compiz/compiz-plugins-"
-"extra/issues\n"
-"POT-Creation-Date: 2017-01-12 18:19+0300\n"
+"Report-Msgid-Bugs-To: https://gitlab.com/compiz/compiz-plugins-extra/issues\n"
+"POT-Creation-Date: 2020-06-23 00:40+0200\n"
 "PO-Revision-Date: 2007-12-17 12:25+0530\n"
 "Last-Translator: Krunaliben Patel <krunaliben.patel@gmail.com>\n"
 "Language-Team: gist Gujarati team <info.gist@cdac.in>\n"
@@ -29,10 +28,12 @@ msgstr ""
 msgid "Bindings"
 msgstr "બાઈન્ડીંગો"
 
-msgid "Toggle AddHelper"
+#, fuzzy
+msgid "Toggle ADD Helper"
 msgstr "AddHelper બદલો"
 
-msgid "Use this to enable/disable AddHelper on the fly."
+#, fuzzy
+msgid "Use this to enable/disable ADD Helper on the fly."
 msgstr "AddHelper ને જરૂરીયાત મુદબ સક્રિય/નિષ્ક્રિય કરવા માટે આને વાપરો."
 
 msgid "Misc. Options"
@@ -41,7 +42,8 @@ msgstr "મિશ્રિત વિકલ્પો"
 msgid "Window Types"
 msgstr "વિન્ડો પ્રકારો"
 
-msgid "Window types that should be Opacified."
+#, fuzzy
+msgid "Window types that should be affected."
 msgstr "વિન્ડો પ્રકારો કે જેઓ અપારદર્શક બનાવવામાં આવવા જોઈએ."
 
 msgid "Enable ADD Helper on start"
@@ -67,6 +69,14 @@ msgstr "અપારદર્શકતા"
 
 msgid "Opacity of faded windows"
 msgstr "ધૂંધળી વિન્ડોની અપારદર્શકતા"
+
+#, fuzzy
+msgid "Contrast"
+msgstr "Control"
+
+#, fuzzy
+msgid "Contrast of the content of the window."
+msgstr "નિર્દેશક મૂકવાનું વિન્ડોનું કેન્દ્ર વાપરે છે"
 
 #, fuzzy
 msgid "Animations Add-On"
@@ -396,6 +406,24 @@ msgstr "બીમ ઉપર"
 
 msgid "Leaf Spread"
 msgstr "પાંદડા વિસ્તરણ"
+
+msgid "Audible Bell"
+msgstr ""
+
+msgid "Plays an audible sound for the system bell"
+msgstr ""
+
+msgid "Play sound on system bell"
+msgstr ""
+
+msgid "Spatial Sounds"
+msgstr ""
+
+msgid ""
+"Whether to spatially locate sounds or not. If enabled, sounds coming from "
+"the left of the sceen will be heard mostly on the left channel, the ones "
+"coming from the right on the right channel and so on."
+msgstr ""
 
 msgid "Benchmark"
 msgstr "બેન્ચમાર્ક"
@@ -936,8 +964,9 @@ msgid ""
 "multiple times in a row."
 msgstr ""
 
-msgid "Corners / Edges"
-msgstr ""
+#, fuzzy
+msgid "Behavior"
+msgstr "વર્તણૂક"
 
 #, fuzzy
 msgid "Resize Actions"
@@ -946,6 +975,10 @@ msgstr "પરાવર્તન"
 #, fuzzy
 msgid "Window resize action"
 msgstr "વિન્ડો શીર્ષક ફોન્ટ"
+
+#, fuzzy
+msgid "Top Left Corner"
+msgstr "કિનારીઓ પ્રતિ"
 
 #, fuzzy
 msgid "Action to be performed when window is dropped on the top left corner"
@@ -974,10 +1007,6 @@ msgstr "પૂર્ણસ્ક્રીન"
 #, fuzzy
 msgid "Right Half"
 msgstr "જમણું"
-
-#, fuzzy
-msgid "Top Left Corner"
-msgstr "કિનારીઓ પ્રતિ"
 
 msgid "Top Half"
 msgstr ""
@@ -1046,6 +1075,16 @@ msgstr "ટોચની બાજુમાંથી પિક્સેલોન�
 msgid "Maximum number of pixels from the Bottom edge a window can be dropped"
 msgstr "તળિયેની બાજુમાંથી પિક્સેલોની સંખ્યા કે જ્યારે વિન્ડો બાકીના પર આવશે"
 
+#, fuzzy
+msgid "Select output with mouse pointer"
+msgstr "માઉસ નિર્દેશક ખેંચો"
+
+msgid ""
+"In the case of multiple outputs, chooses the output containing the mouse "
+"pointer. If this option is not checked, the output is choosen based on the "
+"center of the window."
+msgstr ""
+
 msgid "Draw Indicator"
 msgstr ""
 
@@ -1060,6 +1099,10 @@ msgstr "એનીમેશન ગાળો"
 #, fuzzy
 msgid "Preview animation duration (in ms)."
 msgstr "એનીમેશન ગાળો"
+
+#, fuzzy
+msgid "Outline Thickness"
+msgstr "જાડાઈ"
 
 msgid "Outline Color"
 msgstr "બાહ્ય કિનારી રંગ"
@@ -1523,6 +1566,57 @@ msgstr "લંબચોરસી તેજ"
 msgid "Glow ring"
 msgstr "તેજ રીંગ"
 
+#, fuzzy
+msgid "Highlight Content"
+msgstr "પ્રકાશિત રંગ"
+
+msgid ""
+"Listens for screen reader events and renders highlight for the currently "
+"spoken word."
+msgstr ""
+
+msgid "Toggle Highlight of Content."
+msgstr ""
+
+#, fuzzy
+msgid "Enable on startup"
+msgstr "તેજ સક્રિય કરો"
+
+msgid "Enables this plugin when it is loaded."
+msgstr ""
+
+msgid "Highlight Speech synthesis"
+msgstr ""
+
+msgid "Highlight Speech synthesis' current word."
+msgstr ""
+
+#, fuzzy
+msgid "Speech Options"
+msgstr "પસંદગી"
+
+#, fuzzy
+msgid "Rectangle Border Thickness"
+msgstr "શીર્ષક કિનારી માપ"
+
+msgid "How thick the border of the rectangle should be, in pixels."
+msgstr ""
+
+#, fuzzy
+msgid "Rectangle Color"
+msgstr "લંબચોરસી તેજ"
+
+#, fuzzy
+msgid "Color of the borders of the rectangle."
+msgstr "ઘનના ટોચના ચહેરાનો રંગ"
+
+#, fuzzy
+msgid "Show only border of rectangle"
+msgstr "લંબચોરસ"
+
+msgid "Whether we draw a filled rectangle or just its border."
+msgstr ""
+
 msgid "Motion blur"
 msgstr "ગતિ ઝાંખાપણું"
 
@@ -1908,8 +2002,46 @@ msgid "Toggle the mouse pointer trail."
 msgstr "માઉસ નિર્દેશક ખેંચો"
 
 #, fuzzy
+msgid "Particles"
+msgstr "આગ કણ માપ."
+
+#, fuzzy
+msgid "Enable particles."
+msgstr "શીર્ષકો સક્રિય કરો"
+
+msgid "Crosshair"
+msgstr ""
+
+#, fuzzy
+msgid "Enable crosshair."
+msgstr "તેજ સક્રિય કરો"
+
+#, fuzzy
 msgid "Particle Options"
 msgstr "મિશ્રિત વિકલ્પો"
+
+#, fuzzy
+msgid "Rotation speed"
+msgstr "એનિમેશન ઝડપ"
+
+#, fuzzy
+msgid "Rotation speed."
+msgstr "એનિમેશન ઝડપ"
+
+#, fuzzy
+msgid "Radius"
+msgstr "બાજુ ત્રિજ્યા"
+
+#, fuzzy
+msgid "Ring radius"
+msgstr "બાજુ ત્રિજ્યા"
+
+msgid "Emitters"
+msgstr ""
+
+#, fuzzy
+msgid "Number of particle emitters."
+msgstr "કણોની સંખ્યા"
 
 #, fuzzy
 msgid "Number Of Particles"
@@ -1975,27 +2107,26 @@ msgid "Have random colors for the particles"
 msgstr "આગ અસર માટે પાસે રેન્ડમ રંગો હોય, તે Mystical Fire તરીકે પણ ઓળખાય છે."
 
 #, fuzzy
-msgid "Rotation speed"
-msgstr "એનિમેશન ઝડપ"
+msgid "Crosshair Options"
+msgstr "મિશ્રિત વિકલ્પો"
 
-#, fuzzy
-msgid "Rotation speed."
-msgstr "એનિમેશન ઝડપ"
-
-#, fuzzy
-msgid "Radius"
-msgstr "બાજુ ત્રિજ્યા"
-
-#, fuzzy
-msgid "Ring radius"
-msgstr "બાજુ ત્રિજ્યા"
-
-msgid "Emitters"
+msgid "Crosshair thickness"
 msgstr ""
 
-#, fuzzy
-msgid "Number of particle emitters."
-msgstr "કણોની સંખ્યા"
+msgid "How thick mouse crosshair should be, in pixels."
+msgstr ""
+
+msgid "Crosshair empty radius"
+msgstr ""
+
+msgid "Radius of the disk around the cursor which is not covered by crosshair."
+msgstr ""
+
+msgid "Crosshair Color"
+msgstr ""
+
+msgid "Crosshair color."
+msgstr ""
 
 msgid "Login/Logout"
 msgstr ""
@@ -2433,11 +2564,91 @@ msgstr "તળિયે જમણો કોણ"
 msgid "Bevel bottom right corner"
 msgstr "કોણવાળો તળિયે જમણો ખૂણો"
 
+msgid "Vidcap"
+msgstr ""
+
+#, fuzzy
+msgid "Screen Recorder"
+msgstr "સ્ક્રીન બાજુઓ"
+
+#, fuzzy
+msgid "Start / Stop"
+msgstr "ઝબકાર શરૂ કરો."
+
+msgid "Start and stop recording"
+msgstr ""
+
+#, fuzzy
+msgid "Directory"
+msgstr "ભંગાણ ડમ્પ ડિરેક્ટરી"
+
+msgid "Directory to store videos"
+msgstr ""
+
+msgid "Command"
+msgstr ""
+
+msgid ""
+"Command to be used for encoding video. Use a dash (-) for the input file and "
+"%f.ext for the output file"
+msgstr ""
+
+#, fuzzy
+msgid "Draw Status Indicator"
+msgstr "વિન્ડો પ્રકાશન દોરો"
+
+msgid "Draw color coded status dot"
+msgstr ""
+
 msgid "Wallpaper"
 msgstr "વોલપેપર"
 
 msgid "Draw the desktop wallpaper"
 msgstr "ડેસ્કટોપ વોલપેપર દોરો"
+
+msgid "Recursive directory search"
+msgstr ""
+
+msgid "Search in all sub-directories."
+msgstr ""
+
+msgid "Cycle"
+msgstr ""
+
+msgid "Automatically cycle through wallpapers."
+msgstr ""
+
+#, fuzzy
+msgid "Cycle timeout"
+msgstr "ધૂંધ સમય"
+
+msgid "Time before cycling to next wallpaper (in minutes)."
+msgstr ""
+
+#, fuzzy
+msgid "Fade time"
+msgstr "ધૂંધ સમય"
+
+#, fuzzy
+msgid "Fade transition time (in seconds)."
+msgstr "ધૂંધ અંદર/બહાર ગાળો સેકન્ડોમાં."
+
+#, fuzzy
+msgid "Randomize"
+msgstr "રેન્ડમ"
+
+#, fuzzy
+msgid "Randomly order wallpapers."
+msgstr "રેન્ડમ રીતે રંગાયેલ આગલ"
+
+#, fuzzy
+msgid "Hide other desktop background windows"
+msgstr "બિન ડેસ્કટોપ વિન્ડો છુપાવો"
+
+msgid ""
+"Don't draw desktop backgrounds rendered by other applications. Mouse and "
+"keyboard input works as if the background were drawn."
+msgstr ""
 
 msgid "Backgrounds"
 msgstr "પાશ્વભાગો"
@@ -2510,6 +2721,86 @@ msgstr "રંગો"
 #, fuzzy
 msgid "Second gradient color."
 msgstr "ઢાળ રંગ ૧"
+
+msgid "Workspace Naming"
+msgstr ""
+
+msgid "Allows assigning descriptions to workspaces"
+msgstr ""
+
+msgid "Names"
+msgstr ""
+
+msgid "Workspace Names"
+msgstr ""
+
+#, fuzzy
+msgid "Viewport"
+msgstr "દૃશ્યપોર્ટ ટોચે"
+
+#, fuzzy
+msgid "Number of viewport to be named"
+msgstr "ટ્રેક કરવા માટેની વિન્ડોની સંખ્યા"
+
+msgid "Name"
+msgstr ""
+
+#, fuzzy
+msgid "Viewport name"
+msgstr "દૃશ્યપોર્ટ ડાબે"
+
+msgid "Timeout (in s) of the name display"
+msgstr ""
+
+#, fuzzy
+msgid "Time (in s) the name display fades out after being shown."
+msgstr "ટેબ બદલાવ પછી ટેબ પટ્ટી દેખીતી થાય તેમાં લાગતો સમય (સેકન્ડમાં)"
+
+#, fuzzy
+msgid "Text Display"
+msgstr "ડિસ્પ્લે સમય"
+
+#, fuzzy
+msgid "Selects if the text should be displayed in bold font or not."
+msgstr "પસંદ કરે છે કે શું વિન્ડો શીર્ષક ઘાટા ફોન્ટમાં દર્શાવવું જોઈએ કે નહિં."
+
+#, fuzzy
+msgid "Font Family"
+msgstr "ફોન્ટ માપ"
+
+#, fuzzy
+msgid "Font family for the text display."
+msgstr "વિન્ડો શીર્ષક ડિસ્પ્લે માટે ફોન્ટ માપ"
+
+#, fuzzy
+msgid "Font size for the text display."
+msgstr "વિન્ડો શીર્ષક ડિસ્પ્લે માટે ફોન્ટ માપ"
+
+msgid "Text Placement"
+msgstr "લખાણ જમાવટ"
+
+#, fuzzy
+msgid "Selects where to place the text."
+msgstr "વિન્ડો શીર્ષકને ક્યાં મૂકવી તે પસંદ કરે છે."
+
+msgid "Centered on screen"
+msgstr "સ્ક્રીન પર કેન્દ્રિકૃત થયેલ"
+
+#, fuzzy
+msgid "Top of screen"
+msgstr "ઓફસ્ક્રીન ટાળો"
+
+#, fuzzy
+msgid "Bottom of screen"
+msgstr "તળિયેથી ટોચ સુધી"
+
+#, fuzzy
+msgid "Background color for the text display."
+msgstr "વિન્ડો શીર્ષક માટે પાશ્વભાગનો રંગ"
+
+#, fuzzy
+msgid "Font color for the text display."
+msgstr "વિન્ડો શીર્ષકનો ફોન્ટ રંગ"
 
 #~ msgid ""
 #~ "All effects are chosen randomly, ignoring the selected effect. If None is "
@@ -3527,9 +3818,6 @@ msgstr "ઢાળ રંગ ૧"
 #~ msgid "Restrain the mouse to the zoom area"
 #~ msgstr "નાનામોટાપણાના વિસ્તારમાં માઉસને પુનઃખેંચો"
 
-#~ msgid "Scale the mouse pointer"
-#~ msgstr "માઉસ નિર્દેશક ખેંચો"
-
 #, fuzzy
 #~ msgid "Specific Zoom"
 #~ msgstr "ચોક્કસ નાનામોટાપણાનો અવયવ ૧"
@@ -4027,9 +4315,6 @@ msgstr "ઢાળ રંગ ૧"
 #~ msgid "Put To Next Output"
 #~ msgstr "ટોચે ડાબે મૂકો"
 
-#~ msgid "Put pointer uses the center of the window"
-#~ msgstr "નિર્દેશક મૂકવાનું વિન્ડોનું કેન્દ્ર વાપરે છે"
-
 #~ msgid "Put to adjacent viewport"
 #~ msgstr "બાજુના દૃશ્યપોર્ટ પર મૂકો"
 
@@ -4416,9 +4701,6 @@ msgstr "ઢાળ રંગ ૧"
 #~ msgid "Hide all non Desktop windows during switching"
 #~ msgstr "બદલવા દરમ્યાન બધી બિન ડેસ્કટોપ વિન્ડો છુપાવો"
 
-#~ msgid "Hide non Desktop windows"
-#~ msgstr "બિન ડેસ્કટોપ વિન્ડો છુપાવો"
-
 #~ msgid "Initiate (All Workspaces)"
 #~ msgstr "આરંભ કરો (બધા કાર્યસ્થળો)"
 
@@ -4515,9 +4797,6 @@ msgstr "ઢાળ રંગ ૧"
 #~ msgid "Choose 'Resistance', 'Attraction' or 'Full Mode'."
 #~ msgstr "'અવરોધ', 'આકર્ષણ' અથવા 'સંપૂર્ણ સ્થિતિ' પસંદ કરો."
 
-#~ msgid "Control"
-#~ msgstr "Control"
-
 #~ msgid "Edge Attraction Distance"
 #~ msgstr "બાજુ આકર્ષણ અંતર"
 
@@ -4535,9 +4814,6 @@ msgstr "ઢાળ રંગ ૧"
 
 #~ msgid "Meta"
 #~ msgstr "Meta"
-
-#~ msgid "Screen edges"
-#~ msgstr "સ્ક્રીન બાજુઓ"
 
 #~ msgid "Shift"
 #~ msgstr "Shift"
@@ -4658,10 +4934,6 @@ msgstr "ઢાળ રંગ ૧"
 #~ msgstr "રીંગમાં વિન્ડો માટે અપારદર્શકતાનો જથ્થો (ટકામાં) કે જેઓ પસંદ થયેલ નહિં હોય"
 
 #, fuzzy
-#~ msgid "Behavior"
-#~ msgstr "વર્તણૂક"
-
-#, fuzzy
 #~ msgid "Darken background when showing the stack"
 #~ msgstr "જ્યારે રીંગ બતાવી રહ્યા હોય ત્યારે પાશ્વભાગ ઘાટો કરો"
 
@@ -4724,10 +4996,6 @@ msgstr "ઢાળ રંગ ૧"
 
 #, fuzzy
 #~ msgid "Highlight Border Inlay Color"
-#~ msgstr "પ્રકાશિત રંગ"
-
-#, fuzzy
-#~ msgid "Highlight Mode"
 #~ msgstr "પ્રકાશિત રંગ"
 
 #, fuzzy
@@ -4831,10 +5099,6 @@ msgstr "ઢાળ રંગ ૧"
 #~ msgstr "વિન્ડો પ્રકાશન"
 
 #, fuzzy
-#~ msgid "Show Rectangle"
-#~ msgstr "લંબચોરસ"
-
-#, fuzzy
 #~ msgid "Show icon next to thumbnail"
 #~ msgstr "વિન્ડો શીર્ષક થમ્બમેઈલમાં બતાવો."
 
@@ -4868,14 +5132,8 @@ msgstr "ઢાળ રંગ ૧"
 #~ msgid "Text"
 #~ msgstr "લખાણ"
 
-#~ msgid "Enable Titles"
-#~ msgstr "શીર્ષકો સક્રિય કરો"
-
 #~ msgid "Fade In/Out Duration"
 #~ msgstr "ધૂંધ અંદર/બહાર ગાળો"
-
-#~ msgid "Fade In/Out Duration in seconds."
-#~ msgstr "ધૂંધ અંદર/બહાર ગાળો સેકન્ડોમાં."
 
 #~ msgid "Generate Mipmaps"
 #~ msgstr "મીપમેપ બનાવો"
@@ -5623,10 +5881,6 @@ msgstr "ઢાળ રંગ ૧"
 #~ msgstr "પ્રોમ્પ્ટ દૃશ્ય બદલો."
 
 #, fuzzy
-#~ msgid "Directory"
-#~ msgstr "ભંગાણ ડમ્પ ડિરેક્ટરી"
-
-#, fuzzy
 #~ msgid "Initiate screencasting"
 #~ msgstr "આગ દોરવાનો આરંભ કરો"
 
@@ -5637,10 +5891,6 @@ msgstr "ઢાળ રંગ ૧"
 #, fuzzy
 #~ msgid "ScreenCasting"
 #~ msgstr "સ્ક્રીન બોક્સીંગ"
-
-#, fuzzy
-#~ msgid "Enable colors"
-#~ msgstr "તેજ સક્રિય કરો"
 
 #, fuzzy
 #~ msgid "Number of fish inside the cube"
@@ -5772,83 +6022,3 @@ msgstr "ઢાળ રંગ ૧"
 
 #~ msgid "Tile or Stretch"
 #~ msgstr "તકતી અથવા ખેંચ"
-
-msgid "Workspace Naming"
-msgstr ""
-
-msgid "Allows assigning descriptions to workspaces"
-msgstr ""
-
-msgid "Names"
-msgstr ""
-
-msgid "Workspace Names"
-msgstr ""
-
-#, fuzzy
-msgid "Viewport"
-msgstr "દૃશ્યપોર્ટ ટોચે"
-
-#, fuzzy
-msgid "Number of viewport to be named"
-msgstr "ટ્રેક કરવા માટેની વિન્ડોની સંખ્યા"
-
-msgid "Name"
-msgstr ""
-
-#, fuzzy
-msgid "Viewport name"
-msgstr "દૃશ્યપોર્ટ ડાબે"
-
-msgid "Timeout (in s) of the name display"
-msgstr ""
-
-#, fuzzy
-msgid "Time (in s) the name display fades out after being shown."
-msgstr "ટેબ બદલાવ પછી ટેબ પટ્ટી દેખીતી થાય તેમાં લાગતો સમય (સેકન્ડમાં)"
-
-#, fuzzy
-msgid "Text Display"
-msgstr "ડિસ્પ્લે સમય"
-
-#, fuzzy
-msgid "Selects if the text should be displayed in bold font or not."
-msgstr "પસંદ કરે છે કે શું વિન્ડો શીર્ષક ઘાટા ફોન્ટમાં દર્શાવવું જોઈએ કે નહિં."
-
-#, fuzzy
-msgid "Font Family"
-msgstr "ફોન્ટ માપ"
-
-#, fuzzy
-msgid "Font family for the text display."
-msgstr "વિન્ડો શીર્ષક ડિસ્પ્લે માટે ફોન્ટ માપ"
-
-#, fuzzy
-msgid "Font size for the text display."
-msgstr "વિન્ડો શીર્ષક ડિસ્પ્લે માટે ફોન્ટ માપ"
-
-msgid "Text Placement"
-msgstr "લખાણ જમાવટ"
-
-#, fuzzy
-msgid "Selects where to place the text."
-msgstr "વિન્ડો શીર્ષકને ક્યાં મૂકવી તે પસંદ કરે છે."
-
-msgid "Centered on screen"
-msgstr "સ્ક્રીન પર કેન્દ્રિકૃત થયેલ"
-
-#, fuzzy
-msgid "Top of screen"
-msgstr "ઓફસ્ક્રીન ટાળો"
-
-#, fuzzy
-msgid "Bottom of screen"
-msgstr "તળિયેથી ટોચ સુધી"
-
-#, fuzzy
-msgid "Background color for the text display."
-msgstr "વિન્ડો શીર્ષક માટે પાશ્વભાગનો રંગ"
-
-#, fuzzy
-msgid "Font color for the text display."
-msgstr "વિન્ડો શીર્ષકનો ફોન્ટ રંગ"
