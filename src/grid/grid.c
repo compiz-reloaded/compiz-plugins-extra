@@ -252,10 +252,10 @@ gridCommonWindow (CompWindow *cw,
                   GridType   where,
                   Bool setWorkarea)
 {
-    GRID_SCREEN (cw->screen);
-
     if ((cw) && (where != GridUnknown))
     {
+	GRID_SCREEN (cw->screen);
+
 	/* add maximize option */
 	if (where == GridMaximize)
 	{
