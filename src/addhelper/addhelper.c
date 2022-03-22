@@ -390,6 +390,7 @@ addhelperFiniScreen (CompPlugin *p,
 {
     ADD_SCREEN (s);
 
+    UNWRAP (as, s, drawWindowTexture);
     UNWRAP (as, s, paintWindow);
 
     if (as->contrastFunction)
