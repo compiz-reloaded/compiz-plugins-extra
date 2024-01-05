@@ -21,6 +21,7 @@
  **/
 
 #include <compiz-core.h>
+#include <stdlib.h>
 
 #include "bench_tex.h"
 #include "bench_options.h"

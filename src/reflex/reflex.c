@@ -19,6 +19,7 @@
  *
  */
 #include <compiz-core.h>
+#include <stdlib.h>
 
 #include "reflex_options.h"
 

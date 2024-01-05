@@ -20,6 +20,7 @@
  */
 
 #include <compiz-core.h>
+#include <stdlib.h>
 
 #include "loginout_options.h"
 

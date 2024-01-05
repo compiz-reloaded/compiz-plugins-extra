@@ -26,6 +26,7 @@
  *
  */
 
+#include <stdlib.h>
 #include <string.h>
 #include <compiz-core.h>
 #include <X11/Xatom.h>
