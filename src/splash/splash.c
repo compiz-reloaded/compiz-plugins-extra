@@ -20,6 +20,7 @@
  */
 
 #include <math.h>
+#include <stdlib.h>
 
 #include <compiz-core.h>
 #include <X11/Xatom.h>

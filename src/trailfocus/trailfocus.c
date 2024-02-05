@@ -25,6 +25,7 @@
  *
  */
 
+#include <stdlib.h>
 #include <string.h>
 #include <compiz-core.h>
 #include "trailfocus_options.h"

@@ -23,6 +23,7 @@
  */
 
 #include <compiz-core.h>
+#include <stdlib.h>
 #include <string.h>
 #include "grid_options.h"
 

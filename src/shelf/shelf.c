@@ -33,6 +33,7 @@
 #include <X11/extensions/shape.h>
 #include <X11/cursorfont.h>
 #include <math.h>
+#include <stdlib.h>
 #include <string.h>
 #include "shelf_options.h"
 

@@ -24,6 +24,7 @@
  */
 
 #include <compiz-core.h>
+#include <stdlib.h>
 #include "addhelper_options.h"
 
 #define GET_ADD_DISPLAY(d)                            \

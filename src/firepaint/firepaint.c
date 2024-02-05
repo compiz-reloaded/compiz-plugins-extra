@@ -20,6 +20,7 @@
  */
 
 #include <compiz-core.h>
+#include <stdlib.h>
 
 #include "firepaint_options.h"
 #include "firepaint_tex.h"
