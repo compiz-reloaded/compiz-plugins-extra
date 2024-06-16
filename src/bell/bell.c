@@ -24,6 +24,7 @@
  **/
 
 #include <string.h>
+#include <stdlib.h>
 #include <canberra.h>
 #include <xsettings-client.h>
 
